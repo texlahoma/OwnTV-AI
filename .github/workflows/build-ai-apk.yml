@@ -1,0 +1,89 @@
+name: Build OwnTV-AI APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ai-v12
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owntv-ai-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build OwnTV-AI Android TV APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract OwnTV-AI source
+        run: |
+          mkdir -p source
+          unzip -q OwnTV-AI-v12-final.zip -d source
+          echo "Source tree:"
+          ls -la source
+          echo "Core:"
+          ls -la source/OwnTV_Core
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Inspect Android SDK
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME}"
+          ls -la "${ANDROID_SDK_ROOT}/platforms" || true
+          ls -la "${ANDROID_SDK_ROOT}/build-tools" || true
+          sdkmanager --list_installed || true
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Standard Debug APK
+        working-directory: source
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleStandardDebug \
+            -Powntv.corePath="${GITHUB_WORKSPACE}/source/OwnTV_Core" \
+            --stacktrace \
+            --no-daemon
+
+      - name: List APK
+        if: always()
+        working-directory: source
+        run: |
+          find app/build/outputs -type f -name "*.apk" -print || true
+
+      - name: Verify APK
+        working-directory: source
+        run: |
+          APK="$(find app/build/outputs/apk -type f -name "*.apk" -print | head -n 1)"
+          if [ -z "$APK" ]; then
+            echo "::error::APK was not generated."
+            exit 1
+          fi
+
+          echo "APK: $APK"
+          du -h "$APK"
+          sha256sum "$APK"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: OwnTV-AI-standard-debug
+          path: source/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
