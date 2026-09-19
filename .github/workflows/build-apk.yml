@@ -1,0 +1,89 @@
+name: Build OwnTV APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owntv-ai-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Android TV APK
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout OwnTV-AI
+        uses: actions/checkout@v4
+        with:
+          path: OwnTV
+
+      - name: Checkout OwnTV Core
+        uses: actions/checkout@v4
+        with:
+          repository: ahXN00/OwnTV_Core
+          ref: main
+          path: OwnTV_Core
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licenses
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+
+      - name: Check Gradle wrapper
+        working-directory: OwnTV
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --version
+
+      - name: Build OwnTV Standard Debug APK
+        working-directory: OwnTV
+        env:
+          OWNTV_EDGE_KEY: ${{ secrets.OWNTV_EDGE_KEY }}
+        run: |
+          ./gradlew \
+            :app:assembleStandardDebug \
+            -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
+            --stacktrace \
+            --no-daemon
+
+      - name: List generated APKs
+        working-directory: OwnTV
+        run: |
+          echo "===== APK FILES ====="
+          find app/build/outputs/apk -type f -name "*.apk" -print
+
+      - name: Verify APK exists
+        working-directory: OwnTV
+        run: |
+          APK="$(find app/build/outputs/apk -type f -name "*.apk" | head -n 1)"
+          if [ -z "$APK" ]; then
+            echo "ERROR: APK was not generated."
+            exit 1
+          fi
+
+          echo "APK found:"
+          echo "$APK"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: OwnTV-AI-standard-debug
+          path: OwnTV/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
