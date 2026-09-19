@@ -20,9 +20,9 @@ jobs:
 
     steps:
 
-      # ------------------------------------------------------------
-      # 1. 拉取 OwnTV 官方源码
-      # ------------------------------------------------------------
+      # ============================================================
+      # 1. Checkout OwnTV
+      # ============================================================
       - name: Checkout OwnTV source
         uses: actions/checkout@v4
         with:
@@ -30,9 +30,9 @@ jobs:
           ref: main
           path: OwnTV
 
-      # ------------------------------------------------------------
-      # 2. 拉取 OwnTV_Core 官方源码
-      # ------------------------------------------------------------
+      # ============================================================
+      # 2. Checkout OwnTV Core
+      # ============================================================
       - name: Checkout OwnTV Core source
         uses: actions/checkout@v4
         with:
@@ -40,64 +40,156 @@ jobs:
           ref: main
           path: OwnTV_Core
 
-      # ------------------------------------------------------------
-      # 3. Java 21
-      # ------------------------------------------------------------
+      # ============================================================
+      # 3. JDK 21
+      #
+      # OwnTV 当前 AGP / Kotlin 构建环境使用 JDK 21
+      # ============================================================
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
-      # ------------------------------------------------------------
+      # ============================================================
       # 4. Android SDK
-      # ------------------------------------------------------------
+      #
+      # 不再安装：
+      #   tools
+      #   platforms;android-37
+      #
+      # setup-android@v4 会安装 command-line tools
+      # 和 platform-tools。
+      # ============================================================
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
           packages: 'platform-tools'
 
-      # ------------------------------------------------------------
-      # 5. 安装 OwnTV 所需 Android 37 SDK
-      # ------------------------------------------------------------
-      - name: Install Android SDK 37
+      # ============================================================
+      # 5. Inspect Android SDK
+      #
+      # 这一步非常重要。
+      # 先确认 GitHub Runner 实际提供哪些 Android SDK。
+      # ============================================================
+      - name: Inspect Android SDK
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platforms;android-37" "platform-tools"
+          echo "=========================================="
+          echo "ANDROID_HOME"
+          echo "=========================================="
+          echo "${ANDROID_HOME}"
 
-      # ------------------------------------------------------------
-      # 6. Gradle
-      # ------------------------------------------------------------
+          echo ""
+          echo "=========================================="
+          echo "ANDROID_SDK_ROOT"
+          echo "=========================================="
+          echo "${ANDROID_SDK_ROOT}"
+
+          echo ""
+          echo "=========================================="
+          echo "SDK platforms"
+          echo "=========================================="
+          ls -la "${ANDROID_SDK_ROOT}/platforms" || true
+
+          echo ""
+          echo "=========================================="
+          echo "SDK build-tools"
+          echo "=========================================="
+          ls -la "${ANDROID_SDK_ROOT}/build-tools" || true
+
+          echo ""
+          echo "=========================================="
+          echo "SDK packages"
+          echo "=========================================="
+          sdkmanager --list_installed || true
+
+      # ============================================================
+      # 6. Gradle setup
+      # ============================================================
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # ------------------------------------------------------------
-      # 7. 检查源码和 Gradle
-      # ------------------------------------------------------------
-      - name: Verify source tree
+      # ============================================================
+      # 7. Verify OwnTV source
+      # ============================================================
+      - name: Verify OwnTV source tree
         working-directory: OwnTV
         run: |
-          echo "===== OwnTV ====="
+          echo "=========================================="
+          echo "OwnTV source"
+          echo "=========================================="
+
+          pwd
           ls -la
 
-          echo "===== Gradle wrapper ====="
-          ls -la gradlew gradle/wrapper/gradle-wrapper.properties
+          echo ""
+          echo "=========================================="
+          echo "Gradle wrapper"
+          echo "=========================================="
 
-          echo "===== Gradle version ====="
+          ls -la gradlew
+          ls -la gradle/wrapper/
+
+          echo ""
+          echo "=========================================="
+          echo "Gradle wrapper properties"
+          echo "=========================================="
+
+          cat gradle/wrapper/gradle-wrapper.properties
+
+          echo ""
+          echo "=========================================="
+          echo "Gradle version"
+          echo "=========================================="
+
           chmod +x ./gradlew
           ./gradlew --version
 
-      # ------------------------------------------------------------
-      # 8. 检查 OwnTV_Core
-      # ------------------------------------------------------------
+      # ============================================================
+      # 8. Verify OwnTV Core
+      # ============================================================
       - name: Verify OwnTV Core
         run: |
-          echo "===== OwnTV_Core ====="
+          echo "=========================================="
+          echo "OwnTV_Core"
+          echo "=========================================="
+
+          pwd
           ls -la OwnTV_Core
 
-      # ------------------------------------------------------------
-      # 9. 编译 ARM Android TV Debug APK
-      # ------------------------------------------------------------
+          echo ""
+          echo "OwnTV_Core directories:"
+          find OwnTV_Core -maxdepth 2 -type d | sort | head -100
+
+      # ============================================================
+      # 9. Verify local Core source substitution
+      # ============================================================
+      - name: Verify Core source configuration
+        working-directory: OwnTV
+        run: |
+          echo "=========================================="
+          echo "settings.gradle.kts"
+          echo "=========================================="
+
+          sed -n '1,240p' settings.gradle.kts
+
+          echo ""
+          echo "=========================================="
+          echo "Core path"
+          echo "=========================================="
+
+          echo "OwnTV Core path:"
+          echo "${GITHUB_WORKSPACE}/OwnTV_Core"
+
+      # ============================================================
+      # 10. Build Standard Debug APK
+      #
+      # Standard flavor:
+      #   arm64-v8a
+      #   armeabi-v7a
+      #
+      # 使用本地 OwnTV_Core，避免依赖 GitHub Packages。
+      # ============================================================
       - name: Build Standard Debug APK
         working-directory: OwnTV
         run: |
@@ -105,32 +197,47 @@ jobs:
 
           ./gradlew \
             :app:assembleStandardDebug \
-            -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
+            -Powntv.corePath="${GITHUB_WORKSPACE}/OwnTV_Core" \
             --stacktrace \
             --no-daemon
 
-      # ------------------------------------------------------------
-      # 10. 查找 APK
-      # ------------------------------------------------------------
-      - name: Find generated APK
+      # ============================================================
+      # 11. List generated APK
+      # ============================================================
+      - name: List generated APKs
         working-directory: OwnTV
+        if: always()
         run: |
-          echo "===== Generated APK ====="
+          echo "=========================================="
+          echo "APK output directory"
+          echo "=========================================="
 
           find app/build/outputs/apk \
             -type f \
             -name "*.apk" \
-            -print
+            -print \
+            2>/dev/null || true
 
-      # ------------------------------------------------------------
-      # 11. 验证 APK
-      # ------------------------------------------------------------
+          echo ""
+          echo "=========================================="
+          echo "All APK-related outputs"
+          echo "=========================================="
+
+          find app/build/outputs \
+            -type f \
+            -print \
+            2>/dev/null || true
+
+      # ============================================================
+      # 12. Verify APK
+      # ============================================================
       - name: Verify APK
         working-directory: OwnTV
         run: |
           APK="$(find app/build/outputs/apk \
             -type f \
             -name "*.apk" \
+            -print \
             | head -n 1)"
 
           if [ -z "$APK" ]; then
@@ -138,15 +245,29 @@ jobs:
             exit 1
           fi
 
-          echo "APK found:"
+          echo "=========================================="
+          echo "APK FOUND"
+          echo "=========================================="
+
           echo "$APK"
 
-          echo "APK size:"
+          echo ""
+          echo "=========================================="
+          echo "APK SIZE"
+          echo "=========================================="
+
           du -h "$APK"
 
-      # ------------------------------------------------------------
-      # 12. 上传 APK
-      # ------------------------------------------------------------
+          echo ""
+          echo "=========================================="
+          echo "APK FILE"
+          echo "=========================================="
+
+          file "$APK"
+
+      # ============================================================
+      # 13. Upload APK
+      # ============================================================
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
@@ -154,3 +275,24 @@ jobs:
           path: OwnTV/app/build/outputs/apk/**/*.apk
           if-no-files-found: error
           retention-days: 14
+
+      # ============================================================
+      # 14. Build summary
+      # ============================================================
+      - name: Build summary
+        if: always()
+        run: |
+          echo "=========================================="
+          echo "OwnTV Build Summary"
+          echo "=========================================="
+
+          echo "Repository: ahXN00/OwnTV"
+          echo "Core:       ahXN00/OwnTV_Core"
+          echo "Flavor:     standard"
+          echo "Build:      debug"
+          echo "ABI:        arm64-v8a + armeabi-v7a"
+          echo "JDK:        21"
+          echo "Gradle:     9.7.1"
+          echo ""
+          echo "Next step:"
+          echo "Download the generated APK from Actions Artifacts."
