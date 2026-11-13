@@ -1215,6 +1215,7 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 }
                 healSchema(db)
             }
+        }
 
         /**
          * v43 → v44: per-item AI subtitle memory on `playback_prefs`.
@@ -1236,8 +1237,6 @@ abstract class OwnTVDatabase : RoomDatabase() {
                 }
                 healSchema(db)
             }
-        }
-
         }
 
         /**
