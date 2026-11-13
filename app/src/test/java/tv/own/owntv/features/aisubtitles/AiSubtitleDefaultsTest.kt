@@ -25,7 +25,8 @@ class AiSubtitleDefaultsTest {
                     it in AiSubtitleDefaults.LIVE_DELAY_MIN..AiSubtitleDefaults.LIVE_DELAY_MAX
             },
         )
-        // The default is the middle of 5–10 s: a decode plus a round trip fits, and zapping stays live.
-        assertEquals(8, AiSubtitleDefaults.LIVE_DELAY_DEFAULT)
+        // The default is 12 s: comfortably fits decode plus round trips inside the 20 s band the
+        // pipeline allows, while staying short enough that zapping still feels live.
+        assertEquals(12, AiSubtitleDefaults.LIVE_DELAY_DEFAULT)
     }
 }

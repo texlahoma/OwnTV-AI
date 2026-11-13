@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: fork-sync-upstream
@@ -70,4 +71,39 @@ jobs:
             git rebase --abort
             echo "::error::Rebase of 'core' onto ahXN00/OwnTV_Core main hit conflicts. The 'core-upstream' branch IS updated, so the divergence is inspectable. Resolve locally: git fetch origin core-upstream && git checkout core && git rebase origin/core-upstream && git push --force-with-lease origin core"
             exit 1
+          fi
+
+      - name: Open an issue when sync needs a human
+        # A failed sync silently stalls the fork (main keeps the last good state and no release
+        # runs — the release workflow's workflow_run guard requires a successful sync). The red X
+        # in Actions is invisible to someone who does not watch CI daily, so surface it as an
+        # issue instead — one at a time, updated with each new failure date.
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE="Daily upstream sync needs manual resolution"
+          EXISTING="$(gh issue list --state open --search "$TITLE in:title" --json number --jq 'length')"
+          TODAY="$(date -u +%F)"
+          BODY=$(cat <<EOM
+          The daily sync workflow failed on $TODAY — a rebase hit conflicts or the mirror push was refused. **The fork is safe** (main still holds the last good state and no broken release was published), but new upstream work is NOT being picked up until this is resolved.
+
+          Run: $RUN_URL
+
+          Fix locally, from this repository:
+          \`\`\`
+          git fetch origin upstream
+          git checkout main && git rebase origin/upstream
+          git fetch origin core-upstream
+          git checkout core && git rebase origin/core-upstream
+          git push --force-with-lease origin main core
+          \`\`\`
+          Then close this issue — the next daily run resumes automatically.
+          EOM
+          )
+          if [ "$EXISTING" = "0" ]; then
+            gh issue create --title "$TITLE" --body "$BODY"
+          else
+            gh issue comment "$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number')" --body "Failed again on $TODAY — see $RUN_URL"
           fi

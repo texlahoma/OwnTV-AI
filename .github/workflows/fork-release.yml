@@ -91,6 +91,22 @@ jobs:
           echo "VERSION_CODE=$(( $(date +%s) / 60 ))" >> "$GITHUB_ENV"
           echo "VERSION_NAME=ai-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_ENV"
 
+      - name: Quality gates (i18n ratchet + unit tests)
+        if: env.SKIP != 'true'
+        run: |
+          # The release gate for automatic upstream syncs: a rebase can compile cleanly and still
+          # regress behaviour or leak untranslatable literals. Any failure here aborts the job, so
+          # the Sign/Release steps below never run and the rolling 'latest' keeps the last good
+          # build — devices are never offered a broken update.
+          ./gradlew \
+            :app:verifyI18nLiterals \
+            :OwnTV_Core:core:verifyI18nLiterals \
+            :app:testStandardDebugUnitTest \
+            :OwnTV_Core:core:testDebugUnitTest \
+            :OwnTV_Core:player-core:testDebugUnitTest \
+            -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
+            --stacktrace --no-daemon
+
       - name: Build standard debug APK
         if: env.SKIP != 'true'
         run: |
