@@ -2123,7 +2123,7 @@ private fun FocusHighlightDialog(
 
 
 /** Widened for More's About pane, which shows the same repository line the dialog does. */
-internal const val GITHUB_REPO = "github.com/ahXN00/OwnTV"
+internal const val GITHUB_REPO = "github.com/texlahoma/OwnTV-AI"
 private const val TELEGRAM_LINK = "t.me/owntvplayer"
 
 /** About OwnTV: version, license, author and project link — all readable on screen (no TV browser). */
