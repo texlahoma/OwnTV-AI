@@ -3,8 +3,9 @@ name: Fork release
 # Builds the AI-subtitle APK from THIS fork and refreshes a rolling 'latest' GitHub Release,
 # which the TV app's updater polls (public repo — the updater needs no token).
 #
-# Core resolution: ahXN00/OwnTV_Core is public, so it is checked out next to the app and fed
-# to Gradle via the official -Powntv.corePath substitution — no GitHub Packages token needed.
+# Core resolution: the core source lives on the 'core' branch of THIS repo (mirrored from
+# ahXN00/OwnTV_Core by the sync workflow). It is checked out next to the app and fed to
+# Gradle via the official -Powntv.corePath substitution — no GitHub Packages token needed.
 #
 # versionCode: epoch minutes. Always above the dev fallback (99999), strictly monotonic, and
 # the same formula local sandbox builds pass, so release and local builds form one ordered
@@ -20,9 +21,9 @@ on:
   workflow_run:
     workflows: [ "Sync upstream" ]
     types: [ completed ]
-  # The core mirror (texlahoma/OwnTV_Core) rebases itself on its own schedule; a cross-repo
-  # push cannot trigger workflows here, so the daily run below is what turns a core-side sync
-  # into a fresh release. The sha guard skips the build when nothing changed.
+  # Core rebase pushes made with GITHUB_TOKEN cannot trigger workflows here, so the daily
+  # run below is what turns a core-side sync into a fresh release. The sha guard compares
+  # BOTH the app and core tips and skips the build only when neither changed.
   schedule:
     - cron: "23 5 * * *"
 
@@ -47,12 +48,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
 
-      - name: Checkout core mirror (source substitution, no packages token)
+      - name: Checkout core branch (source substitution, no packages token)
         uses: actions/checkout@v4
         with:
-          repository: texlahoma/OwnTV_Core
-          ref: main
+          ref: core
           path: OwnTV_Core
 
       - name: Set up JDK 21
@@ -69,14 +70,18 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Skip when HEAD is already released
+      - name: Skip when both tips are already released
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CUR_SHA="$(git rev-parse --short=12 HEAD)"
-          LAST_SHA="$(gh release view latest --json body -q .body 2>/dev/null | grep -oE 'sha=[0-9a-f]+' | head -1 | cut -d= -f2 || true)"
-          echo "cur=$CUR_SHA last=$LAST_SHA"
-          if [ -n "$LAST_SHA" ] && [ "$LAST_SHA" = "$CUR_SHA" ]; then
+          CUR_CORE="$(git rev-parse --short=12 origin/core)"
+          BODY="$(gh release view latest --json body -q .body 2>/dev/null || true)"
+          LAST_SHA="$(echo "$BODY" | grep -oE 'sha=[0-9a-f]+' | head -1 | cut -d= -f2 || true)"
+          LAST_CORE="$(echo "$BODY" | grep -oE 'core=[0-9a-f]+' | head -1 | cut -d= -f2 || true)"
+          echo "cur=$CUR_SHA core=$CUR_CORE last=$LAST_SHA lastcore=$LAST_CORE"
+          if [ -n "$LAST_SHA" ] && [ "$LAST_SHA" = "$CUR_SHA" ] && \
+             [ -n "$LAST_CORE" ] && [ "$LAST_CORE" = "$CUR_CORE" ]; then
             echo "SKIP=true" >> "$GITHUB_ENV"
           fi
 
@@ -121,5 +126,5 @@ jobs:
           gh release delete latest --cleanup-tag -y 2>/dev/null || true
           gh release create latest "OwnTV-AI-${VERSION_CODE}.apk" \
             --title "OwnTV-AI ${VERSION_NAME}" \
-            --notes "versionCode=${VERSION_CODE} sha=$(git rev-parse --short=12 HEAD)" \
+            --notes "versionCode=${VERSION_CODE} sha=$(git rev-parse --short=12 HEAD) core=$(git rev-parse --short=12 origin/core)" \
             --latest

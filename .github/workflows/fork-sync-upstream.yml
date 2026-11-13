@@ -1,11 +1,14 @@
 name: Sync upstream
 
-# Daily maintenance for this patch-fork of ahXN00/OwnTV. This fork's main carries the
-# AI-subtitle patches on top of upstream; this workflow:
+# Daily maintenance for this patch-fork of ahXN00/OwnTV. This fork carries the AI-subtitle
+# patches on top of upstream, and the 'core' branch carries the core-module patches (mirrored
+# from ahXN00/OwnTV_Core). This workflow:
 #   1. mirrors upstream main into a local 'upstream' branch (fast-forward by construction —
 #      never conflicts, so the mirror is ALWAYS current, even when step 2 fails);
 #   2. rebases main onto that mirror and force-pushes, preserving this fork's patches on the
-#      newest upstream base.
+#      newest upstream base;
+#   3. mirrors ahXN00/OwnTV_Core main into a 'core-upstream' branch and rebases the 'core'
+#      branch onto it the same way.
 # A conflicting rebase fails loudly and must be resolved locally (see the error message).
 # Pushes made with GITHUB_TOKEN do not trigger other workflows, so fork-release.yml also
 # listens for this workflow's completion via workflow_run.
@@ -47,5 +50,24 @@ jobs:
           else
             git rebase --abort
             echo "::error::Rebase onto ahXN00/OwnTV main hit conflicts. The 'upstream' branch IS updated (step 2), so the divergence is inspectable. Resolve locally: git fetch origin upstream && git rebase origin/upstream && git push --force-with-lease origin main"
+            exit 1
+          fi
+
+      - name: Mirror upstream core into the 'core-upstream' branch
+        run: |
+          git remote add core-upstream https://github.com/ahXN00/OwnTV_Core.git
+          git fetch core-upstream main
+          git push origin "refs/remotes/core-upstream/main:refs/heads/core-upstream" --force
+
+      - name: Rebase core onto upstream core
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout core
+          if git rebase core-upstream/main; then
+            git push --force-with-lease origin core
+          else
+            git rebase --abort
+            echo "::error::Rebase of 'core' onto ahXN00/OwnTV_Core main hit conflicts. The 'core-upstream' branch IS updated, so the divergence is inspectable. Resolve locally: git fetch origin core-upstream && git checkout core && git rebase origin/core-upstream && git push --force-with-lease origin core"
             exit 1
           fi
