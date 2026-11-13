@@ -42,7 +42,9 @@ fun PopupFontTheme(fontScale: Float = 1f, content: @Composable () -> Unit) {
     // Only the caller's fixed design scale (0.70 host / 0.75 dense menus / 0.50 forms) stays here.
     val effectiveFontScale = fontScale
     val t = MaterialTheme.typography
-    val popupFamily = LocalPopupFontFamily.current
+    // Stage popups use the app's own font, as the rest of the app does; a
+    // separate popup font made them read as a different app. The popup font SIZE still applies.
+    val popupFamily = LocalMainFontFamily.current
     fun androidx.compose.ui.text.TextStyle.popup() = copy(
         fontFamily = popupFamily,
         fontSize = if (effectiveFontScale == 1f) fontSize else fontSize * effectiveFontScale,

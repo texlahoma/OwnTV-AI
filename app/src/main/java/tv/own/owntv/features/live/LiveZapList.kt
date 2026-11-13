@@ -4,9 +4,11 @@ import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.player.wrappedZapIndex
@@ -37,6 +39,8 @@ class LiveZapList(
     /** A bounded provider-order window centred on a channel — the rebuild after a numeric tune. */
     private val loadWindowAround: suspend (ChannelEntity) -> List<ChannelEntity>,
     private val categoryName: suspend (Long) -> String?,
+    /** The locked provider folders not open this session; each change runs [dropCategories]. */
+    sealedCategories: Flow<Set<Long>> = emptyFlow(),
 ) {
 
     private var list: List<ChannelEntity> = emptyList()
@@ -80,6 +84,27 @@ class LiveZapList(
     )
     private var pending: PendingDirectTune? = null
 
+    /** The sealed folders as [dropCategories] last heard them; no list published later holds their channels. */
+    private var sealedNow: Set<Long> = emptySet()
+
+    init {
+        scope.launch { sealedCategories.collect(::dropCategories) }
+    }
+
+    /**
+     * Take out the channels of [categoryIds], every folder sealed now (a relock has just closed some).
+     * The list was armed while they were open; CH± would otherwise land on a channel that refuses to
+     * tune, and the overlay would keep listing it. A numeric tune's fallback anchor that names one goes
+     * as well, and a load still running from before the relock leaves them out when it publishes.
+     */
+    fun dropCategories(categoryIds: Set<Long>) {
+        sealedNow = categoryIds
+        if (categoryIds.isEmpty()) return
+        val sealed = { channel: ChannelEntity -> channel.categoryId in categoryIds }
+        if (pending?.previousList?.any(sealed) == true) pending = null
+        if (list.any(sealed)) replace(list)
+    }
+
     // ---- Arming the list ---------------------------------------------------------------------------
 
     /** Rebuild from [channel]'s own provider category. A no-op while zapping inside the same category
@@ -106,6 +131,20 @@ class LiveZapList(
             val loaded = loadForCategory(categoryId)
             if (loaded.isEmpty()) return@launch
             publish(loaded, categoryId = categoryId, title = categoryName(categoryId), key = null)
+            onLoaded()
+        }
+    }
+
+    /** Load a custom category or a built-in rail (Favorites / History / Catch-up / All), picked in the
+     *  in-player category browser — same contract as [armForCategory]. Members come from many provider
+     *  folders, so there is no single [categoryId]; built-in rails pass no [title] (their names are UI
+     *  strings, chosen from [key]). */
+    fun armForKey(key: LiveKey, title: String?, load: suspend () -> List<ChannelEntity>, onLoaded: () -> Unit) {
+        loadJob?.cancel()
+        loadJob = scope.launch {
+            val loaded = load()
+            if (loaded.isEmpty()) return@launch
+            publish(loaded, categoryId = null, title = title, key = key)
             onLoaded()
         }
     }
@@ -144,9 +183,10 @@ class LiveZapList(
 
     /** Publish a list without touching the context around it — the guarded rebuild's landing point. */
     private fun replace(loaded: List<ChannelEntity>) {
-        list = loaded
-        _channels.value = loaded
-        _canZap.value = loaded.size > 1
+        val open = if (sealedNow.isEmpty()) loaded else loaded.filterNot { it.categoryId in sealedNow }
+        list = open
+        _channels.value = open
+        _canZap.value = open.size > 1
     }
 
     fun contains(channelId: Long): Boolean = list.any { it.id == channelId }

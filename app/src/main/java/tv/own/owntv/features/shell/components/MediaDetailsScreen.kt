@@ -1,10 +1,10 @@
 package tv.own.owntv.features.shell.components
 
+import tv.own.owntv.ui.theme.stageTone
+import tv.own.owntv.ui.theme.LocalStagePalette
 import androidx.compose.runtime.Immutable
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -13,12 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -33,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.input.key.Key
@@ -42,20 +38,23 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import tv.own.owntv.R
-import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.modalScrim
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.em
+import tv.own.owntv.ui.theme.StageColors
+import tv.own.owntv.ui.theme.stageAccent
+import tv.own.owntv.ui.theme.stageText
+import tv.own.owntv.ui.theme.mpxSp
+import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.theme.OwnTVTheme
+import tv.own.owntv.ui.theme.gradientWash
 
 /**
- * Read-only, already-merged data for the [MediaDetailsScreen] window. The caller applies the §7.1/§4.1
+ * Read-only, already-merged data for the [MediaDetailsScreen] window. The caller applies the
  * provider/TMDB merge and builds image.tmdb.org URLs, so this window is source-agnostic and reused for
  * movie / series / episode.
  */
@@ -73,27 +72,24 @@ data class MediaDetailsUi(
 )
 
 /**
- * Windowed TMDB details popup (plan §11.1) — a centred ~60%-of-screen card over a dimmed scrim, like the
- * subtitle/track pickers. A 16:9 backdrop hero, then poster + complete info. Purely for reading:
- * **D-pad scrolls, Back exits, nothing is selectable.** The scrolling card owns focus (focusable) and
- * traps it, so D-pad drives the scroll and can't leak to the screen behind.
+ * TMDB details as a Stage page in its own full-screen window: the backdrop edge to edge,
+ * fading into the page, then the eyebrow (episode line), the title 64/800, the meta line, genres as
+ * tags, the overview and the cast. Purely for reading: **Up/Down scroll, Back exits, nothing is
+ * selectable** — the page owns focus and turns Up/Down into a scroll, so the D-pad cannot leak behind.
  */
 @Composable
 fun MediaDetailsScreen(details: MediaDetailsUi, onExit: () -> Unit, modifier: Modifier = Modifier) {
-    val colors = OwnTVTheme.colors
     val scroll = rememberScrollState()
     val focus = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { focus.requestFocus() }
-    }
-    BackHandler { onExit() }
-
-    // A scroll-only window has no inner focus targets, so D-pad Up/Down would otherwise do nothing. The
-    // focusable card owns focus and we translate Up/Down key presses into a programmatic scroll.
     val step = 260f
     val onKey: (androidx.compose.ui.input.key.KeyEvent) -> Boolean = onKey@{ e ->
+        // Back is taken here: on the page's own focus node it would otherwise be spent as a focus exit,
+        // which the trap cancels, and the window would never close. Closed on release.
+        if (e.key == Key.Back) {
+            if (e.type == KeyEventType.KeyUp) onExit()
+            return@onKey true
+        }
         if (e.type != KeyEventType.KeyDown) return@onKey false
         when (e.key) {
             Key.DirectionDown -> { scope.launch { scroll.animateScrollBy(step) }; true }
@@ -101,163 +97,104 @@ fun MediaDetailsScreen(details: MediaDetailsUi, onExit: () -> Unit, modifier: Mo
             else -> false
         }
     }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .modalScrim()
-            .trapAllFocusExit()
-            .focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        // The scrolling card IS the focusable: focus + verticalScroll on the same node so the D-pad
-        // scrolls it directly (no inner focus targets, per the "scroll-only" requirement).
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(0.82f)
-                .fillMaxHeight(0.82f)
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.surfaceContainerHigh)
-                .focusRequester(focus)
-                .onKeyEvent(onKey)
-                .focusable()
-                .verticalScroll(scroll),
-        ) {
-            // Backdrop hero (16:9) with a bottom fade into the card background.
-            Box(modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(colors.surfaceContainerLowest)) {
-                if (!details.backdropUrl.isNullOrBlank()) {
-                    AsyncImage(
-                        model = details.backdropUrl,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
-                Box(
-                    modifier = Modifier.fillMaxSize().background(
-                        Brush.verticalGradient(0.55f to Color.Transparent, 1f to colors.surfaceContainerHigh),
-                    ),
+    val page = stageTone(Color(0xFF070B0E), LocalStagePalette.current.page)
+    tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onExit, stageLayout = true, stageScaled = false) {
+        LaunchedEffect(Unit) { kotlinx.coroutines.delay(60); runCatching { focus.requestFocus() } }
+        Box(modifier.fillMaxSize().background(page).trapAllFocusExit()) {
+            if (!details.backdropUrl.isNullOrBlank()) {
+                AsyncImage(
+                    model = details.backdropUrl, contentDescription = null, contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f),
                 )
             }
-
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 28.dp)) {
-                Box(
-                    modifier = Modifier
-                        .width(120.dp)
-                        .aspectRatio(2f / 3f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(colors.surfaceContainerLowest),
-                    contentAlignment = Alignment.Center,
-                ) {
+                        // A light picture still has to carry white text: a general dim, then the fade into the page.
+            Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(page.copy(alpha = 0.35f)))
+            Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).gradientWash(vertical = true, 0.2f to Color.Transparent, 0.8f to page))
+            Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).gradientWash(vertical = false, 0f to page.copy(alpha = 0.85f), 0.6f to Color.Transparent))
+            Column(
+                Modifier.fillMaxSize().focusRequester(focus).onKeyEvent(onKey).focusable().verticalScroll(scroll)
+                    .padding(start = 120.mpx, end = 120.mpx, top = 300.mpx, bottom = 80.mpx),
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(36.mpx), verticalAlignment = Alignment.Bottom) {
                     if (!details.posterUrl.isNullOrBlank()) {
                         AsyncImage(
-                            model = details.posterUrl,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
+                            model = details.posterUrl, contentDescription = null, contentScale = ContentScale.Crop,
+                            modifier = Modifier.width(220.mpx).aspectRatio(2f / 3f).clip(RoundedCornerShape(20.mpx)),
                         )
-                    } else {
-                        OwnTVIcon(OwnTVIcon.MOVIES, tint = colors.onSurfaceVariant, modifier = Modifier.height(36.dp))
+                    }
+                    Column(Modifier.weight(1f)) {
+                        if (!details.subtitle.isNullOrBlank()) {
+                            Text(details.subtitle, style = stageText(18, 800, 0.08.em), color = stageAccent.accent, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                        Text(details.title, style = stageText(64, 800, (-1.5).mpxSp), color = StageColors.Text, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 6.mpx))
+                        if (details.metaLine.isNotBlank()) {
+                            Text(details.metaLine, style = stageText(22, 600), color = StageColors.ItemText, modifier = Modifier.padding(top = 12.mpx))
+                        }
+                        if (details.genres.isNotEmpty()) {
+                            FlowRow(Modifier.padding(top = 16.mpx), horizontalArrangement = Arrangement.spacedBy(10.mpx), verticalArrangement = Arrangement.spacedBy(10.mpx)) {
+                                details.genres.forEach { tv.own.owntv.ui.stage.StageTag(it) }
+                            }
+                        }
                     }
                 }
-                Spacer(Modifier.width(20.dp))
-                Column(modifier = Modifier.weight(1f).padding(top = 8.dp)) {
-                    Text(details.title, style = MaterialTheme.typography.titleLarge, color = colors.onSurface, fontWeight = FontWeight.Bold)
-                    if (!details.subtitle.isNullOrBlank()) {
-                        Spacer(Modifier.height(4.dp))
-                        Text(details.subtitle, style = MaterialTheme.typography.titleSmall, color = colors.onSurfaceVariant)
-                    }
-                    if (details.metaLine.isNotBlank()) {
-                        Spacer(Modifier.height(8.dp))
-                        Text(details.metaLine, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
-                    }
-                    if (details.genres.isNotEmpty()) {
-                        Spacer(Modifier.height(6.dp))
-                        Text(details.genres.joinToString(" · "), style = MaterialTheme.typography.labelLarge, color = colors.primary)
-                    }
-                }
-            }
-
-            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 28.dp, vertical = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 if (!details.plot.isNullOrBlank()) {
-                    Column {
-                        Text(stringResource(R.string.content_media_overview), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                        Spacer(Modifier.height(6.dp))
-                        Text(details.plot, style = MaterialTheme.typography.bodyLarge, color = colors.onSurfaceVariant)
-                    }
+                    DetailsLabel(stringResource(R.string.content_media_overview))
+                    Text(details.plot, style = stageText(21, 400).copy(lineHeight = (21 * 1.55f).mpxSp), color = StageColors.ItemText, modifier = Modifier.widthIn(max = 1300.mpx))
                 }
                 if (details.cast.isNotEmpty()) {
-                    Column {
-                        Text(stringResource(R.string.content_media_cast), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                        Spacer(Modifier.height(10.dp))
-                        CastGrid(details.cast)
-                    }
+                    DetailsLabel(stringResource(R.string.content_media_cast))
+                    CastGrid(details.cast)
                 }
-                Text(stringResource(R.string.content_media_press_back), style = MaterialTheme.typography.labelMedium, color = colors.onSurfaceVariant)
+                Text(stringResource(R.string.content_media_press_back), style = stageText(16, 600), color = StageColors.Dim, modifier = Modifier.padding(top = 40.mpx))
             }
         }
     }
 }
 
+/** A section label on the details page ("OVERVIEW", "CAST"): 15/800 caps, dim. */
+@Composable
+private fun DetailsLabel(text: String) {
+    val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+    Text(text.uppercase(locale), style = stageText(15, 800, 0.13.em), color = StageColors.Dim, modifier = Modifier.padding(top = 44.mpx, bottom = 14.mpx))
+}
+
 /**
  * Cast as photo + name cards that wrap onto as many lines as needed.
  *
- * Non-focusable by design: this window is deliberately scroll-only with no inner focus targets (the card
- * itself owns focus and turns Up/Down into a scroll), so a focusable horizontal row would break its D-pad
- * model. Wrapping instead of scrolling sideways means every credited actor is reachable with the same
- * Up/Down that scrolls the rest of the window.
+ * Non-focusable by design: the page is scroll-only with no inner focus targets (it owns focus and turns
+ * Up/Down into a scroll), so a focusable row would break its D-pad model. Wrapping instead of scrolling
+ * sideways keeps every credited actor reachable with the same Up/Down that scrolls the rest.
  *
  * The photos come straight from TMDB's image CDN, which needs no API key and does not touch the metadata
  * service, so showing them costs nothing against anyone's allowance.
  */
 @Composable
 private fun CastGrid(cast: List<tv.own.owntv.core.metadata.CastMember>) {
-    val colors = OwnTVTheme.colors
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(28.mpx), verticalArrangement = Arrangement.spacedBy(24.mpx)) {
         cast.forEach { member ->
-            Column(
-                modifier = Modifier.width(88.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+            Column(Modifier.width(132.mpx), horizontalAlignment = Alignment.CenterHorizontally) {
                 val photo = tv.own.owntv.core.metadata.MetadataImages.profile(member.profilePath)
                 Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .clip(RoundedCornerShape(36.dp))
-                        .background(colors.surfaceContainerHigh),
+                    Modifier.size(112.mpx).clip(RoundedCornerShape(56.mpx)).background(StageColors.Ink.copy(alpha = 0.06f)),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (photo != null) {
-                        coil3.compose.AsyncImage(
-                            model = photo,
-                            contentDescription = null,
-                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                        )
+                        AsyncImage(model = photo, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
                     } else {
                         // Plenty of credited actors have no TMDB photo; initials read better than a gap.
                         Text(
-                            member.name.split(' ').mapNotNull { it.firstOrNull() }.take(2)
-                                .joinToString("").uppercase(),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = colors.onSurfaceVariant,
+                            member.name.split(' ').mapNotNull { it.firstOrNull() }.take(2).joinToString("").uppercase(),
+                            style = stageText(26, 800), color = StageColors.Muted,
                         )
                     }
                 }
-                Spacer(Modifier.height(4.dp))
                 Text(
-                    member.name,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    maxLines = 2,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    member.name, style = stageText(16, 600), color = StageColors.ItemText,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 10.mpx),
                 )
             }
         }
     }
 }
+

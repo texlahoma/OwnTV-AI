@@ -16,11 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * "Audio only" plate, drawn over the (black) video surface while the playing item carries no video track
@@ -41,7 +39,6 @@ import tv.own.owntv.ui.theme.OwnTVTheme
  */
 @Composable
 fun AudioOnlyBadge(modifier: Modifier = Modifier, compact: Boolean = false) {
-    val colors = OwnTVTheme.colors
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,19 +50,19 @@ fun AudioOnlyBadge(modifier: Modifier = Modifier, compact: Boolean = false) {
         ) {
             OwnTVIcon(
                 icon = OwnTVIcon.AUDIO,
-                tint = colors.accent,
+                tint = tv.own.owntv.ui.theme.stageAccent.accent,
                 modifier = Modifier.size(if (compact) 30.dp else 52.dp),
             )
             if (!compact) {
                 Text(
                     text = stringResource(R.string.player_audio_only_title),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = tv.own.owntv.ui.theme.stageText(40, 600),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )
                 Text(
                     text = stringResource(R.string.player_audio_only_body),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = tv.own.owntv.ui.theme.stageText(25, 400),
                     color = Color.White.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(0.9f),

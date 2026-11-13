@@ -2,8 +2,6 @@
 
 package tv.own.owntv.features.search
 
-import tv.own.owntv.core.epg.displayLogoUrl
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -22,51 +19,42 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.transformLatest
 import tv.own.owntv.core.database.dao.CategoryDao
-import tv.own.owntv.core.database.dao.FavoriteDao
-import tv.own.owntv.core.database.dao.HistoryDao
 import tv.own.owntv.core.database.dao.ProfileDao
+import tv.own.owntv.core.database.entity.MetadataCacheEntity
+import tv.own.owntv.core.database.entity.MovieEntity
+import tv.own.owntv.core.database.entity.SeriesEntity
+import tv.own.owntv.core.metadata.MetadataRepository
+import tv.own.owntv.ui.stage.PlaylistMark
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
-import tv.own.owntv.core.database.entity.ChannelEntity
-import tv.own.owntv.core.database.entity.FavoriteEntity
-import tv.own.owntv.core.database.entity.MovieEntity
-import tv.own.owntv.core.database.entity.WatchHistoryEntity
-import tv.own.owntv.core.database.entity.playStreamUrl
 import tv.own.owntv.core.content.SearchIntent
+import tv.own.owntv.core.content.SearchKind
 import tv.own.owntv.core.content.SearchReader
 import tv.own.owntv.core.content.SearchResults
-import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.repository.ActiveProfileSources
 import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.settings.SettingsRepository
-import tv.own.owntv.player.OwnTVPlayer
 
 /**
- * Phase 11 — cross-section search over a profile's channels, movies and series.
+ * Cross-section search over a profile's channels, movies and series.
  *
  * The searching itself is core's [SearchReader]: the FTS expression, the hidden items and
  * categories, the kids filter and the Customize renames are the same rules on a phone as on a
  * television, so they are not written twice. What stays here is the screen's own behaviour —
- * debouncing, the recents list, favourites, and how a result is played.
+ * debouncing and the recents list. A result is never played here: OK goes to it.
  */
 class SearchViewModel(
-    private val categoryDao: CategoryDao,
-    private val historyDao: HistoryDao,
     private val profileDao: ProfileDao,
     private val sourceDao: SourceDao,
+    private val categoryDao: CategoryDao,
     private val settings: SettingsRepository,
-    private val favoriteDao: FavoriteDao,
-    private val userDataWriter: tv.own.owntv.core.backup.UserDataWriter,
     private val searchReader: SearchReader,
-    val player: OwnTVPlayer,
-    private val externalPlayerLauncher: tv.own.owntv.core.player.ExternalPlayerLauncher,
-    private val streamUrlResolver: tv.own.owntv.core.stalker.StreamUrlResolver,
+    private val metadata: MetadataRepository,
 ) : ViewModel() {
-
-    /** Global "External player" toggle — the screen must NOT open the fullscreen in-app player when on. */
-    val externalPlayerOn: kotlinx.coroutines.flow.StateFlow<Boolean> = settings.externalPlayerMovies
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     // Observe the active profile's sources reactively so adding/removing a playlist refreshes Search
     // immediately (was read once at startup, so a new playlist showed nothing until app restart).
@@ -91,11 +79,12 @@ class SearchViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SearchResults())
 
     fun setQuery(q: String) {
+        if (q.trim() != _query.value.trim()) lastFocusKey = null
         _query.value = q
         if (q.isNotBlank()) _intent.value = null // typing overrides an active launcher intent
     }
 
-    // --- Batch 5: empty-state launcher (recent search terms + Continue / Unwatched / Channels) ---
+    // --- Empty-state launcher (recent search terms + Continue / Unwatched / Channels) ---
 
     /** Persisted recent search terms (most-recent first). */
     val recentSearches: StateFlow<List<String>> = settings.recentSearches
@@ -128,97 +117,55 @@ class SearchViewModel(
         return searchReader.search(pid, ctx.value, q)
     }
 
-    /** Live channels this profile has favourited — so a search result can show a star and toggle it. */
-    val favoriteChannelIds: StateFlow<Set<Long>> = ctx
-        .flatMapLatest { favoriteDao.observeFavoriteIds(it.profileId, MediaType.LIVE) }
-        .map { it.toSet() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+    // --- Stage page ---
 
-    /** Long-press a channel result to add/remove it from Favorites (no need to open Live TV first). */
-    fun toggleFavoriteChannel(channel: ChannelEntity) {
-        viewModelScope.launch {
-            val pid = ctx.value.profileId
-            if (pid < 0) return@launch
-            if (favoriteChannelIds.value.contains(channel.id)) {
-                userDataWriter.removeFavorite(pid, MediaType.LIVE, channel.id)
-            } else {
-                favoriteDao.add(FavoriteEntity(profileId = pid, mediaType = MediaType.LIVE, itemId = channel.id))
-            }
+    /** The filter buttons switched on; none = everything. Kept across new search text; Back clears it. */
+    private val _kinds = MutableStateFlow<Set<SearchKind>>(emptySet())
+    val kinds: StateFlow<Set<SearchKind>> = _kinds.asStateFlow()
+    fun toggleKind(k: SearchKind) { _kinds.value = if (k in _kinds.value) _kinds.value - k else _kinds.value + k }
+    fun showOnly(k: SearchKind) { _kinds.value = setOf(k) }
+    fun clearKinds() { _kinds.value = emptySet() }
+
+    /** The row a "Go to" left from ("c12", "m34", "s56"), so Back to Search lands on it again. */
+    var lastFocusKey: String? = null
+
+    /** Which playlist a row comes from, as on the browse screens; empty with one playlist. */
+    val playlistMarks: StateFlow<Map<Long, PlaylistMark>> = ctx
+        .map { aps -> if (aps.sources.size < 2) emptyMap() else aps.sources.withIndex().associate { (i, s) -> s.id to PlaylistMark.of(s.name, i) } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
+
+    /** Category names for the movie and series rows ("2005 · ★ 6.2 · Disney+ Movies"). */
+    val categoryNames: StateFlow<Map<Long, String>> = combine(results, curatedResults) { a, b ->
+        (a.movies.mapNotNull { it.categoryId } + a.series.mapNotNull { it.categoryId } +
+            b.movies.mapNotNull { it.categoryId } + b.series.mapNotNull { it.categoryId }).toSet()
+    }
+        .distinctUntilChanged()
+        .mapLatest { ids -> ids.mapNotNull { id -> categoryDao.getById(id)?.let { id to it.name } }.toMap() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
+
+    val metadataMode: StateFlow<tv.own.owntv.core.metadata.MetadataMode> = settings.metadataMode
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.metadata.MetadataMode.PROVIDER_PLUS_TMDB)
+
+    /** The focused movie or series, for the poster panel's TMDB details (backdrop, genres, cast). */
+    private val _focusedVod = MutableStateFlow<Any?>(null)
+    fun focusVod(item: Any?) { _focusedVod.value = item }
+
+    /** The focused title's key ("m34" / "s56") and its TMDB details, after the same focus debounce the
+     *  browse screens use, so passing over rows looks nothing up. */
+    val focusedMeta: StateFlow<Pair<String, MetadataCacheEntity?>?> = _focusedVod
+        .transformLatest { item ->
+            val key = when (item) { is MovieEntity -> "m${item.id}"; is SeriesEntity -> "s${item.id}"; else -> null }
+            if (key == null) { emit(null); return@transformLatest }
+            delay(MetadataRepository.FOCUS_DEBOUNCE_MS)
+            val cache = runCatching {
+                when (item) { is MovieEntity -> metadata.resolveMovie(item); is SeriesEntity -> metadata.resolveSeries(item); else -> null }
+            }.getOrNull()
+            emit(key to cache)
         }
-    }
-
-    /** The non-playback half of tuning a channel result: watch history + the recent-searches entry.
-     *  The shell calls this and then hands playback to LiveViewModel's shared path (F05), so a channel
-     *  opened from Search gets the same engine routing as one opened from Live TV. */
-    fun noteChannelPlayed(channel: ChannelEntity) {
-        record(MediaType.LIVE, channel.id)
-        rememberCurrentQuery()
-    }
-
-    // A second live-start path used to live here as a "standalone host" fallback: mpv straight away, no
-    // ExoPlayer-first ladder, no per-channel engine pin, no learned quirks. It was unreachable in the app
-    // (the shell always supplies the callback) but it was a standing invitation for the two paths to
-    // drift, so SearchScreen now REQUIRES the shared callback and this copy is gone.
-
-    fun playMovie(movie: MovieEntity) {
-        viewModelScope.launch {
-            val pid = currentProfileId() ?: return@launch
-            if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(pid, movie.categoryId, profileDao, categoryDao)) return@launch
-            val source = sourceDao.getById(movie.sourceId)
-            // Stalker: resolve the stored cmd before EITHER branch — the external player must never
-            // receive a raw portal cmd (plan §7), and neither should the in-app engines.
-            val url = if (streamUrlResolver.needsResolve(source)) {
-                runCatching { streamUrlResolver.resolve(source!!, movie.streamUrl, vod = true) }
-                    .onFailure { Log.w(TAG, "stalker resolve failed movieId=${movie.id}", it) }
-                    .getOrNull() ?: return@launch
-            } else {
-                movie.streamUrl
-            }
-            // Global external-player toggle: same chokepoint behavior as MovieViewModel.play().
-            // #115 — a protected item cannot go to an external player: no standard intent extra
-            // carries a licence URL, so the other app would open it and fail on the first segment.
-            // Play it here instead, where the licence request can actually be made.
-            if (settings.externalPlayerMovies.first() && movie.drmConfig == null) {
-                externalPlayerLauncher.launch(
-                    url = url,
-                    title = movie.name,
-                    userAgent = source?.userAgent,
-                    httpHeaders = movie.httpHeaders,
-                )
-                return@launch
-            }
-            player.play(
-                url, title = movie.name, year = movie.year?.toString(), isLive = false,
-                userAgent = source?.userAgent,
-                httpHeaders = movie.httpHeaders,
-                drmConfig = movie.drmConfig,
-                manifestType = movie.manifestType,
-                // P6 — same stable engine-pin identity MovieViewModel uses, so a pin made in one
-                // screen applies in the other.
-                contentKey = tv.own.owntv.core.player.enginePinKey(movie.sourceId, "MOVIE", movie.remoteId),
-            )
-        }
-        record(MediaType.MOVIE, movie.id)
-        rememberCurrentQuery()
-    }
-
-    private fun record(type: MediaType, itemId: Long) {
-        viewModelScope.launch {
-            val pid = currentProfileId() ?: return@launch
-            runCatching {
-                historyDao.record(WatchHistoryEntity(profileId = pid, mediaType = type, itemId = itemId))
-            }.onFailure { t ->
-                Log.w(TAG, "record history failed profile=$pid type=$type itemId=$itemId", t)
-            }
-        }
-    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private suspend fun currentProfileId(): Long? {
         val preferred = settings.activeProfileId.first()
         return if (preferred >= 0) profileDao.resolveExistingProfileId(preferred) else null
-    }
-
-    private companion object {
-        const val TAG = "OwnTVHome"
     }
 }

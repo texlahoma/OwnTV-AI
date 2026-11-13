@@ -2,11 +2,13 @@ package tv.own.owntv.features.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.backup.BackupManager
 import tv.own.owntv.core.setup.SourceImporter
@@ -28,6 +30,11 @@ class SetupViewModel(
     private val epgRepository: tv.own.owntv.core.repository.EpgRepository,
     private val epgSourceStore: tv.own.owntv.core.epg.EpgSourceStore,
     private val companion: tv.own.owntv.core.companion.CompanionController,
+    /** A restore runs here, not in [viewModelScope]: Back while it runs leaves the app, and a restore
+     *  cancelled half way leaves a profile with some of its data and none of the rest. */
+    private val appScope: kotlinx.coroutines.CoroutineScope,
+    private val profiles: tv.own.owntv.core.profile.ProfileManager,
+    private val profileDao: tv.own.owntv.core.database.dao.ProfileDao,
 ) : ViewModel() {
 
     // ---- Remote (companion) add-source: a LAN web form fills the Add Source screen from another device. ----
@@ -82,9 +89,16 @@ class SetupViewModel(
         finish(onDone)
     }
 
-    /** Creates the profile (not active yet); the rest of onboarding attaches content to it. */
-    fun createProfile(name: String, avatarId: Int, isKids: Boolean, pin: String?, onCreated: (Long) -> Unit = {}) {
-        viewModelScope.launch { onCreated(importer.createProfile(name, avatarId, isKids, pin)) }
+    /**
+     * Creates the profile (not active yet); the rest of onboarding attaches content to it. [picture],
+     * when one was chosen, is stored once the profile has an id to store it under.
+     */
+    fun createProfile(name: String, avatarId: Int, isKids: Boolean, pin: String?, picture: File?, onCreated: (Long) -> Unit = {}) {
+        viewModelScope.launch {
+            val id = importer.createProfile(name, avatarId, isKids, pin)
+            if (picture != null) profileDao.getById(id)?.let { profiles.setCustomAvatar(it, picture) }
+            onCreated(id)
+        }
     }
 
     fun startXtream(
@@ -99,8 +113,9 @@ class SetupViewModel(
         movies: SyncScopeChoice = SyncScopeChoice.Now,
         series: SyncScopeChoice = SyncScopeChoice.Now,
         preferHls: Boolean = false,
+        httpReferer: String = "",
     ) = runImport {
-        importer.xtream(name, server, username, password, userAgent, epgUrl, autoRefresh, live, movies, series, preferHls)
+        importer.xtream(name, server, username, password, userAgent, epgUrl, autoRefresh, live, movies, series, preferHls, httpReferer = httpReferer)
     }
 
     fun startStalker(
@@ -116,15 +131,18 @@ class SetupViewModel(
         live: SyncScopeChoice = SyncScopeChoice.Now,
         movies: SyncScopeChoice = SyncScopeChoice.Later,
         series: SyncScopeChoice = SyncScopeChoice.Later,
+        httpReferer: String = "",
+        login: String = "",
+        password: String = "",
     ) = runImport {
         importer.stalker(
             name, portalUrl, mac, serialNumber, deviceId, deviceId2, signature, userAgent,
-            autoRefresh, live, movies, series,
+            autoRefresh, live, movies, series, httpReferer = httpReferer, login = login, password = password,
         )
     }
 
-    fun startM3u(name: String, url: String, userAgent: String = "", epgUrl: String = "", autoRefresh: PlaylistRefresh = PlaylistRefresh.OFF) =
-        runImport { importer.m3u(name, url, userAgent, epgUrl, autoRefresh) }
+    fun startM3u(name: String, url: String, userAgent: String = "", epgUrl: String = "", autoRefresh: PlaylistRefresh = PlaylistRefresh.OFF, httpReferer: String = "") =
+        runImport { importer.m3u(name, url, userAgent, epgUrl, autoRefresh, httpReferer = httpReferer) }
 
     /**
      * Runs one import in the activity-scoped [viewModelScope] so "Run in background" can walk away
@@ -145,7 +163,7 @@ class SetupViewModel(
         job.invokeOnCompletion { if (importJob == job) importJob = null }
     }
 
-    /** Playlists belonging to unlocked (no-PIN) profiles that aren't already on the new profile. */
+    /** Other profiles' playlists not yet on the new profile, minus every one a protected profile uses. */
     suspend fun availableExistingSources(): List<SourceEntity> = importer.availableExistingSources()
 
     /** Link the chosen existing sources to the new profile, then re-sync each one. */
@@ -156,15 +174,21 @@ class SetupViewModel(
      * ask for the backup password via [SourceImporter.ImportState.NeedPassword].
      *
      * [sections] is what the user ticked before the restore began, and defaults to all of it — which
-     * is what the wizard did unconditionally until it gained a picker of its own. Settings → Backup
-     * & Restore has always asked; the first run, where a restore is most likely, did not.
+     * is what the wizard did unconditionally until it gained a picker of its own. More → Backup &
+     * Restore has always asked; the first run, where a restore is most likely, did not.
      */
     fun importBackup(
         file: File,
         onDone: (Long?) -> Unit,
         sections: Set<BackupManager.Section> = BackupManager.Section.entries.toSet(),
+        /** Take another device's hardware settings too — see [BackupManager.import]. */
+        deviceSettings: Boolean = false,
     ) {
-        viewModelScope.launch { if (importer.importBackup(file, sections)) onRestored(onDone) }
+        appScope.launch {
+            if (importer.importBackup(file, sections, deviceSettings)) {
+                withContext(Dispatchers.Main) { onRestored(onDone) }
+            }
+        }
     }
 
     /** Continue an encrypted restore once the user provides (or skips, password = null) the passphrase. */
@@ -173,8 +197,13 @@ class SetupViewModel(
         password: String?,
         onDone: (Long?) -> Unit,
         sections: Set<BackupManager.Section> = BackupManager.Section.entries.toSet(),
+        deviceSettings: Boolean = false,
     ) {
-        viewModelScope.launch { if (importer.restoreWithPassword(file, password, sections)) onRestored(onDone) }
+        appScope.launch {
+            if (importer.restoreWithPassword(file, password, sections, deviceSettings)) {
+                withContext(Dispatchers.Main) { onRestored(onDone) }
+            }
+        }
     }
 
     // A backup may restore several profiles or a PIN-locked active profile. Restoring data is not

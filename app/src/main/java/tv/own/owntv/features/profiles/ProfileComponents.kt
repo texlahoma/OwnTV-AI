@@ -1,13 +1,11 @@
 package tv.own.owntv.features.profiles
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.border
+import tv.own.owntv.ui.theme.stageAccent
+import tv.own.owntv.ui.theme.stageText
+import tv.own.owntv.ui.theme.StageColors
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,8 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,53 +26,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
+import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.core.database.entity.ProfileEntity
-import tv.own.owntv.ui.components.FocusableSurface
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.components.OwnTVAvatar
 import tv.own.owntv.ui.components.OwnTVAvatars
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
-import tv.own.owntv.ui.components.OwnTVTextField
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.OwnTVTheme
 
-/** Modal scrim wrapper for the profile dialogs. Phase 7 — Popup(focusable=true) creates
- *  a hard focus boundary on Android TV so D-pad stays inside the dialog. */
+/** The profile dialogs' Stage popup: [title], [content], [buttons] bottom right. It scrolls, so small
+ *  screens still reach the lower controls; the popup window keeps D-pad focus inside. */
 @Composable
 internal fun ProfileScrim(
     onDismiss: () -> Unit,
-    width: androidx.compose.ui.unit.Dp = 480.dp,
-    padding: androidx.compose.ui.unit.Dp = 28.dp,
-    content: @Composable () -> Unit,
+    title: String,
+    width: androidx.compose.ui.unit.Dp = 864.mpx,
+    buttons: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit,
+    content: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit,
 ) {
-    BackHandler { onDismiss() }
-    tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .modalScrim()
-                .trapAllFocusExit()
-                .focusGroup(),
-            contentAlignment = Alignment.Center,
-        ) {
-            // Scrollable so small/low-res screens can still reach the lower controls (Kids
-            // toggle / PIN / Create were clipped and unreachable on a cut-off screen).
-            Column(
-                modifier = Modifier.dialogPanel(width = width, padding = padding),
-            ) { content() }
-        }
-    }
+    tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = title, eyebrow = null, width = width, buttons = buttons, content = content)
 }
 
 /** Numeric PIN entry. Calls [onSubmit] with the entered digits. [compact] renders the small
@@ -89,45 +58,40 @@ internal fun PinDialog(title: String, onSubmit: (String) -> Unit, onDismiss: () 
 
 @Composable
 private fun PinDialogBody(title: String, onSubmit: (String) -> Unit, onDismiss: () -> Unit, compact: Boolean) {
-    val colors = OwnTVTheme.colors
     var pin by remember { mutableStateOf("") }
     val focus = remember { FocusRequester() }
-    // Wait until the popup window is attached before requesting focus (same as TextInputDialog).
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { focus.requestFocus() }
-    }
-    ProfileScrim(onDismiss, width = if (compact) 290.dp else 480.dp, padding = if (compact) 16.dp else 28.dp) {
-        Text(title, style = if (compact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge, color = colors.onSurface)
-        Spacer(Modifier.height(if (compact) 10.dp else 16.dp))
-        OwnTVTextField(
+    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    // Explicit start/end links: spatial D-pad search from Cancel would otherwise wander into
+    // the gate's profile tiles BEHIND the dialog before reaching OK.
+    val cancelFocus = remember { FocusRequester() }
+    val okFocus = remember { FocusRequester() }
+    ProfileScrim(
+        onDismiss, title = title, width = if (compact) 560.mpx else 700.mpx,
+        buttons = {
+            tv.own.owntv.ui.stage.StagePopupButton(
+                stringResource(R.string.common_cancel),
+                onClick = onDismiss,
+                modifier = Modifier.focusRequester(cancelFocus).focusProperties { end = okFocus },
+                primary = false,
+            )
+            tv.own.owntv.ui.stage.StagePopupButton(
+                stringResource(R.string.common_ok),
+                onClick = { onSubmit(pin) },
+                modifier = Modifier.focusRequester(okFocus).focusProperties { start = cancelFocus },
+                enabled = pin.length >= 4,
+            )
+        },
+    ) {
+        tv.own.owntv.features.settings.StageFieldRow(
+            icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+            label = stringResource(R.string.profiles_pin),
             value = pin,
             onValueChange = { if (it.length <= 6 && it.all(Char::isDigit)) pin = it },
-            label = stringResource(R.string.profiles_pin),
+            modifier = Modifier.fillMaxWidth().focusRequester(focus),
             placeholder = stringResource(R.string.profiles_pin_placeholder),
+            password = true,
             keyboardType = KeyboardType.NumberPassword,
-            isPassword = true,
-            modifier = Modifier.fillMaxWidth(),
-            // Hang the requester on the focusable pill via the dedicated parameter, not the outer
-            // Column (the modifier target is not focusable, so requestFocus would be silently dropped).
-            focusRequester = focus,
         )
-        Spacer(Modifier.height(20.dp))
-        // Explicit start/end links: spatial D-pad search from Cancel would otherwise wander into
-        // the gate's profile tiles BEHIND the dialog before reaching OK.
-        val cancelFocus = remember { FocusRequester() }
-        val okFocus = remember { FocusRequester() }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OwnTVButton(
-                stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY,
-                modifier = Modifier.focusRequester(cancelFocus).focusProperties { end = okFocus },
-            )
-            Spacer(Modifier.weight(1f))
-            OwnTVButton(
-                stringResource(R.string.common_ok), onClick = { onSubmit(pin) }, enabled = pin.length >= 4,
-                modifier = Modifier.focusRequester(okFocus).focusProperties { start = cancelFocus },
-            )
-        }
     }
 }
 
@@ -138,119 +102,136 @@ private fun PinDialogBody(title: String, onSubmit: (String) -> Unit, onDismiss: 
  *
  * [takenNames] are the OTHER profiles' names (lowercased) — profile names must be unique (they're the
  * merge key for backup restore), so a collision blocks Create/Save with an inline error.
+ *
+ * A picture of the user's own: on an existing profile [onPickPicture] / [onClearPicture] apply it at
+ * once, as the phone does, and [customPath] is the one it has now. A new profile has no id to store
+ * one under yet, so the dialog holds the chosen file and hands it to [onConfirm] with the rest.
+ *
+ * [allowDownloads] non-null shows the Allow downloads switch with that value; Save hands the choice
+ * to [onAllowDownloads]. A new profile has no switch: it may download until someone edits it.
  */
 @Composable
 internal fun ProfileEditorDialog(
     initial: ProfileEntity?,
-    onConfirm: (name: String, avatarId: Int, isKids: Boolean, pin: String?) -> Unit,
+    onConfirm: (name: String, avatarId: Int, isKids: Boolean, pin: String?, picture: java.io.File?) -> Unit,
     onDismiss: () -> Unit,
     takenNames: Set<String> = emptySet(),
+    customPath: String = "",
+    onPickPicture: ((java.io.File) -> Unit)? = null,
+    onClearPicture: (() -> Unit)? = null,
+    allowDownloads: Boolean? = null,
+    onAllowDownloads: (Boolean) -> Unit = {},
 ) {
-    val colors = OwnTVTheme.colors
     var name by remember { mutableStateOf(initial?.name ?: "") }
-    var avatarId by remember { mutableIntStateOf(initial?.avatarId ?: -1) } // Phase 7 — new profiles default to no-avatar
+    var downloads by remember(allowDownloads) { mutableStateOf(allowDownloads ?: true) }
+    var avatarId by remember { mutableIntStateOf(initial?.avatarId ?: -1) } // new profiles default to no avatar
     var isKids by remember { mutableStateOf(initial?.isKids ?: false) }
     var pin by remember { mutableStateOf("") }
     var removePin by remember { mutableStateOf(false) }
+    var pendingPicture by remember { mutableStateOf<java.io.File?>(null) }
+    var choosingPicture by remember { mutableStateOf(false) }
+    val picturePath = pendingPicture?.absolutePath ?: customPath
     val focus = remember { FocusRequester() }
-    // Wait until the popup window is attached before requesting focus (same as TextInputDialog).
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { focus.requestFocus() }
-    }
+    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
     val nameTaken = name.trim().isNotEmpty() && name.trim().lowercase() in takenNames
 
-    ProfileScrim(onDismiss) {
-        Text(stringResource(if (initial == null) R.string.profiles_new else R.string.profiles_edit), style = MaterialTheme.typography.titleLarge, color = colors.onSurface)
-        Spacer(Modifier.height(16.dp))
-        OwnTVTextField(name, { name = it }, label = stringResource(R.string.profiles_name), placeholder = stringResource(R.string.profiles_name_hint), modifier = Modifier.fillMaxWidth(), focusRequester = focus)
+    ProfileScrim(
+        onDismiss,
+        title = stringResource(if (initial == null) R.string.profiles_new else R.string.profiles_edit),
+        buttons = {
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = onDismiss, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(
+                stringResource(if (initial == null) R.string.profiles_create else R.string.profiles_save),
+                onClick = {
+                    if (allowDownloads != null && downloads != allowDownloads) onAllowDownloads(downloads)
+                    onConfirm(name, avatarId, isKids, if (removePin) "" else pin.takeIf { it.isNotBlank() }, pendingPicture)
+                },
+                enabled = name.isNotBlank() && !nameTaken && (removePin || pin.isEmpty() || pin.length >= 4),
+            )
+        },
+    ) {
+        tv.own.owntv.features.settings.StageFieldRow(
+            icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+            label = stringResource(R.string.profiles_name),
+            value = name,
+            onValueChange = { name = it },
+            modifier = Modifier.fillMaxWidth().focusRequester(focus),
+            placeholder = stringResource(R.string.profiles_name_hint),
+        )
         if (nameTaken) {
-            Spacer(Modifier.height(6.dp))
             Text(
                 stringResource(R.string.profiles_name_taken),
-                style = MaterialTheme.typography.bodyMedium, color = Color(0xFFEF4444),
+                style = stageText(17, 600), color = StageColors.Danger,
+                modifier = Modifier.padding(top = 8.mpx),
             )
         }
-        Spacer(Modifier.height(16.dp))
-
-        Text(stringResource(R.string.profiles_avatar), style = MaterialTheme.typography.labelMedium, color = colors.onSurfaceVariant)
-        Spacer(Modifier.height(8.dp))
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            items((-1 until OwnTVAvatars.COUNT).toList()) { id -> // Phase 7 — includes "no avatar" (-1)
-                FocusableSurface(
+        tv.own.owntv.ui.stage.StagePopupLabel(stringResource(R.string.profiles_avatar).uppercase(), Modifier.padding(top = 18.mpx))
+        val accent = stageAccent.accent
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(14.mpx), contentPadding = androidx.compose.foundation.layout.PaddingValues(6.mpx)) {
+            items((-1 until OwnTVAvatars.COUNT).toList()) { id -> // includes "no avatar" (-1)
+                tv.own.owntv.ui.stage.StageSurface(
                     onClick = { avatarId = id },
-                    modifier = Modifier.size(60.dp),
-                    selected = id == avatarId,
-                    shape = CircleShape,
-                    selectedContainerColor = colors.primaryContainer,
+                    radius = 44.mpx,
+                    modifier = Modifier.size(88.mpx),
+                    focusStyle = tv.own.owntv.ui.stage.StageFocus.FX,
+                    idle = if (id == avatarId) Modifier.border(3.mpx, accent, CircleShape) else Modifier,
                     contentAlignment = Alignment.Center,
-                    surface = GlassSurface.DIALOGS,
                 ) { _ ->
-                    OwnTVAvatar(avatarId = id, modifier = Modifier.size(48.dp))
+                    OwnTVAvatar(avatarId = id, modifier = Modifier.size(70.mpx))
                 }
             }
         }
-        Spacer(Modifier.height(16.dp))
-
+        tv.own.owntv.ui.stage.StagePopupOption(
+            title = stringResource(R.string.profiles_avatar_own_picture),
+            onClick = { choosingPicture = true },
+            leading = {
+                if (picturePath.isNotBlank()) OwnTVAvatar(avatarId = avatarId, imagePath = picturePath, modifier = Modifier.size(44.mpx))
+                else tv.own.owntv.ui.stage.StagePopupIcon(tv.own.owntv.ui.components.OwnTVIcon.IMAGE)
+            },
+        )
+        tv.own.owntv.ui.stage.StagePopupDivider()
         ToggleRow(label = stringResource(R.string.profiles_kids), desc = stringResource(R.string.profiles_kids_description), checked = isKids) { isKids = it }
-        Spacer(Modifier.height(12.dp))
+        if (allowDownloads != null) {
+            ToggleRow(label = stringResource(R.string.profiles_allow_downloads), desc = stringResource(R.string.profiles_allow_downloads_description), checked = downloads) { downloads = it }
+        }
         if (initial?.pinHash != null) {
             ToggleRow(label = stringResource(R.string.profiles_remove_pin), desc = stringResource(R.string.profiles_no_pin), checked = removePin) { removePin = it }
-            Spacer(Modifier.height(12.dp))
         }
         if (!removePin) {
-            OwnTVTextField(
+            Spacer(Modifier.height(14.mpx))
+            tv.own.owntv.features.settings.StageFieldRow(
+                icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+                label = if (initial?.pinHash != null) stringResource(R.string.profiles_change_pin) else stringResource(R.string.profiles_optional_pin),
                 value = pin,
                 onValueChange = { if (it.length <= 6 && it.all(Char::isDigit)) pin = it },
-                label = if (initial?.pinHash != null) stringResource(R.string.profiles_change_pin) else stringResource(R.string.profiles_optional_pin),
-                placeholder = stringResource(R.string.profiles_pin_digits),
-                keyboardType = KeyboardType.NumberPassword,
-                isPassword = true,
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = stringResource(R.string.profiles_pin_digits),
+                password = true,
+                keyboardType = KeyboardType.NumberPassword,
             )
         }
-
-        Spacer(Modifier.height(22.dp))
-        // Explicit start/end links: spatial D-pad search from Cancel would otherwise wander into the
-        // gate's profile tiles BEHIND the dialog before reaching Create (same as PinDialogBody).
-        val cancelFocus = remember { FocusRequester() }
-        val okFocus = remember { FocusRequester() }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY,
-                modifier = Modifier.focusRequester(cancelFocus).focusProperties { end = okFocus })
-            Spacer(Modifier.weight(1f))
-            OwnTVButton(
-                label = stringResource(if (initial == null) R.string.profiles_create else R.string.profiles_save),
-                onClick = { onConfirm(name, avatarId, isKids, if (removePin) "" else pin.takeIf { it.isNotBlank() }) },
-                enabled = name.isNotBlank() && !nameTaken && (removePin || pin.isEmpty() || pin.length >= 4),
-                modifier = Modifier.focusRequester(okFocus).focusProperties { start = cancelFocus },
-            )
-        }
+    }
+    if (choosingPicture) {
+        ProfilePictureChooser(
+            hasImage = picturePath.isNotBlank(),
+            onPicked = { file ->
+                if (onPickPicture != null) onPickPicture(file) else pendingPicture = file
+                choosingPicture = false
+            },
+            onClear = {
+                if (onClearPicture != null) onClearPicture() else pendingPicture = null
+                choosingPicture = false
+            },
+            onDismiss = { choosingPicture = false },
+        )
     }
 }
 
+/** `.opt` with a switch on the right. */
 @Composable
 private fun ToggleRow(label: String, desc: String, checked: Boolean, onToggle: (Boolean) -> Unit) {
-    val colors = OwnTVTheme.colors
-    FocusableSurface(
-        onClick = { onToggle(!checked) },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
-        contentAlignment = Alignment.CenterStart,
-        surface = GlassSurface.DIALOGS,
-    ) { _ ->
-        Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text(label, style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                Text(desc, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
-            }
-            Box(
-                modifier = Modifier.width(52.dp).height(30.dp).clip(CircleShape)
-                    .background(if (checked) colors.primary else colors.surfaceContainerHighest),
-                contentAlignment = if (checked) Alignment.CenterEnd else Alignment.CenterStart,
-            ) {
-                Box(Modifier.padding(3.dp).size(24.dp).clip(CircleShape).background(Color.White))
-            }
-        }
-    }
+    tv.own.owntv.ui.stage.StagePopupOption(
+        title = label, subtitle = desc, onClick = { onToggle(!checked) },
+        trailing = { tv.own.owntv.ui.stage.StageSwitch(checked) },
+    )
 }

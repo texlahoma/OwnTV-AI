@@ -85,7 +85,7 @@ class MultiviewState(
     private val claims = HashMap<Int, OpenStreamRegistry.Claim>()
 
     /**
-     * Tiles playing sound with no picture — the owner's background-audio case (§2.4): watch one
+     * Tiles playing sound with no picture — the background-audio case: watch one
      * channel while another's commentary plays behind it.
      *
      * It costs a provider connection exactly as a picture does, because dropping the video track does
@@ -136,7 +136,7 @@ class MultiviewState(
     /**
      * Put [channel] in [tile], if that playlist has a connection to spare.
      *
-     * The check is D11's: tiles and recordings count against one budget, per playlist, and a tile
+     * Tiles and recordings count against one budget, per playlist, and a tile
      * that loses is told why instead of being left to fail into a spinner. Refilling a tile releases
      * what it held first, so swapping a channel never counts as two.
      */
@@ -164,9 +164,9 @@ class MultiviewState(
      *
      * **It does not blame the provider, and it used to.** That version was built on the belief that
      * this portal silently cut the oldest stream; measuring the account directly disproved it — four
-     * of its streams run side by side for as long as you like. Every time the old rule fired it was
-     * wrong, most visibly when it told the owner his provider allowed three streams while three of
-     * its streams were playing in front of him.
+     * of its streams run side by side for as long as you like. Every time a stricter rule fired it was
+     * wrong, most visibly when it told the user their provider allowed three streams while three of
+     * its streams were playing in front of them.
      *
      * What is left is the honest reading. The connection budget had already established the provider
      * allows this many, so a picture that stops after that is the television reaching its own limit —

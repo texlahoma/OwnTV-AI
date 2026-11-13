@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
  * Activity-scoped gate/session state for the profile gate and the in-session "Who's watching?"
  * transitions. Owns nothing persisted.
  *
- * **Why a ViewModel and not `rememberSaveable`** (see `docs/internationalization.md`, Phase 0a —
+ * **Why a ViewModel and not `rememberSaveable`** (see `docs/internationalization.md`,
  * "The profile gate: configuration-only retention, never saveable"):
  *
  * The authenticated profile id must survive an Activity recreation caused by a *configuration* change

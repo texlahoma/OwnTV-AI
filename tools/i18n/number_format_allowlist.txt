@@ -1,2 +1,5 @@
 # CATEGORY<TAB>path<TAB>format-literal<TAB>occurrence<TAB>justification
 # Line numbers may be recorded in comments, but are never matching keys.
+DISPLAY	app/src/main/java/tv/own/owntv/features/home/HomeScreen.kt	%.1f	1	Rating shown in the viewer's own number format (8.4 / 8,4)
+DISPLAY	app/src/main/java/tv/own/owntv/features/more/MorePages.kt	%d:%02d	1	Watched time shown to the viewer in their own digits
+DISPLAY	app/src/main/java/tv/own/owntv/features/shell/components/VodStage.kt	%.1f	1	Rating shown in the viewer's own number format (8.4 / 8,4)

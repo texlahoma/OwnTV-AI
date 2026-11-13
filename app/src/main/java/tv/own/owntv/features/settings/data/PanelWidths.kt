@@ -5,7 +5,6 @@ import androidx.compose.ui.unit.dp
 import tv.own.owntv.core.settings.PanelSection
 import tv.own.owntv.core.settings.PanelShares
 import tv.own.owntv.core.settings.PanelWidthLimits
-import tv.own.owntv.core.settings.CINEMATIC_DETAILS_MAX
 import tv.own.owntv.core.settings.balanceToTotal
 import tv.own.owntv.ui.theme.Dimens
 import kotlin.math.roundToInt
@@ -13,7 +12,7 @@ import kotlin.math.roundToInt
 /** Inset between the shared browse container edge and its columns. */
 val BrowseContainerPadding: Dp = 12.dp
 
-/** The mockup's spacing between each column, the divider, and the raised preview. */
+/** The spacing between each column, the divider, and the raised preview. */
 val BrowseColumnGap: Dp = 12.dp
 
 /** The category/list separator itself. */
@@ -55,53 +54,6 @@ fun defaultPanelShares(
     val list = PanelWidthLimits.snap((listDp / content * 100f).roundToInt())
     val preview = PanelWidthLimits.snap((previewDp / content * 100f).roundToInt())
     return balanceToTotal(PanelShares(category, list, preview))
-}
-
-/**
- * Collapses any stored three-panel split into the two columns Cinematic actually has.
- *
- * The preview column is gone, so its share goes to the content area — that is where the space
- * physically went. The result is always savable: the two add up to exactly 100 AND each stays inside
- * [PanelWidthLimits.MAX], which is the pair of rules `PanelShares.isValid` enforces. Getting only
- * the first one right is what made Okay refuse to save while showing a total of 100%.
- */
-fun cinematicWidths(shares: PanelShares): PanelShares {
-    val category = shares.category.coerceIn(PanelWidthLimits.TOTAL - PanelWidthLimits.MAX, PanelWidthLimits.MAX)
-    return PanelShares(category, PanelWidthLimits.TOTAL - category, 0)
-}
-
-/** Resolved geometry for the Cinematic layout: two columns, and a height for the detail block. */
-data class CinematicLayoutSpec(val category: Dp, val content: Dp, val detailsHeight: Dp)
-
-/**
- * The Cinematic layout's geometry: two columns from the width shares, and a detail-block height from
- * [detailsPercent], which is stored separately and takes no part in the shares' 100% budget.
- *
- * That separation is the whole point. A height competing with two widths for one budget meant a
- * taller detail block could only be bought by narrowing the posters, and a stored 0 had to be
- * clamped up to something visible — so the dialog showed one number while the screen drew another.
- * Here 0 means exactly 0: no detail block, all posters.
- *
- * The two width shares are re-normalised against each other, so losing the preview column does not
- * silently widen the category rail.
- */
-fun computeCinematicLayout(
-    shares: PanelShares,
-    detailsPercent: Int,
-    totalWidth: Dp,
-    totalHeight: Dp,
-    gapTotal: Dp = browsePanelGapTotal(previewVisible = false),
-): CinematicLayoutSpec {
-    val content = (totalWidth - gapTotal).value.coerceAtLeast(1f)
-    val columnSum = (shares.category + shares.list).coerceAtLeast(1)
-    val category = content * shares.category / columnSum
-    // The remainder, so rounding never leaves a sliver of background down the right edge.
-    val rest = (content - category).coerceAtLeast(1f)
-    return CinematicLayoutSpec(
-        category = category.dp,
-        content = rest.dp,
-        detailsHeight = (totalHeight.value * detailsPercent.coerceIn(0, CINEMATIC_DETAILS_MAX) / 100f).dp,
-    )
 }
 
 /** Turns validated shares into concrete widths for a row [total] dp wide. */

@@ -20,7 +20,7 @@ import tv.own.owntv.core.model.SourceType
 /**
  * Behavioral tests for the bounded window queries added for direct-tune's zap-list rebuild.
  * These verify the (sortOrder, id) cursor predicate matches the ORDER BY so no channel slips
- * through the gap when sortOrder ties — the P2 regression the DAO was fixed for.
+ * through the gap when sortOrder ties — the regression the DAO was fixed for.
  */
 @RunWith(AndroidJUnit4::class)
 class ChannelDaoBoundedWindowTest {

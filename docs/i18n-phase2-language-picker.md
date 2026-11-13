@@ -111,10 +111,8 @@ Thin by design. `LocaleStore` does all persistence and process-level locale appl
 New file `features/settings/LanguageSettingsScreen.kt`. Follows existing sub-screen pattern:
 
 - Signature: `fun LanguageSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)`
-- Uses `Header(title, onBack)` from `VideoPlayerSettingsScreen.kt:472` (internal fun, so either import or replicate the pattern)
-- `roundedPanel()` modifier on the Column
-- SearchBar at top (reuse existing `ui/components/SearchBar.kt`) for filtering
-- Scrollable `Column` of locale rows, each wrapped in `FocusableSurface`
+- Drawn as a Stage full page (`StageFullPage`), the way every Settings page is
+- One row per locale (`LanguageRow`, built on `StageSettingRow`)
 
 Each row layout:
 - Radio check indicator (filled teal circle with checkmark when selected, outline when not)

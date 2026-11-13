@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.epg.EpgSource
 import tv.own.owntv.core.epg.EpgSourceStore
+import tv.own.owntv.core.live.LiveEpgReader
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.sync.work.EpgSyncScheduler
@@ -31,6 +32,7 @@ class EpgSourcesViewModel(
     private val epgDao: tv.own.owntv.core.database.dao.EpgDao,
     private val channelDao: tv.own.owntv.core.database.dao.ChannelDao,
     private val epgSyncScheduler: EpgSyncScheduler,
+    private val liveEpgReader: LiveEpgReader,
 ) : ViewModel() {
 
     /** An existing playlist's EPG feed, offered as a one-tap "fill from playlist" option. */
@@ -48,14 +50,6 @@ class EpgSourcesViewModel(
     }
 
     /** EPG sources whose own `<icon src>` logos replace the playlist's channel logos. */
-    /** How many days of upcoming guide to store — one value for every EPG source (guide plan R1). */
-    val guideDaysToKeep: StateFlow<Int> = settings.guideDaysToKeep
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.settings.GuideRetention.DEFAULT_DAYS)
-
-    fun setGuideDaysToKeep(days: Int) {
-        viewModelScope.launch { settings.setGuideDaysToKeep(days) }
-    }
-
     val useLogos: StateFlow<Set<Long>> = settings.epgUseLogos
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
 
@@ -69,6 +63,18 @@ class EpgSourcesViewModel(
             settings.setEpgAutoRefresh(source.id, autoRefresh)
             if (useLogos) settings.setEpgUseLogos(source.id, true)
             epgSyncScheduler.enqueueSync(source.id, "add")
+        }
+    }
+
+    /**
+     * Move [source] one place up or down the list: its guide priority. Live TV's cached now/next
+     * came from the old order, so it is dropped; the Guide drops its rows itself the next time it
+     * opens, because the ordered source ids it loaded from no longer match.
+     */
+    fun move(source: EpgSource, up: Boolean) {
+        viewModelScope.launch {
+            store.move(source.id, up)
+            liveEpgReader.clearCache()
         }
     }
 

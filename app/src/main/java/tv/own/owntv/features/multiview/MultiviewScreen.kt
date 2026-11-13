@@ -1,5 +1,7 @@
 package tv.own.owntv.features.multiview
 
+import tv.own.owntv.ui.theme.hudShade
+import tv.own.owntv.ui.theme.hudInk
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,7 +36,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -44,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.database.entity.ChannelEntity
@@ -54,7 +54,6 @@ import tv.own.owntv.player.PlaybackFailure
 import tv.own.owntv.player.describe
 import tv.own.owntv.player.LivePreviewEngine
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * The Multiview grid: up to four live channels at once, grown from the one already playing.
@@ -62,7 +61,7 @@ import tv.own.owntv.ui.theme.OwnTVTheme
  * Tile 1 arrives filled — it is the channel the user pressed the button on — and the rest say
  * "+ Add channel" until they are given one. Nothing here decides whether a tile *may* tune; that is
  * [MultiviewState] asking core's connection budget, and a refused tile draws the sentence it got
- * back rather than a spinner (D5: the grid never comes down because one tile could not start).
+ * back rather than a spinner (the grid never comes down because one tile could not start).
  *
  * | Press | Does |
  * | --- | --- |
@@ -74,7 +73,7 @@ import tv.own.owntv.ui.theme.OwnTVTheme
  *
  * Long OK opens the menu because that is what a long press does everywhere else in this app — the
  * channel list, the guide, Customize — and because most TV remotes have no MENU key at all, which
- * left the menu unreachable on the owner's television.
+ * left the menu unreachable on a real television.
  */
 @UnstableApi
 @Composable
@@ -148,7 +147,6 @@ private fun Tile(
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     val tile = state.tiles[index]
     val focused = state.focused == index
     // Long OK is a key-down held past the system's long-press threshold; Compose reports the repeat
@@ -158,10 +156,10 @@ private fun Tile(
     Box(
         modifier
             .clip(TileShape)
-            .background(colors.surfaceContainerLowest)
+            .background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.04f))
             .border(
                 width = if (focused) 3.dp else 1.dp,
-                color = if (focused) colors.primary else colors.surfaceContainerHigh,
+                color = if (focused) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f),
                 shape = TileShape,
             )
             .focusRequester(focusRequester)
@@ -221,8 +219,8 @@ private fun Tile(
                 when {
                     index in state.soundOnly -> Text(
                         text = stringResource(R.string.multiview_sound_only_note),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     )
@@ -231,8 +229,8 @@ private fun Tile(
                     // explanation — indistinguishable, to the user, from the app being broken.
                     engineState == LivePreviewEngine.State.ERROR -> Text(
                         text = tileFailureText(failure = failure),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     )
@@ -243,6 +241,8 @@ private fun Tile(
                         engine = engine,
                         modifier = Modifier.fillMaxSize(),
                         useTextureView = true,
+                        // The grid is watched, not read: without this the screensaver started mid-match.
+                        keepAwake = true,
                     )
                 }
                 TileCaption(name = channel.name, audible = state.audible == index)
@@ -250,8 +250,8 @@ private fun Tile(
             // The television, not the provider: it had already allowed this stream.
             tile.deviceLimit -> Text(
                 text = stringResource(R.string.multiview_decoder_exhausted),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(25, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center).padding(24.dp),
             )
@@ -260,8 +260,8 @@ private fun Tile(
                 val text = refusal.displayText(LocalContext.current.resources)
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.onSurfaceVariant,
+                    style = tv.own.owntv.ui.theme.stageText(25, 400),
+                    color = tv.own.owntv.ui.theme.StageColors.Muted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center).padding(24.dp),
                 )
@@ -274,13 +274,13 @@ private fun Tile(
                 ) {
                     OwnTVIcon(
                         OwnTVIcon.ADD,
-                        tint = colors.onSurfaceVariant,
+                        tint = tv.own.owntv.ui.theme.StageColors.Muted,
                         modifier = Modifier.size(28.dp),
                     )
                     Text(
                         text = stringResource(R.string.multiview_add_channel),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 500),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                     )
                 }
             }
@@ -293,7 +293,7 @@ private fun Tile(
  *
  * It deliberately never invents a number of provider connections. An earlier version did, reading a
  * stopped tile as proof of the provider's limit, and it was wrong every time it fired — including
- * telling the owner his provider allowed three streams while three of them played beside the
+ * telling the user their provider allowed three streams while three of them played beside the
  * message. Whether the provider allows this is settled before a tile tunes, by a measurement; it is
  * not something to be re-guessed from a stall.
  */
@@ -311,14 +311,13 @@ private fun tileFailureText(failure: PlaybackFailure?): String = when {
 /** The channel's name, and the speaker badge on whichever tile the sound is coming from. */
 @Composable
 private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String, audible: Boolean) {
-    val colors = OwnTVTheme.colors
     val audioTileLabel = stringResource(R.string.multiview_audio_tile)
     Row(
         Modifier
             .align(Alignment.BottomStart)
             .padding(10.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.Black.copy(alpha = 0.55f))
+            .background(hudShade(0.55f))
             .padding(horizontal = 10.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -326,7 +325,7 @@ private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String
         if (audible) {
             OwnTVIcon(
                 OwnTVIcon.VOLUME_HIGH,
-                tint = colors.primary,
+                tint = tv.own.owntv.ui.theme.stageAccent.accent,
                 modifier = Modifier
                     .size(14.dp)
                     .semantics { contentDescription = audioTileLabel },
@@ -334,8 +333,8 @@ private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String
         }
         Text(
             text = name,
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.White,
+            style = tv.own.owntv.ui.theme.stageText(25, 600),
+            color = hudInk,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -351,7 +350,7 @@ private const val LongPressMs = 500L
 /**
  * How long a tile may be stopped before the grid calls it lost.
  *
- * Comfortably longer than the slowest tile open measured on the owner's television (2.9 s), so a
+ * Comfortably longer than the slowest tile open measured on a real television (2.9 s), so a
  * channel that is merely slow to start is never mistaken for one the provider refused — and far
  * shorter than the engine's own eight-attempt ladder, which takes over eighty seconds to conclude
  * anything and would leave a black tile and no explanation for all of it.

@@ -1,53 +1,40 @@
 package tv.own.owntv.features.settings
 
-import androidx.activity.compose.BackHandler
+import tv.own.owntv.ui.theme.StageColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import org.koin.androidx.compose.koinViewModel
 import tv.own.owntv.R
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.core.settings.GuideWidthLimits
 import tv.own.owntv.core.settings.GuideWidthShares
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.components.restoreAfterDialogClose
-import tv.own.owntv.ui.components.roundedPanel
 import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /** Layout setting for the Guide's pinned channel column and scrollable programme timeline. */
 @Composable
@@ -57,77 +44,51 @@ fun GuideWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
     val shares by vm.guideWidthShares.collectAsStateWithLifecycle()
     val current = shares ?: GuideWidthLimits.defaults
     val rowFocus = remember { FocusRequester() }
-    val scrollState = rememberScrollState()
-    // Where to hand focus back when the dialog closes, and where the list was when it opened — the
-    // dialog window still owns focus for a frame or two after the flag flips, so a single early
-    // request is silently dropped. The per-frame retry in [restoreAfterDialogClose] lands focus back
-    // on the opener row and holds the scroll offset still the whole way (same pattern as the sibling
-    // PanelWidthSettingsScreen).
-    var dialogReturn by remember { mutableStateOf<FocusRequester?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-    var savedScroll by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) { runCatching { rowFocus.requestFocus() } }
     LaunchedEffect(showDialog) {
-        if (showDialog) {
-            savedScroll = scrollState.value
-            return@LaunchedEffect
-        }
-        restoreAfterDialogClose(dialogReturn, scrollState, savedScroll)
-        dialogReturn = null
+        if (!showDialog) runCatching { rowFocus.requestFocus() }
     }
-    BackHandler { onBack() }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .roundedPanel()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 40.dp, vertical = 28.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
+    // The TV Guide row and Reset; the panel draws the two columns at their widths.
+    val rules = stringResource(R.string.settings_guide_width_help, *NO_ARGS)
+    StageFullPage(
+        parents = listOf(stringResource(R.string.settings_group_layout)),
+        title = stringResource(R.string.settings_guide_width),
+        count = pluralStringResource(R.plurals.settings_setting_count, 2, 2),
+        onBack = onBack,
+        modifier = modifier,
     ) {
-        Header(title = stringResource(R.string.settings_guide_width), onBack = onBack)
-        Spacer(Modifier.height(4.dp))
-        Text(
-            stringResource(R.string.settings_guide_width_description),
-            style = MaterialTheme.typography.bodyMedium,
-            color = OwnTVTheme.colors.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(16.dp))
-        Row2(
+        val title = stringResource(R.string.content_epg_title)
+        val value = SettingValue.Opens(stringResource(if (enabled) R.string.settings_live_latency_custom else R.string.settings_subtitle_default))
+        StageSettingRow(
             icon = OwnTVIcon.EPG,
-            title = stringResource(R.string.content_epg_title),
-            desc = stringResource(
-                R.string.settings_guide_width_summary,
-                current.channels,
-                current.epg,
+            title = title,
+            desc = stringResource(R.string.settings_guide_width_summary, current.channels, current.epg),
+            value = value,
+            onClick = { showDialog = true },
+            help = SettingHelp(
+                title, rules,
+                hints = settingHints(value, pinnable = false),
+                extra = { androidx.compose.foundation.layout.Box(Modifier.padding(top = 18.mpx)) { GuideWidthDiagram(current) } },
             ),
-            chip = stringResource(
-                if (enabled) R.string.settings_live_latency_custom else R.string.settings_subtitle_default,
-            ),
-            primaryChip = enabled,
-            chevron = true,
             modifier = Modifier.focusRequester(rowFocus),
-            onClick = { dialogReturn = rowFocus; showDialog = true },
         )
-        Spacer(Modifier.height(12.dp))
-        GroupLabel(stringResource(R.string.settings_how_it_works))
-        Text(
-            stringResource(R.string.settings_guide_width_help),
-            style = MaterialTheme.typography.bodyMedium,
-            color = OwnTVTheme.colors.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        val reset = stringResource(R.string.common_reset)
+        StageSettingRow(
+            icon = OwnTVIcon.REFRESH,
+            title = reset,
+            desc = stringResource(R.string.settings_guide_width_summary, GuideWidthLimits.defaults.channels, GuideWidthLimits.defaults.epg),
+            value = null,
+            onClick = { vm.setGuideWidths(false, GuideWidthLimits.defaults) },
+            help = SettingHelp(reset, rules, hints = settingHints(null, pinnable = false)),
         )
+        // In the page's panel.
+        if (showDialog) panelEditor({ showDialog = false }) {
+            GuideWidthDialog(savedEnabled = enabled, savedShares = current, onSave = vm::setGuideWidths, onDismiss = { showDialog = false })
+        }
     }
 
-    if (showDialog) {
-        GuideWidthDialog(
-            savedEnabled = enabled,
-            savedShares = current,
-            onSave = vm::setGuideWidths,
-            onDismiss = { showDialog = false },
-        )
-    }
 }
 
 @Composable
@@ -137,155 +98,38 @@ private fun GuideWidthDialog(
     onSave: (Boolean, GuideWidthShares) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
-    var enabled by remember { mutableStateOf(savedEnabled) }
-    var draft by remember { mutableStateOf(savedShares) }
-    var showError by remember { mutableStateOf(false) }
-    val firstFocus = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { firstFocus.requestFocus() }
-    }
-    BackHandler { onDismiss() }
-
-    tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
-        tv.own.owntv.ui.theme.PopupFontTheme(fontScale = 0.75f) {
-            Box(
-                modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(
-                    modifier = Modifier.dialogPanel(width = 440.dp, corner = 16.dp, padding = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Text(
-                        stringResource(R.string.settings_guide_width),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = colors.onSurface,
-                    )
-                    Row2(
-                        icon = OwnTVIcon.EPG,
-                        title = stringResource(R.string.settings_panel_width_customize),
-                        desc = stringResource(R.string.settings_guide_width_description),
-                        chip = stringResource(if (enabled) R.string.common_on else R.string.common_off),
-                        primaryChip = enabled,
-                        modifier = Modifier.focusRequester(firstFocus),
-                        onClick = { enabled = !enabled },
-                    )
-
-                    GuideWidthDiagram(draft)
-                    StepRow(
-                        label = stringResource(R.string.settings_guide_width_channels),
-                        value = draft.channels,
-                        minimum = GuideWidthLimits.MIN,
-                        maximum = GuideWidthLimits.MAX,
-                        step = GuideWidthLimits.STEP,
-                        onSet = { draft = draft.copy(channels = it); showError = false },
-                    )
-                    StepRow(
-                        label = stringResource(R.string.settings_guide_width_epg),
-                        value = draft.epg,
-                        minimum = GuideWidthLimits.MIN,
-                        maximum = GuideWidthLimits.MAX,
-                        step = GuideWidthLimits.STEP,
-                        onSet = { draft = draft.copy(epg = it); showError = false },
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            stringResource(R.string.settings_panel_width_total),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colors.onSurface,
-                        )
-                        Spacer(Modifier.weight(1f))
-                        Text(
-                            stringResource(R.string.common_percent, draft.total),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (draft.isValid) colors.primary else colors.favorite,
-                        )
-                    }
-                    if (showError && !draft.isValid) {
-                        Text(
-                            stringResource(R.string.settings_panel_width_invalid_total, draft.total),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colors.favorite,
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        OwnTVButton(
-                            stringResource(R.string.common_reset),
-                            onClick = { draft = GuideWidthLimits.defaults; showError = false },
-                            style = OwnTVButtonStyle.SECONDARY,
-                        )
-                        Spacer(Modifier.weight(1f))
-                        OwnTVButton(
-                            stringResource(R.string.common_cancel),
-                            onClick = onDismiss,
-                            style = OwnTVButtonStyle.SECONDARY,
-                        )
-                        OwnTVButton(
-                            stringResource(R.string.common_ok),
-                            onClick = {
-                                if (!draft.isValid) showError = true
-                                else {
-                                    onSave(enabled, draft)
-                                    onDismiss()
-                                }
-                            },
-                        )
-                    }
-                }
+    // The two columns always add up to 100%, so there is one number to set: the channel column's
+    // width; the guide takes the rest. In the page's panel, saved as it changes.
+    val first = remember { FocusRequester() }
+    LaunchedEffect(Unit) { kotlinx.coroutines.delay(60); runCatching { first.requestFocus() } }
+    androidx.compose.foundation.layout.Column(Modifier.trapAllFocusExit().focusGroup()) {
+        tv.own.owntv.ui.stage.StagePopupOption(
+            title = stringResource(R.string.settings_panel_width_customize), onClick = { onSave(!savedEnabled, savedShares) },
+            modifier = Modifier.focusRequester(first),
+            trailing = { tv.own.owntv.ui.stage.StageSwitch(savedEnabled) },
+        )
+        if (savedEnabled) {
+            StepRow(stringResource(R.string.settings_guide_width_channels), savedShares.channels, GuideWidthLimits.MIN, GuideWidthLimits.MAX, GuideWidthLimits.STEP) {
+                onSave(true, GuideWidthShares(it, GuideWidthLimits.TOTAL - it))
             }
+            Box(Modifier.padding(horizontal = 8.mpx, vertical = 14.mpx)) { GuideWidthDiagram(savedShares) }
+        }
+        androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().padding(top = 8.mpx), horizontalArrangement = Arrangement.spacedBy(12.mpx, Alignment.End)) {
+            tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_reset), onClick = { onSave(savedEnabled, GuideWidthLimits.defaults) }, height = 52.mpx, textSize = 18)
+            tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_done), onClick = onDismiss, height = 52.mpx, textSize = 18, tinted = true)
         }
     }
 }
 
 @Composable
 private fun GuideWidthDiagram(shares: GuideWidthShares) {
-    val colors = OwnTVTheme.colors
-    Row(
-        modifier = Modifier.fillMaxWidth().height(52.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(shares.channels.toFloat())
-                .fillMaxSize()
-                .clip(RoundedCornerShape(8.dp))
-                .background(colors.primaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                stringResource(R.string.common_percent, shares.channels),
-                style = MaterialTheme.typography.labelSmall,
-                color = colors.onPrimaryContainer,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Box(
-            modifier = Modifier
-                .weight(shares.epg.toFloat())
-                .fillMaxSize()
-                .clip(RoundedCornerShape(8.dp))
-                .background(colors.secondaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                stringResource(R.string.common_percent, shares.epg),
-                style = MaterialTheme.typography.labelSmall,
-                color = colors.onSecondaryContainer,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+    // The two columns at their widths, in the Stage colours: channels in accent, the guide plain.
+    val a = tv.own.owntv.ui.theme.stageAccent
+    androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().height(52.mpx), horizontalArrangement = Arrangement.spacedBy(6.mpx)) {
+        listOf(shares.channels to a.accent.copy(alpha = 0.32f), shares.epg to tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f)).forEach { (w, fill) ->
+            Box(Modifier.weight(w.toFloat()).fillMaxSize().background(fill, RoundedCornerShape(10.mpx)), contentAlignment = Alignment.Center) {
+                Text(stringResource(R.string.common_percent, w), style = tv.own.owntv.ui.theme.stageText(15, 700), color = tv.own.owntv.ui.theme.StageColors.Text, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+            }
         }
     }
 }

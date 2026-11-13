@@ -6,6 +6,9 @@
     <!-- Downloaded movies/series shared with an external player (ExternalPlayerLauncher). The download
          root is user-chosen and may live anywhere under shared storage, so expose the common roots. -->
     <external-path name="shared_media" path="." />
+    <!-- A USB stick or SD card (/storage/<volume id>/…) is not under external-path, so a download there
+         could not be handed to an external player ("could not open"). -->
+    <root-path name="volumes" path="storage/" />
     <files-path name="files_root" path="." />
     <cache-path name="cache_root" path="." />
 </paths>

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,17 +29,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.database.entity.ProfileEntity
-import tv.own.owntv.ui.components.FocusableSurface
 import tv.own.owntv.ui.components.OwnTVAvatar
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
- * Phase 6.5 — the "Who's watching?" launch gate. Shown when more than one profile exists. Picking a
+ * The "Who's watching?" launch gate. Shown when more than one profile exists. Picking a
  * profile makes it active (and prompts for a PIN if it's locked); [onEnter] records the selected
  * profile id and proceeds into the shell.
  */
@@ -49,7 +44,6 @@ import tv.own.owntv.ui.theme.OwnTVTheme
 fun ProfileGate(onEnter: (Long) -> Unit, onAddProfile: () -> Unit, modifier: Modifier = Modifier) {
     val vm: ProfilesViewModel = koinViewModel()
     val profiles by vm.profiles.collectAsStateWithLifecycle()
-    val colors = OwnTVTheme.colors
 
     var pinFor by remember { mutableStateOf<ProfileEntity?>(null) }
     var pinError by remember { mutableStateOf(false) }
@@ -69,11 +63,11 @@ fun ProfileGate(onEnter: (Long) -> Unit, onAddProfile: () -> Unit, modifier: Mod
     }
 
     Box(
-        modifier = modifier.fillMaxSize().background(colors.background),
+        modifier = modifier.fillMaxSize().background(tv.own.owntv.ui.theme.LocalStagePalette.current.page),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(stringResource(R.string.profiles_gate_title), style = MaterialTheme.typography.headlineLarge, color = colors.onSurface)
+            Text(stringResource(R.string.profiles_gate_title), style = tv.own.owntv.ui.theme.stageText(54, 700), color = tv.own.owntv.ui.theme.StageColors.Text)
             Spacer(Modifier.height(36.dp))
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(28.dp),
@@ -106,49 +100,49 @@ fun ProfileGate(onEnter: (Long) -> Unit, onAddProfile: () -> Unit, modifier: Mod
 
 @Composable
 private fun ProfileTile(profile: ProfileEntity, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val colors = OwnTVTheme.colors
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        FocusableSurface(
+        tv.own.owntv.ui.stage.StageSurface(
             onClick = onClick,
+            radius = 24.dp,
             modifier = modifier.size(132.dp),
-            shape = RoundedCornerShape(24.dp),
+            focusStyle = tv.own.owntv.ui.stage.StageFocus.FX,
             contentAlignment = Alignment.Center,
         ) { _ ->
             Box(contentAlignment = Alignment.TopEnd) {
                 OwnTVAvatar(avatarId = profile.avatarId, imagePath = profile.avatarPath.orEmpty(), modifier = Modifier.size(104.dp))
                 if (profile.pinHash != null) {
-                    Box(Modifier.size(26.dp).clip(CircleShape).background(colors.surfaceContainerHighest), contentAlignment = Alignment.Center) {
-                        OwnTVIcon(OwnTVIcon.SETTINGS, tint = colors.onSurface, modifier = Modifier.size(14.dp))
+                    Box(Modifier.size(26.dp).clip(CircleShape).background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+                        OwnTVIcon(OwnTVIcon.SETTINGS, tint = tv.own.owntv.ui.theme.StageColors.Text, modifier = Modifier.size(14.dp))
                     }
                 }
             }
         }
         Spacer(Modifier.height(10.dp))
-        Text(profile.name, style = MaterialTheme.typography.titleMedium, color = colors.onSurface, textAlign = TextAlign.Center)
+        Text(profile.name, style = tv.own.owntv.ui.theme.stageText(32, 600), color = tv.own.owntv.ui.theme.StageColors.Text, textAlign = TextAlign.Center)
         if (profile.isKids) {
-            Text(stringResource(R.string.profiles_kids_badge), style = MaterialTheme.typography.labelSmall, color = colors.primary)
+            Text(stringResource(R.string.profiles_kids_badge), style = tv.own.owntv.ui.theme.stageText(20, 500), color = tv.own.owntv.ui.theme.stageAccent.accent)
         }
     }
 }
 
 @Composable
 private fun AddTile(onClick: () -> Unit) {
-    val colors = OwnTVTheme.colors
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        FocusableSurface(
+        tv.own.owntv.ui.stage.StageSurface(
             onClick = onClick,
+            radius = 24.dp,
             modifier = Modifier.size(132.dp),
-            shape = RoundedCornerShape(24.dp),
+            focusStyle = tv.own.owntv.ui.stage.StageFocus.FX,
             contentAlignment = Alignment.Center,
         ) { _ ->
             Box(
-                modifier = Modifier.size(104.dp).clip(CircleShape).background(colors.surfaceContainerHigh),
+                modifier = Modifier.size(104.dp).clip(CircleShape).background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f)),
                 contentAlignment = Alignment.Center,
             ) {
-                OwnTVIcon(OwnTVIcon.ADD, tint = colors.onSurfaceVariant, modifier = Modifier.size(40.dp))
+                OwnTVIcon(OwnTVIcon.ADD, tint = tv.own.owntv.ui.theme.StageColors.Muted, modifier = Modifier.size(40.dp))
             }
         }
         Spacer(Modifier.height(10.dp))
-        Text(stringResource(R.string.profiles_add), style = MaterialTheme.typography.titleMedium, color = colors.onSurfaceVariant)
+        Text(stringResource(R.string.profiles_add), style = tv.own.owntv.ui.theme.stageText(32, 600), color = tv.own.owntv.ui.theme.StageColors.Muted)
     }
 }

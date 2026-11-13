@@ -1,8 +1,6 @@
 package tv.own.owntv.features.settings
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,19 +27,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import org.koin.androidx.compose.koinViewModel
 import tv.own.owntv.R
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.res.pluralStringResource
+import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.core.settings.PanelSection
 import tv.own.owntv.core.settings.PanelShares
 import tv.own.owntv.core.settings.PanelWidthLimits
@@ -51,21 +52,11 @@ import tv.own.owntv.core.settings.CINEMATIC_DETAILS_MAX
 import tv.own.owntv.features.settings.data.BrowseColumnGap
 import tv.own.owntv.features.settings.data.BrowseColumnDividerSpace
 import tv.own.owntv.features.settings.data.BrowseContainerPadding
-import tv.own.owntv.features.settings.data.cinematicWidths
 import tv.own.owntv.features.settings.data.defaultPanelShares
 import tv.own.owntv.ui.components.ContentPanelFill
-import tv.own.owntv.ui.components.FocusableSurface
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.PreviewPanelFill
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
 import tv.own.owntv.ui.components.restoreAfterDialogClose
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * Panel Width Adjustment — lets the user re-balance the three browse panels (category rail · item
@@ -81,7 +72,6 @@ import tv.own.owntv.ui.theme.OwnTVTheme
 @Composable
 fun PanelWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val vm: SettingsViewModel = koinViewModel()
-    val colors = OwnTVTheme.colors
 
     var open by remember { mutableStateOf<PanelSection?>(null) }
     val rowFocus = remember { PanelSection.entries.associateWith { FocusRequester() } }
@@ -94,77 +84,83 @@ fun PanelWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
     var savedScroll by remember { mutableIntStateOf(0) }
     LaunchedEffect(open) {
         if (open != null) { savedScroll = scrollState.value; return@LaunchedEffect }
-        restoreAfterDialogClose(dialogReturn, scrollState, savedScroll)
+        if (dialogReturn != null) restoreAfterDialogClose(dialogReturn, scrollState, savedScroll)
         dialogReturn = null
     }
-    BackHandler { onBack() }
-
+    // One row per screen, named with the layout it uses now; the panel draws that layout at its widths.
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val rowWidth = maxWidth - BrowseContainerPadding * 2
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .roundedPanel()
-                .focusProperties { onEnter = { runCatching { rowFocus.getValue(PanelSection.LIVE).requestFocus() } } }
-                .focusGroup()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 40.dp, vertical = 28.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+        val vodLayout by vm.vodLayout.collectAsStateWithLifecycle()
+        val cinematic = vodLayout == tv.own.owntv.core.settings.SettingsRepository.VodLayout.CINEMATIC
+        val liveLayout by vm.liveLayout.collectAsStateWithLifecycle()
+        val liveStage = liveLayout == tv.own.owntv.core.settings.SettingsRepository.LiveLayout.STAGE
+        val liveStageSaved by vm.liveStageWidths.collectAsStateWithLifecycle()
+        val detailsHeights = PanelSection.entries.associateWith {
+            vm.cinematicDetailsHeight(it).collectAsStateWithLifecycle().value
+        }
+        val sheetWidths = PanelSection.entries.associateWith {
+            vm.cinematicSheetWidth(it).collectAsStateWithLifecycle().value
+        }
+        val rules = stringResource(R.string.settings_panel_width_help, *NO_ARGS)
+        val sep = stringResource(R.string.content_epg_bits_separator)
+        StageFullPage(
+            parents = listOf(stringResource(R.string.settings_group_layout)),
+            title = stringResource(R.string.settings_panel_width),
+            count = pluralStringResource(R.plurals.settings_setting_count, PanelSection.entries.size, PanelSection.entries.size),
+            onBack = onBack,
+            modifier = Modifier,
+            scroll = scrollState,
         ) {
-            Header(title = stringResource(R.string.settings_panel_width), onBack = onBack)
-            Spacer(Modifier.height(4.dp))
-            Text(
-                stringResource(R.string.settings_panel_width_screen_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(16.dp))
-
-            val vodLayout by vm.vodLayout.collectAsStateWithLifecycle()
-            val cinematic = vodLayout == tv.own.owntv.core.settings.SettingsRepository.VodLayout.CINEMATIC
-            val detailsHeights = PanelSection.entries.associateWith {
-                vm.cinematicDetailsHeight(it).collectAsStateWithLifecycle().value
-            }
             PanelSection.entries.forEach { section ->
                 val enabled by vm.panelWidthEnabled.getValue(section).collectAsStateWithLifecycle()
                 val shares by vm.panelShares.getValue(section).collectAsStateWithLifecycle()
                 val current = shares ?: defaultPanelShares(section, rowWidth)
-                Row2(
+                val stageWidths = (liveStageSaved ?: tv.own.owntv.core.settings.LiveStageWidths.DEFAULT)
+                    .takeIf { section == PanelSection.LIVE && liveStage }
+                val vodCinematic = cinematic && section != PanelSection.LIVE
+                val layoutName = stringResource(
+                    when {
+                        section == PanelSection.LIVE && liveStage -> R.string.settings_live_layout_stage
+                        vodCinematic -> R.string.settings_vod_layout_cinematic
+                        else -> R.string.settings_vod_layout_separate
+                    },
+                )
+                val title = sectionTitle(section) + sep + layoutName
+                val value = SettingValue.Opens(stringResource(if (enabled) R.string.settings_live_latency_custom else R.string.settings_subtitle_default))
+                StageSettingRow(
                     icon = when (section) {
                         PanelSection.LIVE -> OwnTVIcon.LIVE_TV
                         PanelSection.MOVIES -> OwnTVIcon.MOVIES
                         PanelSection.SERIES -> OwnTVIcon.SERIES
                     },
-                    title = sectionTitle(section),
-                    desc = stringResource(
+                    title = title,
+                    desc = if (stageWidths != null) {
+                        stringResource(R.string.settings_panel_width_summary_stage, stageWidths.sheet, stageWidths.list, stageWidths.preview)
+                    } else if (vodCinematic) {
+                        // Stage Cinematic: the categories are a sheet over the full-width titles.
+                        stringResource(R.string.settings_panel_width_summary_cinematic, sheetWidths.getValue(section), detailsHeights.getValue(section))
+                    } else stringResource(
                         R.string.settings_panel_width_summary,
                         current.category,
                         current.list,
-                        // In Cinematic the third number is a height held separately, so the summary
-                        // must show THAT value — not the preview share, which is always 0 there.
-                        if (cinematic && section != PanelSection.LIVE) {
-                            stringResource(R.string.settings_panel_width_details_height)
-                        } else {
-                            previewLabel(section)
-                        },
-                        if (cinematic && section != PanelSection.LIVE) detailsHeights.getValue(section) else current.preview,
+                        previewLabel(section),
+                        current.preview,
                     ),
-                    chip = stringResource(if (enabled) R.string.settings_live_latency_custom else R.string.settings_subtitle_default),
-                    primaryChip = enabled,
-                    chevron = true,
+                    value = value,
                     onClick = { dialogReturn = rowFocus.getValue(section); open = section },
+                    help = SettingHelp(
+                        title, rules,
+                        hints = settingHints(value, pinnable = false),
+                        extra = {
+                            androidx.compose.foundation.layout.Box(Modifier.padding(top = 18.mpx)) {
+                                if (stageWidths != null) StageWidthDiagram(stageWidths)
+                                else PanelWidthDiagram(current, vodCinematic, detailsHeights.getValue(section))
+                            }
+                        },
+                    ),
                     modifier = Modifier.focusRequester(rowFocus.getValue(section)),
                 )
             }
-
-            Spacer(Modifier.height(12.dp))
-            GroupLabel(stringResource(R.string.settings_how_it_works))
-            Text(
-                stringResource(R.string.settings_panel_width_help),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-            )
         }
 
         open?.let { section ->
@@ -216,7 +212,6 @@ private fun PanelWidthDialog(
     vm: SettingsViewModel,
     onDismiss: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
     val savedEnabled by vm.panelWidthEnabled.getValue(section).collectAsStateWithLifecycle()
     val savedShares by vm.panelShares.getValue(section).collectAsStateWithLifecycle()
     val livePreviewEnabled by vm.livePreviewEnabled.collectAsStateWithLifecycle()
@@ -230,304 +225,217 @@ private fun PanelWidthDialog(
 
     var enabled by remember { mutableStateOf(savedEnabled) }
     var draft by remember { mutableStateOf(savedShares ?: stock) }
+    // Live TV in the Stage layout sizes a different thing: the sheet over the list, on its own scale,
+    // and a row of list + preview that totals 100. Seeded once, like `draft`.
+    val liveLayout by vm.liveLayout.collectAsStateWithLifecycle()
+    val stage = section == PanelSection.LIVE && liveLayout == tv.own.owntv.core.settings.SettingsRepository.LiveLayout.STAGE
+    val savedStage by vm.liveStageWidths.collectAsStateWithLifecycle()
+    var stageDraft by remember { mutableStateOf(savedStage ?: tv.own.owntv.core.settings.LiveStageWidths.DEFAULT) }
     // Seeded ONCE, exactly like `draft` above — never resynced from the flow while the dialog is up.
     // The saved value is a `stateIn(WhileSubscribed)` StateFlow, so it starts at the default and the
     // stored number lands a frame later; a resync would let that late emission overwrite whatever the
     // user had already stepped to, and the edit would save as the default instead.
     var detailsHeight by remember(section) { mutableStateOf(savedDetailsHeight) }
-    // Cinematic is two columns, so the third share must read 0 or the total would never reach 100
-    // with only two steppers on screen. Whatever a preview panel used to hold goes to the content
-    // area — that is where the space physically goes once the preview column is gone.
-    LaunchedEffect(showDetailsHeight) {
-        if (showDetailsHeight) draft = cinematicWidths(draft)
-    }
+    // Cinematic's sheet: its own value, seeded once like the height; the Separate shares stay as they are.
+    val savedSheet by vm.cinematicSheetWidth(section).collectAsStateWithLifecycle()
+    var sheetWidth by remember(section) { mutableStateOf(savedSheet) }
     // The red note only appears once the user has actually tried to save an unbalanced total.
     var showError by remember { mutableStateOf(false) }
     var showPreviewDisableConfirmation by remember { mutableStateOf(false) }
-    val valid = draft.isValid
+    val valid = if (stage) stageDraft.isValid else draft.isValid
+    val shownTotal = if (stage) stageDraft.list + stageDraft.preview else draft.total
 
     val toggleFocus = remember { FocusRequester() }
-    val confirmationFocus = remember { FocusRequester() }
     LaunchedEffect(showPreviewDisableConfirmation) {
         kotlinx.coroutines.delay(80)
-        runCatching {
-            if (showPreviewDisableConfirmation) confirmationFocus.requestFocus() else toggleFocus.requestFocus()
-        }
+        if (!showPreviewDisableConfirmation) runCatching { toggleFocus.requestFocus() }
     }
     LaunchedEffect(valid) { if (valid) showError = false }
-    BackHandler {
-        if (showPreviewDisableConfirmation) showPreviewDisableConfirmation = false else onDismiss()
-    }
-
-    tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
-        Box(
-            Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-            contentAlignment = Alignment.Center,
+    val save = {
+        // An unbalanced total is only a problem for a section that's actually on.
+        if (enabled && !valid) {
+            showError = true
+        } else if (
+            section == PanelSection.LIVE && enabled && livePreviewEnabled &&
+            (if (stage) stageDraft.preview == 0 else draft.preview == 0)
         ) {
-            if (showPreviewDisableConfirmation) {
-                Column(modifier = Modifier.dialogPanel(width = 500.dp, corner = 16.dp, padding = 24.dp)) {
-                    Text(
-                        stringResource(R.string.settings_panel_width_disable_preview_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = colors.onSurface,
-                    )
-                    Spacer(Modifier.height(10.dp))
-                    Text(
-                        stringResource(R.string.settings_panel_width_disable_preview_description),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(22.dp))
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OwnTVButton(
-                            stringResource(R.string.common_cancel),
-                            onClick = { showPreviewDisableConfirmation = false },
-                            modifier = Modifier.focusRequester(confirmationFocus),
-                        )
-                        Spacer(Modifier.weight(1f))
-                        OwnTVButton(
-                            stringResource(R.string.common_ok),
-                            onClick = {
-                                // This branch is Live TV only, which is never Cinematic — the
-                                // details height is saved by the main Okay button below.
-                                vm.setPanelWidths(section, enabled, draft)
-                                onDismiss()
-                            },
-                            style = OwnTVButtonStyle.SECONDARY,
-                        )
-                    }
+            showPreviewDisableConfirmation = true
+        } else if (stage) {
+            vm.setLiveStageWidths(enabled, stageDraft)
+            onDismiss()
+        } else {
+            // Cinematic edits only its own two values; the Separate widths stay as saved.
+            vm.setPanelWidths(section, enabled, if (showDetailsHeight) savedShares ?: stock else draft)
+            if (showDetailsHeight) {
+                vm.setCinematicDetailsHeight(section, detailsHeight)
+                vm.setCinematicSheetWidth(section, sheetWidth)
+            }
+            onDismiss()
+        }
+    }
+    val hint = tv.own.owntv.ui.theme.stageText(15, 500)
+    val muted = tv.own.owntv.ui.theme.StageColors.Muted
+    tv.own.owntv.ui.stage.StagePopup(
+        onDismiss = onDismiss,
+        title = stringResource(R.string.settings_panel_width_dialog_title, sectionTitle(section)),
+        width = 820.mpx,
+        buttons = {
+            tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_reset), onClick = {
+                draft = stock
+                stageDraft = tv.own.owntv.core.settings.LiveStageWidths.DEFAULT
+                detailsHeight = CINEMATIC_DETAILS_DEFAULT
+                sheetWidth = tv.own.owntv.core.settings.LiveStageWidths.DEFAULT.sheet
+                showError = false
+            }, height = 56.mpx, textSize = 19)
+            tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_ok), onClick = save, height = 56.mpx, textSize = 19, tinted = true)
+        },
+    ) {
+        tv.own.owntv.ui.stage.StagePopupOption(
+            title = stringResource(R.string.settings_panel_width_customize), onClick = { enabled = !enabled },
+            modifier = Modifier.focusRequester(toggleFocus),
+            trailing = { tv.own.owntv.ui.stage.StageSwitch(enabled) },
+        )
+        if (enabled) {
+            Spacer(Modifier.height(10.mpx))
+            if (stage) {
+                // List and preview are one row that must total 100, so they move together.
+                StepRow(listLabel(section, false), stageDraft.list, maximum = PanelWidthLimits.TOTAL) {
+                    stageDraft = stageDraft.copy(list = it, preview = PanelWidthLimits.TOTAL - it)
                 }
+                StepRow(thirdSliderLabel(section, false), stageDraft.preview, minimum = 0, maximum = PanelWidthLimits.TOTAL - PanelWidthLimits.MIN) {
+                    stageDraft = stageDraft.copy(preview = it, list = PanelWidthLimits.TOTAL - it)
+                }
+            } else if (showDetailsHeight) {
+                // Stage Cinematic: the titles fill the row and the categories open as a sheet over them, so
+                // the one width is the sheet's, on its own scale (the Separate widths are not touched).
+                StepRow(
+                    stringResource(R.string.settings_panel_width_live_sheet), sheetWidth,
+                    minimum = tv.own.owntv.core.settings.LiveStageWidths.LIVE_SHEET_MIN,
+                    maximum = tv.own.owntv.core.settings.LiveStageWidths.LIVE_SHEET_MAX,
+                ) { sheetWidth = it }
+                Text(stringResource(R.string.settings_panel_width_cinematic_sheet_hint), style = hint, color = muted, modifier = Modifier.padding(horizontal = 22.mpx, vertical = 6.mpx))
             } else {
-            Column(modifier = Modifier.dialogPanel(width = 440.dp, corner = 16.dp, padding = 16.dp)) {
-                Text(
-                    stringResource(R.string.settings_panel_width_dialog_title, sectionTitle(section)),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = colors.onSurface,
-                )
-                Spacer(Modifier.height(12.dp))
-
-                FocusableSurface(
-                    onClick = { enabled = !enabled },
-                    modifier = Modifier.fillMaxWidth().focusRequester(toggleFocus),
-                    shape = RoundedCornerShape(12.dp),
-                    surface = GlassSurface.DIALOGS,
-                    contentAlignment = Alignment.CenterStart,
-                ) { _ ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            stringResource(R.string.settings_panel_width_customize),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = colors.onSurface,
-                            modifier = Modifier.weight(1f),
-                        )
-                        Text(
-                            stringResource(if (enabled) R.string.common_on else R.string.common_off),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (enabled) colors.onPrimaryContainer else colors.onSecondaryContainer,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(if (enabled) colors.primaryContainer else colors.secondaryContainer)
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                        )
-                    }
-                }
-
-                if (enabled) {
-                    Spacer(Modifier.height(10.dp))
-                    if (showDetailsHeight) {
-                        // Two columns that must total 100 are really one slider, so they move
-                        // together: whatever one gives up, the other takes. Without this the total
-                        // could sit at 100 while a column was over the per-panel 80% cap, which
-                        // `isValid` rejects — Okay then refused to save anything at all, silently.
-                        // The 20..80 bounds are what keep BOTH sides inside that cap.
-                        StepRow(
-                            stringResource(R.string.settings_panel_width_category),
-                            draft.category,
-                            minimum = PanelWidthLimits.TOTAL - PanelWidthLimits.MAX,
-                            maximum = PanelWidthLimits.MAX,
-                        ) { draft = PanelShares(it, PanelWidthLimits.TOTAL - it, 0) }
-                        Spacer(Modifier.height(6.dp))
-                        StepRow(
-                            listLabel(section, cinematic),
-                            draft.list,
-                            minimum = PanelWidthLimits.TOTAL - PanelWidthLimits.MAX,
-                            maximum = PanelWidthLimits.MAX,
-                        ) { draft = PanelShares(PanelWidthLimits.TOTAL - it, it, 0) }
-                    } else {
-                    StepRow(stringResource(R.string.settings_panel_width_category), draft.category) { draft = draft.copy(category = it) }
-                    Spacer(Modifier.height(6.dp))
-                    StepRow(listLabel(section, cinematic), draft.list) { draft = draft.copy(list = it) }
-                    }
-                    if (!showDetailsHeight) {
-                        Spacer(Modifier.height(6.dp))
-                        StepRow(
-                            thirdSliderLabel(section, cinematic),
-                            draft.preview,
-                            minimum = 0,
-                        ) { draft = draft.copy(preview = it) }
-                    }
-
-                    Spacer(Modifier.height(10.dp))
-                    PanelWidthDiagram(
-                        draft,
-                        cinematic = showDetailsHeight,
-                        detailsHeight = detailsHeight,
-                    )
-
-                    Spacer(Modifier.height(10.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            stringResource(R.string.settings_panel_width_total),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = colors.onSurface,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.weight(1f),
-                        )
-                        Text(
-                            stringResource(R.string.common_percent, draft.total),
-                            style = MaterialTheme.typography.titleMedium,
-                            // `favorite` is the theme's red — the same one MaterialTheme maps to `error`.
-                            color = if (valid) colors.primary else colors.favorite,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            // Same width as a stepper's value + one button, so it lines up under them.
-                            modifier = Modifier.padding(end = 48.dp).width(64.dp),
-                        )
-                    }
-
-                    if (showDetailsHeight) {
-                        // Below the total on purpose: everything above adds up to 100% across the
-                        // row, and this one does not take part in that at all.
-                        Spacer(Modifier.height(12.dp))
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(colors.outlineVariant.copy(alpha = 0.5f)),
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        StepRow(
-                            stringResource(R.string.settings_panel_width_details_height),
-                            detailsHeight,
-                            minimum = 0,
-                            maximum = CINEMATIC_DETAILS_MAX,
-                        ) { detailsHeight = it }
-                        Spacer(Modifier.height(8.dp))
-                        Text(
-                            stringResource(R.string.settings_panel_width_details_hint),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = colors.onSurfaceVariant,
-                            modifier = Modifier.padding(horizontal = 2.dp),
-                        )
-                    }
-
-                    if (showError) {
-                        Spacer(Modifier.height(8.dp))
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(colors.favorite.copy(alpha = 0.18f))
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                        ) {
-                            Text(
-                                stringResource(R.string.settings_panel_width_invalid_total, draft.total),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = colors.favorite,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(14.dp))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OwnTVButton(
-                        stringResource(R.string.common_reset),
-                        onClick = {
-                            draft = stock
-                            detailsHeight = CINEMATIC_DETAILS_DEFAULT
-                            showError = false
-                        },
-                        style = OwnTVButtonStyle.SECONDARY,
-                    )
-                    Spacer(Modifier.weight(1f))
-                    OwnTVButton(
-                        stringResource(R.string.common_ok),
-                        onClick = {
-                            // An unbalanced total is only a problem for a section that's actually on.
-                            if (enabled && !valid) {
-                                showError = true
-                            } else if (
-                                section == PanelSection.LIVE && enabled && draft.preview == 0 && livePreviewEnabled
-                            ) {
-                                showPreviewDisableConfirmation = true
-                            } else {
-                                vm.setPanelWidths(section, enabled, draft)
-                                if (showDetailsHeight) vm.setCinematicDetailsHeight(section, detailsHeight)
-                                onDismiss()
-                            }
-                        },
-                    )
+                StepRow(stringResource(R.string.settings_panel_width_category), draft.category) { draft = draft.copy(category = it) }
+                StepRow(listLabel(section, cinematic), draft.list, maximum = PanelWidthLimits.listMax(draft.preview)) { draft = draft.copy(list = it) }
+                StepRow(thirdSliderLabel(section, cinematic), draft.preview, minimum = 0) {
+                    // Bringing the third panel back lowers the list's ceiling to MAX again.
+                    draft = draft.copy(preview = it, list = draft.list.coerceAtMost(PanelWidthLimits.listMax(it)))
                 }
             }
+
+            Box(Modifier.padding(horizontal = 8.mpx, vertical = 14.mpx)) {
+                if (stage) StageWidthDiagram(stageDraft)
+                else PanelWidthDiagram(
+                    if (showDetailsHeight) PanelShares(sheetWidth, PanelWidthLimits.TOTAL - sheetWidth, 0) else draft,
+                    cinematic = showDetailsHeight,
+                    detailsHeight = detailsHeight,
+                )
+            }
+
+            // Nothing in Cinematic adds up to 100%: the sheet and the height are each on their own scale.
+            if (!showDetailsHeight) Row(Modifier.fillMaxWidth().padding(horizontal = 22.mpx), verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.settings_panel_width_total), style = tv.own.owntv.ui.theme.stageText(19, 700), color = tv.own.owntv.ui.theme.StageColors.Text, modifier = Modifier.weight(1f))
+                Text(
+                    stringResource(R.string.common_percent, shownTotal), style = tv.own.owntv.ui.theme.stageText(20, 800),
+                    color = if (valid) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Danger,
+                )
+            }
+            if (stage) {
+                // Below the total: the sheet slides over the row and takes no part in its 100%.
+                tv.own.owntv.ui.stage.StagePopupDivider()
+                StepRow(
+                    stringResource(R.string.settings_panel_width_live_sheet), stageDraft.sheet,
+                    minimum = tv.own.owntv.core.settings.LiveStageWidths.LIVE_SHEET_MIN,
+                    maximum = tv.own.owntv.core.settings.LiveStageWidths.LIVE_SHEET_MAX,
+                ) { stageDraft = stageDraft.copy(sheet = it) }
+                Text(stringResource(R.string.settings_panel_width_live_sheet_hint, *NO_ARGS), style = hint, color = muted, modifier = Modifier.padding(horizontal = 22.mpx, vertical = 6.mpx))
+            }
+            if (showDetailsHeight) {
+                // Below the total on purpose: it takes no part in the row's 100%.
+                tv.own.owntv.ui.stage.StagePopupDivider()
+                StepRow(stringResource(R.string.settings_panel_width_details_height), detailsHeight, minimum = 0, maximum = CINEMATIC_DETAILS_MAX) { detailsHeight = it }
+                Text(stringResource(R.string.settings_panel_width_details_hint), style = hint, color = muted, modifier = Modifier.padding(horizontal = 22.mpx, vertical = 6.mpx))
+            }
+            if (showError) {
+                Text(
+                    stringResource(R.string.settings_panel_width_invalid_total, shownTotal),
+                    style = hint, color = tv.own.owntv.ui.theme.StageColors.Danger,
+                    modifier = Modifier.padding(top = 12.mpx).fillMaxWidth()
+                        .background(tv.own.owntv.ui.theme.StageColors.Danger.copy(alpha = 0.14f), RoundedCornerShape(14.mpx))
+                        .padding(horizontal = 18.mpx, vertical = 10.mpx),
+                )
             }
         }
+    }
+    if (showPreviewDisableConfirmation) {
+        tv.own.owntv.ui.stage.StageConfirm(
+            title = stringResource(R.string.settings_panel_width_disable_preview_title),
+            body = stringResource(R.string.settings_panel_width_disable_preview_description),
+            confirm = stringResource(R.string.common_ok),
+            onConfirm = {
+                // This branch is Live TV only, which is never Cinematic.
+                if (stage) vm.setLiveStageWidths(enabled, stageDraft) else vm.setPanelWidths(section, enabled, draft)
+                onDismiss()
+            },
+            onCancel = { showPreviewDisableConfirmation = false },
+            focusCancel = true,
+        )
+    }
+}
+
+/** Live TV, Stage layout: the list and the preview across the row, the categories sheet drawn over its left edge. */
+@Composable
+private fun StageWidthDiagram(w: tv.own.owntv.core.settings.LiveStageWidths) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(44.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.04f))
+            .padding(4.dp),
+    ) {
+        Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Box(Modifier.weight(w.list.toFloat()).fillMaxHeight().clip(RoundedCornerShape(6.dp)).background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f)))
+            if (w.preview > 0) {
+                Box(Modifier.weight(w.preview.toFloat()).fillMaxHeight().clip(RoundedCornerShape(6.dp)).background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.12f)))
+            }
+        }
+        Box(
+            Modifier
+                .fillMaxWidth(w.sheet / 100f)
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(6.dp))
+                .background(tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.55f)),
+        )
     }
 }
 
 /** The browse layout users are sizing: one container, two plain columns, and a raised preview. */
 @Composable
 private fun PanelWidthDiagram(shares: PanelShares, cinematic: Boolean = false, detailsHeight: Int = 0) {
-    val colors = OwnTVTheme.colors
     if (cinematic) {
-        // Two columns, and the third share drawn as a band across the top of the content one —
-        // because that is what it now does. A preview column here would be a picture of a panel
-        // the layout does not have.
-        Row(
+        // The titles across the whole row with the details band on top, and the categories sheet
+        // drawn over its left edge — the Stage Cinematic layout, as Live TV's Stage diagram.
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(46.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(ContentPanelFill)
                 .padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
         ) {
+            Column(Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp))) {
+                val detailsWeight = detailsHeight.toFloat().coerceIn(0f, CINEMATIC_DETAILS_MAX.toFloat())
+                Box(Modifier.weight(detailsWeight.coerceAtLeast(0.01f)).fillMaxWidth().background(tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.32f)))
+                Box(Modifier.weight((100f - detailsWeight).coerceAtLeast(1f)).fillMaxWidth().background(tv.own.owntv.ui.theme.StageColors.Text.copy(alpha = 0.10f)))
+            }
             Box(
                 Modifier
-                    .weight(shares.category.toFloat().coerceAtLeast(1f))
+                    .fillMaxWidth(shares.category / 100f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colors.onSurface.copy(alpha = 0.035f)),
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.55f)),
             )
-            Spacer(Modifier.width(BrowseColumnGap))
-            Column(
-                Modifier
-                    .weight(shares.list.toFloat().coerceAtLeast(1f))
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(8.dp)),
-            ) {
-                val detailsWeight = detailsHeight.toFloat().coerceIn(0f, CINEMATIC_DETAILS_MAX.toFloat())
-                Box(
-                    Modifier
-                        .weight(detailsWeight)
-                        .fillMaxWidth()
-                        .background(colors.primary.copy(alpha = 0.32f)),
-                )
-                Box(
-                    Modifier
-                        .weight((100f - detailsWeight).coerceAtLeast(1f))
-                        .fillMaxWidth()
-                        .background(colors.onSurface.copy(alpha = 0.10f)),
-                )
-            }
         }
         return
     }
@@ -545,7 +453,7 @@ private fun PanelWidthDiagram(shares: PanelShares, cinematic: Boolean = false, d
                 .weight(shares.category.toFloat())
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
-                .background(colors.onSurface.copy(alpha = 0.035f)),
+                .background(tv.own.owntv.ui.theme.StageColors.Text.copy(alpha = 0.035f)),
         )
         Spacer(Modifier.width(BrowseColumnGap))
         Box(
@@ -553,7 +461,7 @@ private fun PanelWidthDiagram(shares: PanelShares, cinematic: Boolean = false, d
                 .width(BrowseColumnDividerSpace)
                 .fillMaxHeight()
                 .padding(vertical = 2.dp)
-                .background(colors.outlineVariant.copy(alpha = 0.35f)),
+                .background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.10f)),
         )
         Spacer(Modifier.width(BrowseColumnGap))
         Box(
@@ -584,48 +492,26 @@ internal fun StepRow(
     step: Int = PanelWidthLimits.STEP,
     onSet: (Int) -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    // One focus stop per value; ◀ ▶ step it, clamped at the ends (nothing to disable, so focus never drops).
+    tv.own.owntv.ui.stage.StageSurface(
+        onClick = {},
+        radius = 16.mpx,
+        focusStyle = tv.own.owntv.ui.stage.StageFocus.FX,
+        modifier = Modifier.fillMaxWidth().height(64.mpx).onPreviewKeyEvent { e ->
+            val d = when (e.key) { Key.DirectionLeft -> -1; Key.DirectionRight -> 1; else -> 0 }
+            if (d != 0 && e.type == KeyEventType.KeyDown) onSet((value + d * step).coerceIn(minimum, maximum))
+            d != 0
+        },
     ) {
-        Text(label, style = MaterialTheme.typography.bodyLarge, color = colors.onSurface, modifier = Modifier.weight(1f))
-        // Both buttons stay focusable at the ends of the range: disabling the one holding focus would
-        // drop it, and focus is trapped in this dialog — the D-pad would go dead (the bug fixed in
-        // StepperDialog). They just stop moving the value and dim instead.
-        StepBtn("–", atLimit = value <= minimum) {
-            onSet((value - step).coerceAtLeast(minimum))
-        }
-        Text(
-            stringResource(R.string.common_percent, value),
-            style = MaterialTheme.typography.titleMedium,
-            color = colors.primary,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.width(64.dp),
-        )
-        StepBtn("+", atLimit = value >= maximum) {
-            onSet((value + step).coerceAtMost(maximum))
+        Row(Modifier.fillMaxWidth().padding(horizontal = 22.mpx), verticalAlignment = Alignment.CenterVertically) {
+            Text(label, style = tv.own.owntv.ui.theme.stageText(19, 600), color = tv.own.owntv.ui.theme.StageColors.Text, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+            OwnTVIcon(OwnTVIcon.CHEVRON, if (value > minimum) tv.own.owntv.ui.theme.StageColors.Muted else tv.own.owntv.ui.theme.StageColors.Dim, Modifier.size(20.mpx).graphicsLayer { rotationZ = 180f })
+            Text(
+                stringResource(R.string.common_percent, value), style = tv.own.owntv.ui.theme.stageText(20, 800),
+                color = tv.own.owntv.ui.theme.stageAccent.accent, textAlign = TextAlign.Center, modifier = Modifier.width(84.mpx),
+            )
+            OwnTVIcon(OwnTVIcon.CHEVRON, if (value < maximum) tv.own.owntv.ui.theme.StageColors.Muted else tv.own.owntv.ui.theme.StageColors.Dim, Modifier.size(20.mpx))
         }
     }
 }
 
-/** Square − / + button (matches the one in NumberInputDialog / StepperDialog). */
-@Composable
-private fun StepBtn(label: String, atLimit: Boolean, onClick: () -> Unit) {
-    val colors = OwnTVTheme.colors
-    FocusableSurface(
-        onClick = onClick,
-        modifier = Modifier.size(40.dp),
-        shape = RoundedCornerShape(12.dp),
-        contentAlignment = Alignment.Center,
-        surface = GlassSurface.DIALOGS,
-    ) { _ ->
-        Text(
-            label,
-            style = MaterialTheme.typography.titleMedium,
-            color = if (atLimit) colors.outline else colors.onSurface,
-            fontWeight = FontWeight.SemiBold,
-        )
-    }
-}

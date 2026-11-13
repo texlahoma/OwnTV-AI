@@ -23,6 +23,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tv.own.owntv.core.content.AdultCategoryClassifier
+import tv.own.owntv.core.customize.CustomizationStore
+import tv.own.owntv.core.customize.SectionCustomizations
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.MovieDao
@@ -32,6 +35,8 @@ import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.dao.TrendingDao
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.MovieEntity
+import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.core.database.entity.MetadataCacheEntity
 import tv.own.owntv.core.home.GuideSliceState
 import tv.own.owntv.core.home.HeroItem
@@ -39,12 +44,13 @@ import tv.own.owntv.core.home.HomeFeedReader
 import tv.own.owntv.core.home.TrendingHomeItem
 import tv.own.owntv.core.home.homeKey
 import tv.own.owntv.core.launcher.LauncherContinuationItem
-import tv.own.owntv.core.launcher.LauncherContinuationKind
 import tv.own.owntv.core.model.HomeConfig
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.metadata.MetadataImages
 import tv.own.owntv.core.metadata.MetadataRepository
 import tv.own.owntv.core.settings.SettingsRepository
+import tv.own.owntv.core.categorylock.sealedCategoryKeys
+import tv.own.owntv.core.sync.LibraryLoading
 import tv.own.owntv.player.HeroPreviewEngine
 
 @Immutable
@@ -52,6 +58,19 @@ data class HomeHeroMetadata(
     val backdropUrl: String? = null,
     val logoUrl: String? = null,
     val plot: String? = null,
+)
+
+/**
+ * What the Trending hero's info line and buttons need beyond the snapshot: TMDB genres (empty until the
+ * cached details are read, or when TMDB has none) and how many entries of the same title the active
+ * playlists hold ("All versions 3").
+ */
+@Immutable
+data class TrendingExtras(
+    val genres: List<String> = emptyList(),
+    val versions: Int = 1,
+    /** TMDB title art, shown instead of the text title when there is one (as the films/series hero). */
+    val logoUrl: String? = null,
 )
 
 @Immutable
@@ -66,14 +85,17 @@ data class HomeUiState(
     val activeTrendingIndex: Int = 0,
     val trendingPreferredLanguage: String = "EN",
     val trendingSeasonCounts: Map<Long, Int> = emptyMap(),
+    /** Keyed by [TrendingHomeItem.stableKey]; filled for the title on screen. */
+    val trendingExtras: Map<String, TrendingExtras> = emptyMap(),
     val heroItems: List<HeroItem> = emptyList(),
     val activeHeroIndex: Int = 0,
     val continueMovies: List<LauncherContinuationItem> = emptyList(),
     val continueSeries: List<LauncherContinuationItem> = emptyList(),
     val heroMetadata: Map<String, HomeHeroMetadata> = emptyMap(),
-    val continuationArtwork: Map<String, String> = emptyMap(),
     val recentLive: List<ChannelEntity> = emptyList(),
     val favoriteLive: List<ChannelEntity> = emptyList(),
+    val favoriteMovies: List<MovieEntity> = emptyList(),
+    val favoriteSeries: List<SeriesEntity> = emptyList(),
     val config: HomeConfig = HomeConfig(),
     val recentGuide: GuideSliceState = GuideSliceState(),
     val favoriteGuide: GuideSliceState = GuideSliceState(),
@@ -81,14 +103,14 @@ data class HomeUiState(
      * True until the first [HomeViewModel.loadHomeData] completes. Home's queries are profile-scoped and
      * already indexed, but on a cold boot their first reads come off slow eMMC (pages not yet in the OS
      * page cache) — that's the ~half-second gap between the shell painting and `home-data`. While that
-     * runs we render a skeleton so the landing screen paints its *structure* instantly instead of flashing
-     * the empty state (which looks wrong for a user who does have history). Flips to false the moment real
-     * data publishes, and stays false thereafter (refreshes don't re-skeleton).
+     * runs Home draws nothing over the background rather than flashing the empty state (which looks wrong
+     * for a user who does have history). Flips to false the moment real data publishes, and stays false
+     * thereafter (refreshes don't blank it again).
      */
     val isLoading: Boolean = true,
 )
 
-/** What the shared top-bar Continue chip points at (Batch 7). */
+/** What the shared top-bar Continue chip points at. */
 enum class ContinueKind { LIVE, MOVIE, EPISODE }
 enum class ContinueAction { RESUME, PLAY, NEXT_UP, LAST_CHANNEL }
 
@@ -120,6 +142,10 @@ class HomeViewModel(
     private val progressDao: tv.own.owntv.core.database.dao.ProgressDao,
     private val metadata: MetadataRepository,
     private val trendingDao: TrendingDao,
+    private val favoriteDao: tv.own.owntv.core.database.dao.FavoriteDao,
+    private val userDataWriter: tv.own.owntv.core.backup.UserDataWriter,
+    private val customize: CustomizationStore,
+    private val libraryLoading: LibraryLoading,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -161,36 +187,48 @@ class HomeViewModel(
                 reloadRequests.emit(null)
             }
         }
+        // A lock closing or opening (the relock on leaving the app, a PIN entry) changes which titles
+        // the rows may show. drop(1): the shell asks for the first load.
+        viewModelScope.launch {
+            customize.sealedCategoryKeys(settings.activeProfileId).drop(1).collect { reloadRequests.emit(null) }
+        }
     }
 
-    // --- Batch 7: the single most-recent resumable item, for the shared top-bar Continue chip. ---
+    // --- The single most-recent resumable item, for the shared top-bar Continue chip. ---
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     val continueTarget: StateFlow<ContinueTarget?> = settings.activeProfileId
         .flatMapLatest { pid ->
             if (pid < 0) flowOf(null)
-            else historyDao.observeMostRecent(pid).map { h -> h?.let { resolveContinue(pid, it) } }
+            // The section's customizations ride along so a rename in Customize retitles the chip at once.
+            else combine(historyDao.observeMostRecent(pid), customize.sealedCategoryKeys(flowOf(pid))) { h, _ -> h }
+                .flatMapLatest { h ->
+                    if (h == null) return@flatMapLatest flowOf(null)
+                    val section = if (h.mediaType == MediaType.EPISODE) MediaType.SERIES else h.mediaType
+                    customize.observe(pid, section).map { cust -> resolveContinue(pid, h, cust) }
+                }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private suspend fun resolveContinue(
         pid: Long,
         h: tv.own.owntv.core.database.entity.WatchHistoryEntity,
+        cust: SectionCustomizations,
     ): ContinueTarget? = when (h.mediaType) {
         MediaType.MOVIE -> movieDao.getById(h.itemId)?.let { m ->
-            if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(pid, m.categoryId, profileDao, categoryDao)) return@let null
+            if (!AdultCategoryClassifier.allows(pid, m.categoryId, profileDao, categoryDao) || customize.sealsCategory(pid, m.categoryId)) return@let null
             val pos = progressDao.get(pid, MediaType.MOVIE, m.id)?.positionMs ?: 0L
-            ContinueTarget(ContinueKind.MOVIE, m.name, if (pos > 0) ContinueAction.RESUME else ContinueAction.PLAY, movieId = m.id, positionMs = pos)
+            ContinueTarget(ContinueKind.MOVIE, cust.displayName(m), if (pos > 0) ContinueAction.RESUME else ContinueAction.PLAY, movieId = m.id, positionMs = pos)
         }
         MediaType.EPISODE -> seriesDao.getEpisodeById(h.itemId)?.let { ep ->
             seriesDao.getSeriesById(ep.seriesId)?.let { s ->
-                if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(pid, s.categoryId, profileDao, categoryDao)) return@let null
+                if (!AdultCategoryClassifier.allows(pid, s.categoryId, profileDao, categoryDao) || customize.sealsCategory(pid, s.categoryId)) return@let null
                 val pos = progressDao.get(pid, MediaType.EPISODE, ep.id)?.positionMs ?: 0L
-                ContinueTarget(ContinueKind.EPISODE, s.name, if (pos > 0) ContinueAction.RESUME else ContinueAction.NEXT_UP, seriesId = ep.seriesId, episodeId = ep.id, positionMs = pos)
+                ContinueTarget(ContinueKind.EPISODE, cust.displayName(s), if (pos > 0) ContinueAction.RESUME else ContinueAction.NEXT_UP, seriesId = ep.seriesId, episodeId = ep.id, positionMs = pos)
             }
         }
         MediaType.LIVE -> channelDao.getById(h.itemId)?.let { c ->
-            if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(pid, c.categoryId, profileDao, categoryDao)) return@let null
-            ContinueTarget(ContinueKind.LIVE, c.name, ContinueAction.LAST_CHANNEL, channelId = c.id)
+            if (!AdultCategoryClassifier.allows(pid, c.categoryId, profileDao, categoryDao) || customize.sealsCategory(pid, c.categoryId)) return@let null
+            ContinueTarget(ContinueKind.LIVE, cust.displayName(c), ContinueAction.LAST_CHANNEL, channelId = c.id)
         }
         else -> null
     }
@@ -199,7 +237,6 @@ class HomeViewModel(
     private val _previewEnabled = MutableStateFlow(true)
     private val _lastHeroInteractionMs = MutableStateFlow(0L)
     private val resolvingHeroKeys = mutableSetOf<String>()
-    private val resolvingContinuationArtworkKeys = mutableSetOf<String>()
 
     val lastHeroInteractionMs: StateFlow<Long> = _lastHeroInteractionMs.asStateFlow()
 
@@ -226,6 +263,85 @@ class HomeViewModel(
         val items = _uiState.value.trendingItems
         if (index !in items.indices) return
         _uiState.value = _uiState.value.copy(activeTrendingIndex = index)
+        resolveTrendingExtras(items[index])
+    }
+
+    /** Titles stored so far while one of this profile's playlists still loads after setup; 0 once none does. */
+    val libraryLoadingTitles: StateFlow<Int> = libraryLoading.titles
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
+    /** Favourite ids per type, for the hero's ♥ (the same favourites Movies and Series show). */
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private fun favoriteIds(type: MediaType): StateFlow<Set<Long>> = settings.activeProfileId
+        .flatMapLatest { pid -> if (pid < 0) flowOf(emptyList()) else favoriteDao.observeFavoriteIds(pid, type) }
+        .map { it.toSet() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+
+    val favoriteMovieIds: StateFlow<Set<Long>> = favoriteIds(MediaType.MOVIE)
+    val favoriteSeriesIds: StateFlow<Set<Long>> = favoriteIds(MediaType.SERIES)
+
+    fun toggleTrendingFavorite(item: TrendingHomeItem) {
+        viewModelScope.launch {
+            val pid = currentProfileId() ?: return@launch
+            val (type, id, favs) = when (item) {
+                is TrendingHomeItem.Movie -> Triple(MediaType.MOVIE, item.movie.id, favoriteMovieIds.value)
+                is TrendingHomeItem.Series -> Triple(MediaType.SERIES, item.series.id, favoriteSeriesIds.value)
+            }
+            if (id in favs) {
+                userDataWriter.removeFavorite(pid, type, id)
+            } else {
+                favoriteDao.add(tv.own.owntv.core.database.entity.FavoriteEntity(profileId = pid, mediaType = type, itemId = id))
+            }
+        }
+    }
+
+    private val resolvingTrendingKeys = mutableSetOf<String>()
+
+    /** Genres and title art from the cached TMDB details, and the count of same-title entries in the active playlists. */
+    private fun resolveTrendingExtras(item: TrendingHomeItem) {
+        val key = item.stableKey
+        if (_uiState.value.trendingExtras.containsKey(key) || !resolvingTrendingKeys.add(key)) return
+        viewModelScope.launch {
+            try {
+                val extras = withContext(Dispatchers.IO) {
+                    val cache = runCatching { resolveTrendingDetails(item).cache }.getOrNull()
+                    val genres = cache?.genresJson
+                        ?.let { json -> runCatching { org.json.JSONArray(json) }.getOrNull() }
+                        ?.let { a -> (0 until a.length()).mapNotNull { a.optString(it).takeIf(String::isNotBlank) } }
+                        .orEmpty()
+                    TrendingExtras(
+                        genres = genres,
+                        versions = runCatching { versionCount(item) }.getOrDefault(1),
+                        logoUrl = MetadataImages.logo(cache?.logoPath),
+                    )
+                }
+                _uiState.value = _uiState.value.copy(trendingExtras = _uiState.value.trendingExtras + (key to extras))
+            } finally {
+                resolvingTrendingKeys.remove(key)
+            }
+        }
+    }
+
+    /**
+     * Entries of the same title (same title signature, the year within one where both have one) across
+     * the playlists the section is showing — what "All versions" then lists.
+     */
+    private suspend fun versionCount(item: TrendingHomeItem): Int {
+        val pid = currentProfileId() ?: return 1
+        val (type, signature, year) = when (item) {
+            is TrendingHomeItem.Movie -> Triple(MediaType.MOVIE, item.movie.titleSignature, item.movie.parsedYear)
+            is TrendingHomeItem.Series -> Triple(MediaType.SERIES, item.series.titleSignature, item.series.parsedYear)
+        }
+        if (signature.isBlank()) return 1
+        val sources = tv.own.owntv.core.repository.activeSourceIds(settings, sourceDao, pid, type)
+        val rows = sources.flatMap { sid ->
+            when (type) {
+                MediaType.MOVIE -> movieDao.trendingExact(sid, listOf(signature))
+                else -> seriesDao.trendingExact(sid, listOf(signature))
+            }
+        }
+        return rows.count { row -> year == null || row.parsedYear == null || kotlin.math.abs(row.parsedYear!! - year) <= 1 }
+            .coerceAtLeast(1)
     }
 
     /** Re-resolve the exact saved provider row immediately before an action in case a sync replaced it. */
@@ -256,24 +372,6 @@ class HomeViewModel(
         resolveHeroMetadata(index)
     }
 
-    fun resolveSeriesContinuationArtwork(item: LauncherContinuationItem) {
-        if (item.kind != LauncherContinuationKind.EPISODE) return
-        if (_uiState.value.continuationArtwork.containsKey(item.stableKey)) return
-        if (!resolvingContinuationArtworkKeys.add(item.stableKey)) return
-
-        viewModelScope.launch {
-            try {
-                delay(250)
-                val art = withContext(Dispatchers.IO) { seriesContinuationArtwork(item) } ?: return@launch
-                _uiState.value = _uiState.value.copy(
-                    continuationArtwork = _uiState.value.continuationArtwork + (item.stableKey to art),
-                )
-            } finally {
-                resolvingContinuationArtworkKeys.remove(item.stableKey)
-            }
-        }
-    }
-
     fun stopPreview() {
         heroPreviewEngine.stop()
     }
@@ -284,10 +382,13 @@ class HomeViewModel(
      * a Referer had a home screen that 403'd on every preview while the item itself played fine.
      */
     suspend fun startPreview(hero: HeroItem) {
-        val ua = withContext(Dispatchers.IO) {
-            runCatching { sourceDao.getById(hero.sourceId)?.userAgent }.getOrNull()
+        val source = withContext(Dispatchers.IO) {
+            runCatching { sourceDao.getById(hero.sourceId) }.getOrNull()
         }
-        heroPreviewEngine.play(hero.streamUrl, hero.seekToMs, ua, hero.httpHeaders)
+        heroPreviewEngine.play(
+            hero.streamUrl, hero.seekToMs, source?.userAgent,
+            tv.own.owntv.core.settings.SourceOverrides.headersWithReferer(hero.httpHeaders, source),
+        )
     }
 
     /**
@@ -315,21 +416,25 @@ class HomeViewModel(
                 .coerceIn(0, (data.trendingItems.size - 1).coerceAtLeast(0)),
             trendingPreferredLanguage = data.trendingPreferredLanguage,
             trendingSeasonCounts = data.trendingSeasonCounts,
+            trendingExtras = previous.trendingExtras.filterKeys { key -> data.trendingItems.any { it.stableKey == key } },
             heroItems = data.heroItems,
             activeHeroIndex = 0,
             continueMovies = data.continueMovies,
             continueSeries = data.continueSeries,
             heroMetadata = previous.heroMetadata.filterKeys { key -> data.heroItems.any { it.homeKey == key } },
-            continuationArtwork = previous.continuationArtwork
-                .filterKeys { key -> data.continueSeries.any { it.stableKey == key } },
             recentLive = data.recentLive,
             favoriteLive = data.favoriteLive,
+            favoriteMovies = data.favoriteMovies,
+            favoriteSeries = data.favoriteSeries,
             config = data.config,
             recentGuide = data.recentGuide,
             favoriteGuide = data.favoriteGuide,
             isLoading = false,
         )
         tv.own.owntv.core.util.Perf.stamp("home-data")
+        _uiState.value.trendingItems.getOrNull(_uiState.value.activeTrendingIndex)?.let(::resolveTrendingExtras)
+        // Keep watching shows every card as a still, so each needs its artwork up front, not on focus.
+        _uiState.value.heroItems.indices.forEach { resolveHeroMetadata(it) }
     }
 
     private fun resolveHeroMetadata(index: Int) {
@@ -342,9 +447,9 @@ class HomeViewModel(
 
         viewModelScope.launch {
             try {
+                // Off the cold-start path: the rails paint first, the stills fill in after.
                 delay(250)
-                val current = _uiState.value.heroItems.getOrNull(_uiState.value.activeHeroIndex)
-                if (current == null || current.homeKey != key) return@launch
+                if (_uiState.value.heroItems.none { it.homeKey == key }) return@launch
 
                 val resolved = withContext(Dispatchers.IO) { heroMetadata(item) } ?: return@launch
                 _uiState.value = _uiState.value.copy(
@@ -378,17 +483,6 @@ class HomeViewModel(
             }
         }
         is HeroItem.LiveHero -> null
-    }
-
-    private suspend fun seriesContinuationArtwork(item: LauncherContinuationItem): String? {
-        val episode = seriesDao.getEpisodeById(item.targetItemId) ?: return null
-        val series = seriesDao.getSeriesById(episode.seriesId) ?: return null
-        val episodeMeta = metadata.resolveEpisode(series, episode)
-        val showMeta = if (episodeMeta == null) metadata.resolveSeries(series) else null
-        return MetadataImages.backdrop(episodeMeta?.backdropPath ?: episodeMeta?.posterPath, size = "w780")
-            ?: MetadataImages.backdrop(showMeta?.backdropPath, size = "w780")
-            ?: series.backdropUrl?.takeIf { it.isNotBlank() }
-            ?: series.posterUrl?.takeIf { it.isNotBlank() }
     }
 
     private suspend fun currentProfileId(): Long? {

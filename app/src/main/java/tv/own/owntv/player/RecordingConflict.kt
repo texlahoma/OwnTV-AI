@@ -14,7 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
- * What the player's failure screen should offer when a **recording** is why the picture stopped (D9).
+ * What the player's failure screen should offer when a **recording** is why the picture stopped.
  *
  * Null means this is an ordinary failure and the screen keeps its single Retry. Non-null means the
  * user is being offered the swap, and [stopAndRetry] is the act behind the first button.
@@ -26,7 +26,7 @@ class RecordingConflict internal constructor(
 }
 
 /**
- * Decide whether this failure is the one D9 describes: **something is recording, and the playback
+ * Decide whether this failure is the recording conflict: **something is recording, and the playback
  * error is the provider refusing a second stream**.
  *
  * Both halves are required, and the second is what stops the swap being offered for every failure
@@ -61,17 +61,18 @@ fun rememberRecordingConflict(error: PlaybackFailure?): RecordingConflict? {
  *
  * Matched on the type rather than on rendered text. Two shapes qualify:
  *
- * - **`Raw` carrying HTTP 458** — the provider saying outright "your account's session is already in
+ * - **`AccountInUse`**, and **`Raw` carrying HTTP 458** from older paths — the provider saying outright "your account's session is already in
  *   use", which is the code `LiveStreamQuirks.isSessionLimit` already recognises.
  * - **`StreamUnavailable`** — the generic refusal. On its own it means little, which is why this is
- *   only ever consulted *after* the caller has established that something is recording. D4 is
- *   explicit that the app should attribute the failure precisely because it knows the user pressed
+ *   only ever consulted *after* the caller has established that something is recording. The
+ *   app should attribute the failure precisely because it knows the user pressed
  *   record; without a recording running, none of this is reached.
  *
  * Deliberately not `LostConnection` or the decoder failures: those have nothing to do with the
  * provider's stream count, and offering to stop a recording would be a lie about the cause.
  */
 private fun isSessionLimitFailure(error: PlaybackFailure): Boolean = when (error) {
+    PlaybackFailure.AccountInUse -> true
     is PlaybackFailure.Raw -> error.message.contains(SESSION_LIMIT_CODE.toString())
     is PlaybackFailure.StreamUnavailable -> true
     else -> false

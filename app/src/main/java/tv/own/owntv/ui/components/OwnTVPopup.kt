@@ -34,6 +34,13 @@ import tv.own.owntv.ui.theme.PopupFontTheme
  *
  * Popup chrome and the user-selected popup typography are reduced together here. Keeping the scale in the host means
  * nested popups (Rule builder -> Rule value) cannot silently return to full application size.
+ *
+ * A popup has no settings panel of its own: [LocalSettingsPanel][tv.own.owntv.features.settings.LocalSettingsPanel]
+ * is cleared inside it, so a picker opened here draws its own popup and a row here never writes its
+ * help into the page behind.
+ *
+ * [stageLayout] is for the Stage popups and menus, which are drawn in design pixels at the screen's own
+ * scale times the user's Popup size, and placed by their caller: no 0.70 host scale, no centring.
  */
 @Composable
 fun OwnTVPopup(
@@ -41,8 +48,14 @@ fun OwnTVPopup(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,
     fontScale: Float = 0.70f,
+    stageLayout: Boolean = false,
+    /** Stage popups follow Popup size and popup font size (the drawn size = 100%). False for a full-screen player. */
+    stageScaled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    // The app's own density (2.0 × UI Zoom). A dialog window starts again from the display's density,
+    // so Stage menus, drawn in design pixels, would come out at 100% zoom whatever the user chose.
+    val appDensity = LocalDensity.current
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -105,6 +118,19 @@ fun OwnTVPopup(
         val availableHeightPx = (usableBottomPx - topSafePx).coerceAtLeast(1)
         val availableHeightDp = with(baseDensity) { availableHeightPx.toDp() }
 
+        if (stageLayout) {
+            // Popup size scales the whole popup; popup font size its text, in place of the main font size.
+            val stageDensity = if (!stageScaled) appDensity else Density(
+                density = appDensity.density * tv.own.owntv.ui.theme.LocalPopupSizeScaleFactor.current,
+                fontScale = appDensity.fontScale / tv.own.owntv.ui.theme.LocalUiFontScaleFactor.current *
+                    tv.own.owntv.ui.theme.LocalPopupFontScaleFactor.current,
+            )
+            CompositionLocalProvider(LocalDensity provides stageDensity, LocalTvImeWatcher provides watcher, LocalTvImeMetrics provides metrics, tv.own.owntv.features.settings.LocalSettingsPanel provides null) {
+                Box(Modifier.fillMaxSize()) { content() }
+            }
+            return@Dialog
+        }
+
         val popupScale = 0.70f
         // The host owns the fixed TV-safe base scale. PopupFontTheme applies the user's independent
         // popup geometry and font controls for both hosted and legacy inline popup content.
@@ -127,6 +153,7 @@ fun OwnTVPopup(
                     LocalDensity provides popupDensity,
                     LocalTvImeWatcher provides watcher,
                     LocalTvImeMetrics provides metrics,
+                    tv.own.owntv.features.settings.LocalSettingsPanel provides null,
                 ) {
                     PopupFontTheme(fontScale = fontScale) {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

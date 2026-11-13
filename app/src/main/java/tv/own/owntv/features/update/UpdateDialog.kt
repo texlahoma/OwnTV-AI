@@ -1,53 +1,51 @@
 package tv.own.owntv.features.update
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import org.koin.compose.koinInject
 import tv.own.owntv.R
+import androidx.compose.ui.unit.em
+import tv.own.owntv.ui.stage.StageButton
+import tv.own.owntv.ui.theme.StageColors
+import tv.own.owntv.ui.theme.mpx
+import tv.own.owntv.ui.theme.mpxSp
+import tv.own.owntv.ui.theme.stageText
 import tv.own.owntv.core.update.UpdateManager
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.OwnTVSpinner
-import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.theme.OwnTVTheme
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clip
+import kotlinx.coroutines.launch
 
 /**
  * The in-app update dialog (used both from Settings → Check for updates and the automatic prompt).
@@ -58,8 +56,9 @@ import tv.own.owntv.ui.theme.OwnTVTheme
 fun UpdateDialog(onDismiss: () -> Unit, checkOnOpen: Boolean = false) {
     val manager: UpdateManager = koinInject()
     val state by manager.state.collectAsStateWithLifecycle()
-    val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
+    val notesScroll = rememberScrollState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (checkOnOpen) manager.check()
@@ -69,86 +68,73 @@ fun UpdateDialog(onDismiss: () -> Unit, checkOnOpen: Boolean = false) {
             runCatching { focus.requestFocus() }
         }
     }
-    BackHandler { onDismiss() }
-
-    Box(
-        modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(Modifier.dialogPanel(width = 520.dp, corner = 20.dp, padding = 28.dp)) {
-            Text(stringResource(R.string.update_title), style = MaterialTheme.typography.titleLarge, color = colors.onSurface)
-            Spacer(Modifier.height(12.dp))
-
+    val busy = state is UpdateManager.State.Idle || state is UpdateManager.State.Checking || state is UpdateManager.State.Downloading
+    tv.own.owntv.ui.stage.StagePopup(
+        onDismiss = onDismiss,
+        title = stringResource(R.string.update_title),
+        width = 900.mpx,
+        scroll = false,
+        // Focus stays on the buttons, so Up and Down scroll the notes.
+        modifier = Modifier.onPreviewKeyEvent { e ->
+            if (e.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+            val step = when (e.key) {
+                Key.DirectionDown -> if (notesScroll.canScrollForward) 200f else return@onPreviewKeyEvent false
+                Key.DirectionUp -> if (notesScroll.canScrollBackward) -200f else return@onPreviewKeyEvent false
+                else -> return@onPreviewKeyEvent false
+            }
+            scope.launch { notesScroll.animateScrollBy(step) }
+            true
+        },
+        buttons = if (busy) null else ({
             when (val s = state) {
-                UpdateManager.State.Idle, UpdateManager.State.Checking -> {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        OwnTVSpinner(sizeDp = 28)
-                        Spacer(Modifier.width(12.dp))
-                        Text(stringResource(R.string.update_checking), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
-                    }
-                }
-                UpdateManager.State.UpToDate -> {
-                    Text(
-                        stringResource(R.string.update_latest, manager.currentVersion),
-                        style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(20.dp))
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        OwnTVButton(stringResource(R.string.settings_close), onClick = onDismiss, modifier = Modifier.focusRequester(focus))
-                    }
-                }
+                UpdateManager.State.UpToDate ->
+                    StageButton(stringResource(R.string.settings_close), onClick = onDismiss, height = 56.mpx, textSize = 19, tinted = true, modifier = Modifier.focusRequester(focus))
                 is UpdateManager.State.Available -> {
-                    Text(
-                        stringResource(R.string.update_available_version, s.info.version, manager.currentVersion),
-                        style = MaterialTheme.typography.bodyMedium, color = colors.onSurface,
-                    )
-                    if (s.info.notes.isNotBlank()) {
-                        Spacer(Modifier.height(12.dp))
-                        Text(stringResource(R.string.update_whats_new), style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            renderReleaseNotes(s.info.notes, headingColor = colors.onSurface),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colors.onSurfaceVariant,
-                            // Cap to the screen (minus dialog chrome) so the Update/Later buttons stay reachable.
-                            modifier = Modifier
-                                .heightIn(max = (androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp - 260.dp).coerceIn(120.dp, 320.dp))
-                                .verticalScroll(rememberScrollState()),
-                        )
-                    }
-                    Spacer(Modifier.height(20.dp))
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OwnTVButton(stringResource(R.string.update_later), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
-                        Spacer(Modifier.weight(1f))
-                        OwnTVButton(stringResource(R.string.update_now), onClick = { manager.downloadAndInstall() }, icon = OwnTVIcon.DOWNLOADS, modifier = Modifier.focusRequester(focus))
-                    }
-                }
-                is UpdateManager.State.Downloading -> {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        OwnTVSpinner(sizeDp = 28)
-                        Spacer(Modifier.width(12.dp))
-                        Text(stringResource(R.string.update_downloading, s.percent), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        stringResource(R.string.update_installer),
-                        style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant,
-                    )
+                    StageButton(stringResource(R.string.update_later), onClick = onDismiss, height = 56.mpx, textSize = 19)
+                    StageButton(stringResource(R.string.update_now), onClick = { manager.downloadAndInstall() }, icon = OwnTVIcon.DOWNLOADS, height = 56.mpx, textSize = 19, tinted = true, modifier = Modifier.focusRequester(focus))
                 }
                 is UpdateManager.State.Failed -> {
+                    StageButton(stringResource(R.string.settings_close), onClick = onDismiss, height = 56.mpx, textSize = 19)
+                    StageButton(stringResource(R.string.update_try_again), onClick = { manager.retry() }, height = 56.mpx, textSize = 19, tinted = true, modifier = Modifier.focusRequester(focus))
+                }
+                else -> Unit
+            }
+        }),
+    ) {
+        val body = stageText(18, 400).copy(lineHeight = (18 * 1.45f).mpxSp)
+        when (val s = state) {
+            UpdateManager.State.Idle, UpdateManager.State.Checking -> Row(verticalAlignment = Alignment.CenterVertically) {
+                OwnTVSpinner(sizeDp = 28)
+                Spacer(Modifier.width(16.mpx))
+                Text(stringResource(R.string.update_checking), style = body, color = StageColors.Muted)
+            }
+            UpdateManager.State.UpToDate -> Text(stringResource(R.string.update_latest, manager.currentVersion), style = body, color = StageColors.Muted)
+            is UpdateManager.State.Available -> {
+                Text(stringResource(R.string.update_available_version, s.info.version, manager.currentVersion), style = stageText(19, 600), color = StageColors.Text)
+                if (s.info.notes.isNotBlank()) {
                     Text(
-                        updateFailureText(s.failure),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
+                        stringResource(R.string.update_whats_new).uppercase(),
+                        style = stageText(14, 800, 0.12.em), color = StageColors.Dim,
+                        modifier = Modifier.padding(top = 22.mpx, bottom = 10.mpx),
                     )
-                    Spacer(Modifier.height(20.dp))
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OwnTVButton(stringResource(R.string.settings_close), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
-                        Spacer(Modifier.weight(1f))
-                        OwnTVButton(stringResource(R.string.update_try_again), onClick = { manager.retry() }, modifier = Modifier.focusRequester(focus))
-                    }
+                    Text(
+                        renderReleaseNotes(s.info.notes, headingColor = StageColors.Text),
+                        style = stageText(17, 400).copy(lineHeight = (17 * 1.5f).mpxSp),
+                        color = StageColors.Muted,
+                        // The notes scroll; the buttons under them stay on screen.
+                        modifier = Modifier.weight(1f, fill = false).verticalScroll(notesScroll),
+                    )
                 }
             }
+            is UpdateManager.State.Downloading -> {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OwnTVSpinner(sizeDp = 28)
+                    Spacer(Modifier.width(16.mpx))
+                    Text(stringResource(R.string.update_downloading, s.percent), style = body, color = StageColors.Text)
+                }
+                Text(stringResource(R.string.update_installer), style = body, color = StageColors.Muted, modifier = Modifier.padding(top = 10.mpx))
+            }
+            is UpdateManager.State.Failed -> Text(updateFailureText(s.failure), style = body, color = StageColors.Muted)
         }
     }
 }

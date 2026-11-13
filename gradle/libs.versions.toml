@@ -34,19 +34,17 @@ paging = "3.5.1"
 # Two defaults changed here: playback now uses dynamic scheduling instead of a fixed interval, and
 # the default PCM buffer is a fixed 500ms — both are felt by the forced-stereo DefaultAudioSink path.
 media3 = "1.11.1"
-# libmpv (FFmpeg-based) — full codec/track support for IPTV, caching, speed, etc.
-libmpv = "1.0.0"
 
 # Installs the APK's merged baseline profiles (Compose/Media3/library-shipped) into ART at
 # install/boot time. Essential for a sideloaded app: without it, baseline profiles only ever
 # reach devices through Play cloud profiles, which OwnTV doesn't have.
 profileinstaller = "1.4.1"
 
-# Compat splash screen (audit ST3). Backports the API 31 splash contract to API 26 so the cold
+# Compat splash screen. Backports the API 31 splash contract to API 26 so the cold
 # start shows the OwnTV play-mark instead of a blank window while the profile row loads.
 splashscreen = "1.2.0"
 
-# Macrobenchmark + the baseline-profile Gradle plugin (audit ST1). The plugin and the runtime
+# Macrobenchmark + the baseline-profile Gradle plugin. The plugin and the runtime
 # library are versioned together — bump both or neither. Must be 1.5.0-alpha+: the 1.4.x plugin
 # rejects an AGP 9 app module outright ("Module `:app` is not a supported android module").
 benchmark = "1.5.0-rc02"
@@ -65,7 +63,7 @@ okhttp = "5.5.0"
 youtubePlayer = "13.0.0"
 # QR generation for the Remote (companion) add-source flow — pure-Java, offline, no Android deps.
 zxing = "3.5.4"
-# Charset detection for local subtitle files (subtitle plan §7.2 / review R6) — tiny, pure-Java
+# Charset detection for local subtitle files — tiny, pure-Java
 # Mozilla universalchardet port; local .srt files are frequently Windows-125x, not UTF-8.
 juniversalchardet = "2.5.0"
 
@@ -87,7 +85,7 @@ espressoCore = "3.7.0"
 # Both artifacts always ship on the same version; never split them. Bumping this is how the TV app
 # takes a core change. For local work, owntv.corePath in ~/.gradle/gradle.properties substitutes
 # core's source for these artifacts, and this number is then ignored.
-owntvCore = "1.0.57"
+owntvCore = "1.0.71"
 
 [libraries]
 # The shared engine, from its own repository
@@ -150,7 +148,7 @@ coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp"
 # QR code generation (Remote companion add-source) — encodes the LAN URL into a scannable bitmap.
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
-# Charset detection for local subtitle files (subtitle plan §7.2 / review R6).
+# Charset detection for local subtitle files.
 juniversalchardet = { group = "com.github.albfernandez", name = "juniversalchardet", version.ref = "juniversalchardet" }
 
 # On-device streaming Whisper (ASR) for the AI-subtitle feature.
@@ -160,7 +158,7 @@ commons-compress = { group = "org.apache.commons", name = "commons-compress", ve
 
 # Networking (M3U/Xtream fetch)
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-# In-app YouTube trailer playback (WebView IFrame wrapper) — plan §7.3; ToS-clean, exposes currentSecond/duration
+# In-app YouTube trailer playback (WebView IFrame wrapper); ToS-clean, exposes currentSecond/duration
 youtube-player = { group = "com.pierfrancescosoffritti.androidyoutubeplayer", name = "core", version.ref = "youtubePlayer" }
 
 # Media3 / ExoPlayer
@@ -170,8 +168,6 @@ androidx-media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exo
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 androidx-media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3" }
 
-# libmpv player engine
-libmpv = { group = "dev.jdtech.mpv", name = "libmpv", version.ref = "libmpv" }
 
 # Dependency injection
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
@@ -193,7 +189,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 # KSP 2.3.6+ supports AGP 9's built-in Kotlin.
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-# Baseline profiles (audit ST1): the test module records the journey, the app module consumes the
+# Baseline profiles: the test module records the journey, the app module consumes the
 # generated profile and packages it as baseline.prof.
 android-test = { id = "com.android.test", version.ref = "agp" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "benchmark" }

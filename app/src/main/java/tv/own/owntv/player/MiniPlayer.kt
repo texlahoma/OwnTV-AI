@@ -1,5 +1,9 @@
 package tv.own.owntv.player
 
+import tv.own.owntv.ui.theme.hudOnAccent
+import tv.own.owntv.ui.theme.hudAccent
+import tv.own.owntv.ui.theme.hudShade
+import tv.own.owntv.ui.theme.hudInk
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -11,7 +15,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.activity.compose.BackHandler
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -37,11 +44,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import tv.own.owntv.ui.components.FocusableSurface
+import tv.own.owntv.ui.stage.StageFocus
+import tv.own.owntv.ui.stage.StageSurface
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * The docked mini-player (dock-to-corner model). The mpv surface is rendered behind this by the shell;
@@ -65,7 +71,9 @@ fun MiniPlayer(
     val isPlaying by player.isPlaying.collectAsStateWithLifecycle()
     val meta by player.currentMeta.collectAsStateWithLifecycle()
     val volume by player.volume.collectAsStateWithLifecycle()
-    val position by player.position.collectAsStateWithLifecycle()
+    // Held as State and read only in the hairline's draw lambda, so the once-a-second tick redraws
+    // that line instead of recomposing the whole window.
+    val positionState = player.position.collectAsStateWithLifecycle()
     val duration by player.duration.collectAsStateWithLifecycle()
 
     // Show the title + controls only while the mini-player has D-pad focus; otherwise fade to just the
@@ -78,7 +86,7 @@ fun MiniPlayer(
     if (focused && onBack != null) BackHandler { onBack() }
     // Small windows show the four verbs that matter and park the window ones behind the "more" tile.
     var windowCluster by remember { mutableStateOf(false) }
-    val accent = OwnTVTheme.colors.accentOnVideo
+    val accent = hudAccent
 
     BoxWithConstraints(modifier = modifier.onFocusChanged { focused = it.hasFocus }.focusGroup()) {
         // The pill carries eight tiles at full width. Below this the window cannot hold them without
@@ -93,24 +101,27 @@ fun MiniPlayer(
         // Progress along the TOP edge — the bottom belongs to the pill and its shadow. Live streams
         // have no duration, so the hairline simply isn't there.
         if (duration > 0L) {
-            val frac = (position.toFloat() / duration.toFloat()).coerceIn(0f, 1f)
             Box(
                 Modifier.align(Alignment.TopStart).fillMaxWidth().height(2.dp)
-                    .background(Color.White.copy(alpha = 0.18f)),
-            ) {
-                Box(Modifier.fillMaxWidth(frac).fillMaxHeight().background(accent))
-            }
+                    .background(hudInk.copy(alpha = 0.18f))
+                    .drawBehind {
+                        val frac = (positionState.value.toFloat() / duration.toFloat()).coerceIn(0f, 1f)
+                        val w = size.width * frac
+                        val x = if (layoutDirection == LayoutDirection.Rtl) size.width - w else 0f
+                        drawRect(accent, topLeft = Offset(x, 0f), size = Size(w, size.height))
+                    },
+            )
         }
 
         Row(
             modifier = Modifier.align(Alignment.TopStart).fillMaxWidth().alpha(controlsAlpha)
-                .background(Brush.verticalGradient(listOf(Color.Black.copy(alpha = 0.6f), Color.Transparent)))
+                .background(Brush.verticalGradient(listOf(hudShade(0.6f), Color.Transparent)))
                 .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 8.dp),
         ) {
             Text(
                 meta.title ?: "",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.White,
+                style = tv.own.owntv.ui.theme.stageText(22, 700),
+                color = hudInk,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth().then(
@@ -124,8 +135,8 @@ fun MiniPlayer(
         Row(
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp).alpha(controlsAlpha)
                 .clip(CircleShape)
-                .background(Color.Black.copy(alpha = 0.62f))
-                .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
+                .background(hudShade(0.62f))
+                .border(1.dp, hudInk.copy(alpha = 0.12f), CircleShape)
                 .padding(horizontal = 6.dp, vertical = 5.dp)
                 .horizontalScroll(rememberScrollState())
                 .focusGroup(),
@@ -178,7 +189,7 @@ fun MiniPlayer(
 /** The hairline that groups the pill's verbs: sound — window — exit. */
 @Composable
 private fun PillSeparator() {
-    Box(Modifier.padding(horizontal = 2.dp).width(1.dp).height(20.dp).background(Color.White.copy(alpha = 0.18f)))
+    Box(Modifier.padding(horizontal = 2.dp).width(1.dp).height(20.dp).background(hudInk.copy(alpha = 0.18f)))
 }
 
 @Composable
@@ -189,31 +200,26 @@ private fun MiniBtn(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val accent = OwnTVTheme.colors.accentOnVideo
-    FocusableSurface(
+    val accent = hudAccent
+    val size = if (lead) 38.dp else 30.dp
+    StageSurface(
         onClick = onClick,
-        modifier = modifier.size(if (lead) 38.dp else 30.dp),
-        shape = CircleShape,
-        focusedScale = 1.02f,
+        radius = size / 2,
+        modifier = modifier.size(size),
         // The dark tiles take focus as light. Play is already the accent circle, so washing it in
-        // more accent would say nothing — it takes a white rim instead.
-        focusLight = if (lead) null else accent,
-        showFocusBorder = !lead,
-        focusedContainerColor = accent,
+        // more accent would say nothing — it fills and takes a white ring instead.
+        focusStyle = if (lead) StageFocus.FILLED else StageFocus.FX,
         // Play is the one accent circle; everything else is a small dark tile.
-        unfocusedContainerColor = if (lead) accent else Color.White.copy(alpha = 0.10f),
-        selectedContainerColor = if (lead) accent else Color.White.copy(alpha = 0.10f),
+        idle = Modifier.background(if (lead) accent else hudInk.copy(alpha = 0.10f), CircleShape),
+        accent = hudFocus(ring = if (lead) hudInk else accent),
         contentAlignment = Alignment.Center,
     ) { focusedTile ->
-        if (lead && focusedTile) {
-            Box(Modifier.matchParentSize().border(1.5.dp, Color.White.copy(alpha = 0.9f), CircleShape))
-        }
         OwnTVIcon(
             icon,
             tint = when {
-                lead -> OwnTVTheme.colors.onAccentOnVideo
+                lead -> hudOnAccent
                 focusedTile || active -> accent
-                else -> Color.White
+                else -> hudInk
             },
             filled = true,
             modifier = Modifier.size(if (lead) 19.dp else 16.dp),

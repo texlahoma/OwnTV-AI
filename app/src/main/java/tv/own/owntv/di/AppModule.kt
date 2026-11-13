@@ -1,6 +1,10 @@
 package tv.own.owntv.di
 
 import org.koin.android.ext.koin.androidContext
+import tv.own.owntv.features.sports.SportsPlayback
+import tv.own.owntv.features.pip.PictureInPicture
+import tv.own.owntv.features.sports.SportsSettingsViewModel
+import tv.own.owntv.features.sports.SportsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -15,9 +19,12 @@ import tv.own.owntv.features.aisubtitles.translate.SpeechTranslator
 import tv.own.owntv.features.aisubtitles.whisper.SherpaOnnxWhisperFactory
 import tv.own.owntv.features.aisubtitles.whisper.WhisperFactory
 import tv.own.owntv.features.more.MoreCountsViewModel
+import tv.own.owntv.features.shell.RailCountsViewModel
 import org.koin.dsl.module
+import tv.own.owntv.features.categorylock.CategoryLockViewModel
 import tv.own.owntv.features.customize.CustomizeItemsViewModel
 import tv.own.owntv.features.customize.CustomizeViewModel
+import tv.own.owntv.features.settings.lock.SettingsPinViewModel
 import tv.own.owntv.features.downloads.DownloadsViewModel
 import tv.own.owntv.features.recordings.RecordingsViewModel
 import tv.own.owntv.features.epg.EpgViewModel
@@ -32,13 +39,16 @@ import tv.own.owntv.features.profiles.ProfileGateSessionViewModel
 import tv.own.owntv.features.profiles.ProfilesViewModel
 import tv.own.owntv.features.search.SearchViewModel
 import tv.own.owntv.features.series.SeriesViewModel
+import tv.own.owntv.features.settings.LocalAutoSyncViewModel
 import tv.own.owntv.features.settings.LocalSyncViewModel
 import tv.own.owntv.features.settings.BackupViewModel
+import tv.own.owntv.features.settings.ChannelNameCleanupViewModel
 import tv.own.owntv.features.settings.DeleteSubtitlesViewModel
 import tv.own.owntv.features.settings.EpgSourcesViewModel
 import tv.own.owntv.features.settings.HomeSettingsViewModel
 import tv.own.owntv.features.settings.LanguageSettingsViewModel
 import tv.own.owntv.features.settings.OpenSubtitlesViewModel
+import tv.own.owntv.features.settings.PlayerButtonsSettingsViewModel
 import tv.own.owntv.features.settings.SettingsViewModel
 import tv.own.owntv.features.setup.DisplaySizeViewModel
 import tv.own.owntv.features.setup.SetupViewModel
@@ -66,6 +76,14 @@ val appModule = module {
     singleOf(::GuideReader)
     singleOf(::SearchReader)
     singleOf(::HomeFeedReader)
+    // Sports Hub: which match the playing channel came from. Lazy; nothing runs until it is asked.
+    singleOf(::SportsPlayback)
+    // Picture-in-picture when leaving the app: one instance shared by the activity and the shell.
+    singleOf(::PictureInPicture)
+    // Process-long scope for work that must outlive the screen that started it (a first-run restore).
+    single<kotlinx.coroutines.CoroutineScope> {
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default)
+    }
     viewModelOf(::HomeViewModel)
     viewModelOf(::SetupViewModel)
     viewModelOf(::DisplaySizeViewModel)
@@ -101,9 +119,13 @@ val appModule = module {
             get(),
             get(),
             get(),
+            get(),
         )
     }
     viewModelOf(::MovieViewModel)
+    viewModelOf(::SportsViewModel)
+    viewModelOf(::SportsSettingsViewModel)
+    viewModelOf(::PlayerButtonsSettingsViewModel)
     viewModelOf(::SeriesViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::ProfilesViewModel)
@@ -120,7 +142,6 @@ val appModule = module {
             sourceDao = get(),
             sourceRepository = get(),
             settings = get(),
-            epgDao = get(),
             importFinalizer = get(),
             channelDao = get(),
             categoryDao = get(),
@@ -141,15 +162,18 @@ val appModule = module {
             sourceTester = get(),
             companion = get(),
             vodEngineStore = get(),
+            forceMpvStore = get(),
             playbackPrefs = get(),
             connectionLimits = get(),
             player = get(),
             livePreview = get(),
             enginePool = get(),
             importer = get(),
+            sourceEditor = get(),
         )
     }
     viewModelOf(::LocalSyncViewModel)
+    viewModelOf(::LocalAutoSyncViewModel)
     viewModelOf(::HomeSettingsViewModel)
     viewModelOf(::LanguageSettingsViewModel)
     viewModelOf(::OpenSubtitlesViewModel)
@@ -157,13 +181,47 @@ val appModule = module {
     viewModelOf(::SubtitleSearchViewModel)
     viewModelOf(::DownloadsViewModel)
     viewModelOf(::RecordingsViewModel)
-    viewModelOf(::EpgViewModel)
+    // 23 constructor parameters — past the highest arity viewModelOf generates (see LiveViewModel).
+    viewModel {
+        EpgViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+        )
+    }
     viewModelOf(::CustomizeViewModel)
+    viewModelOf(::SettingsPinViewModel)
     viewModelOf(::CustomizeItemsViewModel)
     viewModelOf(::BackupViewModel)
     viewModelOf(::EpgSourcesViewModel)
+    viewModelOf(::ChannelNameCleanupViewModel)
     // The counts the More rows and the Favourites / History tabs carry.
     viewModelOf(::MoreCountsViewModel)
+
+    // The counts beside the sections in the open Stage rail.
+    viewModelOf(::RailCountsViewModel)
+    viewModelOf(::CategoryLockViewModel)
+    single { tv.own.owntv.features.settings.lock.MenuChangeGate(get()) }
 
     // AI subtitles (local Whisper ASR → cloud translation). App-only concern, so its settings are
     // kept in the app's own DataStore instead of the shared core SettingsRepository. The manager is

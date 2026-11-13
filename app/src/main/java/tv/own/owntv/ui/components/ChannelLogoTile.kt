@@ -23,7 +23,6 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import tv.own.owntv.ui.theme.OwnTVTheme
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
 
@@ -45,7 +44,7 @@ fun ChannelLogoTile(
     logoUrl: String?,
     modifier: Modifier = Modifier,
     imageModifier: Modifier = Modifier.fillMaxSize(),
-    fill: Color = OwnTVTheme.colors.surfaceContainerLowest,
+    fill: Color = tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.04f),
     contentScale: ContentScale = ContentScale.Fit,
     fallback: @Composable () -> Unit,
 ) {
@@ -72,7 +71,7 @@ fun ChannelLogoTile(
         pending = null
     }
 
-    val surfaceLuminance = OwnTVTheme.colors.surface.luminance()
+    val surfaceLuminance = tv.own.owntv.ui.theme.StageColors.GlassOff.luminance()
     val needsPlate = ink != LOGO_INK_NONE && contrastRatio(Color(ink).luminance(), surfaceLuminance) < MIN_CONTRAST
     val background = when {
         !showLogo -> fill

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import tv.own.owntv.core.database.dao.LinkedSubtitle
 import tv.own.owntv.core.subtitles.SubtitleController
 
-/** Backs the "Delete subtitles" screen (subtitle plan §11): downloaded subs per Movies/Series, with delete. */
+/** Backs the "Delete subtitles" screen: downloaded subs per Movies/Series, with delete. */
 class DeleteSubtitlesViewModel(
     private val controller: SubtitleController,
 ) : ViewModel() {

@@ -24,8 +24,10 @@ import tv.own.owntv.core.customize.SpanSelector
 import tv.own.owntv.core.customize.moveBlock
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.customize.CustomizeKeys
+import tv.own.owntv.core.customize.placePinned
 import tv.own.owntv.core.database.dao.CategoryDao
 import tv.own.owntv.core.database.dao.ContentOrderDao
+import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.dao.CustomCategoryDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.model.MediaType
@@ -34,7 +36,7 @@ import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.settings.SettingsRepository
 
 /** One category row in the Customize screen (hidden rows stay visible here, marked, for unhiding).
- *  [categoryId] is null for a user's custom combined category (issue #87) — there is no provider
+ *  [categoryId] is null for a user's custom combined category — there is no provider
  *  row behind it. [providerName] is null when only one source is in scope. */
 data class CustomizeCatRow(
     val key: String,
@@ -91,8 +93,7 @@ class CustomizeViewModel(
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.Eagerly, Ctx(-1L, emptyList()))
 
-    /** Optional PIN lock on this screen (per profile). [loaded]=false while DataStore is still read,
-     *  so the screen never flashes unlocked content before the lock state is known. */
+    /** This profile's category lock PIN ([pin] null when none is set); [loaded]=false while DataStore is still read. */
     data class PinLock(val loaded: Boolean = false, val pin: String? = null)
 
     val pinLock: StateFlow<PinLock> = ctx
@@ -102,11 +103,15 @@ class CustomizeViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PinLock())
 
-    /** Set (or with null: remove) the PIN lock for this profile. */
+    /** Set (or with null: remove) this profile's category lock PIN. Removing it also drops every
+     *  category lock: without the PIN nothing could open them again. */
     fun setPin(pin: String?) {
         val pid = ctx.value.profileId
         if (pid < 0) return
-        viewModelScope.launch { settings.setCustomizePin(pid, pin) }
+        viewModelScope.launch {
+            if (pin == null) customize.clearCategoryLocks(pid)
+            settings.setCustomizePin(pid, pin)
+        }
     }
 
     private val _section = MutableStateFlow(MediaType.LIVE)
@@ -140,8 +145,7 @@ class CustomizeViewModel(
                     profileDao.observeById(c.profileId),
                 ) { cats, cust, sources, profile ->
                     val providerNames = sources.associate { it.id to it.name }.takeIf { sourceIds.size > 1 }
-                    val orderIndex = cust.categoryOrder.withIndex().associate { (i, k) -> k to i }
-                    // Provider folders + the user's custom combined categories (#87) in ONE list, so
+                    // Provider folders + the user's custom combined categories in ONE list, so
                     // hide/rename/reorder apply uniformly (their keys share the CustomizeKeys
                     // namespace). Custom rows carry categoryId = null and no provider name.
                     val visibleCustomCategories = if (profile?.isKids == true) {
@@ -172,8 +176,9 @@ class CustomizeViewModel(
                             providerName = providerNames?.get(cat.sourceId),
                         )
                     }
-                    val (pinned, rest) = entries.partition { it.key in orderIndex }
-                    (pinned.sortedBy { orderIndex.getValue(it.key) } + rest)
+                    // A moved category keeps its position; the rest stay in playlist order around it.
+                    val (pinned, rest) = entries.partition { it.key in cust.categoryPositions }
+                    placePinned(rest, pinned.map { it to cust.categoryPositions.getValue(it.key) })
                         .filter { filter.accepts(it.hidden) }
                 }
             }
@@ -246,7 +251,7 @@ class CustomizeViewModel(
     fun closeItems() { _selectedCategory.value = null }
 
     /** Data the items ViewModel needs to page the selected category. [categoryId] is null for a
-     *  custom combined category (issue #87) — the items screen then pages the membership join. */
+     *  custom combined category — the items screen then pages the membership join. */
     data class ItemsCtx(val categoryId: Long?, val mediaType: MediaType, val sourceIds: List<Long>)
 
     fun ctxForItems(): ItemsCtx? {
@@ -259,7 +264,7 @@ class CustomizeViewModel(
         )
     }
 
-    // --- custom combined categories (issue #87) ---
+    // --- custom combined categories ---
 
     /** Creates a custom category for the selected section — the "＋ New category" pill. */
     fun createCustomCategory(name: String) {
@@ -271,7 +276,7 @@ class CustomizeViewModel(
     }
 
     /**
-     * Deletes a custom combined category (issue #87). Room rows are cleared FIRST (membership +
+     * Deletes a custom combined category. Room rows are cleared FIRST (membership +
      * manual order inside it), then the DataStore definition — so the rail never shows a half-dead
      * category. The provider items themselves are never touched.
      */
@@ -289,6 +294,44 @@ class CustomizeViewModel(
             contentOrderDao.clearContext(pid, type, row.key)
             // 2) DataStore: remove the definition + any hide/rename pins on it.
             customize.deleteCustomCategory(pid, type, row.key, formerMemberKeys)
+        }
+    }
+
+    /** The single playlist picked at the top right, or null for "All playlists" — what
+     *  [restoreSectionDefaults] covers, so the confirmation can name it. */
+    val restorePlaylistName: StateFlow<String?> = combine(ctx, settings.defaultSourceId) { c, id ->
+        c.sources.firstOrNull { it.id == id && id > 0 }?.name
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /**
+     * Puts the playlists this section is showing (the top-right choice) back to what they provide: their hidden categories
+     * and items show again, their renames and category order are cleared, items moved out of their
+     * folders return and their manual item orders are dropped. Other playlists, custom categories
+     * (and what is in them), Favorites and the guide matches are left alone.
+     *
+     * Keys are "<sourceId>:<id>", so a playlist's entries are the ones whose prefix is one of the
+     * selected source ids; "custom:…" keys never match.
+     */
+    fun restoreSectionDefaults() {
+        val pid = ctx.value.profileId
+        if (pid < 0) return
+        viewModelScope.launch {
+            val type = _section.value
+            val ids = ctx.value.sourceIdsFor(type).toSet()
+            fun mine(key: String) = key.substringBefore(':').toLongOrNull() in ids
+            contentOrderDao.observeContextKeys(pid, type).first()
+                .filter { it != ContentOrderEntity.FAV_CONTEXT && mine(it) }
+                .forEach { contentOrderDao.clearContext(pid, type, it) }
+            customize.update(pid, type) {
+                it.copy(
+                    hiddenCategories = it.hiddenCategories.filterNot(::mine).toSet(),
+                    hiddenItems = it.hiddenItems.filterKeys { k -> !mine(k) },
+                    categoryNames = it.categoryNames.filterKeys { k -> !mine(k) },
+                    itemNames = it.itemNames.filterKeys { k -> !mine(k) },
+                    categoryPositions = it.categoryPositions.filterKeys { k -> !mine(k) },
+                    movedFromOrigin = it.movedFromOrigin.filterKeys { k -> !mine(k) },
+                )
+            }
         }
     }
 
@@ -320,10 +363,11 @@ class CustomizeViewModel(
                 val index = current.indexOfFirst { it.key == row.key }
                 if (index < 0) return@withLock
                 val reordered = moveBlock(current, index, index, kind) ?: return@withLock
-                customize.setCategoryOrder(ctx.value.profileId, _section.value, reordered.map { it.key })
+                customize.saveCategoryMove(ctx.value.profileId, _section.value, reordered.map { it.key }, setOf(row.key))
             }
         }
     }
+
 
 
     fun unhideChannel(key: String) {
@@ -357,15 +401,17 @@ class CustomizeViewModel(
                 val endIndex = current.indexOfFirst { it.key == endKey }
                 if (anchorIndex < 0 || endIndex < 0) return@withLock
                 span.setEndKey(endKey)
-                val reordered = moveBlock(current, minOf(anchorIndex, endIndex), maxOf(anchorIndex, endIndex), kind) ?: return@withLock
-                customize.setCategoryOrder(ctx.value.profileId, _section.value, reordered.map { it.key })
+                val lo = minOf(anchorIndex, endIndex)
+                val hi = maxOf(anchorIndex, endIndex)
+                val reordered = moveBlock(current, lo, hi, kind) ?: return@withLock
+                customize.saveCategoryMove(ctx.value.profileId, _section.value, reordered.map { it.key }, current.subList(lo, hi + 1).map { it.key })
             }
         }
     }
 
     val rangeSelectedKeys: StateFlow<Set<String>> = span.selectedKeys
 
-    // --- bulk rename (issue #86) ---
+    // --- bulk rename ---
 
     /**
      * One-shot bulk-rename flow for the current section's category rows. Every accepted rename lands
@@ -401,5 +447,17 @@ class CustomizeViewModel(
         val byKey = rows.value.associateBy { it.key }
         bulk.start(keys.mapNotNull { byKey[it]?.let { row -> row.key to row.originalName } })
         return keys
+    }
+
+    /**
+     * Bulk-renames every category the list shows (the section and the visibility filter in force) —
+     * the toolbar's Bulk rename / ✨ Auto cleanup, which used to exist for items only; categories had
+     * just the long-press span. Works on the ORIGINAL names, like the span.
+     */
+    fun bulkRenameAll(autocleanup: Boolean) {
+        val entries = rows.value.map { it.key to it.originalName }
+        if (entries.isEmpty()) return
+        bulk.start(entries)
+        if (autocleanup) bulk.autoCleanup()
     }
 }

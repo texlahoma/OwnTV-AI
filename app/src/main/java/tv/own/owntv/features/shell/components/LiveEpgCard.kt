@@ -1,5 +1,6 @@
 package tv.own.owntv.features.shell.components
 
+import tv.own.owntv.ui.theme.hudInk
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,13 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.delay
 import tv.own.owntv.R
-import tv.own.owntv.core.parser.XtEpgEntry
 import tv.own.owntv.ui.format.rememberSystemTimeFormatter
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.core.live.EpgNowNext
 
 /** Which pair of slots a [LiveEpgCard] is describing: what is on air now, or what was on air
@@ -59,7 +57,6 @@ fun LiveEpgCard(
 ) {
     if (epg == null || (epg.now == null && epg.next == null)) return
     val archive = variant == EpgCardVariant.ARCHIVE
-    val colors = OwnTVTheme.colors
     val formatTime = rememberSystemTimeFormatter()
     // Drives the "x min left" text and the progress bar; a slow tick is plenty for minute precision.
     var wallNow by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -71,19 +68,19 @@ fun LiveEpgCard(
     Row(
         modifier = if (!archive) modifier else modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(colors.primary.copy(alpha = 0.09f))
-            .border(1.dp, colors.primary.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
+            .background(tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.09f))
+            .border(1.dp, tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         epg.now?.let { entry ->
             Column(Modifier.widthIn(max = 300.dp)) {
-                SlotLabel(stringResource(if (archive) R.string.content_archive_playing else R.string.content_live_now), colors.primary)
+                SlotLabel(stringResource(if (archive) R.string.content_archive_playing else R.string.content_live_now), tv.own.owntv.ui.theme.stageAccent.accent)
                 Text(
                     entry.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White,
+                    style = tv.own.owntv.ui.theme.stageText(25, 500),
+                    color = hudInk,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -93,7 +90,9 @@ fun LiveEpgCard(
                     if (remaining in 1..600) {
                         stringResource(
                             R.string.content_live_time_remaining,
-                            formatTime(entry.stopMs),
+                            // The whole slot, not the end alone: beside "Live next" (a start–end range)
+                            // a lone end time read as the start.
+                            stringResource(R.string.content_live_time_range, formatTime(entry.startMs), formatTime(entry.stopMs)),
                             remaining,
                         )
                     } else {
@@ -103,8 +102,8 @@ fun LiveEpgCard(
                             formatTime(entry.stopMs),
                         )
                     },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.5f),
+                    style = tv.own.owntv.ui.theme.stageText(20, 500),
+                    color = hudInk.copy(alpha = 0.5f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -116,8 +115,8 @@ fun LiveEpgCard(
                 entry.description?.takeIf { it.isNotBlank() }?.let { synopsis ->
                     Text(
                         synopsis,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.62f),
+                        style = tv.own.owntv.ui.theme.stageText(20, 500),
+                        color = hudInk.copy(alpha = 0.62f),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(top = 2.dp),
@@ -129,11 +128,11 @@ fun LiveEpgCard(
                     Spacer(Modifier.height(5.dp))
                     Box(
                         Modifier.fillMaxWidth().height(2.dp).clip(RoundedCornerShape(1.dp))
-                            .background(Color.White.copy(alpha = 0.18f)),
+                            .background(hudInk.copy(alpha = 0.18f)),
                     ) {
                         Box(
                             Modifier.fillMaxWidth(progress).height(2.dp)
-                                .clip(RoundedCornerShape(1.dp)).background(colors.primary),
+                                .clip(RoundedCornerShape(1.dp)).background(tv.own.owntv.ui.theme.stageAccent.accent),
                         )
                     }
                 }
@@ -141,15 +140,15 @@ fun LiveEpgCard(
         }
         // Hairline separator, only when both halves are present.
         if (epg.now != null && epg.next != null) {
-            Box(Modifier.height(34.dp).widthIn(min = 1.dp, max = 1.dp).background(Color.White.copy(alpha = 0.18f)))
+            Box(Modifier.height(34.dp).widthIn(min = 1.dp, max = 1.dp).background(hudInk.copy(alpha = 0.18f)))
         }
         epg.next?.let { entry ->
             Column(Modifier.widthIn(max = 240.dp)) {
-                SlotLabel(stringResource(if (archive) R.string.content_archive_then else R.string.content_live_next), Color.White.copy(alpha = 0.45f))
+                SlotLabel(stringResource(if (archive) R.string.content_archive_then else R.string.content_live_next), hudInk.copy(alpha = 0.45f))
                 Text(
                     entry.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.72f),
+                    style = tv.own.owntv.ui.theme.stageText(25, 400),
+                    color = hudInk.copy(alpha = 0.72f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -159,8 +158,8 @@ fun LiveEpgCard(
                         formatTime(entry.startMs),
                         formatTime(entry.stopMs),
                     ),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.4f),
+                    style = tv.own.owntv.ui.theme.stageText(20, 500),
+                    color = hudInk.copy(alpha = 0.4f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -169,11 +168,59 @@ fun LiveEpgCard(
     }
 }
 
+/**
+ * The guide lines under the channel-change banner: what is on now, how far through it is, and what
+ * comes next. The same labels, time formats and progress bar as [LiveEpgCard], packed to fit the
+ * banner's width. Draws nothing for a channel without a guide, so the banner stays name and number.
+ */
+@Composable
+fun ZapGuideLines(epg: EpgNowNext?, modifier: Modifier = Modifier) {
+    if (epg == null || (epg.now == null && epg.next == null)) return
+    val formatTime = rememberSystemTimeFormatter()
+    // The banner is up for a few seconds, so the moment it opened is precise enough.
+    val nowMs = remember(epg) { System.currentTimeMillis() }
+    Column(modifier.padding(top = 8.dp)) {
+        epg.now?.let { entry ->
+            SlotLabel(stringResource(R.string.content_live_now), tv.own.owntv.ui.theme.stageAccent.accent)
+            Text(entry.title, style = tv.own.owntv.ui.theme.stageText(25, 400), color = hudInk, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            val remaining = ((entry.stopMs - nowMs) / 60_000L).toInt()
+            Text(
+                if (remaining in 1..600) stringResource(R.string.content_live_time_remaining, stringResource(R.string.content_live_time_range, formatTime(entry.startMs), formatTime(entry.stopMs)), remaining)
+                else stringResource(R.string.content_live_time_range, formatTime(entry.startMs), formatTime(entry.stopMs)),
+                style = tv.own.owntv.ui.theme.stageText(20, 500),
+                color = hudInk.copy(alpha = 0.5f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            val span = (entry.stopMs - entry.startMs).toFloat()
+            if (span > 0f) {
+                val progress = ((nowMs - entry.startMs) / span).coerceIn(0f, 1f)
+                Spacer(Modifier.height(5.dp))
+                Box(Modifier.fillMaxWidth().height(2.dp).clip(RoundedCornerShape(1.dp)).background(hudInk.copy(alpha = 0.18f))) {
+                    Box(Modifier.fillMaxWidth(progress).height(2.dp).clip(RoundedCornerShape(1.dp)).background(tv.own.owntv.ui.theme.stageAccent.accent))
+                }
+            }
+        }
+        epg.next?.let { entry ->
+            Spacer(Modifier.height(8.dp))
+            SlotLabel(stringResource(R.string.content_live_next), hudInk.copy(alpha = 0.45f))
+            Text(entry.title, style = tv.own.owntv.ui.theme.stageText(22, 700), color = hudInk.copy(alpha = 0.72f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                stringResource(R.string.content_live_time_range, formatTime(entry.startMs), formatTime(entry.stopMs)),
+                style = tv.own.owntv.ui.theme.stageText(20, 500),
+                color = hudInk.copy(alpha = 0.4f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
 @Composable
 private fun SlotLabel(text: String, color: Color) {
     Text(
         text.uppercase(),
-        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.2.sp),
+        style = tv.own.owntv.ui.theme.stageText(20, 500).copy(letterSpacing = 1.2.sp),
         color = color,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(bottom = 1.dp),

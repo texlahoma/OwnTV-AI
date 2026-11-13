@@ -1,7 +1,6 @@
 package tv.own.owntv.ui.components
 
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -113,19 +112,6 @@ fun CoroutineScope.jumpLazyListTo(
     runCatching { listState.scrollToItem(index) }
     if (focus != null) {
         withFrameNanos { } // wait one frame so the row is laid out
-        runCatching { focus() }
-    }
-}
-
-/** Same as [jumpLazyListTo] but for a [LazyGridState] (Movies/Series grid mode). */
-fun CoroutineScope.jumpLazyGridTo(
-    gridState: LazyGridState,
-    index: Int,
-    focus: (suspend () -> Unit)? = null,
-) = launch {
-    runCatching { gridState.scrollToItem(index) }
-    if (focus != null) {
-        withFrameNanos { }
         runCatching { focus() }
     }
 }

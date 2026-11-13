@@ -3,7 +3,6 @@
  *
  * Companion to the TMDB proxy in ../tmdb/index.js — same idea, different upstream:
  * the OpenSubtitles REST API (https://api.opensubtitles.com/api/v1/...).
- * See future-plan/OwnTV_Subtitle_Integration_Plan.md, Part B Phase 0.
  *
  * What it does:
  *  1. Accepts the same path/query shape as OpenSubtitles' /api/v1/... API,

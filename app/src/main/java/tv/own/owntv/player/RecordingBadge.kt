@@ -1,5 +1,7 @@
 package tv.own.owntv.player
 
+import tv.own.owntv.ui.theme.hudShade
+import tv.own.owntv.ui.theme.hudInk
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -36,7 +38,7 @@ import tv.own.owntv.core.theme.AnimationLevel
 /**
  * "REC", over the picture, for as long as anything is being recorded.
  *
- * The status pill carries recordings everywhere else in the app (D13), but the shell hides the pill
+ * The status pill carries recordings everywhere else in the app, but the shell hides the pill
  * during fullscreen playback — so this is the only thing standing between a user and an hour of
  * recording they had no idea was happening. It renders nothing at all when nothing is recording.
  *
@@ -79,7 +81,7 @@ fun RecordingBadge(modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(top = 18.dp, end = 22.dp)
             .clip(RoundedCornerShape(6.dp))
-            .background(Color.Black.copy(alpha = 0.55f))
+            .background(hudShade(0.55f))
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -93,7 +95,7 @@ fun RecordingBadge(modifier: Modifier = Modifier) {
         )
         Text(
             text = stringResource(R.string.recording_badge),
-            color = Color.White,
+            color = hudInk,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
         )

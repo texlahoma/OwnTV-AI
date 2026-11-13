@@ -1,17 +1,7 @@
 package tv.own.owntv.features.settings
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,33 +9,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 import androidx.compose.ui.res.stringResource
 import tv.own.owntv.R
 import tv.own.owntv.core.database.dao.LinkedSubtitle
-import tv.own.owntv.ui.components.OwnTVButton
+import tv.own.owntv.ui.format.localizedInteger
+import tv.own.owntv.ui.stage.StageSegmented
+import tv.own.owntv.ui.stage.StageTool
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.focus.focusProperties
 import tv.own.owntv.ui.components.rememberDialogFocusRestore
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
- * Settings → OpenSubtitles account → Delete subtitles (subtitle plan §11). A Movies/Series toggle at
+ * Settings → OpenSubtitles account → Delete subtitles. A Movies/Series toggle at
  * the top, the downloaded subtitles for the selected section below (tap to delete one), and a
  * Delete all action (all / all movies / all series).
  */
 @Composable
 fun DeleteSubtitlesScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val colors = OwnTVTheme.colors
     val vm: DeleteSubtitlesViewModel = koinViewModel()
     val section by vm.section.collectAsStateWithLifecycle()
     val items by vm.items.collectAsStateWithLifecycle()
@@ -54,80 +40,81 @@ fun DeleteSubtitlesScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
     var confirmDelete by remember { mutableStateOf<LinkedSubtitle?>(null) }
     var showDeleteAll by remember { mutableStateOf(false) }
-    // Land D-pad focus inside the screen (Movies/Series toggle) — without this it opens unfocused.
-    val firstFocus = remember { FocusRequester() }
+    val rowsFocus = remember { FocusRequester() }
+    val tabsFocus = remember { FocusRequester() }
+    val actionsFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         withFrameNanos { }
-        runCatching { firstFocus.requestFocus() }
+        if (!rowsFocus.requestFocus()) runCatching { tabsFocus.requestFocus() }
     }
-    BackHandler { onBack() }
 
-    // "Delete all" sits above the Movies/Series toggle that owns [firstFocus], so without this the
-    // confirmation closing dropped focus onto the toggle instead of the button that opened it.
+    // "Delete all" sits in the tool row, so the confirmation closing returns focus there.
     val scrollState = rememberScrollState()
     val dialogFocus = rememberDialogFocusRestore(showDeleteAll, scrollState)
     val deleteAllFocus = remember { FocusRequester() }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .roundedPanel()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 40.dp, vertical = 28.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-    ) {
-        // Title + Delete all (top-right).
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.weight(1f)) { Header(stringResource(R.string.settings_delete_subtitles), onBack) }
-            if (movieCount + seriesCount > 0) {
-                OwnTVButton(
+    // Movies | Series and Delete all in the tool row, the files as rows, Delete in the panel.
+    val total = movieCount + seriesCount
+    val openSubtitles = stringResource(R.string.settings_open_subtitles)
+    val sections = DeleteSubtitlesViewModel.Section.entries
+    StageFullPage(
+        parents = listOf(openSubtitles),
+        settingsRoot = false,
+        title = stringResource(R.string.settings_delete_subtitles),
+        count = pluralStringResource(R.plurals.settings_subtitle_file_count, total, total),
+        onBack = onBack,
+        modifier = modifier,
+        scroll = scrollState,
+        rowsFocus = rowsFocus,
+        toolbar = {
+            StageSegmented(
+                options = sections.map { s ->
+                    val label = stringResource(if (s == DeleteSubtitlesViewModel.Section.MOVIES) R.string.settings_movies else R.string.settings_series)
+                    val n = if (s == DeleteSubtitlesViewModel.Section.MOVIES) movieCount else seriesCount
+                    label + " " + localizedInteger(n, grouping = false)
+                },
+                selected = sections.indexOf(section),
+                onSelect = { vm.selectSection(sections[it]) },
+                modifier = Modifier.focusRequester(tabsFocus),
+            )
+            if (total > 0) {
+                StageTool(
                     stringResource(R.string.settings_delete_all),
                     onClick = { dialogFocus.value = deleteAllFocus; showDeleteAll = true },
-                    style = OwnTVButtonStyle.SECONDARY,
+                    icon = OwnTVIcon.TRASH, boxed = true, danger = true,
                     modifier = Modifier.focusRequester(deleteAllFocus),
                 )
             }
-        }
-        Spacer(Modifier.height(12.dp))
-
-        // Movies / Series toggle (like Customize's section switch).
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            DeleteSubtitlesViewModel.Section.entries.forEach { s ->
-                val count = if (s == DeleteSubtitlesViewModel.Section.MOVIES) movieCount else seriesCount
-                OwnTVButton(
-                    stringResource(
-                        R.string.settings_section_count,
-                        if (s == DeleteSubtitlesViewModel.Section.MOVIES) stringResource(R.string.settings_movies) else stringResource(R.string.settings_series),
-                        count,
-                    ),
-                    onClick = { vm.selectSection(s) },
-                    style = if (s == section) OwnTVButtonStyle.PRIMARY else OwnTVButtonStyle.SECONDARY,
-                    modifier = if (s == DeleteSubtitlesViewModel.Section.MOVIES) Modifier.focusRequester(firstFocus) else Modifier,
-                )
-            }
-        }
-        Spacer(Modifier.height(12.dp))
-
+        },
+    ) {
         if (items.isEmpty()) {
-            Text(
+            StageSettingsNote(
                 stringResource(
                     R.string.settings_no_downloaded_subtitles,
-                    if (section == DeleteSubtitlesViewModel.Section.MOVIES) stringResource(R.string.settings_movies).lowercase() else stringResource(R.string.settings_series).lowercase(),
+                    stringResource(if (section == DeleteSubtitlesViewModel.Section.MOVIES) R.string.settings_movies else R.string.settings_series).lowercase(),
                 ),
-                style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant,
-                modifier = Modifier.padding(16.dp),
+                null,
             )
-        } else {
-            items.forEach { item ->
-                val displayTitle = item.displayTitle()
-                Row2(
-                    icon = OwnTVIcon.SUBTITLE,
-                    title = displayTitle,
-                    desc = listOfNotNull(item.languageName ?: item.language, item.releaseName).joinToString(stringResource(R.string.content_metadata_separator)),
-                    chip = stringResource(R.string.common_delete), primaryChip = false,
-                    onClick = { confirmDelete = item },
-                )
-            }
+        }
+        val help = stringResource(R.string.settings_subtitle_delete_help)
+        val hints = listOf(
+            stringResource(R.string.common_ok) to stringResource(R.string.common_delete),
+            stringResource(R.string.common_back) to openSubtitles,
+        )
+        val separator = dotSeparator()
+        items.forEach { item ->
+            val title = item.displayTitle()
+            val rowFocus = remember { FocusRequester() }
+            val delete = StageAction(OwnTVIcon.TRASH, stringResource(R.string.common_delete), { confirmDelete = item }, danger = true)
+            StageSettingRow(
+                icon = OwnTVIcon.SUBTITLE,
+                title = title,
+                desc = listOfNotNull(item.languageName ?: item.language, item.releaseName).joinToString(separator),
+                value = null,
+                onClick = { confirmDelete = item },
+                modifier = Modifier.focusRequester(rowFocus).focusProperties { right = actionsFocus },
+                help = SettingHelp(title, help, hints = hints, extra = { StageActionColumn(listOf(delete), rowFocus, actionsFocus) }),
+            )
         }
     }
 

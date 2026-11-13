@@ -31,22 +31,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      force_core_source:
-        description: 'Build core from source, as a fork pull request does (ignores GPR_TOKEN)'
-        type: boolean
-        required: false
-        default: false
 
 permissions:
   contents: read
-
-# The pseudo job assembles APKs, so it resolves core from the GitHub Packages registry of
-# ahXN00/OwnTV_Core — see the note in android.yml, including what happens on a fork pull request,
-# where this secret is empty.
-env:
-  GITHUB_ACTOR: ${{ github.actor }}
-  GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -58,13 +45,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR head
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -89,8 +76,8 @@ jobs:
     if: ${{ !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'bump/core-')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Locale-stable Kotlin number formatting
@@ -105,22 +92,18 @@ jobs:
     if: ${{ github.event_name != 'push' && !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'bump/core-')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 'tools' is obsolete and Google removed it from the SDK repository; the
           # action still asks for it by default, which fails the whole setup step.
           packages: 'platform-tools'
-      - name: Resolve core
-        uses: ./.github/actions/resolve-core
-        with:
-          force-source-build: ${{ inputs.force_core_source || false }}
       - name: Assemble standard debug + release APKs
         run: ./gradlew :app:assembleStandardDebug :app:assembleStandardRelease --console=plain
       - name: Verify pseudolocale packaging

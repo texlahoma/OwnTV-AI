@@ -4,16 +4,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,26 +23,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.em
 import androidx.tv.material3.Text
 import tv.own.owntv.R
-import tv.own.owntv.ui.theme.OwnTVTheme
+import tv.own.owntv.ui.stage.StageButton
+import tv.own.owntv.ui.stage.stageGlass
+import tv.own.owntv.ui.theme.StageColors
+import tv.own.owntv.ui.theme.mpx
+import tv.own.owntv.ui.theme.mpxSp
+import tv.own.owntv.ui.theme.stageAccent
+import tv.own.owntv.ui.theme.stageText
 
 /**
- * "Set TMDB name" dialog (plan §11.2 U5b): the user types the exact title (+ optional year) to search TMDB
- * under, overriding the auto-normalized provider title. This is the escape hatch when a match is wrong or
- * was negative-cached for 7 days — saving forces a fresh re-resolve. Mirrors [TextInputDialog]'s TV-friendly
- * layout (two-stage fields, Back exits, focus trapped inside).
+ * "Set TMDB name" in the Stage design: the user types the exact title (+ optional year)
+ * to search TMDB under, overriding the auto-normalized provider title — the escape hatch when a match is
+ * wrong or was negative-cached for 7 days; saving forces a fresh re-resolve.
  *
- * - **Save**: writes the override (caller re-resolves). Disabled while the title is blank.
- * - **Clear** ([hasOverride] only): removes the override (caller re-resolves with the cleaned title).
- * - **Cancel**: close without changes.
+ * A glass panel 760 wide: the eyebrow "TMDB", the title, the explanation, Title and Year side by side,
+ * then Cancel · Clear ([hasOverride] only) · Save (tinted; does nothing while the title is blank).
+ * Centred; while the TV keyboard is up it moves to the top and is capped to the room above the keys,
+ * so the field being typed in stays visible (it used to shrink to its heading).
  */
 @Composable
 fun SetTmdbNameDialog(
@@ -52,58 +59,74 @@ fun SetTmdbNameDialog(
     onClear: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    OwnTVPopup(onDismissRequest = onDismiss) {
-    val colors = OwnTVTheme.colors
-    var title by remember { mutableStateOf(initialTitle) }
-    var year by remember { mutableStateOf(initialYear?.toString() ?: "") }
-    val titleFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { titleFocus.requestFocus() }
-    }
-    BackHandler { onDismiss() }
-    Box(
-        modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            Modifier.dialogPanel(width = 480.dp, padding = 28.dp),
+    OwnTVPopup(onDismissRequest = onDismiss, stageLayout = true) {
+        var title by remember { mutableStateOf(initialTitle) }
+        var year by remember { mutableStateOf(initialYear?.toString() ?: "") }
+        val titleFocus = remember { FocusRequester() }
+        LaunchedEffect(Unit) { runCatching { titleFocus.requestFocus() } }
+        BackHandler { onDismiss() }
+        val ime = LocalTvImeMetrics.current
+        val density = LocalDensity.current
+        BoxWithConstraints(
+            Modifier.fillMaxSize().background(StageColors.Scrim).trapAllFocusExit().focusGroup(),
+            contentAlignment = if (ime.visible) Alignment.TopCenter else Alignment.Center,
         ) {
-            Text(stringResource(R.string.setup_tmdb_name), style = MaterialTheme.typography.titleLarge, color = colors.onSurface)
-            Spacer(Modifier.height(6.dp))
-            Text(
-                stringResource(R.string.setup_tmdb_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(18.dp))
-            OwnTVTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = stringResource(R.string.common_title),
-                modifier = Modifier.fillMaxWidth(),
-                focusRequester = titleFocus,
-            )
-            Spacer(Modifier.height(14.dp))
-            OwnTVTextField(
-                value = year,
-                onValueChange = { s -> year = s.filter { it.isDigit() }.take(4) },
-                label = stringResource(R.string.setup_year_optional),
-                modifier = Modifier.fillMaxWidth(),
-                keyboardType = KeyboardType.Number,
-            )
-            Spacer(Modifier.height(22.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
-                if (hasOverride) OwnTVButton(stringResource(R.string.common_clear), onClick = onClear, style = OwnTVButtonStyle.SECONDARY)
-                Spacer(Modifier.weight(1f))
-                OwnTVButton(
-                    stringResource(R.string.common_save),
-                    onClick = { onSave(title.trim(), year.trim().toIntOrNull()) },
-                    enabled = title.trim().isNotEmpty(),
+            val top = 40.mpx
+            // Room above the keyboard, less a gap; the whole height when it is down.
+            val room = if (ime.visible) with(density) { ime.keyboardTopPx.toDp() } - top - 24.mpx else maxHeight - top * 2
+            Column(
+                Modifier
+                    .padding(top = if (ime.visible) top else 0.mpx)
+                    .width(760.mpx)
+                    .heightIn(max = room.coerceAtLeast(120.mpx))
+                    .stageGlass(30.mpx, overContent = true)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 36.mpx, vertical = 32.mpx),
+            ) {
+                Text(
+                    "TMDB", style = stageText(14, 800, 0.12.em), color = stageAccent.accent,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis,
                 )
+                Text(
+                    stringResource(R.string.setup_tmdb_name), style = stageText(34, 800, (-0.5).mpxSp), color = StageColors.Text,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 6.mpx),
+                )
+                Text(
+                    stringResource(R.string.setup_tmdb_description), style = stageText(18, 400).copy(lineHeight = (18 * 1.45f).mpxSp),
+                    color = StageColors.Muted, modifier = Modifier.padding(top = 10.mpx, bottom = 24.mpx),
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(16.mpx)) {
+                    tv.own.owntv.features.settings.StageFieldRow(
+                        icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+                        label = stringResource(R.string.common_title),
+                        value = title,
+                        onValueChange = { title = it },
+                        modifier = Modifier.weight(1f).focusRequester(titleFocus),
+                    )
+                    tv.own.owntv.features.settings.StageFieldRow(
+                        icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+                        label = stringResource(R.string.setup_year_optional),
+                        value = year,
+                        onValueChange = { s -> year = s.filter { it.isDigit() }.take(4) },
+                        modifier = Modifier.width(200.mpx),
+                        keyboardType = KeyboardType.Number,
+                    )
+                }
+                Row(
+                    Modifier.fillMaxWidth().padding(top = 28.mpx),
+                    horizontalArrangement = Arrangement.spacedBy(14.mpx),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    StageButton(stringResource(R.string.common_cancel), onClick = onDismiss, height = 56.mpx, textSize = 19)
+                    if (hasOverride) StageButton(stringResource(R.string.common_clear), onClick = onClear, height = 56.mpx, textSize = 19)
+                    Spacer(Modifier.weight(1f))
+                    StageButton(
+                        stringResource(R.string.common_save),
+                        onClick = { if (title.isNotBlank()) onSave(title.trim(), year.trim().toIntOrNull()) },
+                        height = 56.mpx, textSize = 19, tinted = true,
+                    )
+                }
             }
         }
-    }
     }
 }

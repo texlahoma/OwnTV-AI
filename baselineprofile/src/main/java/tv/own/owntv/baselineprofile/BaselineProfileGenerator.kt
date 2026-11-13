@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Records the OwnTV baseline profile (audit ST1).
+ * Records the OwnTV baseline profile.
  *
  * Everything this journey touches gets AOT-compiled into the shipped APK, so on the low-end ARM
  * boxes OwnTV targets the Compose runtime, Room's query machinery, Koin's graph resolution and the

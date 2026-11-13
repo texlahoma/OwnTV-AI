@@ -14,15 +14,15 @@ import tv.own.owntv.core.subtitles.OpenSubtitlesClient
 import tv.own.owntv.core.subtitles.SubtitleController
 
 /**
- * Backs the OpenSubtitles search overlay opened from the player's ADD SUBTITLES menu (subtitle plan
- * §6). Reads the current item from [SubtitleController], runs the search, and on selection downloads
+ * Backs the OpenSubtitles search overlay opened from the player's ADD SUBTITLES menu.
+ * Reads the current item from [SubtitleController], runs the search, and on selection downloads
  * + attaches + remembers the subtitle. All OpenSubtitles specifics stay in the controller/repository.
  */
 class SubtitleSearchViewModel(
     private val controller: SubtitleController,
 ) : ViewModel() {
 
-    /** One OpenSubtitles result, distilled to what a TV user needs to choose a release (§6.3). */
+    /** One OpenSubtitles result, distilled to what a TV user needs to choose a release. */
     data class Result(
         val fileId: Long,
         val language: String?,
@@ -35,7 +35,7 @@ class SubtitleSearchViewModel(
     )
 
     sealed interface UiState {
-        /** No usable session — fresh signed-out, or the token expired and silent re-login failed (§14). */
+        /** No usable session — fresh signed-out, or the token expired and silent re-login failed. */
         data class SignedOut(val sessionExpired: Boolean = false) : UiState
         data object Loading : UiState
         data class Results(val results: List<Result>, val showingAllLanguages: Boolean) : UiState
@@ -85,14 +85,14 @@ class SubtitleSearchViewModel(
         }
     }
 
-    /** "Edit search" — free-text query overriding the metadata match (§6.2). */
+    /** "Edit search" — free-text query overriding the metadata match. */
     fun editSearch(query: String) {
         viewModelScope.launch {
             runSearch(languages = if (showingAll()) emptyList() else preferred, editedQuery = query, showingAll = showingAll())
         }
     }
 
-    /** "Show all languages" (§6.4) — drops the preferred-language filter for this search. */
+    /** "Show all languages" — drops the preferred-language filter for this search. */
     fun showAllLanguages() {
         viewModelScope.launch { runSearch(languages = emptyList(), editedQuery = null, showingAll = true) }
     }
@@ -170,7 +170,7 @@ class SubtitleSearchViewModel(
     private fun languageDisplayName(code: String): String =
         runCatching { java.util.Locale.forLanguageTag(code).displayLanguage.ifBlank { code } }.getOrDefault(code)
 
-    /** §14 mapping. 401 here means the one-shot silent re-login already failed → sign in via Settings. */
+    /** Error mapping. 401 here means the one-shot silent re-login already failed → sign in via Settings. */
     private fun errorState(e: Throwable): UiState = when {
         e is OpenSubtitlesClient.ApiException && e.code == 406 -> UiState.Error(UiState.ErrorKind.LIMIT_REACHED)
         e is OpenSubtitlesClient.ApiException && e.code == 401 -> UiState.SignedOut(sessionExpired = true)

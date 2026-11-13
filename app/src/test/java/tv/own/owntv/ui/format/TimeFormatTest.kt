@@ -25,6 +25,15 @@ class TimeFormatTest {
     }
 
     @Test
+    fun `a time already in the date skeleton is replaced, never doubled`() {
+        // "dMMMjm" + "Hm" was "dMMMjmHm": Android rejects two hour fields and the Error log and Backup
+        // screens crashed on every 24-hour device.
+        assertEquals("dMMMHm", combinedDateTimeSkeleton("dMMMjm", is24Hour = true))
+        assertEquals("dMMMyyyyhm", combinedDateTimeSkeleton("dMMMyyyyjm", is24Hour = false))
+        assertEquals("EEEdMMMHm", combinedDateTimeSkeleton("EEEdMMMahmss", is24Hour = true))
+    }
+
+    @Test
     fun `locale-specific date patterns keep their date ordering`() {
         val us = SimpleDateFormat("MMM d, yyyy", Locale.US).apply { timeZone = utc }.format(instant)
         val german = SimpleDateFormat("d. MMM yyyy", Locale.GERMANY).apply { timeZone = utc }.format(instant)

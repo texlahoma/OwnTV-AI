@@ -1,62 +1,54 @@
 package tv.own.owntv.features.shell.components
 
+import tv.own.owntv.ui.theme.StageColors
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import tv.own.owntv.ui.theme.mpx
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.database.entity.SourceEntity
-import tv.own.owntv.ui.components.FocusableSurface
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
 import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
- * The top-bar quick switcher: pick which playlist the whole app shows right now. "All playlists" (id -1)
- * is the merged view; any other row narrows Live/Movies/Series/EPG/Search/Home to that one playlist. The
- * choice persists (it writes the same "Default" setting used in Settings → Sources), so it survives a restart.
+ * The Stage playlist switcher: the options-menu style, 520 wide under the playlist pill, over
+ * the Stage scrim with the pill itself redrawn above it, lit, at [pillBounds]. Rows: "All playlists"
+ * with the layers icon, then each playlist with its mark and channel count; a ✓ marks the current one.
+ * Under the list, outside its scroll, "Resync now" for the current choice (one playlist, or all).
  */
 @Composable
-fun PlaylistPickerDialog(
+fun StagePlaylistMenu(
     playlists: List<SourceEntity>,
     activeId: Long,
+    pillLabel: String,
+    pillBounds: androidx.compose.ui.geometry.Rect?,
     onSelect: (Long) -> Unit,
+    onResync: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
-    // Focus the currently-selected row on open so the user starts on their current choice.
+    val channelDao = org.koin.compose.koinInject<tv.own.owntv.core.database.dao.ChannelDao>()
+    val counts by androidx.compose.runtime.produceState(emptyMap<Long, Int>(), playlists) {
+        value = playlists.associate { it.id to runCatching { channelDao.countForSourceOnce(it.id) }.getOrDefault(0) }
+    }
+    val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+    val numbers = remember(locale) { java.text.NumberFormat.getIntegerInstance(locale) }
     val selectedFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(80)
@@ -64,100 +56,63 @@ fun PlaylistPickerDialog(
     }
     BackHandler { onDismiss() }
 
-    tv.own.owntv.ui.theme.PopupFontTheme {
-    Box(
-        Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        // scroll = false: the playlist list below scrolls itself, and two vertical scrollers cannot nest.
-        Column(
-            Modifier.dialogPanel(width = 280.dp, corner = 16.dp, padding = 14.dp, scroll = false),
-        ) {
-            Text(stringResource(R.string.content_playlist_picker_title), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-            Spacer(Modifier.height(4.dp))
-            Text(
-                stringResource(R.string.content_playlist_picker_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth().heightScrollCap().verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                PlaylistRow(
-                    label = stringResource(R.string.content_all_playlists),
-                    selected = activeId <= 0,
-                    modifier = if (activeId <= 0) Modifier.focusRequester(selectedFocus) else Modifier,
-                    onClick = { onSelect(-1L); onDismiss() },
+    Box(Modifier.fillMaxSize().background(StageColors.Scrim)) {
+        if (pillBounds != null) {
+            val density = androidx.compose.ui.platform.LocalDensity.current
+            with(density) {
+                tv.own.owntv.ui.stage.StagePill(
+                    text = pillLabel,
+                    icon = tv.own.owntv.ui.components.OwnTVIcon.LAYERS,
+                    trailingIcon = tv.own.owntv.ui.components.OwnTVIcon.CHEVRON_DOWN,
+                    onClick = {},
+                    enabled = false,
+                    highlighted = true,
+                    modifier = Modifier
+                        .offset { androidx.compose.ui.unit.IntOffset(pillBounds.left.toInt(), pillBounds.top.toInt()) }
+                        .width(pillBounds.width.toDp()),
                 )
-                playlists.forEach { source ->
-                    PlaylistRow(
-                        label = source.name,
-                        selected = source.id == activeId,
-                        modifier = if (source.id == activeId) Modifier.focusRequester(selectedFocus) else Modifier,
+            }
+        }
+        tv.own.owntv.ui.stage.StageMenu(
+            Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 104.mpx, end = 100.mpx, bottom = 24.mpx)
+                .width(520.mpx)
+                .trapAllFocusExit()
+                .focusGroup(),
+        ) {
+            tv.own.owntv.ui.stage.StageMenuHeader(
+                title = stringResource(R.string.content_playlist_picker_title),
+                subtitle = stringResource(R.string.content_playlist_picker_subtitle),
+            )
+            // The list scrolls under a fixed heading: without it the menu ran off the bottom of the screen
+            // at about 17 playlists, and the rest could not be reached (#6).
+            Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState())) {
+                tv.own.owntv.ui.stage.StageMenuItem(
+                    text = stringResource(R.string.content_all_playlists),
+                    icon = tv.own.owntv.ui.components.OwnTVIcon.LAYERS,
+                    checked = activeId <= 0,
+                    onClick = { onSelect(-1L); onDismiss() },
+                    modifier = if (activeId <= 0) Modifier.focusRequester(selectedFocus) else Modifier,
+                )
+                playlists.forEachIndexed { index, source ->
+                    val current = source.id == activeId
+                    tv.own.owntv.ui.stage.StageMenuItem(
+                        text = source.name,
+                        leading = { tv.own.owntv.ui.stage.StagePlaylistMark(tv.own.owntv.ui.stage.PlaylistMark.of(source.name, index)) },
+                        value = if (current) null else counts[source.id]?.let(numbers::format),
+                        checked = current,
                         onClick = { onSelect(source.id); onDismiss() },
+                        modifier = if (current) Modifier.focusRequester(selectedFocus) else Modifier,
                     )
                 }
             }
-        }
-    }
-    }
-}
-
-/** Caps the list height so a long playlist set scrolls inside the dialog instead of overflowing it —
- *  relative to the screen so the dialog never clips on small/low-res displays. */
-@Composable
-private fun Modifier.heightScrollCap(): Modifier {
-    val max = (androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp - 180.dp).coerceIn(140.dp, 240.dp)
-    return this.heightIn(max = max)
-}
-
-@Composable
-private fun PlaylistRow(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors = OwnTVTheme.colors
-    FocusableSurface(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        selected = selected,
-        shape = RoundedCornerShape(14.dp),
-        focusedContainerColor = colors.surfaceContainerHighest,
-        unfocusedContainerColor = colors.surfaceContainer,
-        selectedContainerColor = colors.secondaryContainer,
-        contentAlignment = Alignment.CenterStart,
-        surface = GlassSurface.DIALOGS,
-    ) { focused ->
-        val content = when {
-            selected -> colors.onSecondaryContainer
-            focused -> colors.onSurface
-            else -> colors.onSurfaceVariant
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(
-                label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = content,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f).then(
-                    if (focused) Modifier.basicMarquee(iterations = Int.MAX_VALUE) else Modifier,
-                ),
+            tv.own.owntv.ui.stage.StageMenuItem(
+                text = stringResource(R.string.settings_sources_resync_now_full),
+                icon = tv.own.owntv.ui.components.OwnTVIcon.REFRESH,
+                value = playlists.firstOrNull { it.id == activeId }?.name ?: stringResource(R.string.content_all_playlists),
+                onClick = { onResync(); onDismiss() },
             )
-            if (selected) {
-                // Accent dot marks the current choice (no dedicated check glyph in OwnTVIcon).
-                Box(Modifier.size(10.dp).clip(RoundedCornerShape(999.dp)).background(colors.primary))
-            }
         }
     }
 }

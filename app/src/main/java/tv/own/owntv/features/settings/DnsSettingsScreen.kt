@@ -1,47 +1,30 @@
 package tv.own.owntv.features.settings
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
+import androidx.compose.ui.res.pluralStringResource
+import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.core.network.DohPresets
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.OwnTVTextField
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.ui.theme.OwnTVTheme
+
+/** This screen's rows as Settings search finds them. */
+internal val DNS_SEARCH_ROWS: List<Int> =
+    listOf(R.string.settings_dns_use_custom, R.string.settings_presets, R.string.settings_dns_server, R.string.settings_dns_test)
 
 @Composable
 fun DnsSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val colors = OwnTVTheme.colors
     val vm: SettingsViewModel = koinViewModel()
 
     val dnsConfig by vm.dnsConfig.collectAsStateWithLifecycle()
@@ -99,166 +82,94 @@ fun DnsSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         vm.resetDnsTest()
     }
 
-    val toggleFocus = remember { FocusRequester() }
-    val firstPresetFocus = remember { FocusRequester() }
-    val serverFieldFocus = remember { FocusRequester() }
-    val saveFocus = remember { FocusRequester() }
+    val rowsFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { runCatching { rowsFocus.requestFocus() } }
 
-    LaunchedEffect(Unit) { runCatching { toggleFocus.requestFocus() } }
-
-    // When toggle turns ON, move focus to the first preset button after layout.
-    // When toggle turns OFF, return focus to the toggle row.
-    LaunchedEffect(toggleOn) {
-        kotlinx.coroutines.delay(60)
-        if (toggleOn) {
-            runCatching { firstPresetFocus.requestFocus() }
-        } else {
-            runCatching { toggleFocus.requestFocus() }
-        }
+    // The switch, then (while it is on) the presets, the server and Test DNS; the explanation in the panel.
+    val explanation = stringResource(R.string.settings_dns_explanation)
+    val limits = stringResource(R.string.settings_dns_limitations)
+    val notes: @Composable () -> Unit = {
+        Text(limits, style = tv.own.owntv.ui.theme.stageText(16, 500), color = tv.own.owntv.ui.theme.StageColors.Muted, modifier = Modifier.padding(top = 14.mpx))
     }
-
-    BackHandler { onBack() }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .roundedPanel()
-            .focusProperties { onEnter = { runCatching { toggleFocus.requestFocus() } } }
-            .focusGroup()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 40.dp, vertical = 28.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+    val rows = if (toggleOn) 5 else 1
+    StageFullPage(
+        parents = listOf(stringResource(R.string.settings_group_app)),
+        title = stringResource(R.string.settings_dns),
+        count = pluralStringResource(R.plurals.settings_setting_count, rows, rows),
+        onBack = onBack,
+        modifier = modifier,
+        rowsFocus = rowsFocus,
     ) {
-        Header(stringResource(R.string.settings_dns), onBack)
-        Spacer(Modifier.height(8.dp))
-
-        GroupLabel(stringResource(R.string.settings_dns_custom))
-        Row2(
+        val useTitle = stringResource(R.string.settings_dns_use_custom)
+        val useValue = SettingValue.Switch(effectiveEnabled)
+        StageSettingRow(
             icon = OwnTVIcon.DNS,
-            title = stringResource(R.string.settings_dns_use_custom),
-            desc = stringResource(R.string.settings_dns_toggle_description),
-            chip = stringResource(if (effectiveEnabled) R.string.common_on else R.string.common_off),
-            primaryChip = effectiveEnabled,
-            modifier = Modifier
-                .focusRequester(toggleFocus)
-                .focusProperties { if (toggleOn) down = firstPresetFocus },
+            title = useTitle,
+            desc = if (toggleOn && !serverConfigured) stringResource(R.string.settings_dns_server_missing)
+                else stringResource(R.string.settings_dns_toggle_description),
+            value = useValue,
             onClick = { applyToggle(!toggleOn) },
+            help = settingHelp(null, useTitle, explanation, useValue, pinnable = false).copy(text = explanation, extra = notes),
         )
-
-        // Red warning: toggle is on but no server configured
-        if (toggleOn && !serverConfigured) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                stringResource(R.string.settings_dns_server_missing),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFFEF4444),
-            )
-        }
-
         // Simple conditional visibility — AnimatedVisibility interferes with D-pad focus on TV.
         if (toggleOn) {
-            Column {
-                Spacer(Modifier.height(12.dp))
-
-                // DoH preset chips — first chip gets focus when toggle turns on.
-                // Explicit vertical links: the 2D focus search otherwise jumps straight from the
-                // preset row to the header / Save, skipping the toggle above and the field below.
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.focusProperties {
-                        up = toggleFocus
-                        down = serverFieldFocus
-                    },
-                ) {
-                    var first = true
-                    for ((label, url) in DohPresets.all) {
-                        val isActive = server.trim() == url
-                        OwnTVButton(
-                            label = label,
-                            onClick = {
-                                server = url
-                                toggleOn = true
-                                applySave()
-                            },
-                            style = if (isActive) OwnTVButtonStyle.PRIMARY else OwnTVButtonStyle.SECONDARY,
-                            modifier = if (first) {
-                                first = false
-                                Modifier.focusRequester(firstPresetFocus)
-                            } else {
-                                Modifier
-                            },
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(12.dp))
-                OwnTVTextField(
-                    value = server,
-                    onValueChange = { server = it },
-                    label = stringResource(R.string.settings_dns_server),
-                    placeholder = stringResource(R.string.settings_dns_server_hint),
-                    focusRequester = serverFieldFocus,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusProperties {
-                            up = firstPresetFocus
-                            down = saveFocus
-                        },
-                )
-
-                Spacer(Modifier.height(20.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.focusProperties { up = serverFieldFocus },
-                ) {
-                    OwnTVButton(stringResource(R.string.common_save), onClick = { applySave() }, modifier = Modifier.focusRequester(saveFocus))
-                    OwnTVButton(
-                        label = stringResource(
-                            if (dnsTestState is SettingsViewModel.DnsTestState.Testing) R.string.settings_testing
-                            else R.string.settings_dns_test,
-                        ),
-                        onClick = {
-                            val s = server.trim()
-                            val doh = if (s.startsWith("https://", ignoreCase = true)) s else ""
-                            vm.testDns(toggleOn, s, 53, doh)
-                        },
-                        style = OwnTVButtonStyle.SECONDARY,
-                    )
-                    DnsTestLabel(dnsTestState)
-                }
+            val presets = DohPresets.all
+            val at = presets.indexOfFirst { it.second == server.trim() }
+            val presetTitle = stringResource(R.string.settings_presets)
+            val presetValue = SettingValue.Segmented(presets.map { it.first }, at)
+            val pick: (Int) -> Unit = { i ->
+                server = presets[i].second
+                applySave()
             }
+            StageSettingRow(
+                icon = OwnTVIcon.DNS,
+                title = presetTitle,
+                desc = null,
+                value = presetValue,
+                onClick = { pick(if (at < 0) 0 else (at + 1) % presets.size) },
+                onStep = { d -> pick(((if (at < 0) -1 else at) + d).coerceIn(0, presets.size - 1)) },
+                help = SettingHelp(presetTitle, explanation, presets.map { it.first }, at, hints = settingHints(presetValue, pinnable = false), extra = notes),
+            )
+            val serverLabel = stringResource(R.string.settings_dns_server)
+            StageFieldRow(
+                OwnTVIcon.PENCIL, serverLabel, server, { server = it },
+                SettingHelp(serverLabel, explanation, extra = notes),
+                placeholder = stringResource(R.string.settings_dns_server_hint),
+                onDone = { applySave() },
+            )
+            // The missing-server warning says "select Save", so Save stays a row of its own (the field
+            // also saves when its keyboard closes).
+            val saveTitle = stringResource(R.string.common_save)
+            StageSettingRow(
+                icon = OwnTVIcon.CHECK,
+                title = saveTitle,
+                desc = null,
+                value = null,
+                onClick = { applySave() },
+                help = SettingHelp(saveTitle, explanation, hints = settingHints(null, pinnable = false), extra = notes),
+            )
+            val testTitle = stringResource(if (dnsTestState is SettingsViewModel.DnsTestState.Testing) R.string.settings_testing else R.string.settings_dns_test)
+            StageSettingRow(
+                icon = OwnTVIcon.REFRESH,
+                title = testTitle,
+                desc = dnsTestText(dnsTestState),
+                value = null,
+                onClick = {
+                    val s = server.trim()
+                    val doh = if (s.startsWith("https://", ignoreCase = true)) s else ""
+                    vm.testDns(toggleOn, s, 53, doh)
+                },
+                help = SettingHelp(testTitle, explanation, hints = settingHints(null, pinnable = false), extra = notes),
+            )
         }
-
-        Spacer(Modifier.height(20.dp))
-        Text(
-            stringResource(R.string.settings_dns_explanation),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            stringResource(R.string.settings_dns_limitations),
-            style = MaterialTheme.typography.bodySmall,
-            color = colors.onSurfaceVariant,
-        )
     }
 }
 
 @Composable
-private fun DnsTestLabel(state: SettingsViewModel.DnsTestState) {
-    val colors = OwnTVTheme.colors
-    val (text, color) = when (state) {
-        is SettingsViewModel.DnsTestState.Ok -> stringResource(
-            R.string.settings_dns_resolved,
-            state.millis,
-        ) to colors.primary
-        is SettingsViewModel.DnsTestState.Fail -> state.failure.displayText() to Color(0xFFEF4444)
-        else -> null to colors.onSurfaceVariant
-    }
-    if (text != null) {
-        Text(text, style = MaterialTheme.typography.bodyMedium, color = color)
-    }
+private fun dnsTestText(state: SettingsViewModel.DnsTestState): String? = when (state) {
+    is SettingsViewModel.DnsTestState.Ok -> stringResource(R.string.settings_dns_resolved, state.millis)
+    is SettingsViewModel.DnsTestState.Fail -> state.failure.displayText()
+    else -> null
 }
 
 @Composable

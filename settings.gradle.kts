@@ -19,23 +19,24 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // A libmpv built on this PC (OwnTV_libmpv's buildscripts/wsl_build.sh), only while
+        // the build command carries -Powntv.libmpvLocalRepo=<folder> (never a file) — core's :player-core then asks
+        // for version "local". Core's settings carry the same lines.
+        providers.gradleProperty("owntv.libmpvLocalRepo").orNull?.let { dir ->
+            maven {
+                name = "LocalLibmpv"
+                url = uri(file(dir))
+                content { includeVersion("tv.own.owntv", "libmpv", "local") }
+            }
+        }
         google()
         mavenCentral()
-        // tv.own.owntv:core and :player-core, built from https://github.com/ahXN00/OwnTV_Core.
-        // That repository is public, but GitHub's Maven registry demands credentials even for a
-        // public package — so resolution needs a token with read:packages. Put it in
-        // ~/.gradle/gradle.properties as gpr.user / gpr.token, NEVER in this repo. CI passes the
-        // same values through the GITHUB_ACTOR / GPR_TOKEN environment variables, except on a fork
-        // pull request, where GitHub withholds secrets and CI builds core from source instead.
+        // OwnTV's own Maven repository — public, no login: tv.own.owntv:core and :player-core
+        // (built from https://github.com/ahXN00/OwnTV_Core) and tv.own.owntv:libmpv, the mpv engine
+        // (https://github.com/ahXN00/OwnTV_libmpv). Served from OwnTV_Core's gh-pages branch.
         maven {
-            name = "OwnTVCore"
-            url = uri("https://maven.pkg.github.com/ahXN00/OwnTV_Core")
-            credentials {
-                username = providers.gradleProperty("gpr.user")
-                    .orElse(providers.environmentVariable("GITHUB_ACTOR")).orNull
-                password = providers.gradleProperty("gpr.token")
-                    .orElse(providers.environmentVariable("GPR_TOKEN")).orNull
-            }
+            name = "OwnTV"
+            url = uri("https://ahxn00.github.io/OwnTV_Core/maven")
             content { includeGroup("tv.own.owntv") }
         }
     }
@@ -50,7 +51,7 @@ providers.gradleProperty("owntv.corePath").orNull?.takeIf { it.isNotBlank() }?.l
 
 rootProject.name = "OwnTV"
 include(":app")
-// Baseline-profile generator (audit ST1). Test-only module: it ships nothing to users, it records
+// Baseline-profile generator. Test-only module: it ships nothing to users, it records
 // the cold-start journey on a device and writes the profile :app packages.
 include(":baselineprofile")
  

@@ -1,18 +1,15 @@
 package tv.own.owntv.features.setup
 
+import tv.own.owntv.ui.theme.stageTone
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -21,34 +18,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.tv.material3.MaterialTheme
+import androidx.compose.ui.unit.em
 import androidx.tv.material3.Text
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.R
 import tv.own.owntv.core.companion.CompanionLink
 import tv.own.owntv.core.companion.CompanionPayload
 import tv.own.owntv.core.companion.CompanionServerState
+import tv.own.owntv.features.settings.SettingHelp
+import tv.own.owntv.features.settings.SettingPanelHeading
+import tv.own.owntv.features.settings.SettingValue
+import tv.own.owntv.features.settings.StageFullPage
+import tv.own.owntv.features.settings.StageSettingRow
+import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.companionLockedText
 import tv.own.owntv.ui.components.displayText
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.ui.theme.OwnTVTheme
+import tv.own.owntv.ui.theme.StageColors
+import tv.own.owntv.ui.theme.mpx
+import tv.own.owntv.ui.theme.stageAccent
+import tv.own.owntv.ui.theme.stageText
 
 /**
- * The Remote add-source screen: opens a small LAN web server and shows the PIN, a QR of the URL, and
- * the URL text so another device on the same Wi-Fi can fill the Add Source form. It only fills it —
- * when a submission arrives, [onPayloadReceived] hands off to the Manual form (pre-filled) where the
- * user presses Start Import. The listener stops automatically when this screen leaves composition.
+ * Add a source › From your phone: the small LAN web server starts as the page opens;
+ * the panel shows the QR, the address and the PIN. A submission hands off to the Type it here
+ * form, pre-filled, where the user presses Start import ([onPayloadReceived]). New PIN restarts the server
+ * with a fresh PIN. The listener stops when this page leaves composition.
+ *
+ * Editing a playlist uses the same page with its own [parents] and [note]; the submission then
+ * pre-fills the edit form, where the user presses Save.
  */
 @Composable
 fun RemoteSetupScreen(
@@ -59,85 +60,90 @@ fun RemoteSetupScreen(
     onPayloadReceived: (CompanionPayload) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    parents: List<String> = listOf(stringResource(R.string.setup_add_source)),
+    note: String = stringResource(R.string.settings_remote_details_note),
 ) {
-    val colors = OwnTVTheme.colors
-    val actionFocus = remember { FocusRequester() }
-    LaunchedEffect(state::class) { runCatching { actionFocus.requestFocus() } }
-
-    // A remote submission hands off to the Manual form; the host navigates away (which stops the server).
+    val rowsFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        if (state == CompanionServerState.Idle) onStartListener(CompanionLink.DEFAULT_PORT)
+        runCatching { rowsFocus.requestFocus() }
+    }
+    // A remote submission hands off to the Type it here form; the host navigates away (which stops the server).
     LaunchedEffect(payloads) { payloads.collect(onPayloadReceived) }
     DisposableEffect(Unit) { onDispose { onStopListener() } }
 
-    Box(modifier.fillMaxSize().roundedPanel()) {
-        Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 48.dp, vertical = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Column(modifier = Modifier.widthIn(max = 640.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(stringResource(R.string.setup_add_from_phone), style = MaterialTheme.typography.headlineLarge, color = colors.onSurface)
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    stringResource(R.string.setup_phone_add_description),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(Modifier.height(20.dp))
+    // The heading is drawn above the QR by [RemotePanel], so the help itself carries none.
+    val help = SettingHelp(
+        title = "",
+        text = note,
+        hints = listOf(stringResource(R.string.common_back) to stringResource(R.string.settings_key_stop_back)),
+    )
+    val panel: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit = { RemotePanel(state) }
+    StageFullPage(
+        parents = parents,
+        title = stringResource(R.string.setup_from_phone),
+        count = "",
+        onBack = onBack,
+        modifier = modifier,
+        rowsFocus = rowsFocus,
+        settingsRoot = false,
+        panelTop = panel,
+    ) {
+        val (line, problem) = when (state) {
+            CompanionServerState.Idle, CompanionServerState.Starting -> stringResource(R.string.setup_opening) to false
+            is CompanionServerState.Listening -> stringResource(R.string.settings_remote_nothing_yet) to false
+            is CompanionServerState.Failed -> state.failure.displayText() to true
+            CompanionServerState.Locked -> companionLockedText() to true
+        }
+        StageSettingRow(
+            icon = OwnTVIcon.PHONE,
+            title = stringResource(R.string.settings_remote_waiting),
+            desc = line,
+            value = if (problem) null else SettingValue.Custom {
+                Text("…", style = stageText(18, 700), color = StageColors.Dim)
+            },
+            onClick = {},
+            help = help,
+        )
+        StageSettingRow(
+            icon = OwnTVIcon.REFRESH,
+            title = stringResource(R.string.settings_remote_new_pin),
+            desc = stringResource(R.string.settings_line_remote_new_pin),
+            value = null,
+            // Restarting mints a fresh PIN — also the way out of a failed or locked server.
+            onClick = { onStopListener(); onStartListener(CompanionLink.DEFAULT_PORT) },
+            help = help,
+        )
+    }
+}
 
-                when (state) {
-                    CompanionServerState.Idle, CompanionServerState.Starting -> {
-                        val starting = state == CompanionServerState.Starting
-                        OwnTVButton(
-                            label = if (starting) stringResource(R.string.setup_opening) else stringResource(R.string.setup_open_server),
-                            onClick = { onStartListener(CompanionLink.DEFAULT_PORT) },
-                            enabled = !starting,
-                            modifier = Modifier.focusRequester(actionFocus),
-                        )
-                    }
-                    is CompanionServerState.Listening -> {
-                        Text(stringResource(R.string.setup_enter_pin_browser), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            state.pin,
-                            style = MaterialTheme.typography.headlineLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = colors.primary,
-                            letterSpacing = 8.sp,
-                        )
-                        Spacer(Modifier.height(14.dp))
-                        state.qr?.let { qr ->
-                            Image(
-                                bitmap = qr.asImageBitmap(),
-                                contentDescription = stringResource(R.string.common_qr_code_companion_url),
-                                modifier = Modifier.size(188.dp).clip(RoundedCornerShape(14.dp)).background(Color.White).padding(9.dp),
-                                contentScale = ContentScale.Fit,
-                            )
-                            Spacer(Modifier.height(12.dp))
-                        }
-                        Text(stringResource(R.string.setup_open_url), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
-                        Spacer(Modifier.height(4.dp))
-                        state.urls.forEach { url ->
-                            Text(url, style = MaterialTheme.typography.titleMedium, color = colors.onSurface, textAlign = TextAlign.Center)
-                        }
-                        Spacer(Modifier.height(18.dp))
-                        OwnTVButton(stringResource(R.string.setup_stop_server), onClick = onStopListener, style = OwnTVButtonStyle.SECONDARY, modifier = Modifier.focusRequester(actionFocus))
-                    }
-                    is CompanionServerState.Failed -> {
-                        Text(state.failure.displayText(), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFEF4444), textAlign = TextAlign.Center)
-                        Spacer(Modifier.height(20.dp))
-                        OwnTVButton(stringResource(R.string.setup_try_again), onClick = { onStartListener(CompanionLink.DEFAULT_PORT) }, modifier = Modifier.focusRequester(actionFocus))
-                    }
-                    CompanionServerState.Locked -> {
-                        Text(companionLockedText(), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFEF4444), textAlign = TextAlign.Center)
-                        Spacer(Modifier.height(20.dp))
-                        // Restarting mints a fresh PIN, so this is the recovery path — not a retry of a failure.
-                        OwnTVButton(stringResource(R.string.setup_start_again_new_pin), onClick = { onStartListener(CompanionLink.DEFAULT_PORT) }, modifier = Modifier.focusRequester(actionFocus))
-                    }
-                }
-                Spacer(Modifier.height(16.dp))
-                OwnTVButton(stringResource(R.string.common_back), onClick = onBack, style = OwnTVButtonStyle.SECONDARY)
-                Spacer(Modifier.height(24.dp)) // breathing room so Back never sits flush to the screen edge
+/** The panel: SCAN WITH YOUR PHONE, the QR beside "or open" + the address + the PIN, then the note. */
+@Composable
+private fun RemotePanel(state: CompanionServerState) {
+    SettingPanelHeading(stringResource(R.string.settings_remote_scan))
+    val listening = state as? CompanionServerState.Listening ?: return
+    Row(horizontalArrangement = Arrangement.spacedBy(24.mpx), verticalAlignment = Alignment.CenterVertically) {
+        listening.qr?.let { qr ->
+            Box(Modifier.size(200.mpx).clip(RoundedCornerShape(18.mpx)).background(Color.White).padding(12.mpx)) {
+                Image(
+                    bitmap = qr.asImageBitmap(),
+                    contentDescription = stringResource(R.string.common_qr_code_companion_url),
+                    contentScale = ContentScale.Fit,
+                )
+            }
+        }
+        Column {
+            Text(stringResource(R.string.settings_remote_or_open), style = stageText(17, 500), color = PanelText)
+            listening.urls.forEach { url ->
+                Text(url, style = stageText(21, 800), color = StageColors.Text, modifier = Modifier.padding(top = 4.mpx))
+            }
+            Row(Modifier.padding(top = 6.mpx), horizontalArrangement = Arrangement.spacedBy(8.mpx), verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.local_sync_pin_label), style = stageText(17, 500), color = PanelText)
+                Text(listening.pin, style = stageText(30, 800, 0.4.em), color = stageAccent.accent)
             }
         }
     }
+    Box(Modifier.size(18.mpx))
 }
+
+private val PanelText: Color @Composable get() = stageTone(Color(0xFFD3DCD8), StageColors.Body)

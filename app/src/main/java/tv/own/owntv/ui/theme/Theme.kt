@@ -25,9 +25,9 @@ enum class ThemeMode { SYSTEM, DARK, LIGHT }
 val LocalThemeMode = staticCompositionLocalOf { ThemeMode.DARK }
 
 /**
- * Width of the focus ring drawn by FocusableSurface (#121 — "make the selection prominent").
- * A CompositionLocal rather than a [Dimens] constant because the user picks it in Settings, and
- * every focusable surface in the app has to follow the same choice.
+ * Width of the focus ring the user picks in Settings, to make the selection prominent.
+ * A CompositionLocal rather than a [Dimens] constant because every surface that draws it has to
+ * follow the same choice.
  */
 val LocalFocusBorderWidth = staticCompositionLocalOf { Dimens.FocusBorderWidth }
 
@@ -93,8 +93,8 @@ fun OwnTVTheme(
     focusHighlight: String = "",
     focusBorderWidthDp: Int = 2,
     animationLevel: AnimationLevel = AnimationLevel.FULL,
-    mainFontFamily: AppFontFamily = AppFontFamily.SYSTEM_SANS,
-    popupFontFamily: AppFontFamily = AppFontFamily.LORA,
+    mainFontFamily: AppFontFamily = AppFontFamily.PLUS_JAKARTA_SANS,
+    popupFontFamily: AppFontFamily = AppFontFamily.PLUS_JAKARTA_SANS,
     popupFontSizePercent: Int = PopupFontScale.DEFAULT,
     popupSizePercent: Int = PopupSizeScale.DEFAULT,
     content: @Composable () -> Unit,
@@ -114,6 +114,7 @@ fun OwnTVTheme(
 
     CompositionLocalProvider(
         LocalOwnTVColors provides colors,
+        LocalStagePalette provides if (useDark) StagePalette.Dark else StagePalette.Light,
         LocalThemeMode provides themeMode,
         LocalFocusBorderWidth provides focusBorderWidthDp.dp,
         LocalAnimationLevel provides animationLevel,

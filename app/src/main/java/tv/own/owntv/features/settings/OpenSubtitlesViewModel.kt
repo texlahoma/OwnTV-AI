@@ -12,7 +12,7 @@ import tv.own.owntv.core.subtitles.OpenSubtitlesAuthStore
 import tv.own.owntv.core.subtitles.OpenSubtitlesClient
 import tv.own.owntv.core.settings.SettingsRepository
 
-/** Backs the OpenSubtitles account screen (subtitle plan §5.3): active profile's session + sign-in/out. */
+/** Backs the OpenSubtitles account screen: active profile's session + sign-in/out. */
 class OpenSubtitlesViewModel(
     private val settings: SettingsRepository,
     private val accounts: OpenSubtitlesAccountManager,
@@ -30,7 +30,7 @@ class OpenSubtitlesViewModel(
     enum class ErrorKind { EMPTY_CREDENTIALS, INVALID_CREDENTIALS, SERVER_ERROR, NETWORK, REFRESH_NETWORK }
 
     /**
-     * One-shot error for the §14 dialogs; wording is resolved by the Compose boundary.
+     * One-shot error for the error dialogs; wording is resolved by the Compose boundary.
      * [httpCode] is set only for [ErrorKind.SERVER_ERROR] — a reachable server that refused the
      * request (403 from the proxy, 429 rate limit, 5xx). Telling that apart from a real transport
      * failure matters: both used to say "check your internet connection", which sent users with a

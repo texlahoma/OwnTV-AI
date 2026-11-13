@@ -8,7 +8,7 @@ import tv.own.owntv.core.theme.OwnTVPalette
  * Material 3 tonal palette for OwnTV (teal-seeded). NEUTRAL + secondary/tertiary roles are
  * theme-only; the `primary` roles are seeded per [AccentColor] (default teal == these values).
  *
- * Dark uses a near-black background (#040e0b) so the panel colours (Phase 6) pop against
+ * Dark uses a near-black background (#040e0b) so the panel colours pop against
  * the deep dark surface while keeping a subtle green undertone.
  *
  * **The values themselves live in core**, in [OwnTVPalette], because the mobile app renders the

@@ -4,14 +4,19 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.vector.PathParser
 
 /**
  * Brand icon set drawn directly with Canvas so we don't depend on which glyphs ship in
@@ -38,8 +43,42 @@ enum class OwnTVIcon {
     // archive box stood for a paired phone, for "let this one be found", and for "send to it" — three
     // meanings on one screen, and all three already meant "backup" everywhere else in the app.
     PHONE, SEND,
-    // Screen-direction nudges for the AI-subtitle position adjustment in the player HUD.
-    ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT,
+    // The sleep timer: a crescent moon, the phone's mark for the same button.
+    BEDTIME,
+    // Stage marks with no older counterpart (see StageGlyphs.kt). TILES is the More destination.
+    PLAY_CIRCLE, BELL, REC, CHEVRON_LEFT, GRID, LIST, CHECK, CLOCK, SUN, TREND, LAYERS, PENCIL,
+    EYE_OFF, MOVE, EXTERNAL, TRASH, LOCK, MULTIVIEW, NOW, CALENDAR, TILES,
+    // Audio mode's equaliser mark (the bar at rest, the rail's Now playing item).
+    EQ,
+    // The Sports Hub's trophy (rail, Settings → Sports).
+    SPORTS,
+    // Voice search, beside the search field.
+    MIC,
+}
+
+/** Parsed once: [StageGlyphPaths] in 24-unit coordinates. */
+private val StagePaths: Map<OwnTVIcon, Path> by lazy {
+    StageGlyphPaths.mapValues { PathParser().parsePathString(it.value).toPath() }
+}
+
+/** Only these are drawn solid; every other glyph ignores [filled]. */
+private val StageFillable = setOf(OwnTVIcon.PLAY, OwnTVIcon.STAR, OwnTVIcon.FAVORITE, OwnTVIcon.REC)
+
+/** A Stage glyph drawn straight into a Canvas (the guide's programme cells), [sizePx] square at [topLeft]. */
+internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStageGlyph(
+    icon: OwnTVIcon,
+    tint: Color,
+    topLeft: Offset,
+    sizePx: Float,
+    filled: Boolean = false,
+) {
+    val path = StagePaths[icon] ?: return
+    val s = sizePx / 24f
+    translate(topLeft.x, topLeft.y) {
+        scale(s, s, pivot = Offset.Zero) {
+            drawPath(path, tint, style = if (filled && icon in StageFillable) Fill else Stroke(2f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+        }
+    }
 }
 
 @Composable
@@ -54,148 +93,27 @@ fun OwnTVIcon(
         fun p(x: Float, y: Float) = Offset(x * s, y * s)
         val stroke = Stroke(width = 2f * s, cap = StrokeCap.Round, join = StrokeJoin.Round)
 
+        val stagePath = StagePaths[icon]
+        if (stagePath != null) {
+            scale(s, s, pivot = Offset.Zero) {
+                drawPath(
+                    stagePath,
+                    tint,
+                    style = if (filled && icon in StageFillable) Fill else Stroke(2f, cap = StrokeCap.Round, join = StrokeJoin.Round),
+                )
+            }
+            return@Canvas
+        }
+
         when (icon) {
-            OwnTVIcon.LIVE_TV -> {
-                drawRoundRectStroke(p(3f, 8f), p(21f, 21f), 2.5f * s, tint, stroke)
-                drawLineStroke(p(8f, 8f), p(12f, 3f), tint, stroke)
-                drawLineStroke(p(16f, 8f), p(12f, 3f), tint, stroke)
-            }
-            OwnTVIcon.MOVIES -> {
-                drawRoundRectStroke(p(3f, 9f), p(21f, 20f), 2f * s, tint, stroke)
-                drawLineStroke(p(3f, 9f), p(21f, 6.5f), tint, stroke)
-                drawLineStroke(p(7.5f, 9f), p(9f, 6.2f), tint, stroke)
-                drawLineStroke(p(12f, 9f), p(13.5f, 5.8f), tint, stroke)
-                drawLineStroke(p(16.5f, 9f), p(18f, 5.5f), tint, stroke)
-            }
-            OwnTVIcon.SERIES -> {
-                drawRoundRectStroke(p(6f, 4f), p(21f, 14f), 2f * s, tint, stroke)
-                drawLineStroke(p(3f, 8f), p(3f, 20f), tint, stroke)
-                drawLineStroke(p(3f, 20f), p(18f, 20f), tint, stroke)
-            }
-            OwnTVIcon.DOWNLOADS -> {
-                drawLineStroke(p(12f, 3f), p(12f, 15f), tint, stroke)
-                drawLineStroke(p(7f, 10f), p(12f, 15f), tint, stroke)
-                drawLineStroke(p(17f, 10f), p(12f, 15f), tint, stroke)
-                drawLineStroke(p(5f, 20f), p(19f, 20f), tint, stroke)
-            }
             OwnTVIcon.MENU -> {
                 drawLineStroke(p(4f, 7f), p(20f, 7f), tint, stroke)
                 drawLineStroke(p(4f, 12f), p(20f, 12f), tint, stroke)
                 drawLineStroke(p(4f, 17f), p(20f, 17f), tint, stroke)
             }
-            OwnTVIcon.SORT -> { // descending bars — classic sort glyph
-                drawLineStroke(p(4f, 7f), p(20f, 7f), tint, stroke)
-                drawLineStroke(p(4f, 12f), p(14f, 12f), tint, stroke)
-                drawLineStroke(p(4f, 17f), p(9f, 17f), tint, stroke)
-            }
-            OwnTVIcon.HISTORY -> {
-                drawCircleStroke(p(12f, 12f), 9f * s, tint, stroke)
-                drawLineStroke(p(12f, 7f), p(12f, 12f), tint, stroke)
-                drawLineStroke(p(12f, 12f), p(16f, 14f), tint, stroke)
-            }
-            OwnTVIcon.SEARCH -> {
-                drawCircleStroke(p(10.5f, 10.5f), 6.5f * s, tint, stroke)
-                drawLineStroke(p(15.5f, 15.5f), p(20f, 20f), tint, stroke)
-            }
-            OwnTVIcon.HOME -> {
-                val roof = Path().apply {
-                    moveTo(p(12f, 3f).x, p(12f, 3f).y)
-                    lineTo(p(3f, 12f).x, p(3f, 12f).y)
-                    lineTo(p(21f, 12f).x, p(21f, 12f).y)
-                    close()
-                }
-                drawPath(roof, tint, style = stroke)
-                drawRoundRectStroke(p(5f, 12f), p(19f, 21f), 2f * s, tint, stroke)
-                drawLineStroke(p(10f, 21f), p(10f, 15f), tint, stroke)
-                drawLineStroke(p(14f, 21f), p(14f, 15f), tint, stroke)
-                drawLineStroke(p(10f, 15f), p(14f, 15f), tint, stroke)
-            }
-            OwnTVIcon.STAR -> {
-                val star = starPath(center = p(12f, 12f), outer = 9f * s, inner = 3.7f * s)
-                if (filled) drawPath(star, tint, style = Fill) else drawPath(star, tint, style = stroke)
-            }
-            OwnTVIcon.FAVORITE -> {
-                // Heart — the app-wide favourite mark (a star reads as a *rating* on posters, which is
-                // exactly what PosterCard's rating badge uses STAR for).
-                val heart = Path().apply {
-                    moveTo(p(12f, 20.5f).x, p(12f, 20.5f).y)
-                    cubicTo(
-                        p(6.5f, 16.2f).x, p(6.5f, 16.2f).y,
-                        p(3f, 12.8f).x, p(3f, 12.8f).y,
-                        p(3f, 9f).x, p(3f, 9f).y,
-                    )
-                    cubicTo(
-                        p(3f, 6f).x, p(3f, 6f).y,
-                        p(5.3f, 3.8f).x, p(5.3f, 3.8f).y,
-                        p(8f, 3.8f).x, p(8f, 3.8f).y,
-                    )
-                    cubicTo(
-                        p(10f, 3.8f).x, p(10f, 3.8f).y,
-                        p(11.4f, 5f).x, p(11.4f, 5f).y,
-                        p(12f, 6.3f).x, p(12f, 6.3f).y,
-                    )
-                    cubicTo(
-                        p(12.6f, 5f).x, p(12.6f, 5f).y,
-                        p(14f, 3.8f).x, p(14f, 3.8f).y,
-                        p(16f, 3.8f).x, p(16f, 3.8f).y,
-                    )
-                    cubicTo(
-                        p(18.7f, 3.8f).x, p(18.7f, 3.8f).y,
-                        p(21f, 6f).x, p(21f, 6f).y,
-                        p(21f, 9f).x, p(21f, 9f).y,
-                    )
-                    cubicTo(
-                        p(21f, 12.8f).x, p(21f, 12.8f).y,
-                        p(17.5f, 16.2f).x, p(17.5f, 16.2f).y,
-                        p(12f, 20.5f).x, p(12f, 20.5f).y,
-                    )
-                    close()
-                }
-                if (filled) drawPath(heart, tint, style = Fill) else drawPath(heart, tint, style = stroke)
-            }
-            OwnTVIcon.INFO -> {
-                drawCircleStroke(p(12f, 12f), 9f * s, tint, stroke)
-                drawCircle(tint, 1.2f * s, p(12f, 7.6f), style = Fill)
-                drawLineStroke(p(12f, 11f), p(12f, 16.5f), tint, stroke)
-            }
-            OwnTVIcon.PLAY -> {
-                val tri = Path().apply {
-                    moveTo(p(8f, 5f).x, p(8f, 5f).y)
-                    lineTo(p(19f, 12f).x, p(19f, 12f).y)
-                    lineTo(p(8f, 19f).x, p(8f, 19f).y)
-                    close()
-                }
-                if (filled) drawPath(tri, tint, style = Fill) else drawPath(tri, tint, style = stroke)
-            }
-            OwnTVIcon.PERSON -> {
-                drawCircleStroke(p(12f, 8f), 3.6f * s, tint, if (filled) stroke else stroke)
-                if (filled) drawCircle(tint, 3.6f * s, p(12f, 8f), style = Fill)
-                // shoulders
-                drawArc(
-                    color = tint,
-                    startAngle = 180f, sweepAngle = 180f, useCenter = false,
-                    topLeft = p(5f, 13f), size = Size(14f * s, 14f * s), style = stroke,
-                )
-            }
             OwnTVIcon.ADD -> {
                 drawLineStroke(p(12f, 5f), p(12f, 19f), tint, stroke)
                 drawLineStroke(p(5f, 12f), p(19f, 12f), tint, stroke)
-            }
-        OwnTVIcon.SETTINGS -> {
-                // "tune" sliders — clearer than a gear at small sizes
-                drawLineStroke(p(4f, 8f), p(20f, 8f), tint, stroke)
-                drawLineStroke(p(4f, 16f), p(20f, 16f), tint, stroke)
-                drawCircle(tint, 2.6f * s, p(9f, 8f), style = Fill)
-                drawCircle(tint, 2.6f * s, p(15f, 16f), style = Fill)
-            }
-            OwnTVIcon.PALETTE -> {
-                drawArc(
-                    color = tint, startAngle = 110f, sweepAngle = 320f, useCenter = false,
-                    topLeft = p(3f, 3f), size = Size(18f * s, 18f * s), style = stroke,
-                )
-                drawCircle(tint, 1.3f * s, p(8.5f, 8f), style = Fill)
-                drawCircle(tint, 1.3f * s, p(13f, 6.5f), style = Fill)
-                drawCircle(tint, 1.3f * s, p(16.5f, 9.5f), style = Fill)
             }
             OwnTVIcon.THEME -> {
                 // half-filled circle — classic dark-mode glyph
@@ -228,19 +146,6 @@ fun OwnTVIcon(
                 }
                 drawPath(tri, tint, style = Fill)
             }
-            OwnTVIcon.EPG -> {
-                // A time axis across the top with programme blocks of differing lengths staggered
-                // under it — a schedule, where the even grid it used to draw was just LIST_GRID again.
-                drawRoundRectStroke(p(3f, 4f), p(21f, 20f), 2f * s, tint, stroke)
-                drawLineStroke(p(3f, 9f), p(21f, 9f), tint, stroke)
-                drawLineStroke(p(7f, 4f), p(7f, 9f), tint, stroke)
-                drawLineStroke(p(13f, 4f), p(13f, 9f), tint, stroke)
-                drawLineStroke(p(19f, 4f), p(19f, 9f), tint, stroke)
-                drawRect(tint, topLeft = p(4.6f, 11f), size = Size(6.4f * s, 2.4f * s))
-                drawRect(tint, topLeft = p(12.4f, 11f), size = Size(7f * s, 2.4f * s))
-                drawRect(tint, topLeft = p(4.6f, 15.6f), size = Size(10.2f * s, 2.4f * s))
-                drawRect(tint, topLeft = p(17.2f, 15.6f), size = Size(3.4f * s, 2.4f * s))
-            }
             OwnTVIcon.VIDEO -> {
                 drawRoundRectStroke(p(3f, 6f), p(21f, 18f), 2.5f * s, tint, stroke)
                 val tri = Path().apply {
@@ -257,38 +162,6 @@ fun OwnTVIcon(
                 drawCircleStroke(p(18f, 18f), 2.4f * s, tint, stroke)
                 drawLineStroke(p(8f, 11f), p(16f, 7f), tint, stroke)
                 drawLineStroke(p(8f, 13f), p(16f, 17f), tint, stroke)
-            }
-            OwnTVIcon.CHEVRON -> {
-                drawLineStroke(p(9f, 5f), p(16f, 12f), tint, stroke)
-                drawLineStroke(p(16f, 12f), p(9f, 19f), tint, stroke)
-            }
-            OwnTVIcon.CHEVRON_UP -> {
-                drawLineStroke(p(5f, 15f), p(12f, 8f), tint, stroke)
-                drawLineStroke(p(12f, 8f), p(19f, 15f), tint, stroke)
-            }
-            OwnTVIcon.CHEVRON_DOWN -> {
-                drawLineStroke(p(5f, 9f), p(12f, 16f), tint, stroke)
-                drawLineStroke(p(12f, 16f), p(19f, 9f), tint, stroke)
-            }
-            OwnTVIcon.ARROW_UP -> {
-                drawLineStroke(p(12f, 20f), p(12f, 5f), tint, stroke)
-                drawLineStroke(p(6f, 11f), p(12f, 5f), tint, stroke)
-                drawLineStroke(p(18f, 11f), p(12f, 5f), tint, stroke)
-            }
-            OwnTVIcon.ARROW_DOWN -> {
-                drawLineStroke(p(12f, 4f), p(12f, 19f), tint, stroke)
-                drawLineStroke(p(6f, 13f), p(12f, 19f), tint, stroke)
-                drawLineStroke(p(18f, 13f), p(12f, 19f), tint, stroke)
-            }
-            OwnTVIcon.ARROW_LEFT -> {
-                drawLineStroke(p(20f, 12f), p(5f, 12f), tint, stroke)
-                drawLineStroke(p(11f, 6f), p(5f, 12f), tint, stroke)
-                drawLineStroke(p(11f, 18f), p(5f, 12f), tint, stroke)
-            }
-            OwnTVIcon.ARROW_RIGHT -> {
-                drawLineStroke(p(4f, 12f), p(19f, 12f), tint, stroke)
-                drawLineStroke(p(13f, 6f), p(19f, 12f), tint, stroke)
-                drawLineStroke(p(13f, 18f), p(19f, 12f), tint, stroke)
             }
             OwnTVIcon.REMOTE_CHANNEL_UP -> {
                 drawLineStroke(p(5f, 10f), p(12f, 4f), tint, stroke)
@@ -320,47 +193,12 @@ fun OwnTVIcon(
                 drawLineStroke(p(21f, 19f), p(17.5f, 15.5f), tint, stroke)
                 drawLineStroke(p(21f, 19f), p(17.5f, 22.5f), tint, stroke)
             }
-            OwnTVIcon.PAUSE -> {
-                drawRect(tint, topLeft = p(8f, 5f), size = Size(2.6f * s, 14f * s))
-                drawRect(tint, topLeft = p(13.4f, 5f), size = Size(2.6f * s, 14f * s))
-            }
-            OwnTVIcon.REWIND -> {
-                drawPath(triangle(p(11f, 6f), p(4f, 12f), p(11f, 18f)), tint, style = Fill)
-                drawPath(triangle(p(20f, 6f), p(13f, 12f), p(20f, 18f)), tint, style = Fill)
-            }
-            OwnTVIcon.FORWARD -> {
-                drawPath(triangle(p(4f, 6f), p(11f, 12f), p(4f, 18f)), tint, style = Fill)
-                drawPath(triangle(p(13f, 6f), p(20f, 12f), p(13f, 18f)), tint, style = Fill)
-            }
-            OwnTVIcon.SKIP_NEXT -> {
-                // play-to-bar: ▶|
-                drawPath(triangle(p(5f, 6f), p(14f, 12f), p(5f, 18f)), tint, style = Fill)
-                drawRect(tint, topLeft = p(15.6f, 6f), size = Size(2.6f * s, 12f * s))
-            }
-            OwnTVIcon.SKIP_PREVIOUS -> {
-                // bar-to-play: |◀
-                drawRect(tint, topLeft = p(5.8f, 6f), size = Size(2.6f * s, 12f * s))
-                drawPath(triangle(p(19f, 6f), p(10f, 12f), p(19f, 18f)), tint, style = Fill)
-            }
             OwnTVIcon.AUDIO -> {
                 // Music note (audio track) — clearly distinct from the speaker/volume icon.
                 drawCircle(tint, radius = 3f * s, center = p(8.5f, 17.5f))    // filled note head
                 drawLineStroke(p(11.5f, 17.5f), p(11.5f, 5f), tint, stroke)   // stem
                 drawLineStroke(p(11.5f, 5f), p(16.5f, 7f), tint, stroke)      // upper flag
                 drawLineStroke(p(11.5f, 8.5f), p(16.5f, 10.5f), tint, stroke) // lower flag
-            }
-            OwnTVIcon.HEADPHONES -> {
-                // Over-ear headphones: headband arc + two filled earcups.
-                drawArc(tint, 180f, 180f, false, topLeft = p(4f, 5f), size = Size(16f * s, 16f * s), style = stroke)
-                drawRoundRectStroke(p(4f, 13f), p(8f, 20f), 2f * s, tint, stroke)
-                drawRect(tint, topLeft = p(4.5f, 13.5f), size = Size(3f * s, 6f * s))
-                drawRoundRectStroke(p(16f, 13f), p(20f, 20f), 2f * s, tint, stroke)
-                drawRect(tint, topLeft = p(16.5f, 13.5f), size = Size(3f * s, 6f * s))
-            }
-            OwnTVIcon.SUBTITLE -> {
-                drawRoundRectStroke(p(3f, 5f), p(21f, 19f), 2.5f * s, tint, stroke)
-                drawLineStroke(p(6f, 14f), p(11f, 14f), tint, stroke)
-                drawLineStroke(p(13f, 14f), p(18f, 14f), tint, stroke)
             }
             OwnTVIcon.BACK -> {
                 drawLineStroke(p(20f, 12f), p(4f, 12f), tint, stroke)
@@ -406,11 +244,6 @@ fun OwnTVIcon(
                     tint, style = Fill,
                 )
             }
-            OwnTVIcon.VOLUME_HIGH -> {
-                drawPath(speaker(::p), tint, style = Fill)
-                drawArc(tint, -52f, 104f, false, topLeft = p(11.5f, 8.5f), size = Size(5f * s, 7f * s), style = stroke)
-                drawArc(tint, -52f, 104f, false, topLeft = p(12.5f, 6f), size = Size(8f * s, 12f * s), style = stroke)
-            }
             OwnTVIcon.VOLUME_LOW -> {
                 drawPath(speaker(::p), tint, style = Fill)
                 drawArc(tint, -52f, 104f, false, topLeft = p(11.5f, 8.5f), size = Size(5f * s, 7f * s), style = stroke)
@@ -427,13 +260,6 @@ fun OwnTVIcon(
                 drawLineStroke(p(17f, 13f), p(17f, 15f), tint, stroke)
                 drawLineStroke(p(17f, 15f), p(15f, 15f), tint, stroke)
             }
-            OwnTVIcon.EXPAND -> { // ⤢ open-in-full: diagonal with arrowheads at both ends
-                drawLineStroke(p(6f, 18f), p(18f, 6f), tint, stroke)
-                drawLineStroke(p(18f, 6f), p(12.5f, 6f), tint, stroke)
-                drawLineStroke(p(18f, 6f), p(18f, 11.5f), tint, stroke)
-                drawLineStroke(p(6f, 18f), p(11.5f, 18f), tint, stroke)
-                drawLineStroke(p(6f, 18f), p(6f, 12.5f), tint, stroke)
-            }
             OwnTVIcon.IMAGE -> { // photo/picture frame: rounded rect + sun + mountain
                 drawRoundRectStroke(p(3f, 5f), p(21f, 19f), 2f * s, tint, stroke)
                 drawCircle(tint, 1.2f * s, p(8f, 10f), style = Fill) // sun
@@ -447,10 +273,6 @@ fun OwnTVIcon(
                 drawRoundRectStroke(p(3f, 5f), p(21f, 19f), 2.5f * s, tint, stroke)
                 drawRect(tint, topLeft = p(12.5f, 12f), size = Size(6.5f * s, 5f * s))
             }
-            OwnTVIcon.CLOSE -> {
-                drawLineStroke(p(6f, 6f), p(18f, 18f), tint, stroke)
-                drawLineStroke(p(18f, 6f), p(6f, 18f), tint, stroke)
-            }
             OwnTVIcon.SWAP -> { // ⇄ switch/swap engine (top arrow →, bottom arrow ←)
                 drawLineStroke(p(4f, 9f), p(18f, 9f), tint, stroke)
                 drawLineStroke(p(18f, 9f), p(15f, 6.5f), tint, stroke)
@@ -459,15 +281,6 @@ fun OwnTVIcon(
                 drawLineStroke(p(6f, 15f), p(9f, 12.5f), tint, stroke)
                 drawLineStroke(p(6f, 15f), p(9f, 17.5f), tint, stroke)
             }
-        OwnTVIcon.LANGUAGE -> {
-                // Material Translate — Latin "A" + character bars (not a globe; globe reads as network).
-                drawLineStroke(p(4f, 15f), p(8.5f, 4f), tint, stroke)
-                drawLineStroke(p(8.5f, 4f), p(13f, 15f), tint, stroke)
-                drawLineStroke(p(5.8f, 11f), p(11.2f, 11f), tint, stroke)
-                drawLineStroke(p(15f, 6f), p(21f, 6f), tint, stroke)
-                drawLineStroke(p(15f, 10.5f), p(19.5f, 10.5f), tint, stroke)
-            drawLineStroke(p(15f, 15f), p(21f, 15f), tint, stroke)
-        }
         OwnTVIcon.GEAR -> {
             drawCircleStroke(p(12f, 12f), 6.5f * s, tint, stroke)
             drawCircleStroke(p(12f, 12f), 2.7f * s, tint, stroke)
@@ -479,20 +292,6 @@ fun OwnTVIcon(
             drawLineStroke(p(16.7f, 16.7f), p(18.7f, 18.7f), tint, stroke)
             drawLineStroke(p(18.7f, 5.3f), p(16.7f, 7.3f), tint, stroke)
             drawLineStroke(p(7.3f, 16.7f), p(5.3f, 18.7f), tint, stroke)
-        }
-        OwnTVIcon.SPARKLE -> {
-            val sparkle = Path().apply {
-                moveTo(p(12f, 2.5f).x, p(12f, 2.5f).y)
-                lineTo(p(14.2f, 9.8f).x, p(14.2f, 9.8f).y)
-                lineTo(p(21.5f, 12f).x, p(21.5f, 12f).y)
-                lineTo(p(14.2f, 14.2f).x, p(14.2f, 14.2f).y)
-                lineTo(p(12f, 21.5f).x, p(12f, 21.5f).y)
-                lineTo(p(9.8f, 14.2f).x, p(9.8f, 14.2f).y)
-                lineTo(p(2.5f, 12f).x, p(2.5f, 12f).y)
-                lineTo(p(9.8f, 9.8f).x, p(9.8f, 9.8f).y)
-                close()
-            }
-            drawPath(sparkle, tint, style = Fill)
         }
             OwnTVIcon.WEATHER -> {
                 // Sun behind a cloud. Lighter than the 2f default: a sun, its rays and a three-lobe
@@ -539,6 +338,12 @@ fun OwnTVIcon(
                 drawRoundRectStroke(p(5f, 8.5f), p(19f, 20.8f), 1.8f * s, tint, stroke)
                 drawLineStroke(p(9.8f, 12.6f), p(14.2f, 12.6f), tint, stroke)
             }
+            OwnTVIcon.BEDTIME -> {
+                // A full disc with a smaller one bitten out of its upper right — the crescent.
+                val disc = Path().apply { addOval(Rect(p(3.5f, 3.5f), p(20.5f, 20.5f))) }
+                val bite = Path().apply { addOval(Rect(p(9.5f, 1f), p(23f, 14.5f))) }
+                drawPath(Path.combine(PathOperation.Difference, disc, bite), tint, style = stroke)
+            }
             OwnTVIcon.SEND -> {
                 // DOWNLOADS reflected: same shaft, same baseline, arrowhead at the top. Send and
                 // Receive sit one row apart in Local sync, so they have to read as one pair.
@@ -546,21 +351,6 @@ fun OwnTVIcon(
                 drawLineStroke(p(7f, 8f), p(12f, 3f), tint, stroke)
                 drawLineStroke(p(17f, 8f), p(12f, 3f), tint, stroke)
                 drawLineStroke(p(5f, 20f), p(19f, 20f), tint, stroke)
-            }
-            OwnTVIcon.PHONE -> { // Handset: the body, and the bar along its bottom edge.
-                drawRoundRectStroke(p(7f, 2.5f), p(17f, 21.5f), 2.2f * s, tint, stroke)
-                drawLineStroke(p(11f, 18.5f), p(13f, 18.5f), tint, stroke)
-            }
-            OwnTVIcon.FOLDER -> { // Folder: the tab, then the body it sits on.
-                drawLineStroke(p(3.2f, 8.2f), p(3.2f, 5.8f), tint, stroke)
-                drawLineStroke(p(3.2f, 5.8f), p(9.2f, 5.8f), tint, stroke)
-                drawLineStroke(p(9.2f, 5.8f), p(11.1f, 8.2f), tint, stroke)
-                drawRoundRectStroke(p(3.2f, 8.2f), p(20.8f, 19.4f), 1.8f * s, tint, stroke)
-            }
-            OwnTVIcon.REFRESH -> { // Circular arrow, head drawn as the usual corner marker.
-                drawArc(tint, 0f, 314.1f, false, p(3.5f, 3.5f), Size(17f * s, 17f * s), style = stroke)
-                drawLineStroke(p(20.8f, 3.6f), p(20.8f, 8.6f), tint, stroke)
-                drawLineStroke(p(20.8f, 8.6f), p(15.8f, 8.6f), tint, stroke)
             }
             OwnTVIcon.POWER -> {
                 drawLineStroke(p(12f, 3f), p(12f, 11.5f), tint, stroke)
@@ -578,11 +368,6 @@ fun OwnTVIcon(
                 drawArc(tint, -45.8f, 91.6f, false, p(6.12f, 6f), Size(12f * s, 12f * s), style = stroke)
                 drawArc(tint, -134.6f, -90.8f, false, p(1.51f, 1.6f), Size(20.8f * s, 20.8f * s), style = stroke)
                 drawArc(tint, -45.4f, 90.8f, false, p(1.69f, 1.6f), Size(20.8f * s, 20.8f * s), style = stroke)
-            }
-            OwnTVIcon.WARNING -> { // A clock read as "history" on the error log; a triangle cannot.
-                drawPath(triangle(p(12f, 3.6f), p(21.8f, 20.4f), p(2.2f, 20.4f)), tint, style = stroke)
-                drawLineStroke(p(12f, 10f), p(12f, 14.6f), tint, stroke)
-                drawCircle(tint, 1.2f * s, p(12f, 17.8f))
             }
             OwnTVIcon.LIST_GRID -> { // Four tiles — the browsing lists themselves.
                 drawRoundRectStroke(p(3f, 4f), p(10.5f, 10.5f), 1.5f * s, tint, stroke)
@@ -643,21 +428,7 @@ fun OwnTVIcon(
                 drawArc(tint, -125f, 100f, false, p(1.8f, 1.8f), Size(20.4f * s, 20.4f * s), style = stroke)
                 drawArc(tint, 55f, 100f, false, p(1.8f, 1.8f), Size(20.4f * s, 20.4f * s), style = stroke)
             }
-            OwnTVIcon.MORE -> { // ⋯ — the rest of the controls, when the window is too small for them.
-                drawCircle(tint, 1.7f * s, p(5.5f, 12f))
-                drawCircle(tint, 1.7f * s, p(12f, 12f))
-                drawCircle(tint, 1.7f * s, p(18.5f, 12f))
-            }
-            OwnTVIcon.SEEK_BACK -> { // REFRESH's circular arrow, mirrored: jump back through the stream.
-                drawArc(tint, 180f, -314.1f, false, p(3.5f, 3.5f), Size(17f * s, 17f * s), style = stroke)
-                drawLineStroke(p(3.2f, 3.6f), p(3.2f, 8.6f), tint, stroke)
-                drawLineStroke(p(3.2f, 8.6f), p(8.2f, 8.6f), tint, stroke)
-            }
-            OwnTVIcon.SEEK_FORWARD -> {
-                drawArc(tint, 0f, 314.1f, false, p(3.5f, 3.5f), Size(17f * s, 17f * s), style = stroke)
-                drawLineStroke(p(20.8f, 3.6f), p(20.8f, 8.6f), tint, stroke)
-                drawLineStroke(p(20.8f, 8.6f), p(15.8f, 8.6f), tint, stroke)
-            }
+            else -> Unit // drawn from StagePaths above
     }
     }
 }
@@ -693,18 +464,4 @@ private fun DrawScope.drawRoundRectStroke(topLeft: Offset, bottomRight: Offset, 
 
 private fun DrawScope.drawCircleStroke(center: Offset, radius: Float, color: Color, stroke: Stroke) {
     drawCircle(color = color, radius = radius, center = center, style = stroke)
-}
-
-private fun starPath(center: Offset, outer: Float, inner: Float): Path {
-    val path = Path()
-    val points = 5
-    for (i in 0 until points * 2) {
-        val r = if (i % 2 == 0) outer else inner
-        val angle = Math.PI / points * i - Math.PI / 2
-        val x = center.x + (r * Math.cos(angle)).toFloat()
-        val y = center.y + (r * Math.sin(angle)).toFloat()
-        if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
-    }
-    path.close()
-    return path
 }

@@ -30,7 +30,7 @@ object OwnTVAvatars {
 
 @Composable
 fun OwnTVAvatar(avatarId: Int, modifier: Modifier = Modifier, imagePath: String = "") {
-    // Phase 7 — avatarId -1 = "no avatar" → show the Rank 1 ProfileIcon as a default silhouette.
+    // avatarId -1 = "no avatar" → show the Rank 1 ProfileIcon as a default silhouette.
     if (avatarId == -1 && imagePath.isBlank()) {
         ProfileIcon(color = Color(0xFF54F2E2), modifier = modifier.padding(4.dp))
         return

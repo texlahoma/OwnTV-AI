@@ -43,6 +43,15 @@ private val DancingScriptFamily = FontFamily(
     variableFont(R.font.dancing_script_variable, FontWeight.Bold),
 )
 
+// Stage's typeface: every weight it uses (400–800) from one variable file.
+private val PlusJakartaSansFamily = FontFamily(
+    variableFont(R.font.plus_jakarta_sans_variable, FontWeight.Normal),
+    variableFont(R.font.plus_jakarta_sans_variable, FontWeight.Medium),
+    variableFont(R.font.plus_jakarta_sans_variable, FontWeight.SemiBold),
+    variableFont(R.font.plus_jakarta_sans_variable, FontWeight.Bold),
+    variableFont(R.font.plus_jakarta_sans_variable, FontWeight.ExtraBold),
+)
+
 private val PoppinsFamily = FontFamily(
     Font(R.font.poppins_regular, FontWeight.Normal),
     Font(R.font.poppins_medium, FontWeight.Medium),
@@ -57,6 +66,7 @@ fun AppFontFamily.asComposeFamily(): FontFamily = when (this) {
     AppFontFamily.PLAYFAIR_DISPLAY -> PlayfairDisplayFamily
     AppFontFamily.DANCING_SCRIPT -> DancingScriptFamily
     AppFontFamily.POPPINS -> PoppinsFamily
+    AppFontFamily.PLUS_JAKARTA_SANS -> PlusJakartaSansFamily
 }
 
 /** Android/mpv equivalents used by subtitle renderers outside Compose typography. */
@@ -73,13 +83,14 @@ val AppFontFamily.subtitleFontResource: Int
         AppFontFamily.PLAYFAIR_DISPLAY -> R.font.playfair_display_variable
         AppFontFamily.DANCING_SCRIPT -> R.font.dancing_script_variable
         AppFontFamily.POPPINS -> R.font.poppins_regular
+        AppFontFamily.PLUS_JAKARTA_SANS -> R.font.plus_jakarta_sans_variable
         AppFontFamily.SYSTEM_SANS,
         AppFontFamily.MONOSPACE,
         -> 0
     }
 
-val LocalMainFontFamily = staticCompositionLocalOf<FontFamily> { FontFamily.SansSerif }
-val LocalPopupFontFamily = staticCompositionLocalOf<FontFamily> { LoraFamily }
+val LocalMainFontFamily = staticCompositionLocalOf<FontFamily> { PlusJakartaSansFamily }
+val LocalPopupFontFamily = staticCompositionLocalOf<FontFamily> { PlusJakartaSansFamily }
 val LocalUiFontScaleFactor = staticCompositionLocalOf { 1f }
 val LocalPopupFontScaleFactor = staticCompositionLocalOf { 1f }
 val LocalPopupSizeScaleFactor = staticCompositionLocalOf { 1f }

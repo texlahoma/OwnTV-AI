@@ -88,8 +88,13 @@ fun formatBestDateTime(
     return formatBestDate(context, skeleton, ms)
 }
 
+/** The date part of [dateSkeleton] plus the time in the device's own hour cycle. Any time fields the
+ *  caller left in are dropped first: two hour fields ("jm" + "Hm") make getBestDateTimePattern throw. */
 internal fun combinedDateTimeSkeleton(dateSkeleton: String, is24Hour: Boolean): String =
-    dateSkeleton + if (is24Hour) "Hm" else "hm"
+    dateSkeleton.filterNot { it in TIME_FIELDS } + if (is24Hour) "Hm" else "hm"
+
+/** Skeleton letters for hour, minute, second and day period. */
+private const val TIME_FIELDS = "hHkKjJCmsabB"
 
 private fun bestDateFormatter(
     locale: Locale,

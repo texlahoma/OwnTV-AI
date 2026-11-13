@@ -583,7 +583,7 @@ Nothing moves to resources yet. This phase makes the runtime, the vocabulary and
 ### 0a. Three real bugs found during the audit (fix first, independently committable)
 
 - `player/SubtitleShift.kt:43` and `:60` ⟨verify⟩ - `"%02d:%02d:%02d%c%03d".format(...)` and `"%d:%02d:%02d.%02d".format(...)` pass no `Locale`, so Kotlin's extension uses `Locale.getDefault()`. Java's `Formatter` localises `%d` digits, so on an Arabic, Persian or Nepali device the shifted SRT/ASS file is **written to disk with Arabic-Indic or Devanagari digits** and becomes unparseable. Fix: `String.format(Locale.ROOT, ...)`. This is a live corruption bug today, not a future one.
-- `ui/components/OwnTVButton.kt:79-84` ⟨verify⟩ - the shared button primitive for the entire app is `maxLines = 1, softWrap = false` with no `overflow`, so long labels are **hard-clipped, not ellipsized**. German, Finnish and Russian will hit this on almost every button. Fix: drop `softWrap = false`, add `overflow = TextOverflow.Ellipsis`, let the `Text` take `Modifier.weight(1f, fill = false)` inside its `Row`.
+- The shared button primitive, `StageButton` (`ui/stage/StageComponents.kt`), must ellipsize long labels (`maxLines = 1, overflow = TextOverflow.Ellipsis`), never hard-clip them: German, Finnish and Russian would otherwise lose the end of almost every button. It does.
 - `MainActivity.kt` previously kept authentication in plain `remember`, so **any** Activity recreation dropped the user back to the profile gate mid-session. This was live for font-scale/dark-mode changes and became more likely once i18n added deliberate recreation. It is now an Activity-scoped, profile-bound ViewModel state as described immediately below.
 
 #### The profile gate: configuration-only retention, profile-bound, never saveable
@@ -992,7 +992,7 @@ on:
 jobs:
   i18n:
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0

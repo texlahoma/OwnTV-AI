@@ -13,27 +13,14 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-    inputs:
-      force_core_source:
-        description: 'Build core from source, as a fork pull request does (ignores GPR_TOKEN)'
-        type: boolean
-        required: false
-        default: false
 
 permissions:
   contents: write   # required so tag builds can create a Release
 
-# Resolving tv.own.owntv:core and :player-core from GitHub Packages. The registry belongs to a
-# DIFFERENT repository (ahXN00/OwnTV_Core) and the built-in GITHUB_TOKEN is scoped to this one — so a
-# personal access token with read:packages is required, stored as the GPR_TOKEN secret. That repo is
-# public; GitHub's Maven registry demands a login even for public packages, which is why the token is
-# needed at all. Every Gradle step needs it, hence workflow level rather than per job.
-#
-# A fork pull request gets no secrets, so GPR_TOKEN is empty there and this resolution cannot work.
-# The resolve-core action below covers that case by building core from source instead.
-env:
-  GITHUB_ACTOR: ${{ github.actor }}
-  GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
+# Core (tv.own.owntv:core, :player-core) and the mpv engine (tv.own.owntv:libmpv) resolve from OwnTV's
+# public Maven repository, https://ahxn00.github.io/OwnTV_Core/maven — no token, so fork pull requests
+# build exactly like the maintainer's. There is no owntv.corePath here: CI deliberately builds against
+# the PINNED artifact, which is what a release actually ships. Local builds use the composite.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: The pin must be core's newest release, and locales.json must match it
         env:
@@ -104,28 +91,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 'tools' is obsolete and Google removed it from the SDK repository; the
           # action still asks for it by default, which fails the whole setup step.
           packages: 'platform-tools'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Resolve core
-        uses: ./.github/actions/resolve-core
-        with:
-          force-source-build: ${{ inputs.force_core_source || false }}
+        uses: gradle/actions/setup-gradle@v6
 
       # One variant, not `test`/`lint` across every flavor: standard+debug is the variant the JVM
       # tests are written against, and the ABI flavors differ only in the packaged native libs.
@@ -141,7 +123,7 @@ jobs:
 
       - name: Upload test and lint reports
         if: always()   # the reports matter most when the step above failed
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: check-reports
           path: |
@@ -162,28 +144,23 @@ jobs:
       APK_OUT: ""
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '21'   # matches gradle/gradle-daemon-jvm.properties (toolchainVersion=21)
+          java-version: '25'   # matches gradle/gradle-daemon-jvm.properties (toolchainVersion=25)
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
         with:
           # 'tools' is obsolete and Google removed it from the SDK repository; the
           # action still asks for it by default, which fails the whole setup step.
           packages: 'platform-tools'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Resolve core
-        uses: ./.github/actions/resolve-core
-        with:
-          force-source-build: ${{ inputs.force_core_source || false }}
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Compute version (from the git tag on releases)
         id: ver
@@ -314,21 +291,20 @@ jobs:
           fi
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           # Upload the whole dist/ so both the arm APK and the x86_64 APK are captured.
           name: ${{ env.APK_OUT }}
           path: dist/*
           if-no-files-found: error
 
-      - name: Extract release notes from CHANGELOG_APP.md
+      - name: Extract release notes from CHANGELOG.md
         if: env.IS_TAG == 'true'
         env:
           TAG: ${{ github.ref_name }}
         run: |
           # The release body is what the in-app updater shows as "What's new", so it must be the
-          # SHORT, bullet-only notes from CHANGELOG_APP.md — never CHANGELOG.md, which is the long
-          # developer/contributor changelog and is read manually on GitHub.
+          # SHORT, bullet-only notes from CHANGELOG.md (the only changelog; detail lives in commits).
           #
           # This runs here rather than only in release-notes.yml because a release published by
           # GITHUB_TOKEN does not trigger other workflows, so that job never fires for tag builds.
@@ -336,12 +312,12 @@ jobs:
           #
           # Take "## <tag>" up to the next "## v" header; the header may carry a date/"unreleased"
           # tail ("## v4.1.5 — 2026-07-26") or nothing at all, so match the version as a whole word.
-          if [ -f CHANGELOG_APP.md ]; then
+          if [ -f CHANGELOG.md ]; then
             awk -v ver="$TAG" '
               $0 ~ ("^## " ver "([ \t]|$)") { flag=1; next }
               /^## v/ && flag { flag=0 }
               flag { print }
-            ' CHANGELOG_APP.md > dist/RELEASE_NOTES.md || true
+            ' CHANGELOG.md > dist/RELEASE_NOTES.md || true
             # Trim leading/trailing blank lines.
             sed -i -e '/./,$!d' dist/RELEASE_NOTES.md
             awk 'NF{p=NR} {a[NR]=$0} END{for(i=1;i<=p;i++) print a[i]}' \
@@ -349,8 +325,8 @@ jobs:
             mv dist/RELEASE_NOTES.trimmed.md dist/RELEASE_NOTES.md
           fi
           if [ ! -s dist/RELEASE_NOTES.md ]; then
-            echo "::warning::No CHANGELOG_APP.md section for $TAG — publishing a placeholder body."
-            echo "See [CHANGELOG.md](https://github.com/$GITHUB_REPOSITORY/blob/$TAG/CHANGELOG.md) for details." \
+            echo "::warning::No CHANGELOG.md section for $TAG — publishing a placeholder body."
+            echo "See the commits for $TAG for details." \
               > dist/RELEASE_NOTES.md
           fi
           echo "--- Release notes ---"
@@ -358,7 +334,7 @@ jobs:
 
       - name: Publish GitHub Release
         if: env.IS_TAG == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: OwnTV ${{ github.ref_name }}
           files: |

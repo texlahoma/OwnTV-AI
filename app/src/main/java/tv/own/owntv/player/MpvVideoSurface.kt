@@ -23,6 +23,9 @@ import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.core.settings.SubtitleStyle
 import tv.own.owntv.ui.theme.asAndroidTypeface
 
+private const val SURFACE_LAYOUT_NUDGES = 30
+private const val SURFACE_LAYOUT_NUDGE_MS = 100L
+
 private class MpvSurfaceView(context: Context, private val player: OwnTVPlayer) :
     SurfaceView(context), SurfaceHolder.Callback {
 
@@ -37,30 +40,8 @@ private class MpvSurfaceView(context: Context, private val player: OwnTVPlayer) 
      *  on surface (re)create. No-op below Android 11, or where the panel can't switch (harmless). */
     fun applyVideoFrameRate(fps: Float) {
         pendingFps = fps
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) return
         val surface = holder.surface ?: return
-        if (!surface.isValid) return
-        if (fps <= 0f) {
-            runCatching {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    surface.clearFrameRate()
-                } else {
-                    // clearFrameRate() was added in API 34. On Android 11–13, passing 0 clears the
-                    // previously requested surface frame-rate hint using the original API 30 contract.
-                    @Suppress("DEPRECATION")
-                    surface.setFrameRate(0f, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT)
-                }
-            }
-            return
-        }
-        runCatching {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                surface.setFrameRate(fps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE, Surface.CHANGE_FRAME_RATE_ALWAYS)
-            } else {
-                @Suppress("DEPRECATION")
-                surface.setFrameRate(fps, Surface.FRAME_RATE_COMPATIBILITY_FIXED_SOURCE)
-            }
-        }
+        SurfaceFrameRate.apply(surface, fps, seamlessOnly = false) // a TV may do a real mode switch
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -87,15 +68,28 @@ private class MpvSurfaceView(context: Context, private val player: OwnTVPlayer) 
  */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-fun MpvVideoSurface(player: OwnTVPlayer, modifier: Modifier = Modifier, autoFrameRate: Boolean = true) {
+fun MpvVideoSurface(
+    player: OwnTVPlayer,
+    modifier: Modifier = Modifier,
+    // Settings › Picture › Frame rate: one switch for films and series, one for Live TV.
+    autoFrameRateFilms: Boolean = true,
+    autoFrameRateLive: Boolean = true,
+    // Auto frame rate's two film extras (Settings › Picture › Frame rate). Ignored on live.
+    afrMatchResolution: Boolean = false,
+    afrHoldSecs: Int = 0,
+) {
     val aspect by player.videoAspect.collectAsStateWithLifecycle()
     val videoSize by player.videoSize.collectAsStateWithLifecycle()
     val zoom by player.zoomMode.collectAsStateWithLifecycle()
     val fps by player.videoFps.collectAsStateWithLifecycle()
 
     // Auto frame rate, mechanism 2: window-level display-mode switch. Complements the per-surface
-    // setFrameRate() hint below, which is a no-op before Android 11 (e.g. Fire OS 7 boxes).
-    AutoFrameRateEffect(fps, autoFrameRate)
+    // setFrameRate() hint below, which is a no-op before Android 11 (e.g. Fire OS 7 boxes). Read per
+    // composition, and a new item always recomposes (its size arrives), so live vs film is current.
+    val engine = androidx.compose.runtime.remember(player) { MpvPlaybackEngine(player) }
+    val film = engine.takeIf { !player.isLiveContent }
+    val autoFrameRate = if (film != null) autoFrameRateFilms else autoFrameRateLive
+    AutoFrameRateEffect(fps, autoFrameRate, film = film, videoSize = videoSize, matchResolution = afrMatchResolution, holdSecs = afrHoldSecs)
 
     BoxWithConstraints(modifier.background(Color.Black).clipToBounds(), contentAlignment = Alignment.Center) {
         val viewModifier = Modifier.videoZoom(zoom, aspect, videoSize, maxWidth, maxHeight)
@@ -103,6 +97,19 @@ fun MpvVideoSurface(player: OwnTVPlayer, modifier: Modifier = Modifier, autoFram
         // recreated — destroying the old Surface and making a FRESH one. The Realtek decoder needs a clean
         // Surface for a back-to-back 4K-class session (reusing the dirty one throws 0x80001000).
         val surfaceResetToken by player.surfaceResetToken.collectAsStateWithLifecycle()
+        // The new SurfaceView gets its surface only once the window lays it out, and nothing else may ask
+        // for a frame: zapped by deep link or autoplay with no key pressed, the screen sat idle and the
+        // waiting load never started until the next remote press. Ask for layout until the surface comes.
+        val hostView = androidx.compose.ui.platform.LocalView.current
+        LaunchedEffect(surfaceResetToken) {
+            if (surfaceResetToken == 0) return@LaunchedEffect
+            repeat(SURFACE_LAYOUT_NUDGES) {
+                hostView.requestLayout()
+                hostView.invalidate()
+                kotlinx.coroutines.delay(SURFACE_LAYOUT_NUDGE_MS)
+                if (player.hasAttachedSurface) return@LaunchedEffect
+            }
+        }
         androidx.compose.runtime.key(surfaceResetToken) {
             AndroidView(
                 modifier = viewModifier,
@@ -117,9 +124,12 @@ fun MpvVideoSurface(player: OwnTVPlayer, modifier: Modifier = Modifier, autoFram
         // owns playback — putting ANY view over the SurfaceView (even an empty one) knocks it off the
         // hardware-overlay / direct scan-out path, which stutters 4K to a ~2 fps slideshow under GPU
         // composition. During normal mpv playback this isn't composed, so the surface scans out directly.
+        // And only while a subtitle track is actually on, as the live path already does with
+        // `subOn`: a film on ExoPlayer with subtitles off would otherwise keep an empty view over it.
         val exoActive by player.exoActiveState.collectAsStateWithLifecycle()
-        val cues by player.exoCues.collectAsStateWithLifecycle()
-        if (exoActive) {
+        val exoSubOn by player.exoSubtitleOn.collectAsStateWithLifecycle()
+        if (exoActive && exoSubOn) {
+            val cues by player.exoCues.collectAsStateWithLifecycle()
             StyledSubtitleView(cues = cues, modifier = viewModifier)
         }
         // Freeze-frame: the last mpv frame, shown over the surface during the mpv→ExoPlayer swap so the
@@ -227,7 +237,7 @@ fun ExoPreviewSurface(
             }
         }
         // Subtitle overlay — mounted ONLY while subs are on, so 4K live keeps its direct hardware-overlay path.
-        // Sized like the video, not like the screen (F17): at any zoom other than Fit the two differ, and
+        // Sized like the video, not like the screen: at any zoom other than Fit the two differ, and
         // mounting this full-screen put the same subtitle in a different place depending on which engine
         // happened to be running. The picture is the reference, so a line stays inside the frame the user
         // is actually looking at.
@@ -240,7 +250,7 @@ fun ExoPreviewSurface(
 }
 
 /**
- * Media3's [androidx.media3.ui.SubtitleView] with the user's subtitle appearance (#96) applied —
+ * Media3's [androidx.media3.ui.SubtitleView] with the user's subtitle appearance applied —
  * shared by Live TV (the default live engine) and the VOD image-subtitle handoff, so a subtitle
  * looks the same on both.
  *
@@ -248,7 +258,7 @@ fun ExoPreviewSurface(
  * master toggle is off) leaves this the plain, unstyled view it has always been. In particular
  * `applyEmbeddedStyles` is only switched off once a color or a background transparency is actually
  * chosen: that discards broadcaster CEA-608/teletext styling, which is the only way an override can
- * take effect — and exactly what #96 asks for, since the opaque black box comes from the broadcaster.
+ * take effect — and exactly what is wanted, since the opaque black box comes from the broadcaster.
  * Whichever of the two is still on "Default" falls back to [androidx.media3.ui.CaptionStyleCompat]'s
  * own value rather than to the (now discarded) embedded one.
  *

@@ -1,41 +1,10 @@
 package tv.own.owntv.features.shell.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 import tv.own.owntv.R
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
- * Shown at launch when a backup restore was interrupted (B2). A restore spans the database and
+ * Shown at launch when a backup restore was interrupted. A restore spans the database and
  * several preference files, so an unlucky kill can leave it half-applied — a merge, so nothing was
  * deleted, but some sections may simply not be there. Rather than let that pass unnoticed, the app
  * says so and points at the fix: run the same restore again (it's idempotent — a re-run merges the
@@ -48,55 +17,10 @@ fun IncompleteRestoreDialog(
     description: String,
     onDismiss: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
-    val okFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(80)
-        runCatching { okFocus.requestFocus() }
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .modalScrim()
-            .trapAllFocusExit()
-            .focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            modifier = Modifier
-                .widthIn(max = 520.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.panel)
-                .verticalScroll(rememberScrollState())
-                .padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = androidx.compose.ui.res.stringResource(R.string.content_restore_incomplete_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = colors.textPrimary,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = androidx.compose.ui.res.stringResource(
-                    R.string.content_restore_incomplete_message,
-                    description,
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.textSecondary,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(Modifier.height(24.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                OwnTVButton(
-                    label = androidx.compose.ui.res.stringResource(R.string.common_ok),
-                    onClick = onDismiss,
-                    style = OwnTVButtonStyle.PRIMARY,
-                    modifier = Modifier.focusRequester(okFocus),
-                )
-            }
-        }
-    }
+    tv.own.owntv.ui.stage.StageNotice(
+        title = androidx.compose.ui.res.stringResource(R.string.content_restore_incomplete_title),
+        body = androidx.compose.ui.res.stringResource(R.string.content_restore_incomplete_message, description),
+        onDismiss = onDismiss,
+        eyebrow = null,
+    )
 }

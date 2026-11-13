@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="extras/logo.png" alt="OwnTV" width="360">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="extras/brand/app-logos/logo_eggshell_light.png">
+    <img src="extras/brand/app-logos/logo_eggshell.png" alt="OwnTV" width="360">
+  </picture>
 </p>
 
 <p align="center">
@@ -48,7 +51,7 @@ Questions, ideas, bug reports — **join the OwnTV Telegram group:**
 
 ### 👉 [t.me/owntvplayer](https://t.me/owntvplayer)
 
-<a href="https://t.me/owntvplayer"><img src="extras/telegram_qr_code.jpg" alt="Scan to join the OwnTV Telegram group" width="150"></a>
+<a href="https://t.me/owntvplayer"><img src="extras/qr-codes/telegram_qr_code.jpg" alt="Scan to join the OwnTV Telegram group" width="150"></a>
 
 ---
 
@@ -58,13 +61,14 @@ Questions, ideas, bug reports — **join the OwnTV Telegram group:**
 - **Two engines** — mpv for compatibility, ExoPlayer for instant Live TV, with automatic fallback and a per-channel override
 - **4K HDR** direct rendering, optional auto frame-rate matching, surround sound with a stereo safety net, 150% volume boost
 - **Subtitles** — text, image and closed captions, plus OpenSubtitles search and local files
-- Resume, next-episode auto-play, mini-player/PiP, audio-only mode, live stream-info overlay
+- Resume, next-episode auto-play, mini-player/PiP, picture-in-picture when you press Home, audio-only mode, live stream-info overlay
 - Media-session transport keys and proper audio focus — it behaves like a TV app
 - An **error log you can export** for any stream that misbehaves
 
 ### 🧭 Browse
 - **Home** with Continue Watching and **Now Trending** (TMDB rankings matched to what your provider can actually play)
 - Live TV · Movies · Series · Downloads · Guide, with per-profile row order, Favorites, History and search
+  (voice search where the TV has a speech recogniser)
 - **Multiple playlists** at once, with provider labels everywhere they could be confused
 - Rename, hide, reorder and combine categories; bulk rename rules
 - **TMDB** posters, plots, cast and trailers in 40 languages — scales to ~50k channels / ~168k movies
@@ -85,14 +89,19 @@ Questions, ideas, bug reports — **join the OwnTV Telegram group:**
 - OwnTV measures how many streams your provider allows and warns before it refuses one
 
 ### 👥 Profiles & Downloads
-- Multiple profiles with their own favourites, history and resume points, PIN locks and a Kids mode
-- Per-profile startup: Home, last channel, Favorites, or one chosen channel
+- Multiple profiles with their own favourites, history and resume points, PIN locks and a Kids mode; lock single categories behind a PIN, and optionally Settings too
+- Per-profile startup: Home, last channel, the last channel in the TV Guide or Live TV, Favorites, or one
+  chosen channel
 - Offline movies and episodes with pause, resume, retry and a storage bar
 
 ### 🎨 Look & robustness
-- Material 3 theming, your own accent and focus highlight, and an interaction-aware **Glass Effect**
+- Your own accent colour and focus highlight, frosted **Glass** with adjustable opacity, and a Stage,
+  Picture or Plain background
+- **Dark and Light themes** (or follow the TV) across the whole app, the player included
 - Font sizing for the interface and for popups, independently
-- **Remote Shortcuts** — map spare colour, number, channel and media keys to 25 actions
+- **Remote Shortcuts** — map spare colour, number, channel and media keys to 26 actions; **Player buttons**
+  choose what OK and a held OK do in the player, swap channel up/down, and turn number keys off
+- **Menu labels** — the section names beside the menu icons: off, when focused, or always
 - **26 interface languages**, RTL-aware, chosen before anything else on a fresh install
 - **Backup & Restore** to a single `.own` file, optionally encrypted, locally or over Wi-Fi
 - **Set up from another device** — a new box copies everything from the OwnTV device you already
@@ -123,7 +132,7 @@ More in **[extras/screenshots/](extras/screenshots/)**.
 | Area | Choice |
 |------|--------|
 | Language | Kotlin 2.4.20 (no `kotlin-android` plugin) |
-| Build | AGP 9.4.0 / Gradle 9.7.1, KSP2 2.3.11 |
+| Build | AGP 9.4.0 / Gradle 9.8.2, KSP2 2.3.11, JDK 25 |
 | UI | Jetpack Compose for TV (`androidx.tv:tv-material` 1.1.0), Compose BOM 2026.08.00 |
 | Media | **libmpv** (FFmpeg) · **ExoPlayer/Media3** 1.11.1 |
 | Database | Room 2.8.5 + Paging 3.5.1 + FTS4 |
@@ -180,7 +189,6 @@ OwnTV_Mobile/  (separate repo, the phone and tablet app on the same core)
 - 📖 **[User Guide](extras/USER_GUIDE.md)** — every feature and where to find it.
 - 📄 **[Master Product Brief](extras/OwnTV_Master_Product_Brief.md)** — the full as-built feature and
   architecture reference.
-- 📺 **[Player design reference](extras/player.html)** — an interactive mockup of the player UI.
 
 ## 📥 Installing (Fire TV / Android TV)
 
@@ -205,22 +213,14 @@ https://github.com/ahXN00/OwnTV/releases/latest/download/OwnTV.apk
 > Only if you want to build from source — otherwise just
 > **[install the APK](#-installing-fire-tv--android-tv)**.
 
-**One extra step first: a GitHub token.** Half the app lives in the separate
-[OwnTV_Core](https://github.com/ahXN00/OwnTV_Core) repository and is pulled from GitHub Packages,
-which always asks who you are. Without it, Gradle sync fails with a `401`.
+Half the app lives in the separate [OwnTV_Core](https://github.com/ahXN00/OwnTV_Core) repository;
+Gradle downloads it from OwnTV's public Maven repository by itself — **no account or token needed**.
 
 1. **Get the code** — `git clone https://github.com/ahXN00/OwnTV.git` (or download the ZIP).
-2. **Add a token** — create a [personal access token (classic)](https://github.com/settings/tokens)
-   with the single scope **`read:packages`**, then put it in `~/.gradle/gradle.properties`
-   (`C:\Users\<you>\.gradle\gradle.properties`) — never inside the project:
-   ```properties
-   gpr.user=your-github-username
-   gpr.token=ghp_yourtokenhere
-   ```
-3. **Open it** in [Android Studio](https://developer.android.com/studio) and let Gradle sync.
-4. **Pick the build variant** — `standard` for real devices and arm emulators, `x86_64` for x86_64
+2. **Open it** in [Android Studio](https://developer.android.com/studio) and let Gradle sync.
+3. **Pick the build variant** — `standard` for real devices and arm emulators, `x86_64` for x86_64
    emulators. This matters: the native player only loads on a matching ABI.
-5. **Run** ▶. Minimum **Android 8.0 / API 26**.
+4. **Run** ▶. Minimum **Android 8.0 / API 26**.
 
 Command line: `./gradlew assembleDebug` (`gradlew.bat` on Windows). The APK lands in
 `app/build/outputs/apk/`.
@@ -240,22 +240,27 @@ If your language is already available, contribute interface translations across 
 
 ## 🙏 Credits
 
-<img src="extras/Weblate_logo.svg" alt="Weblate" width="200">
+<img src="extras/partner-logos/Weblate_logo.svg" alt="Weblate" width="200">
 
 OwnTV speaks 26 languages because people translate it on
 [**Weblate**](https://weblate.org/), which hosts the project free of charge for libre software.
 Thank you to Weblate and to every translator who has given the app their language.
 
-<img src="extras/tmdb_logo.svg" alt="TMDB" width="200">
+<img src="extras/partner-logos/tmdb_logo.svg" alt="TMDB" width="200">
 
 Movie & series metadata and trailers are provided by [TMDB](https://www.themoviedb.org/).
 **This product uses the TMDB API but is not endorsed or certified by TMDB.**
 
-<img src="extras/opensubtitles_logo.svg" alt="OpenSubtitles" width="200">
+<img src="extras/partner-logos/opensubtitles_logo.svg" alt="OpenSubtitles" width="200">
 
 Subtitle search & download is powered by [OpenSubtitles.com](https://www.opensubtitles.com/).
 **This product uses the OpenSubtitles API but is not endorsed or certified by OpenSubtitles.** You sign
 in with your own OpenSubtitles account and are subject to their terms and download quotas.
+
+### 🎨 Brand
+
+The lowercase **owntv** wordmark was designed for OwnTV by [@m3th0d93](https://github.com/m3th0d93)
+in [issue #227](https://github.com/ahXN00/OwnTV/issues/227).
 
 ### ▶️ Playback engines
 
@@ -265,7 +270,7 @@ in with your own OpenSubtitles account and are subject to their terms and downlo
   preview and HLS.
 
 Which of the two starts a stream is yours to set, separately for Live TV and for Movies & Series
-(Settings → Video Player): either order, or one engine only with the automatic handover turned off.
+(Settings → Player): either order, or one engine only with the automatic handover turned off.
 
 ### 🧩 Built with
 

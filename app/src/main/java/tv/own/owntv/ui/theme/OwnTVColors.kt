@@ -105,7 +105,7 @@ private fun rolesFrom(seed: Color, isDark: Boolean): AccentRoles {
  * Build the resolved M3 tokens for a theme (dark/light) and accent. A valid [customAccent] hex
  * overrides the preset (its tonal roles are generated from the seed color).
  *
- * [focusHighlight] recolors the focus ring and its glow only (#121): the accent still owns buttons,
+ * [focusHighlight] recolors the focus ring and its glow only: the accent still owns buttons,
  * chips and containers, so a loud focus color does not repaint the whole app. Blank = the accent.
  */
 fun ownTvColors(

@@ -24,7 +24,7 @@ fun frostMipDimensions(
 /**
  * Compact, dependency-free separable box blur.
  *
- * Used by the Glass effect feature (Phase 4) to produce the single shared frosted copy of the
+ * Used by Glass to produce the single shared frosted copy of the
  * background image. Three horizontal+vertical passes approximate a Gaussian — visually
  * indistinguishable from stack blur for a backdrop frost, and trivially correct. Pure-Kotlin over
  * an `Int` pixel array → works on every API level (no RenderEffect/RenderScript dependency). Run

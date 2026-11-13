@@ -1,44 +1,21 @@
 package tv.own.owntv.features.setup
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Text
 import tv.own.owntv.R
-import tv.own.owntv.ui.components.FocusableSurface
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
+import tv.own.owntv.features.settings.SettingHelp
+import tv.own.owntv.features.settings.SettingValue
+import tv.own.owntv.features.settings.StageFullPage
+import tv.own.owntv.features.settings.StageSettingRow
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
- * First step of "Add source": pick **Remote** (fill the form on another device over the LAN) or **Manual**
- * (type Xtream / M3U / Stalker here with the remote). Shared by the setup wizard and Settings → Manage
- * sources so both entry points offer the same choice.
+ * Playlists › Add a source: **From your phone** (fill the form on another device over the LAN)
+ * or **Type it here** (Xtream / M3U / Stalker with the remote), each explained in the panel.
  */
 @Composable
 fun AddSourceChooserScreen(
@@ -47,79 +24,39 @@ fun AddSourceChooserScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
-    val firstFocus = remember { FocusRequester() }
-    LaunchedEffectRequestFocus(firstFocus)
-    BackHandler { onBack() }
-
-    Box(modifier.fillMaxSize().roundedPanel().background(colors.background), contentAlignment = Alignment.Center) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()).padding(40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(stringResource(R.string.setup_add_source), style = MaterialTheme.typography.headlineLarge, color = colors.onSurface)
-            Spacer(Modifier.height(6.dp))
-            Text(
-                stringResource(R.string.setup_add_source_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(24.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                ChooserCard(
-                    icon = OwnTVIcon.PLAYLIST,
-                    title = stringResource(R.string.setup_from_phone),
-                    subtitle = stringResource(R.string.setup_use_phone_same_wifi),
-                    onClick = onRemote,
-                    modifier = Modifier.focusRequester(firstFocus),
-                )
-                ChooserCard(
-                    icon = OwnTVIcon.ADD,
-                    title = stringResource(R.string.setup_manual),
-                    subtitle = stringResource(R.string.setup_type_source_here),
-                    onClick = onManual,
-                )
-            }
-            Spacer(Modifier.height(24.dp))
-            OwnTVButton(stringResource(R.string.common_back), onClick = onBack, style = OwnTVButtonStyle.SECONDARY)
-        }
+    val rowsFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { runCatching { rowsFocus.requestFocus() } }
+    val playlists = stringResource(R.string.settings_playlists)
+    val hints = listOf(
+        stringResource(R.string.common_ok) to stringResource(R.string.settings_key_open),
+        stringResource(R.string.common_back) to playlists,
+    )
+    StageFullPage(
+        parents = listOf(playlists),
+        title = stringResource(R.string.setup_add_source),
+        count = "",
+        onBack = onBack,
+        modifier = modifier,
+        rowsFocus = rowsFocus,
+        settingsRoot = false,
+    ) {
+        val phone = stringResource(R.string.setup_from_phone)
+        StageSettingRow(
+            icon = OwnTVIcon.PHONE,
+            title = phone,
+            desc = stringResource(R.string.settings_line_add_from_phone),
+            value = SettingValue.Opens(null),
+            onClick = onRemote,
+            help = SettingHelp(phone, stringResource(R.string.settings_help_add_from_phone), hints = hints),
+        )
+        val here = stringResource(R.string.settings_add_type_here)
+        StageSettingRow(
+            icon = OwnTVIcon.PENCIL,
+            title = here,
+            desc = stringResource(R.string.settings_line_add_type_here),
+            value = SettingValue.Opens(null),
+            onClick = onManual,
+            help = SettingHelp(here, stringResource(R.string.settings_help_add_type_here), hints = hints),
+        )
     }
-}
-
-@Composable
-private fun ChooserCard(
-    icon: OwnTVIcon,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors = OwnTVTheme.colors
-    FocusableSurface(
-        onClick = onClick,
-        modifier = modifier.size(width = 224.dp, height = 174.dp),
-        shape = RoundedCornerShape(22.dp),
-        focusedContainerColor = colors.surfaceContainerHighest,
-        unfocusedContainerColor = colors.surfaceContainerHigh,
-        contentAlignment = Alignment.Center,
-        surface = GlassSurface.CARDS,
-    ) { focused ->
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(
-                Modifier.size(56.dp).clip(RoundedCornerShape(16.dp)).background(colors.primaryContainer),
-                contentAlignment = Alignment.Center,
-            ) {
-                OwnTVIcon(icon, tint = colors.onPrimaryContainer, modifier = Modifier.size(28.dp))
-            }
-            Spacer(Modifier.height(14.dp))
-            Text(title, style = MaterialTheme.typography.titleLarge, color = if (focused) colors.primary else colors.onSurface)
-            Spacer(Modifier.height(4.dp))
-            Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant, textAlign = TextAlign.Center)
-        }
-    }
-}
-
-@Composable
-private fun LaunchedEffectRequestFocus(fr: FocusRequester) {
-    androidx.compose.runtime.LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
 }

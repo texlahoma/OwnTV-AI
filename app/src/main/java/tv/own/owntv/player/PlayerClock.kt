@@ -1,5 +1,7 @@
 package tv.own.owntv.player
 
+import tv.own.owntv.ui.theme.hudShade
+import tv.own.owntv.ui.theme.hudInk
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,13 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.delay
 import tv.own.owntv.R
 import tv.own.owntv.ui.format.rememberBestDateFormatter
 import tv.own.owntv.ui.format.rememberSystemTimeFormatter
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * The player's clock, centred at the top of the HUD.
@@ -49,7 +49,6 @@ import tv.own.owntv.ui.theme.OwnTVTheme
  */
 @Composable
 internal fun PlayerClock(watchingMs: Long?, modifier: Modifier = Modifier) {
-    val colors = OwnTVTheme.colors
     val formatTime = rememberSystemTimeFormatter()
     val formatDate = rememberBestDateFormatter("EEEdMMM")
     // Minute precision is all that is displayed, so a 10 s tick keeps it honest without waking the
@@ -60,8 +59,8 @@ internal fun PlayerClock(watchingMs: Long?, modifier: Modifier = Modifier) {
     Row(
         modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(Color.Black.copy(alpha = 0.38f))
-            .border(1.dp, Color.White.copy(alpha = 0.10f), RoundedCornerShape(10.dp))
+            .background(hudShade(0.38f))
+            .border(1.dp, hudInk.copy(alpha = 0.10f), RoundedCornerShape(10.dp))
             .padding(horizontal = 14.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -71,20 +70,20 @@ internal fun PlayerClock(watchingMs: Long?, modifier: Modifier = Modifier) {
                 label = stringResource(R.string.content_clock_programme),
                 time = formatTime(watchingMs),
                 date = formatDate(watchingMs),
-                labelColor = colors.primary,
-                timeColor = colors.primary,
-                dateColor = colors.primary.copy(alpha = 0.7f),
+                labelColor = tv.own.owntv.ui.theme.stageAccent.accent,
+                timeColor = tv.own.owntv.ui.theme.stageAccent.accent,
+                dateColor = tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.7f),
             )
             // Hairline between the two, exactly like the guide card's own divider.
-            Box(Modifier.height(38.dp).width(1.dp).background(Color.White.copy(alpha = 0.18f)))
+            Box(Modifier.height(38.dp).width(1.dp).background(hudInk.copy(alpha = 0.18f)))
         }
         ClockColumn(
             label = stringResource(R.string.content_clock_current),
             time = formatTime(nowMs),
             date = formatDate(nowMs),
-            labelColor = Color.White.copy(alpha = 0.45f),
-            timeColor = Color.White,
-            dateColor = Color.White.copy(alpha = 0.45f),
+            labelColor = hudInk.copy(alpha = 0.45f),
+            timeColor = hudInk,
+            dateColor = hudInk.copy(alpha = 0.45f),
         )
     }
 }
@@ -101,19 +100,19 @@ private fun ClockColumn(
     Column(horizontalAlignment = Alignment.Start) {
         Text(
             label.uppercase(),
-            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.2.sp),
+            style = tv.own.owntv.ui.theme.stageText(20, 500).copy(letterSpacing = 1.2.sp),
             color = labelColor,
             fontWeight = FontWeight.Bold,
         )
         Text(
             time,
-            style = MaterialTheme.typography.headlineSmall,
+            style = tv.own.owntv.ui.theme.stageText(43, 400),
             color = timeColor,
             fontWeight = FontWeight.SemiBold,
         )
         Text(
             date.uppercase(),
-            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
+            style = tv.own.owntv.ui.theme.stageText(20, 500).copy(letterSpacing = 0.8.sp),
             color = dateColor,
         )
     }
