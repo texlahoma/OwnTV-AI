@@ -20,11 +20,11 @@ data class BulkPreviewRow(
     val duplicate: Boolean,
 )
 
-/** How many rows one bulk rename may carry (plan §2.7); above that the flow refuses. */
+/** How many rows one bulk rename may carry; above that the flow refuses. */
 const val BULK_RENAME_MAX_ROWS = 2000
 
 /**
- * One-shot bulk rename flow (issue #86): choice popup → rule builder / auto cleanup → review → apply.
+ * One-shot bulk rename flow: choice popup → rule builder / auto cleanup → review → apply.
  * The flow state (rules, options, preview) lives here — ViewModel state only, deliberately NOT
  * persisted: every session starts from scratch. Nothing is written until the review's Done, and
  * every accepted row lands in ONE [persist] call.
@@ -115,7 +115,7 @@ class BulkRenameSession(
 
     fun dismissRefused() { close() }
 
-    /** Computes the preview on Dispatchers.Default — never the main thread (plan §2.5). */
+    /** Computes the preview on Dispatchers.Default — never the main thread. */
     private fun computePreview() {
         scope.launch(Dispatchers.Default) {
             // Rows the user already applied stay applied when they choose "Edit rules". Re-running

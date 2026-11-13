@@ -5,7 +5,7 @@
     <string name="setup_from_device">Yerel</string>
     <string name="setup_from_phone">Uzaktan</string>
     <string name="setup_send_from_phone">Başka bir cihazdan gönderin</string>
-    <string name="setup_phone_background_description">Aynı Wi-Fi ağındaki bir telefon, tablet veya bilgisayardan QR kodunu tarayın (veya URL\'yi açın), bu PIN\'i girip bir fotoğraf gönderin. Fotoğraf anında arka plan olur.</string>
+    <string name="setup_phone_background_description">Aynı Wi-Fi’daki tarayıcılı herhangi bir cihazda — telefon, bilgisayar veya başka bir TV — QR kodunu tarayın (veya URL’yi açın), bu PIN’i girin ve bir fotoğraf gönderin. Hemen arka plan olur.</string>
     <string name="setup_opening_server">Sunucu açılıyor…</string>
     <string name="setup_enter_pin_browser">Bu PIN\'i tarayıcıya girin</string>
     <string name="setup_open_url">Veya bu URL\'yi açın</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">ör. Televizyonum</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">HOŞ GELDİNİZ</string>
-    <string name="setup_welcome_tagline">Size ait IPTV oynatıcısı.</string>
     <string name="setup_get_started">Başlayın</string>
     <string name="setup_display_size_title">Rahat okunacak boyutu seçin</string>
-    <string name="setup_display_size_description">Arayüzün ve yazısının boyutunu ayarlayın. İkisini de sonradan Ayarlar\'dan değiştirebilirsiniz.</string>
-    <string name="setup_display_size_preview">Bunu oturduğunuz yerden rahatça okuyabiliyorsanız boyut doğrudur.</string>
     <string name="setup_before_you_start">Başlamadan önce</string>
     <string name="setup_disclaimer">OwnTV yalnızca bir medya oynatıcısıdır. Hiçbir kanal, oynatma listesi veya içerik içermez. Yasal olarak erişebildiğiniz kendi Xtream, M3U veya Stalker kaynaklarınızı eklemek sizin sorumluluğunuzdadır.</string>
     <string name="setup_i_understand">Anladım</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Sıfırdan başlayın veya profillerinizi, oynatma listelerinizi ve favorilerinizi bir yedekleme dosyasından ya da başka bir cihazdan geri getirin.</string>
     <string name="setup_new_profile">Yeni profil</string>
     <string name="setup_create_profile_add_sources">Bir profil oluşturun ve kaynak ekleyin</string>
-    <string name="setup_restore_backup">Yedeklemeyi geri yükle</string>
     <string name="setup_import_profiles_playlists">Profilleri ve oynatma listelerini bir dosyadan içe aktarın</string>
     <string name="setup_sync_device">Başka bir cihazdan</string>
     <string name="setup_sync_device_description">Diğer OwnTV cihazınızdaki her şeyi Wi-Fi üzerinden kopyalayın</string>
     <string name="setup_add_playlist">Oynatma listesi ekle</string>
     <string name="setup_add_playlist_description">Bu profil için bir kaynak ekleyin veya daha sonra kurun.</string>
-    <string name="setup_new">Yeni</string>
-    <string name="setup_add_m3u_xtream">M3U, Xtream veya Stalker kaynağı ekleyin</string>
     <string name="setup_existing">Mevcut</string>
     <string name="setup_use_other_profile_playlists">Başka bir profilin oynatma listelerini kullanın</string>
     <string name="setup_import">İçe aktar</string>
@@ -73,7 +66,7 @@
     <string name="setup_invalid_mac">Geçersiz MAC adresi — AA:BB:CC:DD:EE:FF biçimini kullanın</string>
     <string name="setup_pick_backup_file">Geri yüklenecek bir yedekleme dosyası seçin</string>
     <string name="setup_restore_a_backup">Bir yedeklemeyi geri yükleyin</string>
-    <string name="setup_restore_choice_description">Yedeklemeyi aynı Wi-Fi ağındaki başka bir cihazdan (telefon veya dizüstü bilgisayar) gönderin ya da bu cihazda bulunan bir yedekleme dosyasını seçin.</string>
+    <string name="setup_restore_choice_description">Yedeği aynı Wi-Fi’daki tarayıcılı herhangi bir cihazdan uzaktan gönderin veya bu cihazda zaten bulunan bir yedek dosyası seçin.</string>
     <string name="setup_upload_from_wifi_device">Wi-Fi ağınızdaki bir cihazdan yükleyin</string>
     <string name="setup_local_file">Yerel dosya</string>
     <string name="setup_pick_backup_local">Bu cihazdaki bir yedekleme dosyasını seçin</string>
@@ -87,6 +80,8 @@
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> öğe geri yüklendi. İçeriği yüklemek için kaynaklarınızı yeniden eşitleyin.</item>
     </plurals>
     <string name="setup_passwords_omitted">Kayıtlı parolaları daha sonra yeniden girin.</string>
+    <string name="setup_need_password">Kayıtlı parola yok, bu yüzden henüz yüklenmedi: <xliff:g id="names">%1$s</xliff:g>. Oynatma listesini Ayarlar\'da açın ve parolasını girin.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one">Bu sürüm oynatma listesi türünü desteklemediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>
         <item quantity="other">Bu sürüm oynatma listesi türlerini desteklemediği için <xliff:g id="count">%1$d</xliff:g> kaynak atlandı.</item>
@@ -94,18 +89,10 @@
     <string name="setup_continue">Devam et</string>
     <string name="setup_import_failed">İçe aktarma başarısız oldu</string>
     <string name="setup_try_again_caps">Tekrar Dene</string>
-    <string name="setup_add_from_phone">Başka bir cihazdan ekleyin</string>
-    <string name="setup_phone_add_description">Aynı Wi-Fi ağındaki bir telefon, tablet veya bilgisayardan QR kodunu tarayın (veya URL\'yi açın), bu PIN\'i girin, oynatma listesi bilgilerinizi doldurup TV\'ye Gönder düğmesine dokunun. Bilgiler içe aktarılmaya hazır olarak burada görünür — uzaktan kumandayla İçe Aktarmayı Başlat düğmesine basın.</string>
     <string name="setup_opening">Açılıyor…</string>
-    <string name="setup_open_server">Sunucuyu aç</string>
-    <string name="setup_stop_server">Sunucuyu durdur</string>
     <string name="setup_add_source">Kaynak ekle</string>
-    <string name="setup_add_source_description">Formu başka bir cihazda doldurun veya bilgileri uzaktan kumandayla buraya yazın.</string>
-    <string name="setup_manual">Manuel</string>
-    <string name="setup_use_phone_same_wifi">Aynı Wi-Fi ağındaki bir telefon, tablet veya bilgisayarı kullanın</string>
-    <string name="setup_type_source_here">Xtream / M3U / Stalker bilgilerini buraya girin</string>
     <string name="setup_edit_source">Kaynağı düzenle</string>
-    <string name="setup_add_your_source">Kaynağınızı ekleyin</string>
+    <string name="setup_edit_from_phone">Başka bir cihazdan düzenle</string>
     <string name="setup_edit_source_description">Bu kaynağın bilgilerini güncelleyin veya otomatik yenileme ayarını değiştirin.</string>
     <string name="setup_byo_source_description">OwnTV bir oynatıcıdır — kendi Xtream, M3U veya Stalker kaynağınızı ekleyin.</string>
     <string name="setup_xtream">Xtream</string>
@@ -137,6 +124,8 @@
     <string name="setup_test_connection">Bağlantıyı test et</string>
     <string name="setup_user_agent_optional">User-Agent (isteğe bağlı)</string>
     <string name="setup_user_agent_example">ör. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (isteğe bağlı)</string>
+    <string name="setup_referer_example">ör. https://example.com/</string>
     <string name="setup_auto_refresh">Otomatik yenileme</string>
     <string name="setup_auto_refresh_description">Kapalı, başlangıçta veya veriler güncelliğini yitirdiğinde</string>
     <string name="setup_default_playlist">Varsayılan oynatma listesi</string>
@@ -159,7 +148,6 @@
     <string name="setup_now">Şimdi</string>
     <string name="setup_later">Daha sonra</string>
     <string name="setup_off">Kapalı</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">Varsayılan (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -172,13 +160,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Devam et</string>
     <string name="companion_pin_mismatch">Bu PIN eşleşmedi — tekrar deneyin.</string>
-    <string name="companion_tmdb_page_title">TMDB anahtarı gönder</string>
-    <string name="companion_tmdb_heading">TMDB anahtarınızı gönderin</string>
-    <string name="companion_tmdb_description">Aşağıdan TMDB’ye giriş yapın, API anahtarınızı (v3 auth) kopyalayın, buraya yapıştırın ve TV’ye gönderin. Kişisel anahtar ücretsizdir ve neredeyse hiç günlük sınırı yoktur.</string>
-    <string name="companion_tmdb_get_key">TMDB API ayarlarını aç</string>
-    <string name="companion_tmdb_invalid">Bu bir TMDB API anahtarına benzemiyor. "API Key (v3 auth)" değerini kopyalayın.</string>
-    <string name="companion_tmdb_sent_body">TMDB anahtarınız artık TV’de. Kullanmaya başlamak için orada Kaydet’e basın.</string>
-    <string name="companion_tmdb_sent_link">Farklı bir anahtar gönder</string>
     <string name="companion_service_config_empty">Bir API anahtarı, bir Worker URL’si ya da ikisini girin.</string>
     <string name="companion_service_config_invalid_key">Bu API anahtarı geçerli görünmüyor.</string>
     <string name="companion_service_config_invalid_url">Geçerli bir HTTPS Worker URL’si girin.</string>
@@ -198,6 +179,12 @@
     <string name="companion_saved_heading">TV\'nize gönderildi ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> artık TV\'deki Kaynak ekle ekranında. Bilgileri orada kontrol edin ve uzaktan kumandayla İçe Aktarmayı Başlat düğmesine basın.</string>
     <string name="companion_saved_send_another">Başka bir kaynak gönder</string>
+    <string name="companion_edit_page_title">OwnTV — Kaynağı düzenle</string>
+    <string name="companion_edit_heading">Düzenle: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">Gerekeni değiştirin ve TV’ye Gönder’e basın. Boş bırakılan alan mevcut değerini korur. Değişiklikler TV’de görünür — orada kumandayla Kaydet’e basın.</string>
+    <string name="companion_keep_current">Mevcut değeri korumak için boş bırakın</string>
+    <string name="companion_saved_edit_body"><xliff:g id="name">%1$s</xliff:g> için yapılan değişiklikler artık TV’nin düzenleme ekranında. Orada kontrol edin ve kumandayla Kaydet’e basın.</string>
+    <string name="companion_saved_edit_again">Başka bir şeyi değiştir</string>
     <string name="companion_saved_backup_body">Yedeklemeniz artık TV\'de. Uzaktan kumandayı alın ve hangi bölümlerin geri yükleneceğini seçin.</string>
     <string name="companion_saved_backup_link">Farklı bir dosya gönder</string>
     <string name="companion_saved_image_body">Görseliniz artık TV\'nin arka planı.</string>
@@ -265,4 +252,31 @@
     <string name="companion_error_pair_failed">Bu cihazla eşleştirilemedi.</string>
     <string name="local_sync_browser_title">OwnTV yerel eşitleme</string>
     <string name="local_sync_browser_body">Bu adres, diğer cihazınızdaki OwnTV uygulaması içindir. Orada Yerel eşitlemeyi açın ve listeden bu cihazı seçin.</string>
+    <string name="setup_step_display">Ekran</string>
+    <string name="setup_step_playlist">Liste</string>
+    <string name="setup_step_ready">Hazır</string>
+    <string name="setup_key_previous_step">Önceki adım</string>
+    <string name="setup_welcome_title">OwnTV’ye hoş geldiniz</string>
+    <string name="setup_welcome_sub">Kendi IPTV oynatıcınız. Başlamak için bir dil seçin; daha sonra Ayarlar’dan değiştirebilirsiniz.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> dil</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> dilin tümü</item>
+    </plurals>
+    <string name="setup_display_sub">Bu TV’de arayüzün ve metnin ne kadar büyük olduğu. Aşağıdaki satır siz ayarladıkça değişir.</string>
+    <string name="setup_display_sub_mobile">Bu telefonda arayüzün ve metnin ne kadar büyük olduğu. Aşağıdaki satır siz ayarladıkça değişir.</string>
+    <string name="setup_line_zoom">Ekrandaki her şey</string>
+    <string name="setup_line_font">Yalnızca metin</string>
+    <string name="setup_line_app_icon">OwnTV’nin TV’nin ana ekranında nasıl göründüğü</string>
+    <string name="setup_line_app_icon_mobile">OwnTV’nin ana ekranınızda nasıl göründüğü</string>
+    <string name="setup_restore_card_line">Bir dosyadan veya uzaktan başka bir cihazdan</string>
+    <string name="setup_device_appear">Eşitleme modu açık olan cihazlar burada görünür</string>
+    <string name="setup_device_address_hint">veya diğer cihazın adresini yazın</string>
+    <string name="setup_profile_sub">Her profilin kendi favorileri, geçmişi ve Ana sayfası vardır. Daha fazlasını sonra Ayarlar › Profil’den ekleyin.</string>
+    <string name="setup_avatar">Avatar</string>
+    <string name="setup_avatar_line">Birini seçin veya baş harfi bırakın</string>
+    <string name="setup_create_profile">Profil oluştur</string>
+    <string name="setup_phone_card_line">Formu başka bir cihazın tarayıcısında doldurun — en hızlısı</string>
+    <string name="setup_importing_title"><xliff:g id="name">%1$s</xliff:g> içe aktarılıyor</string>
+    <string name="setup_add_guide">TV rehberi ekle</string>
+    <string name="setup_add_guide_line">Yeni kurulumda henüz rehber yok</string>
 </resources>

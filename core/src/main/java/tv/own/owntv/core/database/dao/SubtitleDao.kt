@@ -25,7 +25,7 @@ data class LinkedSubtitle(
     val addedAt: Long,
 )
 
-/** Data access for the external-subtitle tables (subtitle plan Phase 2, §11). */
+/** Data access for the external-subtitle tables. */
 @Dao
 interface SubtitleDao {
 
@@ -34,14 +34,14 @@ interface SubtitleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCache(entry: SubtitleCacheEntity): Long
 
-    /** R3 cache-first lookup: an existing download for this exact OpenSubtitles file → skip /download. */
+    /** Cache-first lookup: an existing download for this exact OpenSubtitles file → skip /download. */
     @Query("SELECT * FROM subtitle_cache WHERE openSubFileId = :fileId LIMIT 1")
     suspend fun findByOpenSubFileId(fileId: Long): SubtitleCacheEntity?
 
     @Query("SELECT * FROM subtitle_cache WHERE id = :id LIMIT 1")
     suspend fun cacheById(id: Long): SubtitleCacheEntity?
 
-    /** Local-file dedupe (§7.4/§10): re-importing the same file reuses the managed copy. */
+    /** Local-file dedupe: re-importing the same file reuses the managed copy. */
     @Query("SELECT * FROM subtitle_cache WHERE source = 'LOCAL' AND fileName = :fileName LIMIT 1")
     suspend fun findLocalByFileName(fileName: String): SubtitleCacheEntity?
 
@@ -59,10 +59,7 @@ interface SubtitleDao {
     @Query("SELECT * FROM subtitle_selection WHERE profileId = :profileId AND contentKey = :contentKey LIMIT 1")
     suspend fun selection(profileId: Long, contentKey: String): SubtitleSelectionEntity?
 
-    @Query("DELETE FROM subtitle_selection WHERE profileId = :profileId AND contentKey = :contentKey")
-    suspend fun clearSelection(profileId: Long, contentKey: String)
-
-    // --- timing (per profile + content + exact subtitle, §8.4) ---
+    // --- timing (per profile + content + exact subtitle) ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertTiming(timing: SubtitleTimingEntity)
@@ -70,7 +67,7 @@ interface SubtitleDao {
     @Query("SELECT offsetMs FROM subtitle_timing WHERE profileId = :profileId AND contentKey = :contentKey AND subtitleKey = :subtitleKey LIMIT 1")
     suspend fun timingOffset(profileId: Long, contentKey: String, subtitleKey: String): Int?
 
-    // --- links (cached subtitle ↔ movie/episode, §11) ---
+    // --- links (cached subtitle ↔ movie/episode) ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLink(link: SubtitleLinkEntity)
@@ -96,9 +93,6 @@ interface SubtitleDao {
             "WHERE l.profileId = :profileId AND l.mediaType = :mediaType ORDER BY l.contentTitle, c.languageName",
     )
     suspend fun linksForType(profileId: Long, mediaType: String): List<LinkedSubtitle>
-
-    @Query("SELECT COUNT(*) FROM subtitle_link WHERE profileId = :profileId AND contentKey = :contentKey")
-    suspend fun linkCountForContent(profileId: Long, contentKey: String): Int
 
     /** Other profiles still referencing this cached file — deletes are profile-scoped, so the shared
      *  file is only removed once the LAST profile lets go of it. */

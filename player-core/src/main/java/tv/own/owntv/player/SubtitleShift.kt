@@ -6,11 +6,11 @@ import java.util.Locale
 
 /**
  * Timestamp-shifted copies of external subtitle files, for subtitle-timing adjustment on the
- * ExoPlayer path (subtitle plan §8). ExoPlayer has no subtitle-offset control, so the offset is
+ * ExoPlayer path. ExoPlayer has no subtitle-offset control, so the offset is
  * applied "at load": a shifted copy is generated and side-loaded in place of the original.
  * mpv needs none of this — it applies `sub-delay` natively.
  *
- * Sign convention (§8.2): positive offset = subtitles shown LATER = timestamps increased.
+ * Sign convention: positive offset = subtitles shown LATER = timestamps increased.
  */
 object SubtitleShift {
 
@@ -44,7 +44,7 @@ object SubtitleShift {
                 // Locale.ROOT, not the default locale: Java's Formatter localises %d digits, so on an
                 // Arabic / Persian / Nepali device a bare format(...) writes Arabic-Indic or Devanagari
                 // digits into the shifted SRT/VTT and the file becomes unparseable. Timestamps are a
-                // wire format, always ASCII. (See docs/internationalization.md Phase 0a.)
+                // wire format, always ASCII.
                 String.format(
                     Locale.ROOT,
                     "%02d:%02d:%02d%c%03d",
@@ -65,7 +65,7 @@ object SubtitleShift {
                 val total = (h.toLong() * 3_600_000 + min.toLong() * 60_000 + s.toLong() * 1_000 + cs.toLong() * 10 + offsetMs)
                     .coerceAtLeast(0)
                 // Same Locale.ROOT rationale as shiftSrtVtt: ASS timestamps are ASCII, never
-                // localised digits. (See docs/internationalization.md Phase 0a.)
+                // localised digits.
                 String.format(
                     Locale.ROOT,
                     "%d:%02d:%02d.%02d",

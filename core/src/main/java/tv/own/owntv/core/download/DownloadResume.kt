@@ -8,7 +8,7 @@ import tv.own.owntv.core.storage.MediaTarget
  *
  * The rule both of them encode: **the file on disk is the truth.** The in-memory progress counter
  * lags a write, and a killed process loses it entirely, so neither the resume offset nor the paused
- * byte count may ever be taken from it (audit item DL2).
+ * byte count may ever be taken from it.
  *
  * They speak [MediaTarget] rather than `File` because a download folder the user picked on a phone
  * is a Storage Access Framework document, not a path — but the rule above is unchanged, and for an

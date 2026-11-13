@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">Votre propre image</string>
     <string name="profiles_kids">Profil enfant</string>
     <string name="profiles_kids_description">Navigation simplifiée et sécurisée</string>
+    <string name="profiles_allow_downloads">Autoriser les téléchargements</string>
+    <string name="profiles_allow_downloads_description">Désactivé masque tous les boutons de téléchargement de ce profil</string>
     <string name="profiles_remove_pin">Supprimer le verrouillage par PIN</string>
     <string name="profiles_no_pin">Ce profil s’ouvre sans PIN</string>
     <string name="profiles_change_pin">Modifier le PIN (laisser vide pour le conserver)</string>
@@ -19,51 +21,67 @@
     <string name="profiles_create">Créer</string>
     <string name="profiles_save">Enregistrer</string>
     <string name="profiles_gate_title">Qui regarde ?</string>
+    <string name="profiles_gate_subtitle">Chaque profil garde ses propres favoris et son historique</string>
     <string name="profiles_wrong_pin">PIN incorrect — réessayez</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — saisissez le PIN</string>
+    <string name="profiles_protected_edit">Il a un verrouillage de profil ou un verrouillage des paramètres. Saisissez l’un des deux PIN pour le modifier.</string>
     <string name="profiles_kids_badge">ENFANT</string>
     <string name="profiles_add">Ajouter un profil</string>
     <string name="profiles_title">Profils</string>
-    <string name="profiles_add_button">Ajouter un profil</string>
-    <string name="profiles_delete_title">Supprimer « <xliff:g id="name">%1$s</xliff:g> » ?</string>
+    <string name="profiles_delete_title">Supprimer « <xliff:g id="name">%1$s</xliff:g> » ?</string>
     <string name="profiles_delete_message">Supprime ce profil, ainsi que ses favoris et son historique. Les sources sont conservées.</string>
     <string name="profiles_kids_tag">Enfant</string>
     <string name="profiles_locked_tag">Verrouillé par PIN</string>
     <string name="search_title">Recherche</string>
     <string name="search_continue">Continuer à regarder</string>
     <string name="search_unwatched">Non vus</string>
-    <string name="search_hint">Rechercher des chaînes, des films et des séries…</string>
     <string name="search_recent">Recherches récentes</string>
-    <string name="search_recent_empty">Vos recherches récentes apparaîtront ici.</string>
-    <string name="search_minimum_query">Saisissez au moins 2 caractères pour effectuer une recherche dans l’ensemble du contenu.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — aucun résultat.</string>
     <string name="search_nothing_in_list">Aucun élément dans <xliff:g id="list">%1$s</xliff:g> pour le moment.</string>
     <string name="search_clear">Effacer</string>
     <string name="search_jump_to">Accéder à</string>
-    <string name="search_watch_live">Regarder en direct</string>
-    <string name="search_play">Lire</string>
     <string name="search_open_series">Ouvrir la série</string>
     <string name="search_movie">Film</string>
     <string name="search_series">Série</string>
     <string name="search_channels">Chaînes</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">Continuer à regarder</string>
-    <string name="home_play_next">Lire l’épisode suivant</string>
-    <string name="home_tune_in">Regarder en direct</string>
-    <string name="home_recent_live">Chaîne en direct vue récemment</string>
+    <string name="search_on_tv">Émissions TV</string>
+    <string name="search_go_to_channel">Aller à la chaîne</string>
+    <string name="search_go_to_movie">Aller au film</string>
+    <string name="search_clear_recent">Effacer les recherches récentes</string>
+    <string name="search_field_hint">Chaînes, films et séries</string>
+    <string name="search_voice">Recherche vocale</string>
+    <string name="search_voice_prompt">Dites une chaîne, un film ou une série</string>
+    <string name="search_card_title">Trouvez tout dans vos playlists</string>
+    <string name="search_card_body">Chaînes, films et séries de toutes les playlists affichées. Choisissez un résultat pour y aller directement, puis lancez la lecture, téléchargez ou ouvrez ses options. Les programmes TV diffusés maintenant ou plus tard dans la journée sont aussi trouvés par leur titre.</string>
+    <string name="search_nothing_found">Aucun résultat pour « <xliff:g id="query">%1$s</xliff:g> »</string>
+    <string name="search_nothing_found_body">La recherche porte sur les noms des chaînes, films et séries des playlists affichées. Les catégories masquées ne sont pas incluses. Les programmes TV sont trouvés par leur titre dans le guide téléchargé.</string>
+    <string name="search_query_quoted">« <xliff:g id="query">%1$s</xliff:g> »</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> résultat</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de résultats</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> résultats</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> chaîne</item>
+        <item quantity="many">Les <xliff:g id="count">%1$d</xliff:g> de chaînes</item>
+        <item quantity="other">Les <xliff:g id="count">%1$d</xliff:g> chaînes</item>
+    </plurals>
     <string name="profiles_default_name">Profil</string>
     <string name="launcher_recent_live_title">Directs récents</string>
     <string name="launcher_recent_live_description">Chaînes en direct vues récemment</string>
     <string name="launcher_movie_type">Film</string>
     <string name="launcher_episode_number">Épisode <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Chargement de votre bibliothèque · <xliff:g id="count">%1$s</xliff:g> titre pour l’instant</item>
+        <item quantity="many">Chargement de votre bibliothèque · <xliff:g id="count">%1$s</xliff:g> de titres pour l’instant</item>
+        <item quantity="other">Chargement de votre bibliothèque · <xliff:g id="count">%1$s</xliff:g> titres pour l’instant</item>
+    </plurals>
+    <string name="home_library_loading_trending">Tendances actuelles apparaîtra à mesure que votre bibliothèque se remplit.</string>
     <string name="home_no_preview">Rien à prévisualiser pour le moment.</string>
     <string name="home_no_rows">Toutes les rangées de l’écran d’accueil sont masquées.</string>
     <string name="home_enable_rows">Réactivez les rangées dans Paramètres → Écran d’accueil.</string>
     <string name="home_start_watching">Commencez à regarder du contenu pour voir votre activité ici.</string>
     <string name="home_continue_empty">Les contenus à reprendre apparaîtront ici dès que l’historique de lecture sera disponible.</string>
     <string name="home_last_watched_now">Dernier visionnage : à l’instant</string>
-    <string name="home_finish_by">Fin prévue à <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">Reprendre</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Dernier visionnage : il y a <xliff:g id="count">%1$d</xliff:g> minute</item>
         <item quantity="many">Dernier visionnage : il y a <xliff:g id="count">%1$d</xliff:g> minutes</item>
@@ -79,37 +97,22 @@
         <item quantity="many">Dernier visionnage : il y a <xliff:g id="count">%1$d</xliff:g> jours</item>
         <item quantity="other">Dernier visionnage : il y a <xliff:g id="count">%1$d</xliff:g> jours</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">Cartes</string>
     <string name="home_row_keep_watching">Continuer à regarder</string>
     <string name="home_row_continue_movies">Continuer à regarder des films</string>
     <string name="home_row_continue_series">Continuer à regarder des séries</string>
     <string name="home_row_recent_channels">Chaînes récentes</string>
     <string name="home_row_favorite_channels">Chaînes favorites</string>
+    <string name="home_row_favorite_movies">Films favoris</string>
+    <string name="home_row_favorite_series">Séries favorites</string>
     <string name="home_row_on_now">En ce moment</string>
     <string name="home_row_hero_description">La grande rangée d’aperçu en haut</string>
     <string name="home_row_continue_movies_description">Films avec une position enregistrée</string>
     <string name="home_row_continue_series_description">Épisodes à reprendre ou à regarder ensuite</string>
     <string name="home_row_recent_description">Chaînes en direct regardées récemment</string>
     <string name="home_row_favorite_description">Vos chaînes de TV en direct favorites</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · EN CE MOMENT</string>
-    <string name="home_ok_to_watch">OK pour regarder</string>
-    <string name="home_ok_to_browse">OK pour parcourir</string>
-    <string name="home_no_programme_details">Aucun détail sur le programme</string>
-    <string name="home_guide_unavailable">Données du guide indisponibles</string>
-    <string name="home_next">Suivant</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">MAINTENANT · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">À SUIVRE · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> chaîne</item>
-        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> chaînes</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> chaînes</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">Vos films favoris</string>
+    <string name="home_row_favorite_series_description">Vos séries favorites</string>
     <string name="update_title">Mise à jour de l’application</string>
     <string name="update_checking">Recherche de mises à jour…</string>
     <string name="update_whats_new">Nouveautés</string>
@@ -144,6 +147,11 @@
     <string name="home_trending_style">Disposition des tendances</string>
     <string name="home_trending_style_hero">Fiche détaillée</string>
     <string name="home_trending_style_posters">Affiches uniquement</string>
+    <string name="home_trending_rank">N°<xliff:g id="rank">%1$d</xliff:g> des tendances · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">DANS VOTRE PLAYLIST</string>
+    <string name="home_trending_style_full_bleed">Plein cadre</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> h <xliff:g id="minutes">%2$02d</xliff:g> min</string>
+    <string name="home_time_left">encore <xliff:g id="duration">%1$s</xliff:g></string>
     <string name="settings_trending_status_off">Les tendances du moment sont désactivées.</string>
     <string name="settings_trending_status_building">Les tendances du moment sont en cours de préparation après la synchronisation du fournisseur.</string>
     <string name="settings_trending_status_metadata_disabled">Les tendances du moment nécessitent les métadonnées TMDB. Choisissez TMDB uniquement ou Fournisseur + TMDB.</string>
@@ -168,12 +176,7 @@
     </plurals>
     <string name="home_trending_movie">Film</string>
     <string name="home_trending_series">Série</string>
-    <string name="home_trending_section_label">TENDANCES DU MOMENT · INSTANTANÉ DE SYNCHRONISATION</string>
     <string name="home_trending_provider_match">Correspondance avec le fournisseur</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> choisi comme langue</string>
-    <string name="home_trending_english_fallback">Choix de repli en anglais</string>
-    <string name="home_trending_untagged_fallback">Choix de repli sans étiquette de langue</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> choisi comme langue de repli</string>
     <string name="home_trending_why_label">POURQUOI CET ÉLÉMENT APPARAÎT</string>
     <string name="home_trending_reason_title">Classement TMDB n°<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + correspondance avec le fournisseur</string>
     <string name="home_trending_reason_preferred">La version <xliff:g id="language">%1$s</xliff:g> sélectionnée du fournisseur est prioritaire sur les entrées dans une autre langue.</string>
@@ -190,12 +193,12 @@
     <string name="home_trending_trailer">Bande-annonce</string>
     <string name="home_trending_more_details">Plus de détails</string>
     <string name="home_trending_all_versions">Toutes les versions</string>
-    <string name="home_trending_previous">Précédent</string>
+    <string name="home_trending_why_menu">Pourquoi ce titre est ici</string>
     <string name="home_trending_pause">Pause</string>
-    <string name="home_trending_resume">Reprendre</string>
-    <string name="home_trending_next">Suivant</string>
     <string name="home_trending_unavailable">Cette version n’est plus disponible</string>
     <string name="recording_notification_title">Enregistrement</string>
+    <string name="auto_start_notification_channel">Démarrage auto au réveil</string>
+    <string name="auto_start_notification_text">OwnTV s’ouvre quand le téléviseur se réveille</string>
     <string name="recording_failed_no_space">Arrêté : plus d’espace disponible</string>
     <string name="recording_failed_no_connection">Aucune connexion disponible chez votre fournisseur</string>
     <string name="recording_failed_clash">Un autre enregistrement utilisait la connexion</string>
@@ -204,21 +207,29 @@
     <string name="recording_failed_channel_gone">Cette chaîne ne figure plus dans votre liste</string>
     <string name="recording_failed_unknown">Rien n’a été enregistré</string>
     <string name="recording_title">Enregistrements</string>
-    <string name="recording_description">La télévision en direct enregistrée sur cet appareil.</string>
-    <string name="recording_empty">Rien d’enregistré pour l’instant. Ouvrez le guide, choisissez un programme et appuyez sur Enregistrer.</string>
+    <string name="recording_empty">Aucun enregistrement pour l’instant. Appuyez sur Enregistrer sur un programme du guide TV, ou faites un appui long sur une chaîne pour l’enregistrer ou programmer une heure.</string>
     <string name="recording_group_now">Enregistrement en cours</string>
     <string name="recording_group_scheduled">Programmé</string>
     <string name="recording_group_completed">Enregistré</string>
     <string name="recording_group_failed">Échec</string>
     <string name="recording_group_missed">Manqué</string>
+    <string name="recording_group_series">Chaque diffusion</string>
     <string name="recording_record">Enregistrer</string>
     <string name="recording_stop">Arrêter l’enregistrement</string>
+    <string name="recording_delete_message">Supprime l\'enregistrement et son fichier de cet appareil. Cette action est irréversible.</string>
     <string name="recording_record_series">Enregistrer chaque diffusion</string>
     <string name="recording_stop_series">Ne plus enregistrer chaque diffusion</string>
     <string name="recording_from_archive">Enregistrer depuis le replay</string>
+    <string name="recording_schedule">Programmer un enregistrement…</string>
+    <string name="recording_schedule_hint">Choisissez le jour, le début et la fin. L’enregistrement a lieu même si cette chaîne n’a pas de guide TV.</string>
+    <string name="recording_schedule_start">Début</string>
+    <string name="recording_schedule_end">Fin</string>
+    <string name="recording_schedule_next_day">jour suivant</string>
+    <string name="recording_schedule_past">Cette heure est déjà passée</string>
     <string name="recording_scheduled_for">Enregistrera <xliff:g id="time">%1$s</xliff:g></string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line">Enregistrement de <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_pill_line_locked">Enregistrement depuis une catégorie verrouillée</string>
     <string name="recording_clash_with">En conflit avec <xliff:g id="programme">%1$s</xliff:g></string>
     <string name="recording_settings_group">Enregistrement</string>
     <string name="settings_recording_reserve">Garder une connexion libre pour regarder</string>
@@ -236,14 +247,330 @@
     <string name="recording_failed_encrypted">Cette chaîne est chiffrée et ne peut pas être enregistrée</string>
     <string name="recording_failed_drm">Cette chaîne est protégée par DRM : elle peut être regardée mais pas enregistrée. La protection vient de votre fournisseur, pas d\'OwnTV.</string>
     <string name="recording_failed_metered">Non enregistré sur les données mobiles</string>
+    <string name="recording_card_empty_title">Aucun enregistrement pour l’instant</string>
+    <string name="recording_card_body">Choisissez un programme dans le guide TV puis Enregistrer, ou faites un appui long sur une chaîne et programmez une heure. Il arrive ici, même pendant que vous regardez autre chose.</string>
+    <string name="recording_open_guide">Ouvrir le guide TV</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> enregistrement</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> enregistrements</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> enregistrements</item>
+    </plurals>
     <string name="settings_recording_mobile_data">Enregistrer sur les données mobiles</string>
-    <string name="settings_recording_mobile_data_description">Désactivé : un enregistrement prévu hors Wi-Fi est ignoré au lieu d’attendre — une émission ne repasse pas.</string>
     <string name="settings_record_watching">Enregistrer ce que je regarde</string>
-    <string name="settings_record_watching_description">Ajoute au lecteur un bouton d’enregistrement qui sauvegarde la chaîne que vous regardez. Il récupère la chaîne lui-même : il occupe donc l’une des connexions de votre fournisseur pendant ce temps, et continue d’enregistrer si vous changez de chaîne ou quittez le lecteur.</string>
+    <string name="settings_record_watching_description">Ajoute au lecteur un bouton d’enregistrement qui sauvegarde la chaîne que vous regardez. Il récupère la chaîne lui-même : il occupe donc l’une des connexions de votre fournisseur pendant ce temps, et continue d’enregistrer si vous changez de chaîne ou quittez le lecteur.</string>
     <string name="settings_record_watching_warning_title">Une seule connexion</string>
-    <string name="settings_record_watching_warning_description">L’enregistrement récupère la chaîne une seconde fois et occupe donc une autre connexion de votre fournisseur. Sur un compte qui n’en autorise qu’une, l’enregistrement est refusé pendant que vous regardez. Une fois lancé il continue seul : changez de chaîne, quittez le lecteur, il poursuit jusqu’à la fin de l’émission ou jusqu’à ce que vous l’arrêtiez depuis Enregistrements.</string>
+    <string name="settings_record_watching_warning_description">L’enregistrement récupère la chaîne une seconde fois et occupe donc une autre connexion de votre fournisseur. Sur un compte qui n’en autorise qu’une, l’enregistrement est refusé pendant que vous regardez. Une fois lancé il continue seul : changez de chaîne, quittez le lecteur, il poursuit jusqu’à la fin de l’émission ou jusqu’à ce que vous l’arrêtiez depuis Enregistrements.</string>
     <string name="settings_record_watching_keep_off">Laisser désactivé</string>
     <string name="settings_record_watching_turn_on">Activer</string>
     <string name="player_recording_conflict">Votre fournisseur n’autorise qu’un flux à la fois, et l’enregistrement l’utilise.</string>
     <string name="player_keep_watching_stop_recording">Continuer à regarder (arrête l’enregistrement)</string>
+    <string name="sports_channel_goal_alerts">Alertes de buts</string>
+    <string name="sports_channel_live_match">Match en direct</string>
+    <string name="sports_channel_match_reminders">Rappels de matchs</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ But ! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Wicket ! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Carton rouge · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Mi-temps · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Fin du match · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Coup d’envoi · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Reporté · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">Annulé · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Score corrigé · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Coup d’envoi dans <xliff:g id="minutes">%1$d</xliff:g> min : <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="many">Coup d’envoi dans <xliff:g id="minutes">%1$d</xliff:g> min : <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Coup d’envoi dans <xliff:g id="minutes">%1$d</xliff:g> min : <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">Sur <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one">Sur <xliff:g id="channel">%1$s</xliff:g> et <xliff:g id="count">%2$d</xliff:g> autre</item>
+        <item quantity="many">Sur <xliff:g id="channel">%1$s</xliff:g> et <xliff:g id="count">%2$d</xliff:g> d’autres</item>
+        <item quantity="other">Sur <xliff:g id="channel">%1$s</xliff:g> et <xliff:g id="count">%2$d</xliff:g> autres</item>
+    </plurals>
+    <string name="sports_action_stop_updates">Arrêter les mises à jour</string>
+    <string name="sports_title">Sports</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> en direct</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> en direct</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> en direct</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de matchs</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> matchs</item>
+    </plurals>
+    <string name="sports_scores_espn">Scores : ESPN</string>
+    <string name="sports_my_teams">Mes équipes</string>
+    <string name="sports_live_now">En direct</string>
+    <string name="sports_not_on_channels">Pas sur vos chaînes</string>
+    <string name="sports_on_channels_now">Du sport sur vos chaînes en ce moment</string>
+    <string name="sports_on_channels_now_mobile">Du sport sur vos chaînes</string>
+    <string name="sports_on_channels_now_hint">D’après votre guide — y compris les sports qu’ESPN ne couvre pas</string>
+    <string name="sports_starting_soon">Bientôt</string>
+    <string name="sports_hint_match_page">Page du match</string>
+    <string name="sports_hint_follow_remind">Suivre · Rappel</string>
+    <string name="sports_hint_day_matches">Matchs du jour</string>
+    <string name="sports_hint_day">Jour</string>
+    <string name="sports_hint_week">Semaine</string>
+    <string name="sports_hint_show_score">Afficher le score</string>
+    <string name="sports_hint_back_to_day">Retour au jour</string>
+    <string name="sports_hint_open_league">Ouvrir le championnat</string>
+    <string name="sports_hint_sport_chips">Boutons de sport</string>
+    <string name="sports_hint_league_chips">Boutons de championnat</string>
+    <string name="sports_hint_follow_unfollow">Suivre · Ne plus suivre</string>
+    <string name="sports_reminder_set">Rappel</string>
+    <string name="sports_until">jusqu’à <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_set">Set <xliff:g id="set">%1$d</xliff:g></string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> ov</string>
+    <string name="sports_empty_nothing">Aucun match aujourd’hui dans ce que vous suivez</string>
+    <string name="sports_empty_unreachable">Impossible d’obtenir les scores pour le moment. Vos chaînes fonctionnent toujours.</string>
+    <string name="sports_paused">Scores en pause — nouvel essai dans quelques minutes</string>
+    <string name="sports_sport_soccer">Football</string>
+    <string name="sports_sport_basketball">Basket</string>
+    <string name="sports_sport_tennis">Tennis</string>
+    <string name="sports_sport_cricket">Cricket</string>
+    <string name="sports_sport_hockey">Hockey sur glace</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">Baseball</string>
+    <string name="sports_sport_golf">Golf</string>
+    <string name="sports_sport_rugby">Rugby</string>
+    <string name="sports_sport_rugby_league">Rugby à XIII</string>
+    <string name="sports_sport_aussie_rules">Football australien</string>
+    <string name="sports_sport_volleyball">Volley-ball</string>
+    <string name="sports_sport_lacrosse">Crosse</string>
+    <string name="sports_sport_handball">Handball</string>
+    <string name="sports_sport_motorsport">Sport automobile</string>
+    <string name="sports_sport_darts">Fléchettes</string>
+    <string name="sports_sport_snooker">Snooker</string>
+    <string name="sports_sport_cycling">Cyclisme</string>
+    <string name="sports_sport_combat">Sports de combat</string>
+    <string name="sports_sport_american_football">Football américain</string>
+    <string name="sports_sport_athletics">Athlétisme</string>
+    <string name="sports_sport_winter">Sports d’hiver</string>
+    <string name="sports_sport_other">Sport</string>
+    <string name="sports_tab_timeline">Déroulé</string>
+    <string name="sports_tab_stats">Stats</string>
+    <string name="sports_tab_lineups">Compos</string>
+    <string name="sports_tab_table">Classement</string>
+    <string name="sports_following">Suivi</string>
+    <string name="sports_follow">Suivre</string>
+    <string name="sports_event_goal">But · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">But contre son camp · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Penalty · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Carton jaune · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Carton rouge · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Remplacement · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">passe déc. <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Wicket · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Coup d’envoi</string>
+    <string name="sports_event_half_time">Mi-temps</string>
+    <string name="sports_event_full_time">Fin du match</string>
+    <string name="sports_stat_red_cards">Cartons rouges</string>
+    <string name="sports_watch_live">Regarder en direct</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Regarder en direct · <xliff:g id="count">%1$d</xliff:g> chaîne</item>
+        <item quantity="many">Regarder en direct · <xliff:g id="count">%1$d</xliff:g> de chaînes</item>
+        <item quantity="other">Regarder en direct · <xliff:g id="count">%1$d</xliff:g> chaînes</item>
+    </plurals>
+    <string name="sports_language_first"><xliff:g id="language">%1$s</xliff:g> d’abord · selon les réglages</string>
+    <string name="sports_any_country">Tous pays</string>
+    <string name="sports_reason_guide">Programme : <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Chaîne événement · le nom cite les deux équipes</string>
+    <string name="sports_reason_pick">Votre choix pour <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_reason_likely">Diffuse souvent <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_confirmed">Confirmé par le programme</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> masquée par les filtres</item>
+        <item quantity="many">+ <xliff:g id="count">%1$d</xliff:g> de masquées par les filtres</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> masquées par les filtres</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Regarder en plein écran</string>
+    <string name="sports_preview_another">Aperçu d’une autre chaîne</string>
+    <string name="sports_always_use">Toujours utiliser pour <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_filter_title">Filtrer les chaînes</string>
+    <string name="sports_showing_of"><xliff:g id="shown">%1$d</xliff:g> sur <xliff:g id="total">%2$d</xliff:g> affichées</string>
+    <string name="sports_filter_country">Pays</string>
+    <string name="sports_filter_match">Match</string>
+    <string name="sports_unknown">Inconnue</string>
+    <string name="sports_any">Toutes</string>
+    <string name="sports_all_playlists">Toutes les playlists</string>
+    <string name="sports_quality_hd">HD et plus</string>
+    <string name="sports_quality_fhd">FHD et plus</string>
+    <string name="sports_quality_uhd">4K uniquement</string>
+    <string name="sports_only_confirmed">Uniquement les chaînes confirmées par le programme</string>
+    <string name="sports_only_confirmed_description">Masquer les chaînes « probables » et mémorisées</string>
+    <string name="sports_only_confirmed_mobile">Confirmées par le programme</string>
+    <string name="sports_remember_filters">Retenir ces filtres pour tous les matchs</string>
+    <string name="sports_remember_filters_description">Enregistré dans Réglages → Sports pour ce profil</string>
+    <string name="sports_remember_filters_mobile">Retenir pour tous les matchs</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one">Afficher <xliff:g id="count">%1$d</xliff:g> chaîne</item>
+        <item quantity="many">Afficher <xliff:g id="count">%1$d</xliff:g> de chaînes</item>
+        <item quantity="other">Afficher <xliff:g id="count">%1$d</xliff:g> chaînes</item>
+    </plurals>
+    <string name="sports_filter_only_this">Uniquement celle-ci</string>
+    <string name="sports_filter_toggle">Activer/désactiver</string>
+    <string name="sports_goal_toast">But pour une équipe que vous suivez</string>
+    <string name="sports_switch">Basculer</string>
+    <string name="sports_other_channels">Autres chaînes</string>
+    <string name="sports_other_channels_count">Autres chaînes · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Autres chaînes pour ce match</string>
+    <string name="sports_playing_now">En cours</string>
+    <string name="sports_switch_channel">Changer de chaîne</string>
+    <string name="sports_tab_fixtures">Calendrier</string>
+    <string name="sports_tab_results">Résultats</string>
+    <string name="sports_tab_scores">Scores</string>
+    <string name="sports_tab_calendar">Agenda</string>
+    <string name="sports_tab_leagues">Championnats</string>
+    <string name="sports_previous_month">Mois précédent</string>
+    <string name="sports_next_month">Mois suivant</string>
+    <string name="sports_next">À suivre : <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">À suivre</string>
+    <string name="sports_no_table_series">Pas de classement — les séries changent chaque semaine</string>
+    <string name="sports_follow_league">Suivre le championnat</string>
+    <string name="sports_unfollow_league">Ne plus suivre le championnat</string>
+    <string name="sports_no_matches_on">Aucun match dans vos sports le <xliff:g id="day">%1$s</xliff:g></string>
+    <string name="sports_nothing_on_day">Rien ce jour-là</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g> : rien ce jour-là</string>
+    <string name="sports_change_leagues_hint">Ajoutez ou retirez des championnats dans Réglages → Sports</string>
+    <string name="sports_loading_month">Chargement : <xliff:g id="month">%1$s</xliff:g>…</string>
+    <string name="sports_offline_saved">Affichage des données enregistrées <xliff:g id="time">%1$s</xliff:g> — ESPN est injoignable</string>
+    <string name="sports_team_page">Page de l’équipe</string>
+    <string name="sports_next_match">Prochain match</string>
+    <string name="sports_last_five">Cinq derniers</string>
+    <string name="sports_league_position">Place au classement</string>
+    <string name="sports_in_my_teams">Dans Mes équipes</string>
+    <string name="sports_open_match_page">Ouvrir la page du match</string>
+    <string name="sports_open_team_page">Ouvrir la page de l’équipe</string>
+    <string name="sports_my_teams_leagues">Les championnats où jouent vos équipes</string>
+    <string name="sports_tab_drivers">Pilotes</string>
+    <string name="sports_tab_constructors">Constructeurs</string>
+    <string name="sports_tab_races">Courses</string>
+    <string name="sports_tab_rankings">Classement</string>
+    <string name="sports_tab_matches">Matchs</string>
+    <string name="sports_next_race_weekend">Prochain week-end de course</string>
+    <string name="sports_last_weekend">Le week-end dernier</string>
+    <string name="sports_session_practice_1">Essais libres 1</string>
+    <string name="sports_session_practice_2">Essais libres 2</string>
+    <string name="sports_session_practice_3">Essais libres 3</string>
+    <string name="sports_session_sprint_qualifying">Qualifications sprint</string>
+    <string name="sports_session_qualifying">Qualifications</string>
+    <string name="sports_session_sprint">Sprint</string>
+    <string name="sports_session_race">Course</string>
+    <string name="sports_table_team">Équipe</string>
+    <string name="sports_table_played">J</string>
+    <string name="sports_table_won">G</string>
+    <string name="sports_table_drawn">N</string>
+    <string name="sports_table_lost">P</string>
+    <string name="sports_table_difference">Diff</string>
+    <string name="sports_table_points">Pts</string>
+    <string name="sports_table_form">Forme</string>
+    <string name="sports_this_matchday">Cette journée</string>
+    <string name="sports_settings_what">Contenu affiché</string>
+    <string name="sports_show_in_menu">Afficher Sports dans le menu</string>
+    <string name="sports_show_in_menu_description">Activé par défaut, avec ou sans playlist</string>
+    <string name="sports_leagues">Sports et championnats</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> championnat</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de championnats</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> championnats</item>
+    </plurals>
+    <string name="sports_spoiler_free">Sans spoiler</string>
+    <string name="sports_spoiler_free_description">Masquer les scores jusqu’à ce que vous appuyiez sur OK</string>
+    <string name="sports_spoiler_free_description_mobile">Touchez un score pour l’afficher</string>
+    <string name="sports_settings_watching">Visionnage</string>
+    <string name="sports_languages">Langues de commentaire préférées</string>
+    <string name="sports_languages_mobile">Langues de commentaire</string>
+    <string name="sports_languages_description">En tête dans « Regarder en direct »</string>
+    <string name="sports_countries">Pays préférés</string>
+    <string name="sports_countries_description">D’après les préfixes des chaînes, comme « DE| »</string>
+    <string name="sports_picture_description">Masquer les chaînes en dessous</string>
+    <string name="sports_settings_while_watching">Pendant le visionnage</string>
+    <string name="sports_score_info_bar">Score dans la barre d’infos</string>
+    <string name="sports_score_info_bar_description">Affiché seulement quand la barre est ouverte, pour ne pas gâcher un but</string>
+    <string name="sports_score_info_bar_description_mobile">Seulement barre ouverte</string>
+    <string name="sports_goal_alerts_description">Pour mes équipes, pendant que je regarde autre chose</string>
+    <string name="sports_match_reminders_description">Avant le coup d’envoi, avec la meilleure chaîne</string>
+    <string name="sports_remembered_channels">Chaînes mémorisées</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> autre</item>
+        <item quantity="many"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> d’autres</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> autres</item>
+    </plurals>
+    <string name="sports_show_likely">Afficher les chaînes « probables »</string>
+    <string name="sports_show_likely_description">Chaînes sportives non confirmées par le programme</string>
+    <string name="sports_settings_data">Données</string>
+    <string name="sports_live_refresh">Actualisation en direct</string>
+    <string name="sports_live_refresh_description">Seulement quand un écran sport ou un score est affiché</string>
+    <string name="sports_about">À propos des données sportives</string>
+    <string name="sports_about_summary">Scores : ESPN · chaînes : votre playlist et votre programme</string>
+    <string name="sports_alerts_when_closed">Alertes quand OwnTV est fermé</string>
+    <string name="sports_alerts_when_closed_description">Demande une seule fois l’autorisation des notifications</string>
+    <string name="sports_alert_me_about">M’alerter pour</string>
+    <string name="sports_kind_goals">Buts et wickets</string>
+    <string name="sports_kind_kickoff_full_time">Coup d’envoi et fin</string>
+    <string name="sports_alerts_for">Pour</string>
+    <string name="sports_followed_leagues">Championnats suivis</string>
+    <string name="sports_followed_leagues_description">Chaque match, ce qui peut faire beaucoup</string>
+    <string name="sports_live_card">Carte de score en direct</string>
+    <string name="sports_live_card_offer">Proposer une carte de score en direct</string>
+    <string name="sports_live_card_description">Mise à jour toutes les 30 s jusqu’à la fin ; à lancer depuis un match</string>
+    <string name="sports_alerts_footnote">Quand OwnTV est fermé, les alertes arrivent en général en moins d’une minute. Si le téléphone reste longtemps immobile écran éteint, Android peut les retenir jusqu’à environ 15 minutes. La carte de score en direct n’est pas retenue.</string>
+    <string name="sports_search_teams">Rechercher équipes, joueurs, championnats</string>
+    <string name="sports_suggested">Suggestions d’après ce que vous regardez</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Vous avez regardé <xliff:g id="count">%1$d</xliff:g> de leurs matchs</item>
+        <item quantity="many">Vous avez regardé <xliff:g id="count">%1$d</xliff:g> de leurs matchs</item>
+        <item quantity="other">Vous avez regardé <xliff:g id="count">%1$d</xliff:g> de leurs matchs</item>
+    </plurals>
+    <string name="sports_league_label">Championnat</string>
+    <string name="sports_no_playlist_title">Ajoutez une playlist pour regarder les matchs</string>
+    <string name="sports_no_playlist_body">Scores, classements et alertes fonctionnent sans. Avec une playlist, OwnTV trouve toutes les chaînes qui diffusent ce match.</string>
+    <string name="sports_add_playlist">Ajouter une playlist</string>
+    <string name="sports_home_row">Sport en direct</string>
+    <string name="sports_home_row_description">Matchs suivis, quand l’un est en direct ou sur le point de commencer</string>
+    <string name="sports_empty_nothing_followed">Aucun sport ni championnat choisi pour l’instant</string>
+    <string name="sports_empty_choose_in">Choisissez-les dans Paramètres → Application → Sports → Sports et championnats.</string>
+    <string name="sports_load_time_warning">Plus vous choisissez de sports et de championnats, plus le chargement et la construction prennent du temps.</string>
+    <string name="sports_sport_buttons">Boutons de sport</string>
+    <string name="sports_sport_buttons_mine">Mes sports</string>
+    <string name="sports_sport_buttons_all">Tous les sports</string>
+    <string name="sports_sport_buttons_description">Mes sports : uniquement vos choix. Tous les sports : chaque championnat connu d’OwnTV, plus long à charger.</string>
+    <string name="sports_auto_rebuild">Reconstruction automatique</string>
+    <string name="sports_auto_rebuild_description">Fréquence à laquelle les scores, les détails des matchs et les classements sont récupérés automatiquement</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one">Toutes les <xliff:g id="count">%1$d</xliff:g> heure</item>
+        <item quantity="many">Toutes les <xliff:g id="count">%1$d</xliff:g> heures</item>
+        <item quantity="other">Toutes les <xliff:g id="count">%1$d</xliff:g> heures</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">À chaque démarrage de l’app</string>
+    <string name="sports_calendar_refresh">Actualisation de l’agenda</string>
+    <string name="sports_calendar_refresh_description">Fréquence à laquelle les mois enregistrés sont récupérés à nouveau</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one">Tous les <xliff:g id="count">%1$d</xliff:g> jour</item>
+        <item quantity="many">Tous les <xliff:g id="count">%1$d</xliff:g> jours</item>
+        <item quantity="other">Tous les <xliff:g id="count">%1$d</xliff:g> jours</item>
+    </plurals>
+    <string name="sports_find_channels">Trouver les chaînes</string>
+    <string name="sports_find_channels_description">Cherche ce match dans votre guide et le nom de vos chaînes. Avec une grande playlist, cela peut prendre un moment.</string>
+    <string name="sports_finding_channels">Recherche dans vos chaînes…</string>
+    <string name="sports_strict_filter">Filtrage strict</string>
+    <string name="sports_strict_filter_description">Activé : seules les chaînes qui passent vos filtres sont listées. Désactivé : toutes les chaînes, celles qui passent d’abord.</string>
+    <string name="sports_rebuilding">Reconstruction du sport…</string>
+    <string name="sports_rebuild_failed">Impossible de mettre à jour les données sportives</string>
+    <string name="sports_refresh_data_now">Actualiser les données sportives</string>
+    <string name="sports_last_updated">Dernière mise à jour : <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Les chaînes peuvent être cherchées à partir de <xliff:g id="time">%1$s</xliff:g>, 30 minutes avant le coup d’envoi.</string>
+    <string name="sports_find_channels_ended">Ce match est terminé : il n’y a pas de chaîne à trouver.</string>
+    <string name="sports_tab_broadcasts">Diffusion</string>
+    <string name="sports_broadcasts_guide">Dans votre guide</string>
+    <string name="sports_broadcasts_espn">Selon ESPN (États-Unis uniquement)</string>
+    <string name="sports_broadcasts_find_first">Utilisez Trouver les chaînes pour lister les chaînes de votre guide qui diffusent ce match.</string>
+    <string name="sports_broadcasts_none">Aucune indiquée</string>
+    <string name="sports_move_instructions">▲/▼ pour choisir · OK pour prendre ou poser · Enregistrer à la fin</string>
 </resources>

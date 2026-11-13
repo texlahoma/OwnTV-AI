@@ -1,0 +1,2865 @@
+{
+ "header": {
+  "competitions": [
+   {
+    "id": "1555117",
+    "uid": "s:200~e:1555117~c:1555117",
+    "description": "1st Match",
+    "date": "2026-10-17T11:30Z",
+    "endDate": "2026-10-19T23:59Z",
+    "neutralSite": true,
+    "conferenceCompetition": false,
+    "boxscoreAvailable": false,
+    "liveAvailable": true,
+    "fastcastAvailable": true,
+    "preCommentaryAvailable": false,
+    "updatesOnly": false,
+    "limitedOvers": true,
+    "recent": true,
+    "reducedOvers": false,
+    "class": {
+     "internationalClassId": "2",
+     "generalClassId": "5",
+     "generalClassCard": "ODI",
+     "name": "One-Day Internationals",
+     "eventType": "ODI"
+    },
+    "onWatchESPN": false,
+    "competitors": [
+     {
+      "id": "25",
+      "uid": "s:200~e:1555117~c:1555117~t:25",
+      "order": 2,
+      "homeAway": "home",
+      "winner": false,
+      "score": "87/3 (14/50 ov, target 272)",
+      "team": {
+       "id": "25",
+       "uid": "s:200~t:25",
+       "location": "Bangladesh",
+       "name": "Bangladesh",
+       "nickname": "Bangladesh",
+       "abbreviation": "BAN",
+       "displayName": "Bangladesh",
+       "color": "#ed3507",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/cricket/500/25.png",
+         "rel": [
+          "full",
+          "default"
+         ]
+        }
+       ]
+      },
+      "possession": false
+     },
+     {
+      "id": "9",
+      "uid": "s:200~e:1555117~c:1555117~t:9",
+      "order": 1,
+      "homeAway": "away",
+      "winner": false,
+      "score": "271/8",
+      "team": {
+       "id": "9",
+       "uid": "s:200~t:9",
+       "location": "Zimbabwe",
+       "name": "Zimbabwe",
+       "nickname": "Zimbabwe",
+       "abbreviation": "ZIM",
+       "displayName": "Zimbabwe",
+       "color": "#d04037",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/cricket/500/9.png",
+         "rel": [
+          "full",
+          "default"
+         ]
+        }
+       ]
+      },
+      "possession": false
+     }
+    ],
+    "status": {
+     "displayClock": "0'",
+     "presentLocalTime": "21:08",
+     "period": 2,
+     "session": "",
+     "battingTeamId": 25,
+     "summary": "Bangladesh require 185 runs",
+     "type": {
+      "id": "0",
+      "description": "Live",
+      "detail": "Live",
+      "shortDetail": "Live",
+      "state": "in",
+      "statusPrimary": "Live"
+     },
+     "displayPeriod": "2nd"
+    },
+    "tiebreaker": [],
+    "boxscoreMinutes": false,
+    "commentaryCount": 396,
+    "commentaries": {
+     "214010": {
+      "id": "214010",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "Sikandar Raza joins the atack",
+      "text": "fuller length ball outside off, shuffles across and driven to cover. Brilliant stop by the fielder there, one-handed effort and a flying diving stop",
+      "postText": "",
+      "shortText": "Sikandar Raza to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201401,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "299572",
+        "name": "Sikandar Raza",
+        "firstName": "Sikandar",
+        "lastName": "Raza",
+        "fullName": "Sikandar Raza Butt",
+        "displayName": "Sikandar Raza"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 1,
+       "wickets": 0,
+       "overs": 0.1,
+       "conceded": 0
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 1,
+       "balls": 30,
+       "wickets": 1,
+       "overs": 5.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 14,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 9,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.14,
+       "remainingBalls": 215,
+       "byes": 0,
+       "number": 2,
+       "balls": 85,
+       "noBalls": 0,
+       "requiredRunRate": 5.16,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 35.5,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 1,
+       "balls": 1,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 15,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 14.1,
+       "actual": 14.1,
+       "unique": 14.01
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256911000,
+      "sortOrder": 2014.01
+     },
+     "213060": {
+      "id": "213060",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "Maiden Over! Excellent over from Nyamhuri; didn't offer any space for Saif Hassan to free his arms. He got inside the shell now, tried to hit boundaries from ball one, and succeeded once but failed quite a few times.",
+      "postText": "<b>Australia's Jake Fraser-McGurk <a href=\"/series/one-day-cup-aus-2026-27-1544840/south-australia-vs-queensland-10th-match-1544851/match-report\">smashed a 49-ball century</a> in a one-day game in Adelaide.</b>",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201306,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 1,
+       "balls": 30,
+       "wickets": 1,
+       "overs": 5.0,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 9,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.21,
+       "remainingBalls": 216,
+       "byes": 0,
+       "number": 2,
+       "balls": 84,
+       "noBalls": 0,
+       "requiredRunRate": 5.13,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.0,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 6,
+       "balls": 6,
+       "complete": true,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.6,
+       "actual": 13.6,
+       "unique": 13.06
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256846000,
+      "sortOrder": 2013.06
+     },
+     "213050": {
+      "id": "213050",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "short and wide outside off, carves it down to short cover",
+      "postText": "",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201305,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 29,
+       "wickets": 1,
+       "overs": 4.5,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 8,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.28,
+       "remainingBalls": 217,
+       "byes": 0,
+       "number": 2,
+       "balls": 83,
+       "noBalls": 0,
+       "requiredRunRate": 5.11,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.1,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 5,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.5,
+       "actual": 13.5,
+       "unique": 13.05
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256811000,
+      "sortOrder": 2013.05
+     },
+     "213040": {
+      "id": "213040",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "fuller length ball outside off, plays the front foot straight drive and mistimes to mid-off",
+      "postText": "",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201304,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 28,
+       "wickets": 1,
+       "overs": 4.4,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 7,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.36,
+       "remainingBalls": 218,
+       "byes": 0,
+       "number": 2,
+       "balls": 82,
+       "noBalls": 0,
+       "requiredRunRate": 5.09,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.2,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 4,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.4,
+       "actual": 13.4,
+       "unique": 13.04
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256775000,
+      "sortOrder": 2013.04
+     },
+     "213030": {
+      "id": "213030",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "good length ball defends on the track",
+      "postText": "Shumon: \"I agree with all comments on Soumya, but Shanto, for all his experience and skills failed fantastically.  He could not get singles in.  Rasahad- is the pitch not suitable for singles at this stage?\" Pitch isn't the factor here; positive sensible intent is what Bangladesh failed to execute except going for the big hits.",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201303,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 27,
+       "wickets": 1,
+       "overs": 4.3,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 6,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.44,
+       "remainingBalls": 219,
+       "byes": 0,
+       "number": 2,
+       "balls": 81,
+       "noBalls": 0,
+       "requiredRunRate": 5.06,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.3,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 3,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.3,
+       "actual": 13.3,
+       "unique": 13.03
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256743000,
+      "sortOrder": 2013.03
+     },
+     "213020": {
+      "id": "213020",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "sharp bouncer on the stumps, moves onto the back foot and bunts it to short cover",
+      "postText": "",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201302,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 26,
+       "wickets": 1,
+       "overs": 4.2,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 5,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.52,
+       "remainingBalls": 220,
+       "byes": 0,
+       "number": 2,
+       "balls": 80,
+       "noBalls": 0,
+       "requiredRunRate": 5.04,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.4,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 2,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.2,
+       "actual": 13.2,
+       "unique": 13.02
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256708000,
+      "sortOrder": 2013.02
+     },
+     "213010": {
+      "id": "213010",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "hard length ball on the stumps, cramped for space, defends off the front foot",
+      "postText": "",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201301,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 25,
+       "wickets": 1,
+       "overs": 4.1,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 4,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.6,
+       "remainingBalls": 221,
+       "byes": 0,
+       "number": 2,
+       "balls": 79,
+       "noBalls": 0,
+       "requiredRunRate": 5.02,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 36.5,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 1,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 1,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 14,
+       "runs": 0,
+       "wickets": 0,
+       "overs": 13.1,
+       "actual": 13.1,
+       "unique": 13.01
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256673000,
+      "sortOrder": 2013.01
+     },
+     "212070": {
+      "id": "212070",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "full and overpitched outside the off stump channel, moves towards the line of the ball and plays off the front foot, inside edges onto the front pad",
+      "postText": "<b>In big news today, <a href=\"/story/ipl-mahela-jayawardene-steps-down-as-mi-head-coach-1558843\">Mumbai Indians and their head coach Mahela Jayawardene</a> have parted ways ahead of the retention and auction in the coming months.</b>",
+      "shortText": "Evans to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201207,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 31
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 13,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.69,
+       "remainingBalls": 222,
+       "byes": 0,
+       "number": 2,
+       "balls": 78,
+       "noBalls": 0,
+       "requiredRunRate": 5,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 37.0,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 7,
+       "balls": 6,
+       "complete": true,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.6,
+       "actual": 12.6,
+       "unique": 12.07
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256627000,
+      "sortOrder": 2012.07
+     },
+     "212060": {
+      "id": "212060",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "good length ball darted outside off, lets it go",
+      "postText": "Ahmad Waqas: \"Wow! This Zim BAN game reminds you of that old, slow, steady, golden era of ONE DAYERS when 272 used to be an excellent total!\"",
+      "shortText": "Evans to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201206,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 23,
+       "wickets": 1,
+       "overs": 3.5,
+       "conceded": 31
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 12,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.77,
+       "remainingBalls": 223,
+       "byes": 0,
+       "number": 2,
+       "balls": 77,
+       "noBalls": 0,
+       "requiredRunRate": 4.97,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 37.1,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 6,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.5,
+       "actual": 12.5,
+       "unique": 12.06
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256611000,
+      "sortOrder": 2012.06
+     },
+     "212050": {
+      "id": "212050",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "length ball outside off, no shot offered",
+      "postText": "",
+      "shortText": "Evans to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 0,
+      "sequence": 201205,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 22,
+       "wickets": 1,
+       "overs": 3.4,
+       "conceded": 31
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 11,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.86,
+       "remainingBalls": 224,
+       "byes": 0,
+       "number": 2,
+       "balls": 76,
+       "noBalls": 0,
+       "requiredRunRate": 4.95,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 37.2,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 87
+      },
+      "over": {
+       "ball": 5,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.4,
+       "actual": 12.4,
+       "unique": 12.05
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256531000,
+      "sortOrder": 2012.05
+     },
+     "212040": {
+      "id": "212040",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "wide ball sliding down the leg-side",
+      "postText": "",
+      "shortText": "Evans to Towhid Hridoy, 1 wide",
+      "homeScore": "0",
+      "awayScore": "87/3",
+      "scoreValue": 1,
+      "sequence": 201204,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 21,
+       "wickets": 1,
+       "overs": 3.3,
+       "conceded": 31
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 10,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.96,
+       "remainingBalls": 225,
+       "byes": 0,
+       "number": 2,
+       "balls": 75,
+       "noBalls": 0,
+       "requiredRunRate": 4.93,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 185,
+       "remainingOvers": 37.3,
+       "totalRuns": 1,
+       "wides": 1,
+       "runs": 87
+      },
+      "over": {
+       "ball": 4,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 1,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.3,
+       "actual": 12.4,
+       "unique": 12.04
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256507000,
+      "sortOrder": 2012.04
+     },
+     "212030": {
+      "id": "212030",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "length ball flicked away behind square for a couple of runs",
+      "postText": "",
+      "shortText": "Evans to Towhid Hridoy, 2 runs",
+      "homeScore": "0",
+      "awayScore": "86/3",
+      "scoreValue": 2,
+      "sequence": 201203,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 21,
+       "wickets": 1,
+       "overs": 3.3,
+       "conceded": 30
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 10,
+       "faced": 10,
+       "fours": 0,
+       "runs": 2,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.88,
+       "remainingBalls": 225,
+       "byes": 0,
+       "number": 2,
+       "balls": 75,
+       "noBalls": 0,
+       "requiredRunRate": 4.96,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 186,
+       "remainingOvers": 37.3,
+       "totalRuns": 2,
+       "wides": 0,
+       "runs": 86
+      },
+      "over": {
+       "ball": 3,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.3,
+       "actual": 12.3,
+       "unique": 12.03
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256465000,
+      "sortOrder": 2012.03
+     },
+     "212020": {
+      "id": "212020",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "similar line and length ball, taps it to backward point this time",
+      "postText": "",
+      "shortText": "Evans to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "84/3",
+      "scoreValue": 0,
+      "sequence": 201202,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 20,
+       "wickets": 1,
+       "overs": 3.2,
+       "conceded": 28
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 9,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.81,
+       "remainingBalls": 226,
+       "byes": 0,
+       "number": 2,
+       "balls": 74,
+       "noBalls": 0,
+       "requiredRunRate": 4.99,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 188,
+       "remainingOvers": 37.4,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 84
+      },
+      "over": {
+       "ball": 2,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.2,
+       "actual": 12.2,
+       "unique": 12.02
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256432000,
+      "sortOrder": 2012.02
+     },
+     "212010": {
+      "id": "212010",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "good length ball on the probing zone, dabs it to cover",
+      "postText": "Atanu Sen : \"Soumya Sarkar hardly gets a chance.Yes it is true that doesn't perform but he doesn't get enough chance in ODI hardly gets any chance in T20s was selected for the tests against Australia and Afghanistan but didn't played a single match.So I think it's harsh to judge his performance right now.\"",
+      "shortText": "Evans to Towhid Hridoy, no run",
+      "homeScore": "0",
+      "awayScore": "84/3",
+      "scoreValue": 0,
+      "sequence": 201201,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 19,
+       "wickets": 1,
+       "overs": 3.1,
+       "conceded": 28
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 8,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.9,
+       "remainingBalls": 227,
+       "byes": 0,
+       "number": 2,
+       "balls": 73,
+       "noBalls": 0,
+       "requiredRunRate": 4.96,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 188,
+       "remainingOvers": 37.5,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 84
+      },
+      "over": {
+       "ball": 1,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 13,
+       "runs": 3,
+       "wickets": 0,
+       "overs": 12.1,
+       "actual": 12.1,
+       "unique": 12.01
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256401000,
+      "sortOrder": 2012.01
+     },
+     "211070": {
+      "id": "211070",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "Short pitched ball tries to drag it down, mis-hits it to the right side of the bowler",
+      "postText": "<b>Today's edition of <a href=\"/game/wordplay\">WORD PLAY</a> features a player turned commentator you will surely know.</b>",
+      "shortText": "Nyamhuri to Saif Hassan, no run",
+      "homeScore": "0",
+      "awayScore": "84/3",
+      "scoreValue": 0,
+      "sequence": 201107,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 24,
+       "wickets": 1,
+       "overs": 4.0,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 18,
+       "wickets": 1,
+       "overs": 3.0,
+       "conceded": 28
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 3,
+       "fours": 1,
+       "runs": 0,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 7,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 7,
+       "remainingBalls": 228,
+       "byes": 0,
+       "number": 2,
+       "balls": 72,
+       "noBalls": 0,
+       "requiredRunRate": 4.94,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 188,
+       "remainingOvers": 38.0,
+       "totalRuns": 0,
+       "wides": 0,
+       "runs": 84
+      },
+      "over": {
+       "ball": 7,
+       "balls": 6,
+       "complete": true,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 12,
+       "runs": 12,
+       "wickets": 0,
+       "overs": 11.6,
+       "actual": 11.6,
+       "unique": 11.07
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256337000,
+      "sortOrder": 2011.07
+     },
+     "211060": {
+      "id": "211060",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "short of a length ball on the pads, glanced away to long leg",
+      "postText": "KiwiTiger: \"@Abdulqahhar vai, now just wait and watch how all gears fall off this run machine of a batting lineup in this chase\"",
+      "shortText": "Nyamhuri to Saif Hassan, 2 runs",
+      "homeScore": "0",
+      "awayScore": "84/3",
+      "scoreValue": 2,
+      "sequence": 201106,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 23,
+       "wickets": 1,
+       "overs": 3.5,
+       "conceded": 39
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 18,
+       "wickets": 1,
+       "overs": 3.0,
+       "conceded": 28
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 6,
+       "faced": 2,
+       "fours": 1,
+       "runs": 2,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 7,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 7.09,
+       "remainingBalls": 229,
+       "byes": 0,
+       "number": 2,
+       "balls": 71,
+       "noBalls": 0,
+       "requiredRunRate": 4.92,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 188,
+       "remainingOvers": 38.1,
+       "totalRuns": 2,
+       "wides": 0,
+       "runs": 84
+      },
+      "over": {
+       "ball": 6,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 12,
+       "runs": 12,
+       "wickets": 0,
+       "overs": 11.5,
+       "actual": 11.5,
+       "unique": 11.06
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256301000,
+      "sortOrder": 2011.06
+     },
+     "211050": {
+      "id": "211050",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "<strong>We are up for a treat!</strong> That's some way to get off the mark, Attaboy! Pitched up front outside off, presents the full face of the bat and caresses it through the extra cover region, giving no chance to the ring fielders to move a step.",
+      "postText": "",
+      "shortText": "Nyamhuri to Saif Hassan, FOUR",
+      "homeScore": "0",
+      "awayScore": "82/3",
+      "scoreValue": 4,
+      "sequence": 201105,
+      "boundary": true,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 22,
+       "wickets": 1,
+       "overs": 3.4,
+       "conceded": 37
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 18,
+       "wickets": 1,
+       "overs": 3.0,
+       "conceded": 28
+      },
+      "batsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 4,
+       "faced": 1,
+       "fours": 1,
+       "runs": 4,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 7,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 7.02,
+       "remainingBalls": 230,
+       "byes": 0,
+       "number": 2,
+       "balls": 70,
+       "noBalls": 0,
+       "requiredRunRate": 4.95,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 190,
+       "remainingOvers": 38.2,
+       "totalRuns": 4,
+       "wides": 0,
+       "runs": 82
+      },
+      "over": {
+       "ball": 5,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 12,
+       "runs": 12,
+       "wickets": 0,
+       "overs": 11.4,
+       "actual": 11.4,
+       "unique": 11.05
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "821749",
+         "name": "Saif Hassan",
+         "shortName": "Saif Hassan"
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256245000,
+      "sortOrder": 2011.05
+     },
+     "211040": {
+      "id": "211040",
+      "team": {
+       "id": "25",
+       "name": "Bangladesh",
+       "abbreviation": "BAN"
+      },
+      "mediaId": 0,
+      "period": 2,
+      "preText": "",
+      "text": "shortish delivery fends it down with the outside part of the bat and edges it aerially past backward point",
+      "postText": "",
+      "shortText": "Nyamhuri to Towhid Hridoy, 1 run",
+      "homeScore": "0",
+      "awayScore": "78/3",
+      "scoreValue": 1,
+      "sequence": 201104,
+      "boundary": false,
+      "bowler": {
+       "athlete": {
+        "id": "1409283",
+        "name": "Newman Nyamhuri",
+        "firstName": "Newman",
+        "lastName": "Nyamhuri",
+        "fullName": "Newman Takudzwa Nyamhuri",
+        "displayName": "Newman Nyamhuri"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 21,
+       "wickets": 1,
+       "overs": 3.3,
+       "conceded": 33
+      },
+      "otherBowler": {
+       "athlete": {
+        "id": "696127",
+        "name": "Brad Evans",
+        "firstName": "Brad",
+        "lastName": "Evans",
+        "fullName": "Brad Evans",
+        "displayName": "Brad Evans"
+       },
+       "team": {
+        "id": "9",
+        "name": "Zimbabwe",
+        "abbreviation": "ZIM"
+       },
+       "maidens": 0,
+       "balls": 18,
+       "wickets": 1,
+       "overs": 3.0,
+       "conceded": 28
+      },
+      "batsman": {
+       "athlete": {
+        "id": "990031",
+        "name": "Towhid Hridoy",
+        "firstName": "Towhid",
+        "lastName": "Hridoy",
+        "fullName": "Md Towhid Hridoy",
+        "displayName": "Towhid Hridoy"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 8,
+       "faced": 7,
+       "fours": 0,
+       "runs": 1,
+       "sixes": 0
+      },
+      "otherBatsman": {
+       "athlete": {
+        "id": "821749",
+        "name": "Saif Hassan",
+        "firstName": "Saif",
+        "lastName": "Hassan",
+        "fullName": "Mohammad Saif Hassan",
+        "displayName": "Saif Hassan"
+       },
+       "team": {
+        "id": "25",
+        "name": "Bangladesh",
+        "abbreviation": "BAN"
+       },
+       "totalRuns": 0,
+       "faced": 0,
+       "fours": 0,
+       "runs": 0,
+       "sixes": 0
+      },
+      "innings": {
+       "id": "296700",
+       "runRate": 6.78,
+       "remainingBalls": 231,
+       "byes": 0,
+       "number": 2,
+       "balls": 69,
+       "noBalls": 0,
+       "requiredRunRate": 5.03,
+       "wickets": 3,
+       "legByes": 0,
+       "ballLimit": 300,
+       "target": 272,
+       "session": 1,
+       "day": 1,
+       "fallOfWickets": 0,
+       "trailBy": 0,
+       "leadBy": 0,
+       "remainingRuns": 194,
+       "remainingOvers": 38.3,
+       "totalRuns": 1,
+       "wides": 0,
+       "runs": 78
+      },
+      "over": {
+       "ball": 4,
+       "balls": 6,
+       "complete": false,
+       "limit": 50.0,
+       "maiden": 0,
+       "noBall": 0,
+       "wide": 0,
+       "legByes": 0,
+       "byes": 0,
+       "number": 12,
+       "runs": 12,
+       "wickets": 0,
+       "overs": 11.3,
+       "actual": 11.3,
+       "unique": 11.04
+      },
+      "dismissal": {
+       "dismissal": false,
+       "batsman": {
+        "athlete": {
+         "id": "990031",
+         "name": "Towhid Hridoy",
+         "shortName": ""
+        }
+       },
+       "text": ""
+      },
+      "bbbTimestamp": 1792256210000,
+      "sortOrder": 2011.04
+     }
+    }
+   }
+  ]
+ }
+}

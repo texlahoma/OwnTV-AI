@@ -6,7 +6,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Phase 3 / S2 — what the Xtream per-category fallback is allowed to prune. Before this the fallback
+ * What the Xtream per-category fallback is allowed to prune. Before this the fallback
  * never pruned at all, so titles removed by the provider stayed forever on any panel that can't serve
  * the bulk list; the risk in fixing it is deleting rows the pass never actually saw.
  *

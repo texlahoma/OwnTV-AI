@@ -19,6 +19,10 @@ internal object CompanionHttpProtocol {
     /** PIN posts and source forms — a few hundred bytes in practice. */
     const val FORM_BODY_LIMIT = 64 * 1024
 
+    /** Where a paired device posts its container during an automatic sync (see LocalAutoSyncServer). */
+    const val AUTO_SYNC_IMPORT_PATH = "/sync/auto/import"
+
+
     private const val INITIAL_BODY_BUFFER = 64 * 1024
     private const val BODY_CHUNK = 16 * 1024
 
@@ -48,17 +52,25 @@ internal object CompanionHttpProtocol {
         // `/m3u` joins the upload group: the M3U panel can carry a whole playlist file inline, and a
         // real playlist is far past the 64 KB a form field needs.
         path == "/backup" || path == "/background" || path == "/m3u" -> UPLOAD_BODY_LIMIT
+        // An automatic sync's container, raw: a whole library's favourites and history.
+        path == AUTO_SYNC_IMPORT_PATH -> UPLOAD_BODY_LIMIT
         else -> FORM_BODY_LIMIT
     }
 
     /**
      * Read a request body without trusting Content-Length for allocation. A declared or observed
-     * body over [limit] returns null so the caller can answer 413.
+     * body over [limit] returns null so the caller can answer 413. A body that ends before its
+     * Content-Length throws [java.io.EOFException]: half an uploaded backup used to be kept and then
+     * failed to decrypt, which the TV could only report as a wrong password.
      */
-    fun readBody(input: BufferedInputStream, headers: Map<String, String>, limit: Int): String? {
+    fun readBody(input: BufferedInputStream, headers: Map<String, String>, limit: Int): String? =
+        readBodyBytes(input, headers, limit)?.toString(StandardCharsets.UTF_8)
+
+    /** [readBody] for a binary body: the bytes as sent. */
+    fun readBodyBytes(input: BufferedInputStream, headers: Map<String, String>, limit: Int): ByteArray? {
         val declared = headers["content-length"]?.toLongOrNull() ?: 0L
         if (declared > limit) return null
-        if (declared == 0L) return ""
+        if (declared == 0L) return ByteArray(0)
         val buffer = ByteArrayOutputStream(declared.coerceAtMost(INITIAL_BODY_BUFFER.toLong()).toInt())
         val chunk = ByteArray(BODY_CHUNK)
         var total = 0L
@@ -70,11 +82,12 @@ internal object CompanionHttpProtocol {
             if (total > limit) return null
             buffer.write(chunk, 0, read)
         }
-        return buffer.toString(StandardCharsets.UTF_8.name())
+        if (total < declared) throw java.io.EOFException("Body ended at $total of $declared bytes")
+        return buffer.toByteArray()
     }
 
     /** Parse a submitted form/JSON body, or null when its required fields are missing. */
-    fun parsePayload(contentType: String?, bodyText: String, fallbackType: SourceType): CompanionPayload? {
+    fun parsePayload(contentType: String?, bodyText: String, fallbackType: SourceType, requireFields: Boolean = true): CompanionPayload? {
         val isJson = contentType?.contains("application/json", ignoreCase = true) == true ||
             bodyText.trimStart().startsWith("{")
         val fields = if (isJson) {
@@ -104,7 +117,8 @@ internal object CompanionHttpProtocol {
         val portalUrl = pick(fields, "portalUrl", "portal_url").trim()
         val mac = pick(fields, "mac", "macAddress", "mac_address").trim()
 
-        when (type) {
+        // An edit may leave any field empty: it keeps the playlist's current value (CompanionSourceEdit).
+        if (requireFields) when (type) {
             SourceType.STALKER -> if (portalUrl.isBlank() || mac.isBlank()) return null
             // One of the two is required, not both: a URL to fetch, or a file to save.
             SourceType.M3U -> if (server.isBlank() && playlistContent.isBlank()) return null

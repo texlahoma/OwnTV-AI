@@ -36,6 +36,45 @@ enum class HlsSupport(val code: Int) {
 enum class DownloadStatus { QUEUED, RUNNING, PAUSED, COMPLETED, FAILED }
 
 /**
+ * Why a download failed, waits or was paused — the sentence on its row instead of a bare "Failed".
+ * Null on a row with nothing to explain. Stored by name, like [RecordingFailure].
+ */
+enum class DownloadReason {
+    /** The provider says every connection the account has is in use (HTTP 429, 458, 509). */
+    ACCOUNT_BUSY,
+
+    /** The provider refused the link (HTTP 401, 403): busy, expired or blocked — it does not say which. */
+    REFUSED,
+
+    /** The provider no longer has the file (HTTP 404, 410). */
+    NOT_FOUND,
+
+    /** The provider failed (HTTP 5xx). */
+    SERVER_ERROR,
+
+    /** Any other HTTP answer that was not the file. */
+    HTTP_ERROR,
+
+    /** The network dropped, timed out or never connected. */
+    CONNECTION_LOST,
+
+    /** The download folder is gone (card or USB removed) or its permission was withdrawn. */
+    FOLDER_UNAVAILABLE,
+
+    /** The volume filled up. */
+    NO_SPACE,
+
+    /** The file is bigger than the drive can hold in one file — a FAT32 stick stops at 4 GB. */
+    FILE_TOO_LARGE,
+
+    /** Queued on a one-stream playlist that is being watched; starts once nothing plays from it. */
+    WAITING_FOR_WATCHING,
+
+    /** Paused because the user chose to watch on a one-stream playlist. */
+    PAUSED_FOR_WATCHING,
+}
+
+/**
  * Lifecycle of a live recording.
  *
  * [MISSED] is the one that does not exist for downloads, and it is the whole reason the Recordings
@@ -55,17 +94,17 @@ enum class RecordingStatus { SCHEDULED, RECORDING, COMPLETED, FAILED, MISSED, CA
 enum class RecordingFailure {
     NONE,
 
-    /** Free space reached the reserve floor (D2/D8). Whatever was captured is kept and playable. */
+    /** Free space reached the reserve floor. Whatever was captured is kept and playable. */
     NO_SPACE,
 
     /**
      * The playlist had no connection left — either the provider refused, or the app's own budget
-     * said so before asking (D10/D11). On a one-connection account this is the ordinary outcome of
+     * said so before asking. On a one-connection account this is the ordinary outcome of
      * recording while watching, not a fault.
      */
     NO_CONNECTION,
 
-    /** Another recording already held the budget when this one was due (D10). */
+    /** Another recording already held the budget when this one was due. */
     CLASH,
 
     /** The network went away and did not come back inside the programme's window. */
@@ -94,7 +133,7 @@ enum class RecordingFailure {
     ENCRYPTED,
 
     /**
-     * The channel declares DRM — a Widevine or ClearKey licence in its playlist entry (#115).
+     * The channel declares DRM — a Widevine or ClearKey licence in its playlist entry.
      *
      * Distinct from [ENCRYPTED], which is HLS transport encryption (`#EXT-X-KEY`, usually plain
      * AES-128) discovered *in* the playlist. This one is declared by the playlist itself and is known
@@ -103,7 +142,7 @@ enum class RecordingFailure {
      * Refused for the same reason as [ENCRYPTED] and one more: the CDM decrypts only *into a secure
      * decoder for immediate display*, so there is no point at which this app could obtain the frames
      * to write down. Attempting it would spend the account's connection for the whole programme and
-     * produce a file that cannot play — the outcome §1.5 exists to prevent.
+     * produce a file that cannot play — the outcome this refusal exists to prevent.
      */
     DRM_PROTECTED,
 

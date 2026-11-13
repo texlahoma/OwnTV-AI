@@ -41,11 +41,72 @@ class CatchupUrlTest {
     }
 
     @Test
-    fun forM3u_nullWhenNoTemplate() {
-        assertNull(CatchupUrl.forM3u("http://x/live.ts", "default", null, start, end))
+    fun forM3u_nullWhenNothingToBuildFrom() {
+        assertNull(CatchupUrl.forM3u("http://x/live.ts", null, null, start, end))
+        assertNull(CatchupUrl.forM3u("http://x/live.ts", "vod", null, start, end))
     }
 
-    /** F17 — `{lutc}` used to survive into the request verbatim. */
+    /** Kodi's rule: `catchup="default"` with no `catchup-source` appends the shift query. */
+    @Test
+    fun forM3u_defaultWithoutSourceAppendsTheShiftQuery() {
+        val out = CatchupUrl.forM3u("http://x/live.ts", "default", null, start, end)
+        assertNotNull(out)
+        assertTrue(out!!.startsWith("http://x/live.ts?utc=1609459200&lutc="))
+    }
+
+    /** `${timestamp}` is now (Kodi: "same as {lutc}"), not the programme start. */
+    @Test
+    fun template_timestampIsNow() {
+        val now = 1609466400_000L
+        assertEquals("http://x/s?t=1609466400", CatchupUrl.fromTemplate("http://x/s?t=\${timestamp}", start, end, now))
+        assertEquals("http://x/s?t=1609466400", CatchupUrl.fromTemplate("http://x/s?t={timestamp}", start, end, now))
+    }
+
+    /** `{duration:X}` / `{offset:X}` divide by X seconds; a non-number argument is left alone. */
+    @Test
+    fun template_durationAndOffsetWithADivisor() {
+        val now = start + 7_200_000L // two hours after the start
+        assertEquals(
+            "http://x/s?d=60&o=120&d2=60&o2=7200",
+            CatchupUrl.fromTemplate("http://x/s?d={duration:60}&o={offset:60}&d2=\${duration:60}&o2=\${offset:1}", start, end, now),
+        )
+        assertEquals("http://x/{duration:abc}", CatchupUrl.fromTemplate("http://x/{duration:abc}", start, end, now))
+        assertEquals("http://x/{duration:0}", CatchupUrl.fromTemplate("http://x/{duration:0}", start, end, now))
+    }
+
+    /** `{utc:FMT}` and friends format their own instant; only Y m d H M S are fields. */
+    @Test
+    fun template_customFormats() {
+        val s = 1609502461_000L // 2021-01-01 12:01:01 UTC
+        val e = 1609506062_000L // 2021-01-01 13:01:02 UTC
+        val now = 1609595103_000L // 2021-01-02 13:45:03 UTC
+        assertEquals("http://x/20210101120101", CatchupUrl.fromTemplate("http://x/{utc:YmdHMS}", s, e, now))
+        assertEquals("http://x/20210101-12-01", CatchupUrl.fromTemplate("http://x/\${start:Ymd-H-M}", s, e, now))
+        assertEquals("http://x/20210101-13-01", CatchupUrl.fromTemplate("http://x/{utcend:Ymd-H-M}", s, e, now))
+        assertEquals("http://x/2021.01.01_13", CatchupUrl.fromTemplate("http://x/\${end:Y.m.d_H}", s, e, now))
+        assertEquals("http://x/20210102134503", CatchupUrl.fromTemplate("http://x/{lutc:YmdHMS}", s, e, now))
+        assertEquals("http://x/2021-01-02", CatchupUrl.fromTemplate("http://x/\${now:Y-m-d}", s, e, now))
+        assertEquals("http://x/13:45", CatchupUrl.fromTemplate("http://x/\${timestamp:H:M}", s, e, now))
+        // The bare date parts are unchanged.
+        assertEquals("http://x/2021/01/01/12/01/01", CatchupUrl.fromTemplate("http://x/{Y}/{m}/{d}/{H}/{M}/{S}", s, e, now))
+        // An unknown name with an argument is left as it is.
+        assertEquals("http://x/{catchup-id:x}", CatchupUrl.fromTemplate("http://x/{catchup-id:x}", s, e, now))
+    }
+
+    /** `catchup-correction` moves the programme's times before the URL is built, for every style. */
+    @Test
+    fun forM3u_correctionShiftsTheTimes() {
+        assertEquals(
+            "http://x/s?start=1609455600&end=1609459200",
+            CatchupUrl.forM3u("http://x/live.ts", null, "http://x/s?start={utc}&end={utcend}", start, end, correctionMin = -60),
+        )
+        assertEquals(
+            "http://x/ch1/timeshift_abs-1609461000.m3u8",
+            CatchupUrl.forM3u("http://x/ch1/index.m3u8", "flussonic", null, start, end, correctionMin = 30),
+        )
+    }
+
+    /** `{lutc}` used to survive into the request verbatim. */
     @Test
     fun template_fillsNowTokens() {
         val now = 1609466400_000L
@@ -104,5 +165,93 @@ class CatchupUrlTest {
     fun timeshiftPhpAlternate_nullForNonTimeshiftUrls() {
         assertNull(CatchupUrl.timeshiftPhpAlternate("http://x/live/user/pass/1.ts"))
         assertNull(CatchupUrl.timeshiftPhpAlternate(null))
+    }
+
+    // 2026-10-17 14:30:00Z .. 15:00:00Z.
+    private val acStart = 1792247400_000L
+    private val acEnd = 1792249200_000L
+    private val playseek = "?playseek=\${(b)yyyyMMddHHmmss}-\${(e)yyyyMMddHHmmss}"
+
+    @Test
+    fun forM3u_legacyPlayseekUtc() {
+        assertEquals(
+            "http://h/cctv1.m3u8?playseek=20261017143000-20261017150000",
+            CatchupUrl.forM3u("http://h/cctv1.m3u8", "append", playseek, acStart, acEnd, TimeZone.getTimeZone("UTC")),
+        )
+    }
+
+    @Test
+    fun forM3u_legacyPlayseekUsesTzUnlessUtcSuffix() {
+        val shanghai = TimeZone.getTimeZone("Asia/Shanghai")
+        assertEquals(
+            "http://h/cctv1.m3u8?playseek=20261017223000-20261017230000",
+            CatchupUrl.forM3u("http://h/cctv1.m3u8", "append", playseek, acStart, acEnd, shanghai),
+        )
+        assertEquals(
+            "http://h/cctv1.m3u8?playseek=20261017143000-20261017150000",
+            CatchupUrl.forM3u(
+                "http://h/cctv1.m3u8",
+                "append",
+                "?playseek=\${(b)yyyyMMddHHmmss:utc}-\${(e)yyyyMMddHHmmss:utc}",
+                acStart,
+                acEnd,
+                shanghai,
+            ),
+        )
+    }
+
+    @Test
+    fun template_legacyTimestampAndKodiLetters() {
+        assertEquals(
+            "1792247400-1792249200",
+            CatchupUrl.fromTemplate("\${(b)timestamp}-\${(e)timestamp}", acStart, acEnd),
+        )
+        assertEquals(
+            "20261017143000",
+            CatchupUrl.fromTemplate("\${(b)YmdHMS}", acStart, acEnd),
+        )
+        assertEquals(
+            "20261017143000",
+            CatchupUrl.fromTemplate("\${(b)yyyyMMddHHmmss}", acStart, acEnd),
+        )
+        assertEquals("\${(b)foo}", CatchupUrl.fromTemplate("\${(b)foo}", acStart, acEnd))
+        assertEquals("\${(b)yyyy'}", CatchupUrl.fromTemplate("\${(b)yyyy'}", acStart, acEnd))
+    }
+
+    /** `${(b)HH:mm}` is a Java pattern; colons are part of FMT and the zone is the caller's. */
+    @Test
+    fun template_legacyColonPatternUsesTz() {
+        assertEquals(
+            "22:30",
+            CatchupUrl.fromTemplate("\${(b)HH:mm}", acStart, acEnd, tz = TimeZone.getTimeZone("Asia/Shanghai")),
+        )
+    }
+
+    /** `${(b)HH:mm:utc}` forces UTC even when the caller passed another zone. */
+    @Test
+    fun template_legacyColonPatternUtcSuffix() {
+        assertEquals(
+            "14:30",
+            CatchupUrl.fromTemplate(
+                "\${(b)HH:mm:utc}",
+                acStart,
+                acEnd,
+                tz = TimeZone.getTimeZone("Asia/Shanghai"),
+            ),
+        )
+    }
+
+    /** Old `{utc}` / `{start}` / date-part tokens stay UTC; only `${(b)…}` follows [tz]. */
+    @Test
+    fun template_oldTokensStayUtcWhenTzIsShanghai() {
+        assertEquals(
+            "20261017143000-20261017223000-1792247400-1792247400-30-20261017143000",
+            CatchupUrl.fromTemplate(
+                "{utc:YmdHMS}-\${(b)yyyyMMddHHmmss}-{utc}-\${start}-{duration:60}-{Y}{m}{d}{H}{M}{S}",
+                acStart,
+                acEnd,
+                tz = TimeZone.getTimeZone("Asia/Shanghai"),
+            ),
+        )
     }
 }

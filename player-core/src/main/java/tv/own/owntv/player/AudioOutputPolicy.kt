@@ -1,16 +1,27 @@
 package tv.own.owntv.player
 
 import android.content.Context
-import androidx.media3.common.C
+import android.os.Handler
 import androidx.media3.common.Format
 import androidx.media3.common.MimeTypes
+import androidx.media3.common.audio.ChannelMixingAudioProcessor
+import androidx.media3.common.audio.ChannelMixingMatrix
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.audio.AudioCapabilities
+import androidx.media3.exoplayer.audio.AudioRendererEventListener
+import androidx.media3.common.audio.AudioProcessor
 import androidx.media3.exoplayer.audio.AudioSink
 import androidx.media3.exoplayer.audio.DefaultAudioSink
+import androidx.media3.exoplayer.audio.ForwardingAudioSink
+import androidx.media3.exoplayer.mediacodec.MediaCodecInfo
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
+import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
+import androidx.media3.exoplayer.video.VideoRendererEventListener
 import tv.own.owntv.core.player.SurroundMode
+import tv.own.owntv.player.ffmpeg.FfmpegAudioRenderer
 
 /**
  * Session-wide state for the audio-output safety net, shared by **every** engine (mpv, the Live
@@ -77,6 +88,15 @@ object AudioOutputPolicy {
  * makes the sink query the real device capabilities and ignore anything set here — which is the one
  * thing we must not let it do. If a future Media3 removes it, the `runCatching` falls back to the
  * stock sink and we lose the guarantee rather than the playback.
+ *
+ * Every sink carries an [AudioDynamicsProcessor] (night mode / volume levelling), which passes
+ * sound through untouched while both are off. With [passthrough] false the sink refuses encoded
+ * Dolby/DTS that the device can decode ([DecodedOnlyAudioSink]), so it is decoded here — multichannel
+ * PCM still, when the output takes it.
+ *
+ * Audio decoders: the device's MediaCodec ones first, then — with the FFmpeg audio setting on — FFmpeg
+ * ([FfmpegAudio]) for what the chip cannot decode. Never FFmpeg first — it would software-decode AAC and
+ * take passthrough away.
  */
 @UnstableApi
 class OwnTVRenderersFactory(
@@ -91,7 +111,60 @@ class OwnTVRenderersFactory(
      * is what loses the only HEVC decoder.
      */
     private val audioDelayMs: (() -> Int)? = null,
+    /** A/V-sync offset applied to whichever sink is built — see [AudioDelayClock]. Null = none. */
+    private val audioDelay: AudioDelayClock? = null,
+    /** False: decode Dolby/DTS in the app instead of bitstreaming it. */
+    private val passthrough: Boolean = true,
+    /**
+     * Never start the video decoder on Media3's placeholder surface (or with none): without a screen
+     * surface the codec waits for one, while the load carries on. A codec started on the placeholder is
+     * moved to the screen with `setOutputSurface` when it arrives, and on some devices that move keeps the
+     * sound but shows no new frames — logged as `setOutputSurface -- failed to set consumer usage
+     * (6/BAD_INDEX)` on a Raspberry Pi 4 (`c2.v4l2.avc.decoder`). The Realtek TV decoders already wait.
+     */
+    private val onSurfaceOnly: Boolean = false,
 ) : DefaultRenderersFactory(context) {
+
+    override fun buildVideoRenderers(
+        context: Context,
+        extensionRendererMode: Int,
+        mediaCodecSelector: MediaCodecSelector,
+        enableDecoderFallback: Boolean,
+        eventHandler: Handler,
+        eventListener: VideoRendererEventListener,
+        allowedVideoJoiningTimeMs: Long,
+        out: ArrayList<Renderer>,
+    ) {
+        super.buildVideoRenderers(
+            context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback,
+            eventHandler, eventListener, allowedVideoJoiningTimeMs, out,
+        )
+        if (!onSurfaceOnly) return
+        val i = out.indexOfFirst { it is MediaCodecVideoRenderer }
+        if (i < 0) return
+        // Built as DefaultRenderersFactory builds its own; the options it adds are ones this factory never sets.
+        out[i] = OnSurfaceVideoRenderer(
+            MediaCodecVideoRenderer.Builder(context)
+                .setCodecAdapterFactory(codecAdapterFactory)
+                .setMediaCodecSelector(mediaCodecSelector)
+                .setAllowedJoiningTimeMs(allowedVideoJoiningTimeMs)
+                .setEnableDecoderFallback(enableDecoderFallback)
+                .setEventHandler(eventHandler)
+                .setEventListener(eventListener)
+                .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY),
+        )
+    }
+
+    private class OnSurfaceVideoRenderer(builder: MediaCodecVideoRenderer.Builder) : MediaCodecVideoRenderer(builder) {
+        // Only a codec still to be started is refused the stand-in: a running one keeps being moved, because
+        // releasing it instead costs a black screen until the next keyframe (up to 2 s measured on the TCL).
+        override fun shouldUsePlaceholderSurface(codecInfo: MediaCodecInfo): Boolean =
+            codec != null && super.shouldUsePlaceholderSurface(codecInfo)
+
+        // Android 15's surface-less mode is the same start, moved later.
+        override fun shouldUseDetachedSurface(codecInfo: MediaCodecInfo): Boolean =
+            codec != null && super.shouldUseDetachedSurface(codecInfo)
+    }
 
     override fun buildAudioSink(
         context: Context,
@@ -109,67 +182,157 @@ class OwnTVRenderersFactory(
         // ("enabling floating point output disables audio processing"), and MediaCodecAudioRenderer
         // asks the decoder for float PCM whenever the sink reports it useful. A hold-back sink is
         // therefore always 16-bit, where the chain — and the hold-back in it — is guaranteed to run.
-        val floatOutput = enableFloatOutput && holdBack == null
-        val base = if (!forceStereo) {
-            runCatching<AudioSink?> {
-                val sink = DefaultAudioSink.Builder(context)
-                    .setEnableFloatOutput(floatOutput)
-                    .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
-                    .apply { holdBack?.let { setHoldBack(it) } }
-                    .build()
-                if (holdBack != null) LiveAudioDelay.plumbed = true
-                sink
-            }.getOrElse {
-                android.util.Log.w("AudioOutputPolicy", "delayed sink unavailable, using stock sink", it)
-                if (holdBack != null) LiveAudioDelay.plumbed = false
-                super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
-            }
-        } else {
-            runCatching<AudioSink?> {
-                @Suppress("DEPRECATION")
-                val sink = DefaultAudioSink.Builder()
-                    .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
-                    .setEnableFloatOutput(floatOutput)
-                    .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
-                    .apply { holdBack?.let { setHoldBack(it) } }
-                    .build()
-                if (holdBack != null) LiveAudioDelay.plumbed = true
-                sink
-            }.getOrElse {
-                android.util.Log.w("AudioOutputPolicy", "stereo-only sink unavailable, using device capabilities", it)
-                if (holdBack != null) LiveAudioDelay.plumbed = false
-                super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
-            }
+        var sink = buildBaseAudioSink(context, enableFloatOutput && holdBack == null, enableAudioOutputPlaybackParams, holdBack)
+        if (sink == null) {
+            LiveAudioDelay.plumbed = false
+            return super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
         }
+        if (holdBack != null) LiveAudioDelay.plumbed = true
+        if (!passthrough && !forceStereo) sink = DecodedOnlyAudioSink(sink)
         // Hand the decoded PCM to the AI-subtitle tap (see PlaybackAudioTap). This sink is built once
         // when the engine's renderers are created, so the decision cannot depend on whether the tape
         // is armed at that exact moment — AI subtitles may be switched on any time during playback. The
         // wrapper always forwards to a consumer when one is attached and otherwise shuffles the audio
-        // straight through with negligible overhead. Only wraps a real sink — the external/none case
-        // returns null and must stay null.
-        if (base != null) {
-            // [TapAudioSink.pcmOnly]: a LIVE sink must see real PCM. Encoded audio that the device
-            // can bitstream is otherwise bypassed, and a bypassed track gives the tap nothing to
-            // listen to and the hold-back nothing to queue — the channel then reads `dly 8s/0ms/8s`
-            // and the caption session stands itself down. Only live engines take this; VOD, the hero
-            // preview and every other ExoPlayer keep Media3's own passthrough decision.
-            return TapAudioSink(base, pcmOnly = holdBack != null)
-        }
-        return base
+        // straight through with negligible overhead. Wrapping here puts the tap OUTSIDE the hold-back
+        // chain: it hears the raw PCM the moment the decoder hands it over, a hold-back depth ahead of
+        // what the listener hears — which is exactly the head start the caption pipeline needs. Only
+        // wraps a real sink — the external/none case returns null and must stay null.
+        sink = TapAudioSink(sink, pcmOnly = holdBack != null)
+        return if (audioDelay != null) DelayedClockAudioSink(sink, audioDelay) else sink
     }
 
+    override fun buildAudioRenderers(
+        context: Context,
+        extensionRendererMode: Int,
+        mediaCodecSelector: MediaCodecSelector,
+        enableDecoderFallback: Boolean,
+        audioSink: AudioSink,
+        eventHandler: Handler,
+        eventListener: AudioRendererEventListener,
+        out: ArrayList<Renderer>,
+    ) {
+        super.buildAudioRenderers(
+            context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback,
+            audioSink, eventHandler, eventListener, out,
+        )
+        if (FfmpegAudio.available) out.add(FfmpegAudioRenderer(eventHandler, eventListener, audioSink))
+    }
+
+    private fun buildBaseAudioSink(
+        context: Context,
+        enableFloatOutput: Boolean,
+        enableAudioOutputPlaybackParams: Boolean,
+        holdBack: (() -> Int)?,
+    ): AudioSink? {
+        // What DefaultRenderersFactory builds itself, plus the processors. With a hold-back the
+        // chain is [HoldBackAudioProcessor, AudioDynamicsProcessor] — the dynamics stage keeps its
+        // place behind the hold-back, which only ever delays, never reshapes.
+        fun deviceSink(): AudioSink {
+            val b = DefaultAudioSink.Builder(context)
+                .setEnableFloatOutput(enableFloatOutput)
+                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+            if (holdBack != null) b.setHoldBack(holdBack) else b.setAudioProcessors(arrayOf(AudioDynamicsProcessor()))
+            return b.build()
+        }
+        if (!forceStereo) return deviceSink()
+        return runCatching<AudioSink?> {
+            @Suppress("DEPRECATION")
+            val b = DefaultAudioSink.Builder()
+                .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
+                .setEnableFloatOutput(enableFloatOutput)
+                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+            // Capping the capabilities only removes passthrough: decoders still hand over 5.1 PCM
+            // (Media3 asks them for every channel they have), so mix it down here.
+            if (holdBack != null) b.setHoldBack(holdBack, StereoDownmix.processor())
+            else b.setAudioProcessors(arrayOf(StereoDownmix.processor(), AudioDynamicsProcessor()))
+            b.build()
+        }.getOrElse {
+            android.util.Log.w("AudioOutputPolicy", "stereo-only sink unavailable, using device capabilities", it)
+            deviceSink()
+        }
+    }
     /**
      * Build the sink with the in-memory hold-back (see [HoldBackAudioProcessor]). The AudioTrack
      * underneath keeps the device's ordinary size — no multi-second request, no custom provider,
      * nothing this TV's audio HAL can refuse. The depth is read live from [delayMs], so switching
      * captions on starts the hold-back on the RUNNING player instead of waiting for a rebuild.
      */
-    private fun DefaultAudioSink.Builder.setHoldBack(delayMs: () -> Int): DefaultAudioSink.Builder {
+    private fun DefaultAudioSink.Builder.setHoldBack(
+        delayMs: () -> Int,
+        vararg extraProcessors: AudioProcessor,
+    ): DefaultAudioSink.Builder {
         @Suppress("DEPRECATION")
         return setAudioProcessorChain(
-            DefaultAudioSink.DefaultAudioProcessorChain(HoldBackAudioProcessor(delayMs)),
+            DefaultAudioSink.DefaultAudioProcessorChain(HoldBackAudioProcessor(delayMs), *extraProcessors),
         )
     }
+}
+
+/**
+ * A sink that will not take encoded audio the app can decode (a device decoder or FFmpeg), so the
+ * renderer decodes it instead of bitstreaming it. A format nothing here decodes is still passed through:
+ * sound from the receiver beats silence (and on the live engine, "no decoder" is what hands a channel to mpv).
+ */
+@UnstableApi
+class DecodedOnlyAudioSink(sink: AudioSink) : ForwardingAudioSink(sink) {
+    override fun supportsFormat(format: Format): Boolean =
+        if (mustDecode(format)) false else super.supportsFormat(format)
+
+    override fun getFormatSupport(format: Format): Int =
+        if (mustDecode(format)) AudioSink.SINK_FORMAT_UNSUPPORTED else super.getFormatSupport(format)
+
+    private fun mustDecode(format: Format): Boolean {
+        val mime = format.sampleMimeType ?: return false
+        return mustDecode(mime, deviceDecoder = FfmpegAudio::deviceDecodes, ffmpeg = FfmpegAudio::supports)
+    }
+
+    companion object {
+        /** Encoded [mime] must be decoded in the app: something here can decode it. PCM never. */
+        fun mustDecode(mime: String, deviceDecoder: (String) -> Boolean, ffmpeg: (String) -> Boolean): Boolean =
+            mime != MimeTypes.AUDIO_RAW && (deviceDecoder(mime) || ffmpeg(mime))
+    }
+}
+
+/**
+ * "Stereo only": a channel mixer that folds any decoded layout down to two channels. A layout without a
+ * matrix would fail the sink outright, so every count a decoder can hand over (1–8) has one, in
+ * Android's channel order with Android's own downmix coefficients.
+ *
+ * Not Media3's `createForConstantPower`: in 1.11.1 its 3–6 channel arrays are written as a left row and
+ * a right row, but the mixer reads one row per *input* channel — 5.1 would put the LFE on the right
+ * speaker only and most of front-right on the left.
+ */
+@UnstableApi
+object StereoDownmix {
+    private const val H = 0.7071f
+    // Each channel's (left, right) share.
+    private val FL = 1f to 0f
+    private val FR = 0f to 1f
+    private val FC = H to H
+    private val LFE = 0.5f to 0.5f
+    private val BL = H to 0f
+    private val BR = 0f to H
+    private val BC = 0.5f to 0.5f
+    private val SL = H to 0f
+    private val SR = 0f to H
+
+    private fun layout(channels: Int): List<Pair<Float, Float>> = when (channels) {
+        1 -> listOf(H to H)
+        2 -> listOf(FL, FR)
+        3 -> listOf(FL, FR, FC)
+        4 -> listOf(FL, FR, BL, BR)
+        5 -> listOf(FL, FR, FC, BL, BR)
+        6 -> listOf(FL, FR, FC, LFE, BL, BR)
+        7 -> listOf(FL, FR, FC, LFE, BL, BR, BC)
+        else -> listOf(FL, FR, FC, LFE, BL, BR, SL, SR)
+    }
+
+    fun matrices(): List<ChannelMixingMatrix> = (1..8).map { n ->
+        ChannelMixingMatrix(n, 2, layout(n).flatMap { (l, r) -> listOf(l, r) }.toFloatArray())
+    }
+
+    fun processor(): ChannelMixingAudioProcessor =
+        ChannelMixingAudioProcessor().apply { matrices().forEach(::putChannelMixingMatrix) }
 }
 
 /**
@@ -217,8 +380,22 @@ class AudioWatchdog : AnalyticsListener {
     /** True when the renderer chose passthrough (the TV/receiver decodes) rather than in-app decode. */
     @Volatile var passthrough = false
         private set
-    /** Whether a decoder was initialised for the current audio format. See [onAudioPositionAdvancing]. */
+    /** Whether an audio decoder is running: from [onAudioDecoderInitialized] to [onAudioDecoderReleased].
+     *  See [onAudioPositionAdvancing]. */
     @Volatile private var decoderInitialized = false
+
+    /**
+     * The failing output was already plain stereo PCM: two channels or fewer, and decoded here — either
+     * a format that can never be bitstreamed (AAC, MP3, Opus…), or a decoder was seen running for it.
+     * Latching the session to stereo cannot change such an output, so the owner should rebuild this
+     * player without latching — the latch would only take surround away from every later stream.
+     */
+    val outputWasStereoPcm: Boolean
+        get() {
+            val format = audioFormat ?: return false
+            if (format.channelCount !in 1..2) return false
+            return !canBitstream(format.sampleMimeType) || (decoderInitialized && !passthrough)
+        }
 
     /** Call when a new load starts. */
     fun reset() {
@@ -245,7 +422,8 @@ class AudioWatchdog : AnalyticsListener {
         audioFormat = format
         armed = true
         advancing = false
-        decoderInitialized = false
+        // Not decoderInitialized: Media3 can report the decoder before the format it was created for, and
+        // clearing it here then read a decoded stream as passthrough. The decoder's own lifecycle owns it.
         playingSinceArmMs = 0L
         lastTickMs = 0L
     }
@@ -270,6 +448,11 @@ class AudioWatchdog : AnalyticsListener {
         )
     }
 
+    override fun onAudioDecoderReleased(eventTime: AnalyticsListener.EventTime, decoderName: String) {
+        decoderInitialized = false
+        android.util.Log.i("AudioOutputPolicy", "audio decoder released: $decoderName")
+    }
+
     override fun onAudioPositionAdvancing(
         eventTime: AnalyticsListener.EventTime,
         playoutStartSystemTimeMs: Long,
@@ -282,7 +465,9 @@ class AudioWatchdog : AnalyticsListener {
         // read `false` for every bitstreamed E-AC3/AC3/DTS track. Deferring to here rather than
         // deciding in onAudioInputFormatChanged avoids the window where the decoder simply has not
         // been created yet.
-        if (!decoderInitialized && !passthrough) {
+        // Only a format the sink can bitstream can be on that path: AAC or MP3 without a decoder event is a
+        // decoder this listener did not hear about, not passthrough.
+        if (!decoderInitialized && !passthrough && canBitstream(audioFormat?.sampleMimeType)) {
             passthrough = true
             android.util.Log.i("AudioOutputPolicy", "audio path: passthrough — the TV is decoding this stream")
         }
@@ -366,6 +551,9 @@ class AudioWatchdog : AnalyticsListener {
         return "no sound from the audio output after ${AudioOutputPolicy.NO_AUDIO_GRACE_MS / 1000}s ($what)"
     }
 
+    /** Formats an Android audio sink can send to the TV undecoded; everything else is always decoded here. */
+    private fun canBitstream(mimeType: String?): Boolean = mimeType in BITSTREAM_MIME_TYPES
+
     /** Human-readable audio line for the stream-info overlay, or null when nothing is known yet. */
     fun describe(): String? {
         val f = audioFormat ?: return null
@@ -375,8 +563,13 @@ class AudioWatchdog : AnalyticsListener {
         val path = if (passthrough) "passthrough" else "decoded"
         return listOfNotNull(codec, channels, rate, path).joinToString(" · ")
     }
-}
 
-/** Media3 channel-count cap that matches [mode]; [C.INDEX_UNSET] semantics are not used here. */
-fun maxAudioChannelsFor(mode: SurroundMode): Int =
-    if (AudioOutputPolicy.allowsMultichannel(mode)) Int.MAX_VALUE else 2
+    private companion object {
+        /** What a sink can bitstream (Media3's passthrough encodings); see [canBitstream]. */
+        val BITSTREAM_MIME_TYPES = setOf(
+            MimeTypes.AUDIO_AC3, MimeTypes.AUDIO_E_AC3, MimeTypes.AUDIO_E_AC3_JOC, MimeTypes.AUDIO_AC4,
+            MimeTypes.AUDIO_DTS, MimeTypes.AUDIO_DTS_HD, MimeTypes.AUDIO_DTS_EXPRESS, MimeTypes.AUDIO_DTS_UHD_P2,
+            MimeTypes.AUDIO_TRUEHD,
+        )
+    }
+}

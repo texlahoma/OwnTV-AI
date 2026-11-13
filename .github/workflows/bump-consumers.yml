@@ -24,8 +24,8 @@ name: Bump consumers
 # checks at all.
 
 # Triggered by the GitHub RELEASE, not by the tag. The release is created by "Publish core" as its
-# last step, so it exists only if the unit tests passed and both artifacts actually reached GitHub
-# Packages. That makes the release the single visible gate: no release means no pin-bump PR, and the
+# last step, so it exists only if the unit tests passed and both artifacts are actually served by
+# OwnTV's Maven repository. That makes the release the single visible gate: no release means no pin-bump PR, and the
 # version is there on the Releases page for users to read before any consumer moves to it.
 #
 # For this to fire at all, the release must be created with CONSUMER_BUMP_TOKEN, not GITHUB_TOKEN —
@@ -51,7 +51,7 @@ concurrency:
 jobs:
   bump:
     # A release only exists if "Publish core" got as far as creating it, so reaching here already
-    # means the tests passed and both artifacts are on GitHub Packages. The tag-name guard is the
+    # means the tests passed and both artifacts are served by OwnTV's Maven repository. The tag-name guard is the
     # remaining check: this repo could carry some other release series one day, and pinning
     # consumers to a version that was never published as core breaks every contributor's build.
     if: >-
@@ -67,7 +67,7 @@ jobs:
           # Private until the mobile app's first release, so CONSUMER_BUMP_TOKEN has to grant access
           # to it explicitly — a fine-grained PAT lists repositories one by one, and adding this line
           # without adding the repo to the token fails on `gh pr list` with a 404 that reads exactly
-          # like a typo. It carries its own `automerge-core-bump.yml` since Plan 3 Phase 5, so its
+          # like a typo. It carries its own `automerge-core-bump.yml`, so its
           # pull request merges itself once green, exactly like the TV app's.
           - ahXN00/OwnTV_Mobile
 
@@ -76,7 +76,7 @@ jobs:
       # is copied from here into the consumer, and it must be the catalogue that belongs to the
       # version being pinned — main may already carry a locale that is not in this release.
       - name: Checkout core
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.release.tag_name || github.ref }}
 
@@ -112,7 +112,8 @@ jobs:
 
           if [ -z "${GH_TOKEN:-}" ]; then
             echo "::error::CONSUMER_BUMP_TOKEN is not set on this repository."
-            echo "Add a PAT with 'repo' scope: Settings -> Secrets and variables -> Actions."
+            echo "Add a fine-grained PAT for OwnTV, OwnTV_Core and OwnTV_Mobile with Contents and Pull"
+            echo "requests read/write: Settings -> Secrets and variables -> Actions."
             exit 1
           fi
 
@@ -154,7 +155,7 @@ jobs:
           EOF
 
           cat > ../pr-body.md <<EOF
-          Core \`${VERSION}\` has been published to GitHub Packages.
+          Core \`${VERSION}\` has been published to OwnTV's Maven repository (https://ahxn00.github.io/OwnTV_Core/maven).
 
           - \`owntvCore\` moved to \`${VERSION}\` in \`gradle/libs.versions.toml\`
           - \`tools/i18n/locales.json\` refreshed from core
@@ -166,8 +167,8 @@ jobs:
           Merge once the checks are green. See the core changelog for what \`${VERSION}\` contains.
           EOF
 
-          git config user.name  "OwnTV"
-          git config user.email "xiannero@yahoo.com"
+          git config user.name  "Ashiq Hasan"
+          git config user.email "ashiq.hasan@hotmail.com"
           git commit -a --file ../commit-message.txt
 
           git push --force-with-lease origin "$BRANCH"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """MANUAL, ONE-OFF supply-chain tool: drives the Anthropic Message Batches API, the
 Claude Code CLI (``--backend claude``), the Codex CLI (``--backend codex``), or Pi
-(``--backend pi``) to seed the Phase 4a community-translation snapshot
+(``--backend pi``) to seed the community-translation snapshot
 (docs/i18n-phase4a-seed-translations.md).
 
 This is the only module under tools/i18n/ that imports ``anthropic``. It is never wired

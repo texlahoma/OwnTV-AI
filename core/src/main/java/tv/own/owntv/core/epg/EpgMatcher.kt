@@ -6,7 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Smart EPG matching (#13): pairs a channel with a guide channel by *name* when the provider's
+ * Smart EPG matching: pairs a channel with a guide channel by *name* when the provider's
  * tvg-id is missing or doesn't line up with the EPG feed's ids.
  *
  * Two pure pieces, both easy to unit-test:
@@ -78,7 +78,7 @@ object EpgMatcher {
     /**
      * Memo for [normalizeForEpg]. Normalising is four regex passes plus a token walk, and the picker
      * re-normalises the *same* channel names on every keystroke — measured at 1.9 s to rank 3,958 rows,
-     * of which the normalisation is the bulk (`C-F15`). The candidate set repeats heavily across
+     * of which the normalisation is the bulk. The candidate set repeats heavily across
      * keystrokes, so a bounded cache removes almost all of the repeat cost.
      *
      * Bounded and LRU because the auto-matcher runs this over whole catalogues during sync; an unbounded
@@ -401,7 +401,7 @@ object EpgMatcher {
     /**
      * [rankForPicker], scored across all cores.
      *
-     * Measured on the owner's TV (`C-F15`): 3,958 candidates took 1.9 s to rank on one thread, which is
+     * Measured on a real TV: 3,958 candidates took 1.9 s to rank on one thread, which is
      * two seconds of nothing happening after a keystroke. The work is pure CPU over independent rows, so
      * splitting it is free of behaviour change — the scores, the threshold partition and the final order
      * are identical, only the wall clock differs.

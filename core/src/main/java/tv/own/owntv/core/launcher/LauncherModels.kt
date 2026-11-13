@@ -32,14 +32,7 @@ data class LauncherContinuationItem(
     val year: Int? = null,
 )
 
-data class LauncherRecommendationCluster(
-    val stableKey: String,
-    val title: String,
-    val description: String? = null,
-)
-
 data class LauncherSnapshot(
     val profileId: Long,
     val continuationItems: List<LauncherContinuationItem>,
-    val recommendationClusters: List<LauncherRecommendationCluster> = emptyList(),
 )

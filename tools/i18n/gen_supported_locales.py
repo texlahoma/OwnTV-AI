@@ -11,7 +11,7 @@ Run after editing ``locales.json`` or the res tree:
 
     python3 tools/i18n/gen_supported_locales.py
 
-The emitted file is checked in; a future Phase 4 build task can re-run it automatically.
+The emitted file is checked in; CI runs ``check`` so it never drifts.
 """
 from __future__ import annotations
 
@@ -188,7 +188,7 @@ def _generate() -> tuple[str, int, int]:
     L.append(f"package {PACKAGE}")
     L.append("")
     L.append("/**")
-    L.append(" * One supported locale, as consumed by the in-app language picker (Phase 2) and the locale")
+    L.append(" * One supported locale, as consumed by the in-app language picker and the locale")
     L.append(" * runtime. Mirrors ``tools/i18n/locales.json`` exactly; ``coverage`` is computed from the")
     L.append(" * actual resource files by the generator, never stored.")
     L.append(" */")
@@ -252,7 +252,7 @@ def _generate() -> tuple[str, int, int]:
     L.append("            it.packaged && it.pickerVisible")
     L.append("    }")
     L.append("")
-    L.append("    /** A community locale is ready for manual packaging/picker promotion at 70% or above. */")
+    L.append("    /** A community locale is ready for manual packaging/picker promotion at the readiness threshold or above. */")
     L.append("    fun isTranslationReady(coverage: Int): Boolean =")
     L.append("        coverage >= TRANSLATION_READINESS_THRESHOLD_PERCENT")
     L.append("")

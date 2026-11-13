@@ -13,20 +13,17 @@
     <string name="common_ok">موافق</string>
     <string name="common_on">مفعّل</string>
     <string name="common_off">معطّل</string>
+    <string name="common_share">مشاركة</string>
     <string name="common_never">أبدًا</string>
     <string name="common_exit">خروج</string>
     <string name="common_resume">استئناف</string>
     <string name="common_start_over">المشاهدة من البداية</string>
     <string name="common_name">الاسم</string>
     <string name="common_own_tv_user">مستخدم OwnTV</string>
-    <string name="common_switch_profile">تبديل الملف الشخصي</string>
     <string name="common_proxy">الوكيل</string>
     <string name="common_title">العنوان</string>
     <string name="common_search_hint">بحث…</string>
     <string name="common_search">بحث</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">بحث</string>
     <string name="common_nav_home">الرئيسية</string>
     <string name="common_nav_live_tv">البث التلفزيوني المباشر</string>
@@ -34,16 +31,14 @@
     <string name="common_nav_series">مسلسلات</string>
     <string name="common_nav_downloads">التنزيلات</string>
     <string name="common_nav_guide">دليل البرامج</string>
+    <string name="common_nav_guide_short">الدليل</string>
     <string name="common_nav_library">المكتبة</string>
     <string name="common_nav_more">المزيد</string>
     <string name="common_cast">البث</string>
     <string name="common_nav_settings">الإعدادات</string>
     <string name="shell_no_source">لا يوجد مصدر</string>
     <string name="shell_now_playing">يُشغَّل الآن</string>
-    <string name="common_something_went_wrong">حدث خطأ ما</string>
-    <string name="common_move_instructions">▲/▼ للنقل · موافق للحفظ · رجوع للإلغاء</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -57,7 +52,7 @@
     <string name="sync_error_interrupted">قاطع الخادم عملية التنزيل. يُرجى المحاولة مرة أخرى.</string>
     <string name="sync_error_mac">رفضت البوابة عنوان MAC هذا. تحقق من عنوان MAC (ومن تاريخ التلفاز ووقته) — أو ربما انتهت صلاحية الاشتراك.</string>
     <string name="sync_error_invalid_mac">عنوان MAC غير صالح — استخدم AA:BB:CC:DD:EE:FF</string>
-    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <string name="sync_counts_success">تمت المزامنة بنجاح</string>
     <string name="sync_counts_synced">تمت مزامنة <xliff:g id="counts">%1$s</xliff:g></string>
     <string name="sync_import_warnings">تم الاستيراد مع وجود تحذيرات: <xliff:g id="phases">%1$s</xliff:g></string>
@@ -95,6 +90,8 @@
     <string name="sync_status_cancelled">أُلغيت المزامنة · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download">جارٍ تنزيل <xliff:g id="title">%1$s</xliff:g></string>
     <string name="sync_status_download_with_progress">جارٍ تنزيل <xliff:g id="title">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">جارٍ التنزيل من فئة مقفلة</string>
+    <string name="sync_status_download_locked_with_progress">جارٍ التنزيل من فئة مقفلة · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_phase_live">البث التلفزيوني المباشر</string>
     <string name="sync_phase_movies">أفلام</string>
     <string name="sync_phase_series">مسلسلات</string>
@@ -162,16 +159,16 @@
     <string name="sync_error_secure">فشل الاتصال الآمن — ربما تكون شهادة الخادم غير صالحة.</string>
     <string name="sync_error_malformed_guide">كانت بيانات دليل البرامج الواردة من الخادم بتنسيق غير صالح. ربما تم تحميل بعضها رغم ذلك — يُرجى المحاولة مرة أخرى، أو التحقق من عنوان URL الخاص بدليل البرامج الإلكتروني.</string>
     <string name="sync_error_guide_empty">هذا الدليل فارغ حاليًا. ربما لم ينشره المزوّد بعد — يرجى المحاولة لاحقًا.</string>
-    <string name="common_items_per_skip">عدد العناصر لكل تخطٍّ</string>
+    <string name="sync_error_guide_no_matching_channels">لا تتطابق أي من قنوات هذا الدليل مع قنوات قائمة التشغيل بعد. افتح دليل البرامج الإلكتروني واستخدم مطابقة دليل البرامج الإلكتروني تلقائيًا لربطها حسب الاسم.</string>
     <string name="common_minutes">دقائق</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> ميجابايت</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> غيغابايت</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">إخفاء</string>
     <string name="common_show">إظهار</string>
     <string name="common_qr_code_companion_url">رمز QR لعنوان URL المرافق</string>
     <string name="sync_status_trending_starting">اكتملت المزامنة · <xliff:g id="source">%1$s</xliff:g> · جارٍ إنشاء «الرائج الآن»</string>
-    <string name="sync_status_trending_matching">جارٍ مطابقة العناصر الرائجة مع قائمة التشغيل الخاصة بك</string>
     <string name="sync_status_trending_detail_waiting">في انتظار استجابة العناصر المرشحة من TMDB</string>
     <string name="sync_status_trending_detail_received">العناصر المرشحة من TMDB · الأفلام: <xliff:g id="movies">%1$d</xliff:g> · المسلسلات: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">فهرس عناوين المزوّد · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -192,14 +189,6 @@
         <item quantity="few">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عناصر رائجة</item>
         <item quantity="many">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصرًا رائجًا</item>
         <item quantity="other">تم استلام أحدث <xliff:g id="count">%1$d</xliff:g> عنصر رائج</item>
-    </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="zero">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="one">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="two">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="few">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="many">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">تمت مطابقة <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
     </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="zero">جارٍ إنشاء «الرائج الآن» · <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
@@ -233,4 +222,21 @@
         <item quantity="many">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقةً فقط</item>
         <item quantity="other">«الرائج الآن» مخفي · <xliff:g id="count">%1$d</xliff:g> مطابقة فقط</item>
     </plurals>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · تبديل</string>
+    <string name="shell_rail_detail_last">الأخير: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">استئناف: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">التالي: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">الإعدادات، المفضلة، النسخ الاحتياطي</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قيد التنزيل · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">صوت</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">تجاهل</string>
 </resources>

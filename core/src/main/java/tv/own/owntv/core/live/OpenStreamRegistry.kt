@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong
 /**
  * Who is currently holding a stream on which playlist.
  *
- * Multiview tiles and recordings spend the same provider connections (D11), so neither can count on
+ * Multiview tiles and recordings spend the same provider connections, so neither can count on
  * its own: the only place that knows a playlist has two tiles open *and* something recording is one
  * shared register. Callers claim before they tune and release when they stop; [connectionBudget]
  * turns the counts into an answer.

@@ -66,9 +66,19 @@ class PlayerControlsTest {
             listOf(PlayerControl.BRIGHTNESS, PlayerControl.CHANNEL_LIST),
             PlayerControl.entries.filter { it.host == ControlHost.MOBILE_ONLY },
         )
-        // Nothing is television-only any more: H3 found that the phone has a Go Live pill too, and
+        // Nothing is television-only any more: the phone has a Go Live pill too, and
         // it was the last entry claiming to be one-sided.
         assertEquals(emptyList<PlayerControl>(), PlayerControl.entries.filter { it.host == ControlHost.TV_ONLY })
+    }
+
+    @Test
+    fun `the match tools follow previous channel, in the media cluster, on both apps`() {
+        // Other channels and Match sit right after the channel-history tools.
+        listOf(true, false).forEach { tv ->
+            val media = PlayerControl.clusterFor(tv, ControlCluster.MEDIA)
+            val i = media.indexOf(PlayerControl.PREVIOUS_CHANNEL)
+            assertEquals(listOf(PlayerControl.OTHER_CHANNELS, PlayerControl.MATCH), media.subList(i + 1, i + 3))
+        }
     }
 
     @Test
@@ -87,15 +97,15 @@ class PlayerControlsTest {
     }
 
     @Test
-    fun `the controls Plan D added are in the shared order, not bolted on per app`() {
-        // H4's whole purpose: the alignment has to have held through the features built before it.
+    fun `the Multiview and Record controls are in the shared order, not bolted on per app`() {
+        // The alignment has to have held through the features built before it.
         assertTrue(PlayerControl.RECORD.onTv && PlayerControl.RECORD.onMobile)
         assertTrue(PlayerControl.MULTIVIEW.onTv && PlayerControl.MULTIVIEW.onMobile)
     }
 
     @Test
     fun `report sits last, because it is shown only while Info is open`() {
-        // The H1 decision, pinned: both apps follow the television's rule. If Report ever moves out
+        // Pinned: both apps follow the television's rule. If Report ever moves out
         // of last place, the rule it depends on has probably been forgotten.
         assertEquals(PlayerControl.REPORT, PlayerControl.entries.last())
         assertEquals(PlayerControl.INFO, PlayerControl.entries[PlayerControl.entries.size - 2])
@@ -103,7 +113,7 @@ class PlayerControlsTest {
 
     @Test
     fun `the order is the television's own, control for control`() {
-        // The reference, written out. H2 renders the television's HUD from this list, so if the two
+        // The reference, written out. the television's HUD renders from this list, so if the two
         // ever disagree something moved on a shipped screen — which is exactly what this phase is
         // meant to catch. It caught one already: RECORD and MULTIVIEW were first written into the
         // media cluster here, and the television has always had them among the tools.
@@ -116,12 +126,18 @@ class PlayerControlsTest {
                 PlayerControl.AUDIO,
                 PlayerControl.FAVOURITE,
                 PlayerControl.CATCH_UP,
+                PlayerControl.PREVIOUS_CHANNEL,
+                PlayerControl.OTHER_CHANNELS,
+                PlayerControl.MATCH,
+                PlayerControl.SOURCES,
                 PlayerControl.ENGINE,
                 PlayerControl.ASPECT,
+                PlayerControl.QUALITY,
                 PlayerControl.MINI_PLAYER,
                 PlayerControl.AUDIO_ONLY,
                 PlayerControl.MULTIVIEW,
                 PlayerControl.RECORD,
+                PlayerControl.SLEEP_TIMER,
                 PlayerControl.INFO,
                 PlayerControl.REPORT,
             ),

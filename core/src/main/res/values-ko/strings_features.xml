@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">내 사진 사용</string>
     <string name="profiles_kids">어린이 프로필</string>
     <string name="profiles_kids_description">간소화된 안전 탐색 환경</string>
+    <string name="profiles_allow_downloads">다운로드 허용</string>
+    <string name="profiles_allow_downloads_description">끄면 이 프로필에서 모든 다운로드 버튼이 숨겨집니다</string>
     <string name="profiles_remove_pin">PIN 잠금 해제</string>
     <string name="profiles_no_pin">이 프로필은 PIN 없이 열립니다</string>
     <string name="profiles_change_pin">PIN 변경(비워 두면 유지)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">만들기</string>
     <string name="profiles_save">저장</string>
     <string name="profiles_gate_title">누가 시청하나요?</string>
+    <string name="profiles_gate_subtitle">프로필마다 즐겨찾기와 기록이 따로 저장됩니다</string>
     <string name="profiles_wrong_pin">PIN이 잘못되었습니다 — 다시 시도하세요</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN을 입력하세요</string>
+    <string name="profiles_protected_edit">프로필 잠금 또는 설정 잠금이 있습니다. 변경하려면 두 PIN 중 하나를 입력하세요.</string>
     <string name="profiles_kids_badge">어린이</string>
     <string name="profiles_add">프로필 추가</string>
     <string name="profiles_title">프로필</string>
-    <string name="profiles_add_button">프로필 추가</string>
     <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” 프로필을 삭제할까요?</string>
     <string name="profiles_delete_message">이 프로필과 해당 즐겨찾기 및 시청 기록을 삭제합니다. 소스는 유지됩니다.</string>
     <string name="profiles_kids_tag">어린이</string>
@@ -32,38 +35,47 @@
     <string name="search_title">검색</string>
     <string name="search_continue">이어서 보기</string>
     <string name="search_unwatched">시청하지 않음</string>
-    <string name="search_hint">채널, 영화 및 시리즈 검색…</string>
     <string name="search_recent">최근 검색어</string>
-    <string name="search_recent_empty">최근 검색어가 여기에 표시됩니다.</string>
-    <string name="search_minimum_query">전체 항목을 검색하려면 2자 이상 입력하세요.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — 검색 결과가 없습니다.</string>
     <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g>에 아직 아무 항목도 없습니다.</string>
     <string name="search_clear">지우기</string>
     <string name="search_jump_to">바로가기</string>
-    <string name="search_watch_live">실시간으로 보기</string>
-    <string name="search_play">재생</string>
     <string name="search_open_series">시리즈 열기</string>
     <string name="search_movie">영화</string>
     <string name="search_series">시리즈</string>
     <string name="search_channels">채널</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">이어서 보기</string>
-    <string name="home_play_next">다음 에피소드 재생</string>
-    <string name="home_tune_in">실시간 시청</string>
-    <string name="home_recent_live">최근 시청한 실시간 콘텐츠</string>
+    <string name="search_on_tv">TV 프로그램</string>
+    <string name="search_go_to_channel">채널로 이동</string>
+    <string name="search_go_to_movie">영화로 이동</string>
+    <string name="search_clear_recent">최근 검색 지우기</string>
+    <string name="search_field_hint">채널, 영화, 시리즈</string>
+    <string name="search_voice">음성 검색</string>
+    <string name="search_voice_prompt">채널, 영화 또는 시리즈를 말하세요</string>
+    <string name="search_card_title">플레이리스트에서 무엇이든 찾기</string>
+    <string name="search_card_body">표시 중인 모든 플레이리스트의 채널, 영화, 시리즈입니다. 결과를 선택하면 바로 해당 위치로 이동하며, 그곳에서 재생, 다운로드하거나 옵션을 열 수 있습니다. 지금 또는 오늘 이후 방송되는 TV 프로그램도 제목으로 찾을 수 있습니다.</string>
+    <string name="search_nothing_found">‘<xliff:g id="query">%1$s</xliff:g>’에 대한 결과가 없습니다</string>
+    <string name="search_nothing_found_body">표시 중인 플레이리스트의 채널, 영화, 시리즈 이름에서 검색합니다. 숨긴 카테고리는 검색하지 않습니다. TV 프로그램은 다운로드한 편성표에서 제목으로 검색합니다.</string>
+    <string name="search_query_quoted">‘<xliff:g id="query">%1$s</xliff:g>’</string>
+    <plurals name="search_result_count">
+        <item quantity="other">결과 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="other">채널 <xliff:g id="count">%1$d</xliff:g>개 모두</item>
+    </plurals>
     <string name="profiles_default_name">프로필</string>
     <string name="launcher_recent_live_title">최근 실시간 방송</string>
     <string name="launcher_recent_live_description">최근 시청한 실시간 채널</string>
     <string name="launcher_movie_type">영화</string>
     <string name="launcher_episode_number">에피소드 <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="other">라이브러리를 불러오는 중 · 지금까지 <xliff:g id="count">%1$s</xliff:g>개</item>
+    </plurals>
+    <string name="home_library_loading_trending">지금 인기 급상승 항목은 라이브러리가 채워지는 대로 표시됩니다.</string>
     <string name="home_no_preview">아직 미리 볼 항목이 없습니다.</string>
     <string name="home_no_rows">홈 화면의 모든 행이 숨겨져 있습니다.</string>
     <string name="home_enable_rows">설정 → 홈 화면에서 행을 다시 켜세요.</string>
     <string name="home_start_watching">시청을 시작하면 여기에 시청 활동이 표시됩니다.</string>
     <string name="home_continue_empty">재생 기록이 생기면 이어서 볼 항목이 여기에 표시됩니다.</string>
     <string name="home_last_watched_now">마지막 시청: 방금 전</string>
-    <string name="home_finish_by"><xliff:g id="time">%1$s</xliff:g>에 시청 완료 예정</string>
-    <string name="home_resume">이어보기</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="other">마지막 시청: <xliff:g id="count">%1$d</xliff:g>분 전</item>
     </plurals>
@@ -73,35 +85,22 @@
     <plurals name="home_last_watched_days">
         <item quantity="other">마지막 시청: <xliff:g id="count">%1$d</xliff:g>일 전</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">카드</string>
     <string name="home_row_keep_watching">이어서 보기</string>
     <string name="home_row_continue_movies">이어서 볼 영화</string>
     <string name="home_row_continue_series">이어서 볼 시리즈</string>
     <string name="home_row_recent_channels">최근 채널</string>
     <string name="home_row_favorite_channels">즐겨찾기 채널</string>
+    <string name="home_row_favorite_movies">즐겨찾기 영화</string>
+    <string name="home_row_favorite_series">즐겨찾기 시리즈</string>
     <string name="home_row_on_now">현재 방송 중</string>
     <string name="home_row_hero_description">맨 위에 표시되는 큰 미리보기 행</string>
     <string name="home_row_continue_movies_description">재생 위치가 저장된 영화</string>
     <string name="home_row_continue_series_description">이어서 보거나 다음 에피소드를 재생할 수 있는 항목</string>
     <string name="home_row_recent_description">최근 시청한 실시간 채널</string>
     <string name="home_row_favorite_description">즐겨찾기에 추가한 실시간 채널</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · 현재 방송 중</string>
-    <string name="home_ok_to_watch">확인 버튼을 눌러 시청</string>
-    <string name="home_ok_to_browse">확인 버튼을 눌러 탐색</string>
-    <string name="home_no_programme_details">프로그램 상세 정보 없음</string>
-    <string name="home_guide_unavailable">편성표 데이터를 사용할 수 없음</string>
-    <string name="home_next">다음</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">현재 · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">다음 · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 채널</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">즐겨찾기에 추가한 영화</string>
+    <string name="home_row_favorite_series_description">즐겨찾기에 추가한 시리즈</string>
     <string name="update_title">앱 업데이트</string>
     <string name="update_checking">업데이트 확인 중…</string>
     <string name="update_whats_new">새로운 기능</string>
@@ -136,6 +135,11 @@
     <string name="home_trending_style">인기 레이아웃</string>
     <string name="home_trending_style_hero">상세 카드</string>
     <string name="home_trending_style_posters">포스터만</string>
+    <string name="home_trending_rank">트렌드 #<xliff:g id="rank">%1$d</xliff:g> · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">내 재생목록에 있음</string>
+    <string name="home_trending_style_full_bleed">전체 화면</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g>시간 <xliff:g id="minutes">%2$02d</xliff:g>분</string>
+    <string name="home_time_left"><xliff:g id="duration">%1$s</xliff:g> 남음</string>
     <string name="settings_trending_status_off">지금 인기 급상승이 꺼져 있습니다.</string>
     <string name="settings_trending_status_building">제공업체 동기화 후 지금 인기 급상승을 준비하고 있습니다.</string>
     <string name="settings_trending_status_metadata_disabled">지금 인기 급상승에는 TMDB 메타데이터가 필요합니다. TMDB만 또는 제공업체 + TMDB를 선택하세요.</string>
@@ -154,12 +158,7 @@
     </plurals>
     <string name="home_trending_movie">영화</string>
     <string name="home_trending_series">시리즈</string>
-    <string name="home_trending_section_label">지금 인기 급상승 · 동기화 스냅샷</string>
     <string name="home_trending_provider_match">제공업체 일치 항목</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> 언어 선택 항목</string>
-    <string name="home_trending_english_fallback">영어 대체 선택 항목</string>
-    <string name="home_trending_untagged_fallback">언어 태그 없는 대체 선택 항목</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> 대체 선택 항목</string>
     <string name="home_trending_why_label">이 항목이 표시되는 이유</string>
     <string name="home_trending_reason_title">TMDB 순위 #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + 제공업체 일치</string>
     <string name="home_trending_reason_preferred">선택한 <xliff:g id="language">%1$s</xliff:g> 제공업체 버전이 다른 언어의 항목보다 우선합니다.</string>
@@ -174,12 +173,12 @@
     <string name="home_trending_trailer">예고편</string>
     <string name="home_trending_more_details">상세 정보 더 보기</string>
     <string name="home_trending_all_versions">모든 버전</string>
-    <string name="home_trending_previous">이전</string>
+    <string name="home_trending_why_menu">이 작품이 여기에 있는 이유</string>
     <string name="home_trending_pause">일시중지</string>
-    <string name="home_trending_resume">이어보기</string>
-    <string name="home_trending_next">다음</string>
     <string name="home_trending_unavailable">이 버전은 더 이상 사용할 수 없습니다</string>
     <string name="recording_notification_title">녹화 중</string>
+    <string name="auto_start_notification_channel">절전 해제 시 자동 시작</string>
+    <string name="auto_start_notification_text">TV가 깨어나면 OwnTV가 열립니다</string>
     <string name="recording_failed_no_space">중지됨: 저장 공간이 없습니다</string>
     <string name="recording_failed_no_connection">제공업체에 사용 가능한 연결이 없습니다</string>
     <string name="recording_failed_clash">다른 녹화가 연결을 사용 중이었습니다</string>
@@ -188,21 +187,29 @@
     <string name="recording_failed_channel_gone">해당 채널이 재생목록에 더 이상 없습니다</string>
     <string name="recording_failed_unknown">녹화되지 않았습니다</string>
     <string name="recording_title">녹화</string>
-    <string name="recording_description">이 기기에 저장된 라이브 TV.</string>
-    <string name="recording_empty">아직 녹화가 없습니다. TV 편성표를 열고 프로그램을 선택한 뒤 녹화를 누르세요.</string>
+    <string name="recording_empty">아직 녹화된 것이 없습니다. TV 편성표에서 프로그램의 녹화를 누르거나, 채널을 길게 눌러 녹화하거나 시간을 예약하세요.</string>
     <string name="recording_group_now">녹화 중</string>
     <string name="recording_group_scheduled">예약됨</string>
     <string name="recording_group_completed">녹화됨</string>
     <string name="recording_group_failed">실패</string>
     <string name="recording_group_missed">놓침</string>
+    <string name="recording_group_series">모든 방송</string>
     <string name="recording_record">녹화</string>
     <string name="recording_stop">녹화 중지</string>
+    <string name="recording_delete_message">이 기기에서 녹화와 해당 파일을 제거합니다. 되돌릴 수 없습니다.</string>
     <string name="recording_record_series">모든 방송 녹화</string>
     <string name="recording_stop_series">모든 방송 녹화 중지</string>
     <string name="recording_from_archive">다시보기에서 녹화</string>
+    <string name="recording_schedule">녹화 예약…</string>
+    <string name="recording_schedule_hint">날짜, 시작, 종료 시간을 고르세요. 이 채널에 TV 편성표가 없어도 녹화됩니다.</string>
+    <string name="recording_schedule_start">시작</string>
+    <string name="recording_schedule_end">종료</string>
+    <string name="recording_schedule_next_day">다음 날</string>
+    <string name="recording_schedule_past">이미 지난 시간입니다</string>
     <string name="recording_scheduled_for"><xliff:g id="time">%1$s</xliff:g>에 녹화합니다</string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> 녹화 중</string>
+    <string name="recording_pill_line_locked">잠긴 카테고리에서 녹화 중</string>
     <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g>와(과) 겹칩니다</string>
     <string name="recording_settings_group">녹화</string>
     <string name="settings_recording_reserve">시청용으로 스트림 하나 남겨두기</string>
@@ -218,8 +225,13 @@
     <string name="recording_failed_encrypted">이 채널은 암호화되어 있어 녹화할 수 없습니다</string>
     <string name="recording_failed_drm">이 채널은 DRM으로 보호되어 있어 시청은 가능하지만 녹화할 수 없습니다. 이 보호는 OwnTV가 아니라 제공업체에서 적용한 것입니다.</string>
     <string name="recording_failed_metered">모바일 데이터로 녹화하지 않음</string>
+    <string name="recording_card_empty_title">아직 녹화한 항목이 없습니다</string>
+    <string name="recording_card_body">TV 편성표에서 프로그램을 골라 녹화를 선택하거나, 채널을 길게 눌러 시간을 예약하세요. 다른 것을 보는 동안에도 여기에 저장됩니다.</string>
+    <string name="recording_open_guide">TV 가이드 열기</string>
+    <plurals name="recording_card_count">
+        <item quantity="other">녹화 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
     <string name="settings_recording_mobile_data">모바일 데이터로 녹화</string>
-    <string name="settings_recording_mobile_data_description">끄면 Wi-Fi가 아닐 때 시작될 녹화는 기다리지 않고 건너뜁니다. 생방송은 다시 오지 않습니다.</string>
     <string name="settings_record_watching">보고 있는 것 녹화</string>
     <string name="settings_record_watching_description">보고 있는 채널을 저장하는 녹화 버튼을 플레이어에 추가합니다. 채널을 직접 받아오므로 녹화하는 동안 공급자의 연결을 하나 사용하며, 채널을 바꾸거나 플레이어를 나가도 계속 녹화합니다.</string>
     <string name="settings_record_watching_warning_title">연결은 하나뿐</string>
@@ -228,4 +240,289 @@
     <string name="settings_record_watching_turn_on">켜기</string>
     <string name="player_recording_conflict">제공업체가 한 번에 하나의 스트림만 허용하는데, 지금 녹화가 그것을 쓰고 있습니다.</string>
     <string name="player_keep_watching_stop_recording">계속 보기 (녹화를 중지합니다)</string>
+    <string name="sports_channel_goal_alerts">골 알림</string>
+    <string name="sports_channel_live_match">실시간 경기</string>
+    <string name="sports_channel_match_reminders">경기 알림</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ 골! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">위킷! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">레드카드 · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">하프타임 · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">경기 종료 · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">킥오프 · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">연기 · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">취소 · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">점수 정정 · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="other"><xliff:g id="minutes">%1$d</xliff:g>분 후 킥오프: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on"><xliff:g id="channel">%1$s</xliff:g>에서 방송</string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="other"><xliff:g id="channel">%1$s</xliff:g> 외 <xliff:g id="count">%2$d</xliff:g>개</item>
+    </plurals>
+    <string name="sports_action_stop_updates">업데이트 중지</string>
+    <string name="sports_title">스포츠</string>
+    <plurals name="sports_hub_live">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>경기 생중계</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>경기</item>
+    </plurals>
+    <string name="sports_scores_espn">점수: ESPN</string>
+    <string name="sports_my_teams">내 팀</string>
+    <string name="sports_live_now">지금 생중계</string>
+    <string name="sports_not_on_channels">내 채널에서 방송 안 함</string>
+    <string name="sports_on_channels_now">지금 내 채널의 스포츠</string>
+    <string name="sports_on_channels_now_mobile">내 채널의 스포츠</string>
+    <string name="sports_on_channels_now_hint">내 편성표 기준 — ESPN이 다루지 않는 종목 포함</string>
+    <string name="sports_starting_soon">곧 시작</string>
+    <string name="sports_hint_match_page">경기 페이지</string>
+    <string name="sports_hint_follow_remind">팔로우 · 알림</string>
+    <string name="sports_hint_day_matches">그날 경기</string>
+    <string name="sports_hint_day">날짜</string>
+    <string name="sports_hint_week">주</string>
+    <string name="sports_hint_show_score">점수 보기</string>
+    <string name="sports_hint_back_to_day">날짜로 돌아가기</string>
+    <string name="sports_hint_open_league">리그 열기</string>
+    <string name="sports_hint_sport_chips">종목 버튼</string>
+    <string name="sports_hint_league_chips">리그 버튼</string>
+    <string name="sports_hint_follow_unfollow">팔로우 · 팔로우 취소</string>
+    <string name="sports_reminder_set">알림</string>
+    <string name="sports_until"><xliff:g id="time">%1$s</xliff:g>까지</string>
+    <string name="sports_set"><xliff:g id="set">%1$d</xliff:g>세트</string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> 오버</string>
+    <string name="sports_empty_nothing">오늘 팔로우한 경기가 없습니다</string>
+    <string name="sports_empty_unreachable">지금은 점수를 가져올 수 없습니다. 채널은 계속 이용할 수 있습니다.</string>
+    <string name="sports_paused">점수 일시 중지 — 몇 분 후 다시 시도합니다</string>
+    <string name="sports_sport_soccer">축구</string>
+    <string name="sports_sport_basketball">농구</string>
+    <string name="sports_sport_tennis">테니스</string>
+    <string name="sports_sport_cricket">크리켓</string>
+    <string name="sports_sport_hockey">아이스하키</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">종합격투기</string>
+    <string name="sports_sport_baseball">야구</string>
+    <string name="sports_sport_golf">골프</string>
+    <string name="sports_sport_rugby">럭비</string>
+    <string name="sports_sport_rugby_league">럭비 리그</string>
+    <string name="sports_sport_aussie_rules">오스트레일리안 풋볼</string>
+    <string name="sports_sport_volleyball">배구</string>
+    <string name="sports_sport_lacrosse">라크로스</string>
+    <string name="sports_sport_handball">핸드볼</string>
+    <string name="sports_sport_motorsport">모터스포츠</string>
+    <string name="sports_sport_darts">다트</string>
+    <string name="sports_sport_snooker">스누커</string>
+    <string name="sports_sport_cycling">사이클</string>
+    <string name="sports_sport_combat">격투기</string>
+    <string name="sports_sport_american_football">미식축구</string>
+    <string name="sports_sport_athletics">육상</string>
+    <string name="sports_sport_winter">동계 스포츠</string>
+    <string name="sports_sport_other">스포츠</string>
+    <string name="sports_tab_timeline">타임라인</string>
+    <string name="sports_tab_stats">통계</string>
+    <string name="sports_tab_lineups">라인업</string>
+    <string name="sports_tab_table">순위</string>
+    <string name="sports_following">팔로잉</string>
+    <string name="sports_follow">팔로우</string>
+    <string name="sports_event_goal">골 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">자책골 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">페널티킥 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">옐로카드 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">레드카드 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">교체 · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">도움 <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">위킷 · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">킥오프</string>
+    <string name="sports_event_half_time">하프타임</string>
+    <string name="sports_event_full_time">경기 종료</string>
+    <string name="sports_stat_red_cards">레드카드</string>
+    <string name="sports_watch_live">실시간 보기</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="other">실시간 보기 · <xliff:g id="count">%1$d</xliff:g>개 채널</item>
+    </plurals>
+    <string name="sports_language_first"><xliff:g id="language">%1$s</xliff:g> 우선 · 설정 기준</string>
+    <string name="sports_any_country">모든 국가</string>
+    <string name="sports_reason_guide">편성표: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">이벤트 채널 · 이름에 두 팀 포함</string>
+    <string name="sports_reason_pick"><xliff:g id="competition">%1$s</xliff:g>에 선택한 채널</string>
+    <string name="sports_reason_likely">주로 <xliff:g id="competition">%1$s</xliff:g> 방송</string>
+    <string name="sports_confirmed">편성표로 확인됨</string>
+    <plurals name="sports_hidden">
+        <item quantity="other">+ 필터로 <xliff:g id="count">%1$d</xliff:g>개 숨김</item>
+    </plurals>
+    <string name="sports_watch_full_screen">전체 화면으로 보기</string>
+    <string name="sports_preview_another">다른 채널 미리보기</string>
+    <string name="sports_always_use"><xliff:g id="competition">%1$s</xliff:g>에 항상 사용</string>
+    <string name="sports_filter_title">채널 필터</string>
+    <string name="sports_showing_of"><xliff:g id="total">%2$d</xliff:g>개 중 <xliff:g id="shown">%1$d</xliff:g>개 표시</string>
+    <string name="sports_filter_country">국가</string>
+    <string name="sports_filter_match">경기</string>
+    <string name="sports_unknown">알 수 없음</string>
+    <string name="sports_any">전체</string>
+    <string name="sports_all_playlists">모든 재생목록</string>
+    <string name="sports_quality_hd">HD 이상</string>
+    <string name="sports_quality_fhd">FHD 이상</string>
+    <string name="sports_quality_uhd">4K만</string>
+    <string name="sports_only_confirmed">편성표로 확인된 채널만</string>
+    <string name="sports_only_confirmed_description">‘가능성 있음’ 및 기억한 채널 숨기기</string>
+    <string name="sports_only_confirmed_mobile">편성표 확인만</string>
+    <string name="sports_remember_filters">모든 경기에 이 필터 기억</string>
+    <string name="sports_remember_filters_description">이 프로필의 설정 → 스포츠에 저장</string>
+    <string name="sports_remember_filters_mobile">모든 경기에 기억</string>
+    <plurals name="sports_show_channels">
+        <item quantity="other">채널 <xliff:g id="count">%1$d</xliff:g>개 보기</item>
+    </plurals>
+    <string name="sports_filter_only_this">이것만</string>
+    <string name="sports_filter_toggle">전환</string>
+    <string name="sports_goal_toast">팔로우한 팀의 골</string>
+    <string name="sports_switch">전환</string>
+    <string name="sports_other_channels">다른 채널</string>
+    <string name="sports_other_channels_count">다른 채널 · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">이 경기의 다른 채널</string>
+    <string name="sports_playing_now">재생 중</string>
+    <string name="sports_switch_channel">채널 전환</string>
+    <string name="sports_tab_fixtures">일정</string>
+    <string name="sports_tab_results">결과</string>
+    <string name="sports_tab_scores">점수</string>
+    <string name="sports_tab_calendar">캘린더</string>
+    <string name="sports_tab_leagues">리그</string>
+    <string name="sports_previous_month">이전 달</string>
+    <string name="sports_next_month">다음 달</string>
+    <string name="sports_next">다음: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">다음</string>
+    <string name="sports_no_table_series">순위표 없음 — 시리즈가 매주 바뀝니다</string>
+    <string name="sports_follow_league">리그 팔로우</string>
+    <string name="sports_unfollow_league">리그 팔로우 취소</string>
+    <string name="sports_no_matches_on"><xliff:g id="day">%1$s</xliff:g>에는 내 종목의 경기가 없습니다</string>
+    <string name="sports_nothing_on_day">이날은 일정이 없습니다</string>
+    <string name="sports_nothing_in_sport">이날은 <xliff:g id="sport">%1$s</xliff:g> 일정이 없습니다</string>
+    <string name="sports_change_leagues_hint">설정 → 스포츠에서 리그를 추가하거나 삭제하세요</string>
+    <string name="sports_loading_month"><xliff:g id="month">%1$s</xliff:g> 불러오는 중…</string>
+    <string name="sports_offline_saved"><xliff:g id="time">%1$s</xliff:g>에 저장된 내용 표시 중 — ESPN에 연결할 수 없습니다</string>
+    <string name="sports_team_page">팀 페이지</string>
+    <string name="sports_next_match">다음 경기</string>
+    <string name="sports_last_five">최근 5경기</string>
+    <string name="sports_league_position">리그 순위</string>
+    <string name="sports_in_my_teams">내 팀에 있음</string>
+    <string name="sports_open_match_page">경기 페이지 열기</string>
+    <string name="sports_open_team_page">팀 페이지 열기</string>
+    <string name="sports_my_teams_leagues">내 팀이 뛰는 리그</string>
+    <string name="sports_tab_drivers">드라이버</string>
+    <string name="sports_tab_constructors">컨스트럭터</string>
+    <string name="sports_tab_races">레이스</string>
+    <string name="sports_tab_rankings">랭킹</string>
+    <string name="sports_tab_matches">경기</string>
+    <string name="sports_next_race_weekend">다음 레이스 주말</string>
+    <string name="sports_last_weekend">지난 주말</string>
+    <string name="sports_session_practice_1">연습 주행 1</string>
+    <string name="sports_session_practice_2">연습 주행 2</string>
+    <string name="sports_session_practice_3">연습 주행 3</string>
+    <string name="sports_session_sprint_qualifying">스프린트 예선</string>
+    <string name="sports_session_qualifying">예선</string>
+    <string name="sports_session_sprint">스프린트</string>
+    <string name="sports_session_race">결승</string>
+    <string name="sports_table_team">팀</string>
+    <string name="sports_table_played">경기</string>
+    <string name="sports_table_won">승</string>
+    <string name="sports_table_drawn">무</string>
+    <string name="sports_table_lost">패</string>
+    <string name="sports_table_difference">득실</string>
+    <string name="sports_table_points">승점</string>
+    <string name="sports_table_form">최근</string>
+    <string name="sports_this_matchday">이번 라운드</string>
+    <string name="sports_settings_what">표시 항목</string>
+    <string name="sports_show_in_menu">메뉴에 스포츠 표시</string>
+    <string name="sports_show_in_menu_description">기본값 켜짐, 재생목록 유무와 관계없음</string>
+    <string name="sports_leagues">종목 및 리그</string>
+    <plurals name="sports_league_count">
+        <item quantity="other">리그 <xliff:g id="count">%1$d</xliff:g>개</item>
+    </plurals>
+    <string name="sports_spoiler_free">스포일러 방지</string>
+    <string name="sports_spoiler_free_description">OK를 누를 때까지 점수 숨기기</string>
+    <string name="sports_spoiler_free_description_mobile">점수를 탭하면 표시</string>
+    <string name="sports_settings_watching">시청</string>
+    <string name="sports_languages">선호 해설 언어</string>
+    <string name="sports_languages_mobile">해설 언어</string>
+    <string name="sports_languages_description">‘실시간 보기’에서 먼저 표시</string>
+    <string name="sports_countries">선호 국가</string>
+    <string name="sports_countries_description">‘DE|’ 같은 채널 접두사 기준</string>
+    <string name="sports_picture_description">이보다 낮은 채널 숨기기</string>
+    <string name="sports_settings_while_watching">시청 중</string>
+    <string name="sports_score_info_bar">정보 표시줄에 점수</string>
+    <string name="sports_score_info_bar_description">표시줄이 열려 있을 때만 표시되어 골을 미리 알리지 않음</string>
+    <string name="sports_score_info_bar_description_mobile">표시줄이 열려 있을 때만</string>
+    <string name="sports_goal_alerts_description">내 팀, 다른 것을 볼 때</string>
+    <string name="sports_match_reminders_description">킥오프 전, 최적의 채널과 함께</string>
+    <string name="sports_remembered_channels">기억한 채널</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · 외 <xliff:g id="count">%3$d</xliff:g>개</item>
+    </plurals>
+    <string name="sports_show_likely">‘가능성 있음’ 채널 표시</string>
+    <string name="sports_show_likely_description">편성표 확인이 없는 스포츠 채널</string>
+    <string name="sports_settings_data">데이터</string>
+    <string name="sports_live_refresh">실시간 새로고침</string>
+    <string name="sports_live_refresh_description">스포츠 화면이나 점수가 표시될 때만</string>
+    <string name="sports_about">스포츠 데이터 정보</string>
+    <string name="sports_about_summary">점수: ESPN · 채널: 내 재생목록과 편성표</string>
+    <string name="sports_alerts_when_closed">OwnTV가 닫혀 있을 때 알림</string>
+    <string name="sports_alerts_when_closed_description">알림 권한을 한 번 요청합니다</string>
+    <string name="sports_alert_me_about">알림 받을 항목</string>
+    <string name="sports_kind_goals">골과 위킷</string>
+    <string name="sports_kind_kickoff_full_time">킥오프와 경기 종료</string>
+    <string name="sports_alerts_for">대상</string>
+    <string name="sports_followed_leagues">팔로우한 리그</string>
+    <string name="sports_followed_leagues_description">모든 경기, 많을 수 있음</string>
+    <string name="sports_live_card">실시간 점수 카드</string>
+    <string name="sports_live_card_offer">실시간 점수 카드 제공</string>
+    <string name="sports_live_card_description">경기 종료까지 30초마다 갱신, 경기 페이지에서 시작</string>
+    <string name="sports_alerts_footnote">OwnTV가 닫혀 있어도 알림은 보통 1분 안에 도착합니다. 휴대전화가 화면이 꺼진 채 오래 움직이지 않으면 Android가 최대 약 15분까지 늦출 수 있습니다. 실시간 점수 카드는 늦어지지 않습니다.</string>
+    <string name="sports_search_teams">팀, 선수, 리그 검색</string>
+    <string name="sports_suggested">시청 기록 기반 추천</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="other">이 팀의 경기를 <xliff:g id="count">%1$d</xliff:g>번 시청함</item>
+    </plurals>
+    <string name="sports_league_label">리그</string>
+    <string name="sports_no_playlist_title">경기를 보려면 재생목록을 추가하세요</string>
+    <string name="sports_no_playlist_body">점수, 순위, 알림은 재생목록 없이도 작동합니다. 재생목록이 있으면 OwnTV가 이 경기를 방송하는 모든 채널을 찾습니다.</string>
+    <string name="sports_add_playlist">재생목록 추가</string>
+    <string name="sports_home_row">실시간 스포츠</string>
+    <string name="sports_home_row_description">팔로우한 경기, 생중계 중이거나 곧 시작할 때</string>
+    <string name="sports_empty_nothing_followed">아직 선택한 종목이나 리그가 없습니다</string>
+    <string name="sports_empty_choose_in">설정 → 앱 → 스포츠 → 종목 및 리그에서 선택하세요.</string>
+    <string name="sports_load_time_warning">선택한 종목과 리그가 많을수록 불러오기와 구성에 시간이 더 걸립니다.</string>
+    <string name="sports_sport_buttons">종목 버튼</string>
+    <string name="sports_sport_buttons_mine">내 종목</string>
+    <string name="sports_sport_buttons_all">모든 종목</string>
+    <string name="sports_sport_buttons_description">내 종목: 선택한 것만. 모든 종목: OwnTV가 아는 모든 리그이며 불러오는 데 더 오래 걸립니다.</string>
+    <string name="sports_auto_rebuild">자동 다시 구성</string>
+    <string name="sports_auto_rebuild_description">점수, 경기 상세 정보, 순위표를 자동으로 다시 가져오는 주기</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>시간마다</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">앱을 시작할 때마다</string>
+    <string name="sports_calendar_refresh">캘린더 새로고침</string>
+    <string name="sports_calendar_refresh_description">저장된 달을 다시 가져오는 주기</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>일마다</item>
+    </plurals>
+    <string name="sports_find_channels">채널 찾기</string>
+    <string name="sports_find_channels_description">편성표와 채널 이름에서 이 경기를 찾습니다. 재생목록이 크면 잠시 걸릴 수 있습니다.</string>
+    <string name="sports_finding_channels">채널을 검색하는 중…</string>
+    <string name="sports_strict_filter">엄격한 필터</string>
+    <string name="sports_strict_filter_description">켜기: 필터를 통과한 채널만 표시합니다. 끄기: 모든 채널을 표시하고 통과한 채널을 먼저 보여 줍니다.</string>
+    <string name="sports_rebuilding">스포츠 다시 구성 중…</string>
+    <string name="sports_rebuild_failed">스포츠 데이터를 업데이트하지 못했습니다</string>
+    <string name="sports_refresh_data_now">지금 스포츠 데이터 새로 고침</string>
+    <string name="sports_last_updated">마지막 업데이트: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">채널은 <xliff:g id="time">%1$s</xliff:g>부터(경기 시작 30분 전) 찾을 수 있습니다.</string>
+    <string name="sports_find_channels_ended">이 경기는 끝나서 찾을 채널이 없습니다.</string>
+    <string name="sports_tab_broadcasts">중계</string>
+    <string name="sports_broadcasts_guide">내 편성표</string>
+    <string name="sports_broadcasts_espn">ESPN 제공(미국만)</string>
+    <string name="sports_broadcasts_find_first">채널 찾기로 이 경기를 중계하는 편성표 채널을 확인하세요.</string>
+    <string name="sports_broadcasts_none">없음</string>
+    <string name="sports_move_instructions">▲/▼ 선택 · OK 들기/놓기 · 끝나면 저장</string>
 </resources>

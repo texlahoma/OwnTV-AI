@@ -5,6 +5,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import android.util.Log
+import androidx.core.content.edit
 import org.json.JSONObject
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -13,17 +14,17 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /**
- * Per-profile OpenSubtitles session storage (subtitle plan §5.4/§5.5, review R5).
+ * Per-profile OpenSubtitles session storage.
  *
  * Each profile's blob (username, optional password, token, API host, account metadata) is sealed
  * with an Android Keystore AES-256-GCM key that never leaves secure hardware, and the ciphertext
  * sits in a private SharedPreferences file. The password is present only when the user opted in
- * to "Stay signed in" (R5) — otherwise only the token is stored and expiry means manual sign-in.
+ * to "Stay signed in" — otherwise only the token is stored and expiry means manual sign-in.
  *
- * No insecure fallback (plan §5.4): if the Keystore key is missing/reset or a blob fails to
+ * No insecure fallback: if the Keystore key is missing/reset or a blob fails to
  * decrypt (GCM tag mismatch), the stored session is erased and the profile is simply signed out.
  *
- * Logging rule: never log usernames, passwords, tokens, or blob contents (plan §12).
+ * Logging rule: never log usernames, passwords, tokens, or blob contents.
  */
 class OpenSubtitlesAuthStore(context: Context) {
 
@@ -57,15 +58,15 @@ class OpenSubtitlesAuthStore(context: Context) {
     /** Seals and stores [session] for [profileId]. On any crypto failure nothing is written. */
     fun save(profileId: Long, session: Session) {
         runCatching {
-            prefs.edit().putString(key(profileId), encrypt(encode(session))).apply()
+            prefs.edit { putString(key(profileId), encrypt(encode(session))) }
         }.onFailure {
             Log.w(TAG, "could not store session for profile $profileId: ${it.javaClass.simpleName}")
         }
     }
 
-    /** Permanent erasure for sign-out and profile deletion (plan §5.5). */
+    /** Permanent erasure for sign-out and profile deletion. */
     fun erase(profileId: Long) {
-        prefs.edit().remove(key(profileId)).apply()
+        prefs.edit { remove(key(profileId)) }
     }
 
     private fun key(profileId: Long) = "profile_$profileId"

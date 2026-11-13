@@ -33,7 +33,7 @@ class HeroPreviewEngine(
     /** True while another engine (mpv) already holds a stream — used for the one-session guard. */
     private val streamInUse: () -> Boolean = { false },
 ) {
-    /** Mirrors Settings → Video player → Hardware decoding, like every other engine. Read at [build]
+    /** Mirrors Settings → Picture → Hardware decoding, like every other engine. Read at [build]
      *  time; a change rebuilds on the next preview (see the decode-path check in [play]). */
     @Volatile private var hwDecodingEnabled = true
 
@@ -97,7 +97,7 @@ class HeroPreviewEngine(
         override fun onPlayerError(error: PlaybackException) {
             android.util.Log.w(TAG, "Hero preview error: ${error.errorCodeName}", error)
             // HTTP 458 = "account session in use": the provider allows one stream at a time. Remember it
-            // so every engine (Live preview included) stops competing for that single session (F19d).
+            // so every engine (Live preview included) stops competing for that single session.
             currentUrl?.let { url -> if (httpStatusOf(error) == 458) LiveStreamQuirks.rememberSessionLimit(url) }
             noFrameWatchdog.disarm()
             hasStarted = false
@@ -127,7 +127,7 @@ class HeroPreviewEngine(
      *  the one place in the app that gets a 403 while the player itself plays the item fine. */
     fun play(url: String, seekToMs: Long = 0L, userAgent: String? = null, httpHeaders: String? = null) {
         // One-session provider with its single stream already in use: previewing here would knock the
-        // user's own playback off the air (or just fail with a 458). Stay on the poster instead (F19d) —
+        // user's own playback off the air (or just fail with a 458). Stay on the poster instead —
         // the same rule the Live preview pane follows.
         if (streamInUse() && LiveStreamQuirks.isSingleSession(url)) {
             stop()
@@ -220,6 +220,7 @@ class HeroPreviewEngine(
             .setRenderersFactory(ownTVRenderers(context, forceStereo = true, softwareFirst = !hwDecodingEnabled))
             .setMediaSourceFactory(DefaultMediaSourceFactory(dataSource))
             .setLoadControl(loadControl)
+            .setAudioAttributes(OWNTV_MEDIA_AUDIO, false)
             .build()
             .apply {
                 // The preview is silent by definition. `volume = 0f` still decoded the audio track and

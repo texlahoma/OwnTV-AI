@@ -13,20 +13,17 @@
     <string name="common_ok">OK</string>
     <string name="common_on">Be</string>
     <string name="common_off">Ki</string>
+    <string name="common_share">Megosztás</string>
     <string name="common_never">Soha</string>
     <string name="common_exit">Kilépés</string>
     <string name="common_resume">Folytatás</string>
     <string name="common_start_over">Újrakezdés</string>
     <string name="common_name">Név</string>
     <string name="common_own_tv_user">OwnTV-felhasználó</string>
-    <string name="common_switch_profile">Profilváltás</string>
     <string name="common_proxy">Proxy</string>
     <string name="common_title">Cím</string>
     <string name="common_search_hint">Keresés…</string>
     <string name="common_search">Keresés</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">Keresés</string>
     <string name="common_nav_home">Kezdőlap</string>
     <string name="common_nav_live_tv">Élő TV</string>
@@ -34,16 +31,14 @@
     <string name="common_nav_series">Sorozatok</string>
     <string name="common_nav_downloads">Letöltések</string>
     <string name="common_nav_guide">Műsorújság</string>
+    <string name="common_nav_guide_short">Műsor</string>
     <string name="common_nav_library">Könyvtár</string>
     <string name="common_nav_more">Továbbiak</string>
     <string name="common_cast">Átküldés</string>
     <string name="common_nav_settings">Beállítások</string>
     <string name="shell_no_source">Nincs forrás</string>
     <string name="shell_now_playing">Most játszott</string>
-    <string name="common_something_went_wrong">Valami hiba történt</string>
-    <string name="common_move_instructions">▲/▼ mozgatás · OK mentés · Vissza megszakítás</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -87,8 +82,9 @@
     <string name="sync_status_cancelled">Szinkronizálás megszakítva · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download"><xliff:g id="title">%1$s</xliff:g> letöltése</string>
     <string name="sync_status_download_with_progress"><xliff:g id="title">%1$s</xliff:g> letöltése · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">Letöltés zárolt kategóriából</string>
+    <string name="sync_status_download_locked_with_progress">Letöltés zárolt kategóriából · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_status_trending_starting">Szinkronizálás kész · <xliff:g id="source">%1$s</xliff:g> · Most felkapott összeállítása</string>
-    <string name="sync_status_trending_matching">Felkapott elemek párosítása a lejátszási listáddal</string>
     <string name="sync_status_trending_detail_waiting">Várakozás a TMDB jelöltek válaszára</string>
     <string name="sync_status_trending_detail_received">TMDB-jelöltek · Filmek: <xliff:g id="movies">%1$d</xliff:g> · Sorozatok: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">Szolgáltatói címindex · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -105,10 +101,6 @@
     <plurals name="sync_status_trending_received">
         <item quantity="one">Megérkezett a legfrissebb <xliff:g id="count">%1$d</xliff:g> felkapott elem</item>
         <item quantity="other">Megérkezett a legfrissebb <xliff:g id="count">%1$d</xliff:g> felkapott elem</item>
-    </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="one">Párosítva: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">Párosítva: <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
     </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="one">Most felkapott összeállítása · <xliff:g id="count">%1$d</xliff:g> találat</item>
@@ -164,13 +156,27 @@
     <string name="sync_error_server">A kiszolgálón hiba történt. Kérjük, próbáld újra később.</string>
     <string name="sync_error_secure">A biztonságos kapcsolat nem jött létre — lehet, hogy a kiszolgáló tanúsítványa érvénytelen.</string>
     <string name="sync_error_malformed_guide">A kiszolgálóról érkező műsorújság-adatok hibásak voltak. Egy részük így is betöltődhetett — kérjük, próbáld újra, vagy ellenőrizd az EPG URL-t.</string>
-    <string name="common_items_per_skip">Elemek ugrásonként</string>
     <string name="common_minutes">Perc</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> GB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Elrejtés</string>
     <string name="common_show">Megjelenítés</string>
     <string name="common_qr_code_companion_url">QR-kód a társalkalmazás URL-jéhez</string>
     <string name="sync_error_guide_empty">Ez a műsorújság jelenleg üres. Lehet, hogy a szolgáltató még nem tette közzé — próbáld meg később.</string>
+    <string name="sync_error_guide_no_matching_channels">A műsorújság egyik csatornája sem egyezik még a lejátszási listád csatornáival. Nyisd meg a Műsorújságot, és az EPG automatikus párosítása gombbal párosítsd őket név szerint.</string>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · váltás</string>
+    <string name="shell_rail_detail_last">Utoljára: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">Folytatás: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">Következő: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">Beállítások, kedvencek, biztonsági mentés</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> letöltés folyamatban · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> letöltés folyamatban · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">Hang</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">Elvetés</string>
 </resources>

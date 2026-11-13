@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * D3 — [BulkInsertHelper] drops a table's non-unique indexes for a bulk insert and restores the
+ * [BulkInsertHelper] drops a table's non-unique indexes for a bulk insert and restores the
  * *canonical* set from [OwnTVDatabase.EXPECTED_NON_UNIQUE_INDEXES]. A table it is willing to drop
  * but which has no canonical entry would therefore lose its indexes permanently — silently, until a
  * later migration's schema validation crash-loops the app on upgrade. These tests pin the contract

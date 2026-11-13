@@ -38,6 +38,20 @@
     <string name="player_live_offset">\u2212<xliff:g id="offset">%1$s</xliff:g></string>
     <!-- Translators: Button on the player controls that jumps from the rewound archive back to the live broadcast. Keep this very short (14 characters maximum) \u2014 it sits on a small pill on the remote-driven player bar. -->
     <string name="player_go_live">Go live</string>
+    <!-- Translators: Popup title when the user returns to a live channel whose saved copy (timeshift) was kept while they were away. Buttons: common_resume and player_go_live. -->
+    <string name="player_timeshift_resume_title">Continue where you left off?</string>
+    <!-- Translators: Message of player_timeshift_resume_title. -->
+    <string name="player_timeshift_resume_message">This channel was saved while you were away.</string>
+    <!-- Translators: Action that tunes back to the channel watched before the current one, like a TV remote's "last channel" button. Shown in Remote shortcuts and read out for the phone player's button. -->
+    <string name="player_previous_channel">Previous channel</string>
+    <!-- Translators: Player button: the other versions of the channel playing (the same channel in another quality, category or playlist), to switch to. Keep it short. -->
+    <string name="player_tool_sources">Sources</string>
+    <!-- Translators: Shown in the Sources list when the channel playing has no other version. -->
+    <string name="player_sources_none">No other version of this channel was found.</string>
+    <!-- Translators: Phone live player button that steps to the next channel in the list being watched, wrapping round at the end. Read out by screen readers. -->
+    <string name="player_next_channel_in_list">Next channel</string>
+    <!-- Translators: Phone live player button that steps back one channel in the list being watched, wrapping round at the start. Must differ from "Previous channel" (player_previous_channel), which returns to the last channel watched; both buttons are on the same screen. -->
+    <string name="player_previous_channel_in_list">Previous channel in list</string>
     <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
     <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
@@ -60,6 +74,8 @@
     <string name="player_tool_speed">Speed</string>
     <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Aspect</string>
+    <!-- Translators: Player tool bar button and menu title: pick the picture quality (resolution) of the stream. -->
+    <string name="player_tool_quality">Quality</string>
     <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_mini">Mini</string>
     <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
@@ -85,6 +101,8 @@
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Retrying in <xliff:g id="seconds">%3$d</xliff:g>s.</string>
     <!-- Translators: Substituted as the reason in player_provider_retry_after when the provider gave no message of its own. -->
     <string name="player_provider_busy">The provider is busy.</string>
+    <!-- Translators: Shown under the loading spinner when a live channel that was playing has been frozen for a while and the player is reconnecting by itself (no action needed). -->
+    <string name="player_reconnecting">Stream interrupted. Reconnecting…</string>
     <!-- Translators: Dialog title for the audio track selection dialog in the player HUD. -->
     <string name="player_audio_track">Audio Track</string>
     <!-- Translators: Dialog title for the subtitle track selection dialog in the player HUD. -->
@@ -143,8 +161,6 @@
     <string name="player_play_now">Play now</string>
     <!-- Translators: Dialog title for the volume adjustment dialog in the player HUD. -->
     <string name="player_volume">Volume</string>
-    <!-- Translators: Name of the player-engine toggle button in the player control bar, shown while it has focus. It switches playback between the two video engines. -->
-    <string name="player_control_engine">Player engine</string>
     <!-- Translators: Button in the volume dialog to unmute audio. Shown when volume is currently 0. -->
     <string name="player_unmute">Unmute</string>
     <!-- Translators: Button in the volume dialog to mute audio. Shown when volume is currently audible. -->
@@ -177,6 +193,8 @@
     <string name="player_switch_exo">Switched to ExoPlayer</string>
     <!-- Translators: Toast message shown briefly when the user switches the video engine to mpv. "MPV" is a brand name. -->
     <string name="player_switch_mpv">Switched to MPV</string>
+    <!-- Translators: One-time hint over the live player when a channel keeps dropping frames on the ExoPlayer engine. "MPV" is the other engine's brand name; the player bar has a button that switches to it. -->
+    <string name="player_smoothness_hint">This channel is dropping frames. Switching the player to MPV may play it more smoothly.</string>
     <!-- Translators: Error message when image-based subtitles are incompatible with the video\'s audio format. -->
     <string name="player_error_image_subtitle_audio">Image subtitles aren\'t available for this video\'s audio format.</string>
     <!-- Translators: Error message when both ExoPlayer and mpv fail. "ExoPlayer" and "mpv" are engine brand names. Shown in player error overlay and toast. -->
@@ -201,10 +219,6 @@
     <string name="player_error_image_show">Couldn\'t show image subtitles for this file.</string>
     <!-- Translators: Toast when an external player cannot open the stream URL. -->
     <string name="player_external_could_not_open">Could not open this stream.</string>
-    <!-- Translators: Android Intent chooser title when multiple external players can handle the stream. -->
-    <string name="player_external_play_with">Play with</string>
-    <!-- Translators: Android Intent chooser title with channel/programme context. "channel" is the channel name, "programme" is the programme title. The middle dot is a visual separator. -->
-    <string name="player_external_play_with_item">Play \u201c<xliff:g id="channel">%1$s</xliff:g> \u00b7 <xliff:g id="programme">%2$s</xliff:g>\u201d with\u2026</string>
     <!-- Translators: Toast when no external player app is installed. "VLC" and "MX Player" are brand names. -->
     <string name="player_external_not_found">No external player found \u2014 install VLC or MX Player.</string>
     <!-- Translators: Error when audio plays but video cannot be rendered on this device. -->
@@ -219,10 +233,14 @@
     <string name="player_error_no_internet">No internet connection. Check your network and try again.</string>
     <!-- Translators: Generic stream playback error with an optional hint. "hint" is a hint string (may be empty or contain player_error_custom_user_agent text). -->
     <string name="player_error_stream_unavailable">Couldn\'t play this stream. The source may be offline or use an unsupported format. <xliff:g id="hint">%1$s</xliff:g></string>
+    <!-- Translators: Error title when the provider refuses playback because the same account is already streaming elsewhere (HTTP 458). "Retry" is the button below it. -->
+    <string name="player_error_account_in_use">This account is already playing on another device or app. Stop it there, then press Retry.</string>
     <!-- Translators: Error when mpv cannot open or decode the file. "mpv" is an engine brand name. -->
     <string name="player_error_mpv_open_decode">mpv couldn\'t open or decode this file.</string>
     <!-- Translators: Error when mpv fails to start the stream after multiple retries. -->
     <string name="player_error_mpv_stream_never_started">The stream never started in mpv after several retries.</string>
+    <!-- Translators: Player error for a channel or film the playlist marks as protected with Apple's FairPlay DRM. No Android device can decrypt FairPlay, so this is a limit of the device, not of the app or the provider. Keep "Apple FairPlay", "Android" and "Apple" as they are. -->
+    <string name="player_error_fairplay">This stream is protected by Apple FairPlay, which Android devices can\'t play. The playlist is made for Apple devices.</string>
     <!-- Translators: Notification when the audio output cannot do surround and falls back to stereo. -->
     <string name="player_error_surround">This audio output can\'t do surround \u2014 switched to stereo.</string>
     <!-- Translators: Error when hardware decoding fails and software decoding cannot handle the resolution. "resolution" is a string such as "4K" or "3840x2160". This is a technical diagnostic, not actionable advice for most users. -->
@@ -264,7 +282,7 @@
     <!-- Translators: Fallback label for a subtitle track when it has no name or language. "number" is the track index. -->
     <string name="player_subtitle_track_number">Subtitle <xliff:g id="number">%1$d</xliff:g></string>
     <!-- Translators: Visible middle-dot separator between inline metadata segments in the player HUD, stream info overlay, launcher metadata, and subtitle track labels. -->
-    <string name="player_metadata_separator"> \u00b7 </string>
+    <string name="player_metadata_separator">" · "</string>
     <!-- Translators: Title of the technical stream info overlay shown in the player. -->
     <string name="player_stream_info">Stream info</string>
     <!-- Translators: Row label in the stream info overlay for the video engine (ExoPlayer/mpv). -->
@@ -283,6 +301,16 @@
     <string name="player_stream_hlg">HLG</string>
     <!-- Translators: HDR mode value in the stream info overlay. "SDR" stands for Standard Dynamic Range. -->
     <string name="player_stream_sdr">SDR</string>
+    <!-- Translators: Row label in the stream info overlay: whether the picture is interlaced (broadcast TV scan type). -->
+    <string name="player_stream_interlacing">Interlacing</string>
+    <!-- Translators: Interlacing value: the picture is progressive, so nothing needs deinterlacing. -->
+    <string name="player_stream_progressive">None (progressive)</string>
+    <!-- Translators: Interlacing value: an interlaced picture whose combing the app's player removes. -->
+    <string name="player_stream_deinterlaced_by_player">Interlaced · deinterlaced by the player</string>
+    <!-- Translators: Interlacing value: an interlaced picture whose combing the TV or phone's own video hardware removes. -->
+    <string name="player_stream_deinterlaced_by_device">Interlaced · deinterlaced by the device</string>
+    <!-- Translators: Interlacing value: an interlaced picture shown with its combing (nothing removes it). -->
+    <string name="player_stream_not_deinterlaced">Interlaced · not deinterlaced</string>
     <!-- Translators: Row label in the stream info overlay for the video bitrate. -->
     <string name="player_stream_bitrate">Bitrate</string>
     <!-- Translators: Row label in the stream info overlay for the video decoder type. -->
@@ -409,8 +437,6 @@
     <string name="player_subtitles_session_expired">Your OpenSubtitles session has expired. To keep searching and downloading subtitles, sign in again from Settings \u2192 Video player \u2192 Subtitles \u2192 OpenSubtitles.</string>
     <!-- Translators: Error/dialog when the user needs an OpenSubtitles account to search. Directs to Settings path. "opensubtitles.com" is a website URL. -->
     <string name="player_subtitles_account_needed">OpenSubtitles account needed\n\nTo search and download subtitles, sign in from Settings \u2192 Video player \u2192 Subtitles \u2192 OpenSubtitles. OpenSubtitles is a free, open community service \u2014 anyone can create a free account at opensubtitles.com.</string>
-    <!-- Translators: Empty-state message in the subtitle search results when no matches are found. -->
-    <string name="player_subtitles_no_matches">No matching subtitles were found.</string>
     <!-- Translators: Button label in the subtitle search to show results in all languages. -->
     <string name="player_subtitles_show_all_languages">Show all languages</string>
     <!-- Translators: Label for the "all languages" filter option in subtitle search. -->
@@ -435,7 +461,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
     </plurals>
     <!-- Translators: Visible middle-dot separator between tag chips in the subtitle search results and account info. -->
-    <string name="player_subtitles_tags_separator"> \u00b7 </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <!-- Translators: Button in the subtitle search edit form to submit the query. -->
     <string name="player_subtitles_search">Search</string>
     <!-- Translators: Label in the OpenSubtitles account screen showing the connected username. -->
@@ -445,8 +471,6 @@
     <string name="player_subtitles_resets">Resets</string>
     <!-- Translators: Account level badge for free OpenSubtitles accounts. -->
     <string name="player_subtitles_free_account">Free</string>
-    <!-- Translators: Wrapper that passes a value through unchanged. "value" is a formatted string from another resource. Used in the OpenSubtitles account info display. -->
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <!-- Translators: Instruction in the OpenSubtitles sign-in form. -->
     <string name="player_subtitles_enter_credentials">Enter your OpenSubtitles username and password.</string>
     <!-- Translators: Error when the OpenSubtitles sign-in fails with invalid credentials. -->
@@ -471,7 +495,6 @@
     <string name="player_reason_archive_software_fallback">Catch-up archive reopened in software decoding</string>
     <!-- Translators: Playback-log event headline after surround output fails. -->
     <string name="player_reason_stereo_fallback">Switched to stereo audio</string>
-    <!-- Translators: Playback-log event headline after repeated ExoPlayer failures. mpv is a player name. -->
     <!-- Translators: Playback-log event headline for IPTV providers that permit only one active connection. -->
     <string name="player_reason_one_session_provider">Provider allows one session at a time</string>
     <!-- Translators: Playback-log event headline when ExoPlayer hands a channel to mpv. -->
@@ -512,20 +535,26 @@
     <string name="player_subtitles_search_language_description">Only subtitles in this language appear in search results. You can still press “All languages” in the results to see everything for one search.</string>
     <string name="player_subtitles_language_not_set">Not set</string>
     <string name="player_frame_rate_prompt_title">This channel may judder</string>
-    <string name="player_frame_rate_prompt_description">It plays at <xliff:g id="fps">%1$d</xliff:g> fps while your TV is running at <xliff:g id="current_hz">%2$d</xliff:g> Hz, which can’t show those frames evenly — motion looks slightly jerky.\n\nAuto frame rate switches the TV to <xliff:g id="target_hz">%3$d</xliff:g> Hz while you watch and puts it back afterwards. Some TVs blank for a moment when the rate changes; you can turn it off again in Settings → Video Player.</string>
+    <string name="player_frame_rate_prompt_description">It plays at <xliff:g id="fps">%1$d</xliff:g> fps while your TV is running at <xliff:g id="current_hz">%2$d</xliff:g> Hz, which can’t show those frames evenly — motion looks slightly jerky.\n\nAuto frame rate switches the TV to <xliff:g id="target_hz">%3$d</xliff:g> Hz while you watch and puts it back afterwards. Some TVs blank for a moment when the rate changes; you can turn it off again in Settings → Picture → Frame rate.</string>
     <string name="player_frame_rate_turn_on">Turn on</string>
     <!-- Translators: Shown instead of the picture when the user has turned the data saver on and the phone is on mobile data. -->
     <string name="player_error_data_saver">Data saver is on, so streaming over mobile data is off. Connect to Wi-Fi, or turn Data saver off in Settings.</string>
-    <!-- Translators: Chip on the sound-only player screen. The middle dot separates two short facts. -->
-    <string name="player_audio_only_video_off">Video off · saving data</string>
-    <!-- Translators: Button on the sound-only player screen. Brings the picture back. -->
-    <string name="player_audio_only_show_video">Video</string>
     <!-- Translators: Button on the sound-only player screen. Stops playback after a chosen time so the user can fall asleep to it. -->
     <string name="player_sleep_timer">Sleep timer</string>
     <!-- Translators: Sleep-timer option. Stop when the programme currently on air ends. -->
     <string name="player_sleep_timer_end_of_programme">End of programme</string>
+    <!-- Translators: Sleep-timer option while a movie plays. Stop when the movie ends. -->
+    <string name="player_sleep_timer_end_of_movie">End of movie</string>
+    <!-- Translators: Sleep-timer option while a series episode plays. Stop when this episode ends, instead of playing the next one. -->
+    <string name="player_sleep_timer_end_of_episode">End of episode</string>
     <!-- Translators: Sleep-timer status. The placeholder is an already-formatted duration, for example 30 min. -->
     <string name="player_sleep_timer_remaining">Stops in <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Tick row in the sleep-timer picker. When the timer ends, the screen is switched off too, not only the video stopped. -->
+    <string name="player_sleep_timer_screen_off">Also turn off the screen</string>
+    <!-- Translators: Shown by the system when the user allows the app to switch the screen off. Says what the permission is used for. -->
+    <string name="player_sleep_timer_screen_off_explanation">Used only to turn the screen off when the sleep timer ends, never at any other time.</string>
+    <!-- Translators: Short message when the device has no way to give the app that permission (some TVs). -->
+    <string name="player_sleep_timer_screen_off_unavailable">This device does not let apps turn the screen off.</string>
     <!-- Translators: Action on the floating mini-player. Return to the full-screen player. -->
     <string name="player_pip_expand">Expand</string>
     <!-- Translators: Player error shown when a Chromecast-style receiver refuses the stream. The receiver decodes the stream itself, so a format it does not support cannot be cast at all. -->
@@ -552,16 +581,14 @@
     </plurals>
     <!-- Translators: Shown when a recording is refused because the last connection is kept for watching. -->
     <string name="multiview_refused_reserved">One connection is kept free so you can keep watching. Change that in Settings to record on every connection.</string>
-    <!-- Translators: Shown when the playlist never said how many streams it allows. -->
-    <string name="multiview_unknown_connections">OwnTV could not tell how many streams this playlist allows. If a tile fails, that is why.</string>
     <!-- Translators: Shown on a tile the device has no video decoder left for. -->
     <string name="multiview_decoder_exhausted">This TV can\'t decode another channel at the same time.</string>
+    <!-- Translators: Phone/tablet wording of multiview_decoder_exhausted. -->
+    <string name="multiview_decoder_exhausted_mobile">This device can\'t decode another channel at the same time.</string>
     <!-- Translators: Tile menu: pick a different channel for this tile. -->
     <string name="multiview_tile_change_channel">Change channel</string>
     <!-- Translators: Tile menu: make this tile the only thing on screen. -->
     <string name="multiview_tile_fullscreen">Make fullscreen</string>
-    <!-- Translators: Tile menu: record the channel in this tile. -->
-    <string name="multiview_tile_record">Record this</string>
     <!-- Translators: Tile menu: empty this tile. -->
     <string name="multiview_tile_remove">Remove tile</string>
     <!-- Translators: Description of the badge on the tile whose sound is playing. -->
@@ -576,4 +603,12 @@
     <string name="multiview_tile_show_picture">Show the picture</string>
     <!-- Translators: Shown on a sound-only tile. It still uses one provider connection. -->
     <string name="multiview_sound_only_note">Sound only — still one of your provider\'s streams</string>
+    <!-- Translators: Key hint in the trailer player: ◀ and ▶ jump 10 seconds back or forward. Keep it short. -->
+    <string name="player_trailer_skip">Skip 10 s</string>
+    <!-- Translators: Popup title when no trailer video for a title is allowed to play inside the app. -->
+    <string name="player_trailer_blocked_title">This trailer can’t play in OwnTV</string>
+    <!-- Translators: Popup text under that title: the video owners only allow playback on YouTube itself. "YouTube" is a brand name — keep it. -->
+    <string name="player_trailer_blocked_body">Its owner only allows it to be played on YouTube.</string>
+    <!-- Translators: Popup button: open the trailer in the YouTube app instead. Keep "YouTube" as is. -->
+    <string name="player_trailer_open_youtube">Open in YouTube</string>
 </resources>

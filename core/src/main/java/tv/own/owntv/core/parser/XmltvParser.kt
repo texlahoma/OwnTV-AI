@@ -6,6 +6,7 @@ import android.util.Xml
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import org.xmlpull.v1.XmlPullParser
+import java.io.IOException
 import java.io.InputStream
 import java.io.PushbackInputStream
 import java.util.zip.GZIPInputStream
@@ -22,14 +23,14 @@ object XmltvParser {
     /**
      * Parse an XMLTV stream. [onChannel] gets (id, displayName, iconUrl — the feed's `<icon src>`
      * channel logo, null when absent or not an http(s) URL); [onProgramme] gets
-     * (channelId, startMs, stopMs, title, description). If [channelFilter] is present, programmes
-     * whose normalized channel id is not in the set are skipped before child parsing. Gzip is
-     * detected from the magic bytes.
+     * (channelId, startMs, stopMs, title, description, details — the optional [EpgDetails]). If
+     * [channelFilter] is present, programmes whose normalized channel id is not in the set are skipped
+     * before child parsing. Gzip is detected from the magic bytes.
      */
     suspend fun parse(
         input: InputStream,
         onChannel: suspend (id: String, displayName: String?, iconUrl: String?) -> Unit,
-        onProgramme: suspend (channelId: String, startMs: Long, stopMs: Long, title: String, description: String?) -> Unit,
+        onProgramme: suspend (channelId: String, startMs: Long, stopMs: Long, title: String, description: String?, details: EpgDetails) -> Unit,
         channelFilter: Set<String>? = null,
     ) {
         val startedAt = SystemClock.elapsedRealtime()
@@ -83,7 +84,18 @@ object XmltvParser {
                 }
             }
             ctx.ensureActive()
-            event = try { parser.next() } catch (e: Exception) { break } // unrecoverable position → stop, keep what we have
+            event = try {
+                parser.next()
+            } catch (e: IOException) {
+                // A dropped connection or a cut gzip is not the end of the feed. Ending quietly here made
+                // a half guide look complete: the caller then pruned everything after the cut and kept
+                // the cut file as the trusted cache. Thrown, the caller keeps the rows read so far and
+                // neither prunes nor caches.
+                Log.w(TAG, "parse read failed channels=$channels programmes=$programmes: ${e.message}")
+                throw e
+            } catch (_: Exception) {
+                break // malformed past recovery → stop, keep what we have
+            }
         }
         Log.d(
             TAG,
@@ -159,6 +171,8 @@ object XmltvParser {
             }
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
+        } catch (e: IOException) {
+            throw e // the stream failed, not this element — see parse()
         } catch (e: Exception) {
             if (trackedKey) seenChannelIds.remove(key)
             recoverElement(parser, startDepth)
@@ -188,7 +202,7 @@ object XmltvParser {
 
     private suspend fun readProgramme(
         parser: XmlPullParser,
-        onProgramme: suspend (String, Long, Long, String, String?) -> Unit,
+        onProgramme: suspend (String, Long, Long, String, String?, EpgDetails) -> Unit,
         metrics: ParseMetrics,
         channelFilter: Set<String>?,
     ): Boolean {
@@ -211,20 +225,29 @@ object XmltvParser {
         val stopMs = parseTime(parser.getAttributeValue(null, "stop"))
         var title = ""
         var desc: String? = null
+        // The details line. Created only when a programme has an element other than title/desc:
+        // most feeds carry none, and the guide reader must stay as fast for them as before.
+        var details: DetailReader? = null
         try {
             while (true) {
                 ctx.ensureActive()
                 when (parser.next()) {
                     XmlPullParser.START_TAG -> when (parser.name) {
                         "title" -> if (title.isBlank()) title = readText(parser).trim()
-                        "desc" -> if (desc == null) desc = readText(parser).trim().takeIf { it.isNotBlank() }
+                        "desc" -> if (desc == null) desc = EpgText.clean(readText(parser))
+                        else -> (details ?: DetailReader().also { details = it }).start(parser)
                     }
-                    XmlPullParser.END_TAG -> if (parser.name == "programme") break
+                    XmlPullParser.END_TAG -> when (parser.name) {
+                        "programme" -> break
+                        "rating" -> details?.inRating = false
+                    }
                     XmlPullParser.END_DOCUMENT -> break
                 }
             }
         } catch (c: kotlin.coroutines.cancellation.CancellationException) {
             throw c
+        } catch (e: IOException) {
+            throw e // the stream failed, not this element — see parse()
         } catch (e: Exception) {
             recoverElement(parser, startDepth)
             Log.w(TAG, "Skipping malformed <programme> element", e)
@@ -235,7 +258,7 @@ object XmltvParser {
         if (channelId.isNotBlank() && startMs > 0 && stopMs > startMs) {
             val callbackStart = SystemClock.elapsedRealtime()
             try {
-                onProgramme(channelId, startMs, stopMs, title.ifBlank { "—" }, desc)
+                onProgramme(channelId, startMs, stopMs, title.ifBlank { "—" }, desc, details?.result() ?: EpgDetails.NONE)
             } finally {
                 metrics.callbackMs += SystemClock.elapsedRealtime() - callbackStart
             }
@@ -244,6 +267,51 @@ object XmltvParser {
         return false
     }
 
+    /** Collects one programme's optional details; each field keeps the first value the feed gives. */
+    private class DetailReader {
+        private var categories: ArrayList<String>? = null
+        private var year: Int? = null
+        private var rating: String? = null
+        private var ratingSystem: String? = null
+        var inRating = false
+        private var lengthMin: Int? = null
+        private var episode: String? = null
+
+        suspend fun start(parser: XmlPullParser) {
+            when (parser.name) {
+                "category" -> {
+                    val list = categories ?: ArrayList<String>(2).also { categories = it }
+                    if (list.size < EpgDetails.MAX_CATEGORIES * 2) list.add(readText(parser))
+                }
+                "date" -> if (year == null) year = XmltvDetailRules.year(readText(parser))
+                "rating" -> if (rating == null) {
+                    inRating = true
+                    ratingSystem = parser.getAttributeValue(null, "system")
+                }
+                // <value> also sits inside <star-rating>; only the age rating's is wanted.
+                "value" -> if (inRating && rating == null) rating = XmltvDetailRules.rating(ratingSystem, readText(parser))
+                "length" -> if (lengthMin == null) {
+                    val units = parser.getAttributeValue(null, "units")
+                    lengthMin = XmltvDetailRules.lengthMinutes(readText(parser), units)
+                }
+                "episode-num" -> {
+                    val system = parser.getAttributeValue(null, "system")
+                    val parsed = XmltvDetailRules.episode(system, readText(parser))
+                    // xmltv_ns is normalised ("S1 E3"), so it wins over a broadcaster's own form.
+                    if (parsed != null && (episode == null || system.equals("xmltv_ns", true))) episode = parsed
+                }
+            }
+        }
+
+        fun result(): EpgDetails =
+            if (categories == null && year == null && rating == null && lengthMin == null && episode == null) {
+                EpgDetails.NONE
+            } else {
+                EpgDetails(categories?.let(XmltvDetailRules::categories), year, rating, lengthMin, episode)
+            }
+    }
+
+
     private suspend fun skipElement(parser: XmlPullParser, startDepth: Int) {
         val ctx = currentCoroutineContext()
         var depth = parser.depth
@@ -251,6 +319,8 @@ object XmltvParser {
             ctx.ensureActive()
             val event = try {
                 parser.next()
+            } catch (e: IOException) {
+                throw e // the stream failed, not this element — see parse()
             } catch (_: Exception) {
                 return
             }
@@ -272,6 +342,8 @@ object XmltvParser {
             ctx.ensureActive()
             val event = try {
                 parser.next()
+            } catch (e: IOException) {
+                throw e // the stream failed, not this element — see parse()
             } catch (_: Exception) {
                 return
             }
@@ -289,7 +361,7 @@ object XmltvParser {
     /**
      * XMLTV time is `yyyyMMddHHmmss` optionally followed by a ` +0000` style offset.
      * See [parseXmltvTime] — this used to build a `SimpleDateFormat` per timestamp, which is two
-     * per programme and ~200,000 on a large guide (E2).
+     * per programme and ~200,000 on a large guide.
      */
     private fun parseTime(raw: String?): Long = parseXmltvTime(raw)
 

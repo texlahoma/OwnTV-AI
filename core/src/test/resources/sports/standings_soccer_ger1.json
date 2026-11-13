@@ -1,0 +1,1295 @@
+{
+ "name": "German Bundesliga",
+ "children": [
+  {
+   "name": "2026-27 German Bundesliga",
+   "abbreviation": "2026-27",
+   "standings": {
+    "entries": [
+     {
+      "team": {
+       "id": "126",
+       "abbreviation": "SCF",
+       "displayName": "SC Freiburg",
+       "shortDisplayName": "Freiburg",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+10",
+        "value": 10.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "13",
+        "value": 13.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "14",
+        "value": 14.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "1",
+        "value": 1.0
+       }
+      ],
+      "note": {
+       "description": "Champions League",
+       "rank": 1
+      }
+     },
+     {
+      "team": {
+       "id": "124",
+       "abbreviation": "DOR",
+       "displayName": "Borussia Dortmund",
+       "shortDisplayName": "Dortmund",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+7",
+        "value": 7.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "13",
+        "value": 13.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "11",
+        "value": 11.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "2",
+        "value": 2.0
+       }
+      ],
+      "note": {
+       "description": "Champions League",
+       "rank": 2
+      }
+     },
+     {
+      "team": {
+       "id": "132",
+       "abbreviation": "MUN",
+       "displayName": "Bayern Munich",
+       "shortDisplayName": "Bayern",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+12",
+        "value": 12.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "11",
+        "value": 11.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "16",
+        "value": 16.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "3",
+        "value": 3.0
+       }
+      ],
+      "note": {
+       "description": "Champions League",
+       "rank": 3
+      }
+     },
+     {
+      "team": {
+       "id": "131",
+       "abbreviation": "B04",
+       "displayName": "Bayer Leverkusen",
+       "shortDisplayName": "Leverkusen",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+6",
+        "value": 6.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "10",
+        "value": 10.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "14",
+        "value": 14.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "4",
+        "value": 4.0
+       }
+      ],
+      "note": {
+       "description": "Champions League",
+       "rank": 4
+      }
+     },
+     {
+      "team": {
+       "id": "11420",
+       "abbreviation": "RBL",
+       "displayName": "RB Leipzig",
+       "shortDisplayName": "RB Leipzig",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+10",
+        "value": 10.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "9",
+        "value": 9.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "15",
+        "value": 15.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "5",
+        "value": 5.0
+       }
+      ],
+      "note": {
+       "description": "Europa League",
+       "rank": 5
+      }
+     },
+     {
+      "team": {
+       "id": "3841",
+       "abbreviation": "FCA",
+       "displayName": "FC Augsburg",
+       "shortDisplayName": "Augsburg",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+5",
+        "value": 5.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "13",
+        "value": 13.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "6",
+        "value": 6.0
+       }
+      ],
+      "note": {
+       "description": "Europa League",
+       "rank": 6
+      }
+     },
+     {
+      "team": {
+       "id": "137",
+       "abbreviation": "SVW",
+       "displayName": "Werder Bremen",
+       "shortDisplayName": "Bremen",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "10",
+        "value": 10.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "10",
+        "value": 10.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "7",
+        "value": 7.0
+       }
+      ],
+      "note": {
+       "description": "Conference League qualifying",
+       "rank": 7
+      }
+     },
+     {
+      "team": {
+       "id": "2950",
+       "abbreviation": "M05",
+       "displayName": "Mainz",
+       "shortDisplayName": "Mainz",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "+3",
+        "value": 3.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "7",
+        "value": 7.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "10",
+        "value": 10.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "13",
+        "value": 13.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "8",
+        "value": 8.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "10388",
+       "abbreviation": "ELV",
+       "displayName": "SV Elversberg",
+       "shortDisplayName": "Elversberg",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/10388.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "7",
+        "value": 7.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "9",
+        "value": 9.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "122",
+       "abbreviation": "KOE",
+       "displayName": "FC Cologne",
+       "shortDisplayName": "Cologne",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-2",
+        "value": -2.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "7",
+        "value": 7.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "10",
+        "value": 10.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "10",
+        "value": 10.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "134",
+       "abbreviation": "VFB",
+       "displayName": "VfB Stuttgart",
+       "shortDisplayName": "Stuttgart",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-1",
+        "value": -1.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "6",
+        "value": 6.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "9",
+        "value": 9.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "8",
+        "value": 8.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "11",
+        "value": 11.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "127",
+       "abbreviation": "HSV",
+       "displayName": "Hamburg SV",
+       "shortDisplayName": "Hamburg",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-10",
+        "value": -10.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "6",
+        "value": 6.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "15",
+        "value": 15.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "12",
+        "value": 12.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "133",
+       "abbreviation": "S04",
+       "displayName": "Schalke 04",
+       "shortDisplayName": "Schalke",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/133.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-2",
+        "value": -2.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "6",
+        "value": 6.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "13",
+        "value": 13.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "125",
+       "abbreviation": "SGE",
+       "displayName": "Eintracht Frankfurt",
+       "shortDisplayName": "Frankfurt",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-7",
+        "value": -7.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "16",
+        "value": 16.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "9",
+        "value": 9.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "2",
+        "value": 2.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "14",
+        "value": 14.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "3307",
+       "abbreviation": "SCP",
+       "displayName": "SC Paderborn 07",
+       "shortDisplayName": "Paderborn",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-4",
+        "value": -4.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "7",
+        "value": 7.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "15",
+        "value": 15.0
+       }
+      ]
+     },
+     {
+      "team": {
+       "id": "598",
+       "abbreviation": "FCU",
+       "displayName": "1. FC Union Berlin",
+       "shortDisplayName": "Union Berlin",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-12",
+        "value": -12.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "17",
+        "value": 17.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "16",
+        "value": 16.0
+       }
+      ],
+      "note": {
+       "description": "Relegation playoff",
+       "rank": 16
+      }
+     },
+     {
+      "team": {
+       "id": "7911",
+       "abbreviation": "TSG",
+       "displayName": "TSG Hoffenheim",
+       "shortDisplayName": "Hoffenheim",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "4",
+        "value": 4.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-4",
+        "value": -4.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "3",
+        "value": 3.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "13",
+        "value": 13.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "9",
+        "value": 9.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "1",
+        "value": 1.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "17",
+        "value": 17.0
+       }
+      ],
+      "note": {
+       "description": "Relegation",
+       "rank": 17
+      }
+     },
+     {
+      "team": {
+       "id": "268",
+       "abbreviation": "BMG",
+       "displayName": "Borussia Mönchengladbach",
+       "shortDisplayName": "Gladbach",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+        }
+       ]
+      },
+      "stats": [
+       {
+        "name": "gamesPlayed",
+        "abbreviation": "GP",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "losses",
+        "abbreviation": "L",
+        "displayValue": "5",
+        "value": 5.0
+       },
+       {
+        "name": "pointDifferential",
+        "abbreviation": "GD",
+        "displayValue": "-11",
+        "value": -11.0
+       },
+       {
+        "name": "points",
+        "abbreviation": "P",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "pointsAgainst",
+        "abbreviation": "A",
+        "displayValue": "18",
+        "value": 18.0
+       },
+       {
+        "name": "pointsFor",
+        "abbreviation": "F",
+        "displayValue": "7",
+        "value": 7.0
+       },
+       {
+        "name": "ties",
+        "abbreviation": "D",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "wins",
+        "abbreviation": "W",
+        "displayValue": "0",
+        "value": 0.0
+       },
+       {
+        "name": "rank",
+        "abbreviation": "R",
+        "displayValue": "18",
+        "value": 18.0
+       }
+      ],
+      "note": {
+       "description": "Relegation",
+       "rank": 18
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -5,7 +5,7 @@
     <string name="setup_from_device">Lokalnie</string>
     <string name="setup_from_phone">Zdalnie</string>
     <string name="setup_send_from_phone">Wyślij z innego urządzenia</string>
-    <string name="setup_phone_background_description">Na telefonie, tablecie lub komputerze połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wpisz ten PIN i wyślij zdjęcie. Natychmiast stanie się ono tłem.</string>
+    <string name="setup_phone_background_description">Na dowolnym urządzeniu z przeglądarką w tej samej sieci Wi-Fi — telefonie, komputerze lub innym telewizorze — zeskanuj kod QR (lub otwórz adres), wpisz ten PIN i wyślij zdjęcie. Od razu stanie się tłem.</string>
     <string name="setup_opening_server">Uruchamianie serwera…</string>
     <string name="setup_enter_pin_browser">Wpisz ten PIN w przeglądarce</string>
     <string name="setup_open_url">Lub otwórz ten adres URL</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">np. Moja telewizja</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">WITAJ W</string>
-    <string name="setup_welcome_tagline">Twój własny odtwarzacz IPTV.</string>
     <string name="setup_get_started">Rozpocznij</string>
     <string name="setup_display_size_title">Ustaw wygodny rozmiar</string>
-    <string name="setup_display_size_description">Wybierz rozmiar interfejsu i jego tekstu. Oba możesz zmienić później w Ustawieniach.</string>
-    <string name="setup_display_size_preview">Jeśli czytasz to bez wysiłku ze swojego miejsca, rozmiar jest odpowiedni.</string>
     <string name="setup_before_you_start">Zanim zaczniesz</string>
     <string name="setup_disclaimer">OwnTV jest wyłącznie odtwarzaczem multimedialnym. Nie zawiera żadnych kanałów, list odtwarzania ani treści. Odpowiadasz za dodawanie własnych, legalnie dostępnych źródeł Xtream, M3U lub Stalker.</string>
     <string name="setup_i_understand">Rozumiem</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Zacznij od nowa albo przywróć dane profili, listy odtwarzania i ulubione z pliku kopii zapasowej lub z innego urządzenia.</string>
     <string name="setup_new_profile">Nowy profil</string>
     <string name="setup_create_profile_add_sources">Utwórz profil i dodaj źródła</string>
-    <string name="setup_restore_backup">Przywróć kopię zapasową</string>
     <string name="setup_import_profiles_playlists">Zaimportuj z pliku dane profili i listy odtwarzania</string>
     <string name="setup_sync_device">Z innego urządzenia</string>
     <string name="setup_sync_device_description">Skopiuj wszystko z drugiego urządzenia OwnTV przez Wi-Fi</string>
     <string name="setup_add_playlist">Dodaj listę odtwarzania</string>
     <string name="setup_add_playlist_description">Dodaj źródło do tego profilu albo skonfiguruj je później.</string>
-    <string name="setup_new">Nowe</string>
-    <string name="setup_add_m3u_xtream">Dodaj źródło M3U, Xtream lub Stalker</string>
     <string name="setup_existing">Istniejące</string>
     <string name="setup_use_other_profile_playlists">Użyj list odtwarzania z innego profilu</string>
     <string name="setup_import">Import</string>
@@ -75,7 +68,7 @@
     <string name="setup_invalid_mac">Nieprawidłowy adres MAC — użyj formatu AA:BB:CC:DD:EE:FF</string>
     <string name="setup_pick_backup_file">Wybierz plik kopii zapasowej do przywrócenia</string>
     <string name="setup_restore_a_backup">Przywróć kopię zapasową</string>
-    <string name="setup_restore_choice_description">Wyślij kopię zapasową z innego urządzenia (telefonu lub laptopa) połączonego z tą samą siecią Wi-Fi albo wybierz plik kopii zapasowej zapisany na tym urządzeniu.</string>
+    <string name="setup_restore_choice_description">Wyślij kopię zapasową zdalnie z dowolnego urządzenia z przeglądarką w tej samej sieci Wi-Fi albo wybierz plik kopii, który już jest na tym urządzeniu.</string>
     <string name="setup_upload_from_wifi_device">Prześlij z urządzenia w tej samej sieci Wi-Fi</string>
     <string name="setup_local_file">Plik lokalny</string>
     <string name="setup_pick_backup_local">Wybierz plik kopii zapasowej na tym urządzeniu</string>
@@ -88,30 +81,24 @@
         <item quantity="one">Przywrócono <xliff:g id="items">%1$d</xliff:g> element. Ponownie zsynchronizuj źródła, aby wczytać treści.</item>
         <item quantity="few">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementy. Ponownie zsynchronizuj źródła, aby wczytać treści.</item>
         <item quantity="many">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementów. Ponownie zsynchronizuj źródła, aby wczytać treści.</item>
-        <item quantity="other">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementu. Ponownie zsynchronizuj źródła, aby wczytać treści.</item>
+        <item quantity="other">Przywrócono <xliff:g id="items">%1$d</xliff:g> elementów. Ponownie zsynchronizuj źródła, aby wczytać treści.</item>
     </plurals>
     <string name="setup_passwords_omitted">Później ponownie wpisz wszystkie zapisane hasła.</string>
+    <string name="setup_need_password">Brak zapisanego hasła, więc jeszcze nie wczytano: <xliff:g id="names">%1$s</xliff:g>. Otwórz listę odtwarzania w Ustawieniach i wpisz jej hasło.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one">Pominięto <xliff:g id="count">%1$d</xliff:g> źródło, ponieważ ta wersja nie obsługuje typu jego listy odtwarzania.</item>
         <item quantity="few">Pominięto <xliff:g id="count">%1$d</xliff:g> źródła, ponieważ ta wersja nie obsługuje typów ich list odtwarzania.</item>
         <item quantity="many">Pominięto <xliff:g id="count">%1$d</xliff:g> źródeł, ponieważ ta wersja nie obsługuje typów ich list odtwarzania.</item>
-        <item quantity="other">Pominięto <xliff:g id="count">%1$d</xliff:g> źródła, ponieważ ta wersja nie obsługuje typu jego listy odtwarzania.</item>
+        <item quantity="other">Pominięto <xliff:g id="count">%1$d</xliff:g> źródeł, ponieważ ta wersja nie obsługuje typów ich list odtwarzania.</item>
     </plurals>
     <string name="setup_continue">Kontynuuj</string>
     <string name="setup_import_failed">Import nie powiódł się</string>
     <string name="setup_try_again_caps">Spróbuj ponownie</string>
-    <string name="setup_add_from_phone">Dodaj z innego urządzenia</string>
-    <string name="setup_phone_add_description">Na telefonie, tablecie lub komputerze połączonym z tą samą siecią Wi-Fi zeskanuj kod QR (lub otwórz adres URL), wpisz ten PIN, uzupełnij dane listy odtwarzania i wybierz opcję Wyślij do telewizora. Jej dane pojawią się tutaj i będą gotowe do importu — wybierz pilotem opcję Rozpocznij import.</string>
     <string name="setup_opening">Uruchamianie…</string>
-    <string name="setup_open_server">Uruchom serwer</string>
-    <string name="setup_stop_server">Zatrzymaj serwer</string>
     <string name="setup_add_source">Dodaj źródło</string>
-    <string name="setup_add_source_description">Wypełnij formularz na innym urządzeniu albo wpisz tutaj dane za pomocą pilota.</string>
-    <string name="setup_manual">Ręcznie</string>
-    <string name="setup_use_phone_same_wifi">Użyj telefonu, tabletu lub komputera w tej samej sieci Wi-Fi</string>
-    <string name="setup_type_source_here">Wpisz tutaj dane Xtream / M3U / Stalker</string>
     <string name="setup_edit_source">Edytuj źródło</string>
-    <string name="setup_add_your_source">Dodaj swoje źródło</string>
+    <string name="setup_edit_from_phone">Edytuj z innego urządzenia</string>
     <string name="setup_edit_source_description">Zaktualizuj dane tego źródła albo zmień ustawienie automatycznego odświeżania.</string>
     <string name="setup_byo_source_description">OwnTV jest odtwarzaczem — dodaj własne źródło Xtream, M3U lub Stalker.</string>
     <string name="setup_xtream">Xtream</string>
@@ -143,6 +130,8 @@
     <string name="setup_test_connection">Przetestuj połączenie</string>
     <string name="setup_user_agent_optional">User-Agent (opcjonalnie)</string>
     <string name="setup_user_agent_example">np. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (opcjonalnie)</string>
+    <string name="setup_referer_example">np. https://example.com/</string>
     <string name="setup_auto_refresh">Automatyczne odświeżanie</string>
     <string name="setup_auto_refresh_description">Wyłączone, przy uruchamianiu lub gdy dane są nieaktualne</string>
     <string name="setup_default_playlist">Domyślna lista odtwarzania</string>
@@ -165,7 +154,6 @@
     <string name="setup_now">Teraz</string>
     <string name="setup_later">Później</string>
     <string name="setup_off">Wyłączone</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">Domyślne (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -178,13 +166,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Kontynuuj</string>
     <string name="companion_pin_mismatch">Ten PIN jest nieprawidłowy — spróbuj ponownie.</string>
-    <string name="companion_tmdb_page_title">Wyślij klucz TMDB</string>
-    <string name="companion_tmdb_heading">Wyślij swój klucz TMDB</string>
-    <string name="companion_tmdb_description">Zaloguj się poniżej do TMDB, skopiuj swój klucz API (v3 auth), wklej go tutaj i wyślij do telewizora. Klucz osobisty jest bezpłatny i praktycznie nie ma dziennego limitu.</string>
-    <string name="companion_tmdb_get_key">Otwórz ustawienia API TMDB</string>
-    <string name="companion_tmdb_invalid">To nie wygląda na klucz API TMDB. Skopiuj wartość „API Key (v3 auth)”.</string>
-    <string name="companion_tmdb_sent_body">Twój klucz TMDB jest już w telewizorze. Naciśnij tam Zapisz, aby zacząć go używać.</string>
-    <string name="companion_tmdb_sent_link">Wyślij inny klucz</string>
     <string name="companion_service_config_empty">Wpisz klucz API, adres URL Workera albo oba.</string>
     <string name="companion_service_config_invalid_key">Ten klucz API nie wygląda na prawidłowy.</string>
     <string name="companion_service_config_invalid_url">Wpisz prawidłowy adres URL Workera z HTTPS.</string>
@@ -204,6 +185,12 @@
     <string name="companion_saved_heading">Wysłano do telewizora ✓</string>
     <string name="companion_saved_source_body">Źródło <xliff:g id="name">%1$s</xliff:g> jest teraz widoczne na ekranie Dodaj źródło na telewizorze. Sprawdź tam jego dane i wybierz pilotem opcję Rozpocznij import.</string>
     <string name="companion_saved_send_another">Wyślij kolejne źródło</string>
+    <string name="companion_edit_page_title">OwnTV — Edytuj źródło</string>
+    <string name="companion_edit_heading">Edytuj <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">Zmień, co trzeba, i naciśnij Wyślij do telewizora. Puste pole zachowuje obecną wartość. Zmiany pojawią się na telewizorze — naciśnij tam Zapisz na pilocie.</string>
+    <string name="companion_keep_current">Zostaw puste, aby zachować obecną wartość</string>
+    <string name="companion_saved_edit_body">Zmiany w <xliff:g id="name">%1$s</xliff:g> są już na ekranie edycji telewizora. Sprawdź je tam i naciśnij Zapisz na pilocie.</string>
+    <string name="companion_saved_edit_again">Zmień coś jeszcze</string>
     <string name="companion_saved_backup_body">Kopia zapasowa jest teraz dostępna na telewizorze. Weź pilot i wybierz elementy, które chcesz przywrócić.</string>
     <string name="companion_saved_backup_link">Wyślij inny plik</string>
     <string name="companion_saved_image_body">Obraz jest teraz tłem telewizora.</string>
@@ -271,4 +258,33 @@
     <string name="companion_error_pair_failed">Nie udało się sparować z tym urządzeniem.</string>
     <string name="local_sync_browser_title">Synchronizacja lokalna OwnTV</string>
     <string name="local_sync_browser_body">Ten adres jest dla aplikacji OwnTV na drugim urządzeniu. Otwórz tam Synchronizację lokalną i wybierz to urządzenie z listy.</string>
+    <string name="setup_step_display">Ekran</string>
+    <string name="setup_step_playlist">Playlista</string>
+    <string name="setup_step_ready">Gotowe</string>
+    <string name="setup_key_previous_step">Poprzedni krok</string>
+    <string name="setup_welcome_title">Witamy w OwnTV</string>
+    <string name="setup_welcome_sub">Twój własny odtwarzacz IPTV. Wybierz język, aby zacząć — możesz go później zmienić w Ustawieniach.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> język</item>
+        <item quantity="few">Wszystkie <xliff:g id="count">%1$d</xliff:g> języki</item>
+        <item quantity="many">Wszystkie <xliff:g id="count">%1$d</xliff:g> języków</item>
+        <item quantity="other">Wszystkie <xliff:g id="count">%1$d</xliff:g> języków</item>
+    </plurals>
+    <string name="setup_display_sub">Jak duży jest interfejs i tekst na tym telewizorze. Wiersz poniżej zmienia się na bieżąco.</string>
+    <string name="setup_display_sub_mobile">Jak duży jest interfejs i tekst na tym telefonie. Wiersz poniżej zmienia się na bieżąco.</string>
+    <string name="setup_line_zoom">Wszystko na ekranie</string>
+    <string name="setup_line_font">Tylko tekst</string>
+    <string name="setup_line_app_icon">Jak OwnTV wygląda na ekranie głównym telewizora</string>
+    <string name="setup_line_app_icon_mobile">Jak OwnTV wygląda na Twoim ekranie głównym</string>
+    <string name="setup_restore_card_line">Z pliku lub zdalnie z innego urządzenia</string>
+    <string name="setup_device_appear">Tutaj pojawią się urządzenia z włączonym trybem synchronizacji</string>
+    <string name="setup_device_address_hint">lub wpisz adres drugiego urządzenia</string>
+    <string name="setup_profile_sub">Profil ma własne ulubione, historię i ekran główny. Kolejne dodasz później w Ustawienia › Profil.</string>
+    <string name="setup_avatar">Awatar</string>
+    <string name="setup_avatar_line">Wybierz jeden lub zostaw literę</string>
+    <string name="setup_create_profile">Utwórz profil</string>
+    <string name="setup_phone_card_line">Wypełnij formularz w przeglądarce na innym urządzeniu — najszybciej</string>
+    <string name="setup_importing_title">Importowanie: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">Dodaj przewodnik TV</string>
+    <string name="setup_add_guide_line">Nowa instalacja nie ma jeszcze przewodnika</string>
 </resources>

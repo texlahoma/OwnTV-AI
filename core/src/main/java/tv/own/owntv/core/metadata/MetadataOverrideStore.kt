@@ -16,7 +16,7 @@ private val Context.metadataOverrideStore: DataStore<Preferences> by
 data class TmdbOverride(val title: String, val year: Int?)
 
 /**
- * Per-content TMDB name overrides (plan §11.2 U5b), stored as JSON in DataStore — deliberately NOT a Room
+ * Per-content TMDB name overrides, stored as JSON in DataStore — deliberately NOT a Room
  * table, so no schema change (the DB uses destructive migrations) and the override survives every re-sync
  * via the same stable local key used for matching ([MetadataRepository.movieLocalKey] / [seriesLocalKey]).
  *

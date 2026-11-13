@@ -49,9 +49,25 @@ interface SourceDao {
     )
     suspend fun updateHlsSupportFromSync(id: Long, hlsSupported: HlsSupport)
 
+    /**
+     * The provider's published limit, as a sync reads it — unless the limit was measured (Re-test),
+     * which outranks the panel's own number: a panel that says 1 while allowing more is exactly why
+     * the user measured it.
+     */
+    @Query("UPDATE sources SET maxConnections = :maxConnections WHERE id = :id AND maxConnectionsProbedAt <= 0")
+    suspend fun updateMaxConnectionsUnlessMeasured(id: Long, maxConnections: Int)
+
+    /** Per-playlist "Ignore connection limit" (see [SourceEntity.ignoreConnectionLimit]). */
+    @Query("UPDATE sources SET ignoreConnectionLimit = :ignore WHERE id = :id")
+    suspend fun updateIgnoreConnectionLimit(id: Long, ignore: Boolean)
+
     /** Simultaneous streams the provider allows (Xtream `user_info.max_connections`); 0 = unknown. */
     @Query("UPDATE sources SET maxConnections = :maxConnections WHERE id = :id")
     suspend fun updateMaxConnections(id: Long, maxConnections: Int)
+
+    /** The Xtream panel's own time zone (a `TimeZone` ID), read at every sync; null = not reported. */
+    @Query("UPDATE sources SET serverTimeZone = :zone WHERE id = :id")
+    suspend fun updateServerTimeZone(id: Long, zone: String?)
 
     /**
      * Record a *measured* limit and when it was measured.
@@ -63,9 +79,6 @@ interface SourceDao {
      */
     @Query("UPDATE sources SET maxConnections = :maxConnections, maxConnectionsProbedAt = :probedAt WHERE id = :id")
     suspend fun updateProbedConnections(id: Long, maxConnections: Int, probedAt: Long)
-
-    @Query("UPDATE sources SET preferHls = :preferHls WHERE id = :id")
-    suspend fun updatePreferHls(id: Long, preferHls: Boolean)
 
     /** Per-playlist "Pre-buffer" override in seconds; `-1` follows the global setting. */
     @Query("UPDATE sources SET livePrerollSecs = :secs WHERE id = :id")
@@ -80,13 +93,28 @@ interface SourceDao {
     @Query("UPDATE sources SET liveLatencyMode = :mode, liveLatencyCustomSecs = :customSecs WHERE id = :id")
     suspend fun updateLiveLatency(id: Long, mode: String?, customSecs: Int)
 
+    /** Per-playlist catch-up time zone (a `CatchupTimezone` name); `null` follows the global setting. The
+     *  offset is written alongside so a MANUAL choice can never land without its value. */
+    @Query("UPDATE sources SET catchupTimezone = :mode, catchupOffsetMin = :offsetMin WHERE id = :id")
+    suspend fun updateCatchupTimezone(id: Long, mode: String?, offsetMin: Int?)
+
+    /** Per-playlist Movies & Series engine (an `EnginePreference` name); `null` follows the global setting. */
+    @Query("UPDATE sources SET vodEnginePreference = :preference WHERE id = :id")
+    suspend fun updateVodEnginePreference(id: Long, preference: String?)
+
+    /** Per-playlist "Give up after" in seconds (0 = never); `null` follows the global setting. */
+    @Query("UPDATE sources SET liveTuneTimeoutSecs = :secs WHERE id = :id")
+    suspend fun updateLiveTuneTimeout(id: Long, secs: Int?)
+
+    /** Per-playlist "Clean channel names" and the user's own words to remove (`null` = none). Takes
+     *  effect at the playlist's next sync, which rewrites the names it changes. */
+    @Query("UPDATE sources SET cleanChannelNames = :enabled, channelNameStrip = :strip WHERE id = :id")
+    suspend fun updateChannelNameCleanup(id: Long, enabled: Boolean, strip: String?)
+
     // --- profile <-> source links (hybrid model) ---
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun link(ref: ProfileSourceCrossRef)
-
-    @Query("DELETE FROM profile_source WHERE profileId = :profileId AND sourceId = :sourceId")
-    suspend fun unlink(profileId: Long, sourceId: Long)
 
     @Query(
         "SELECT s.* FROM sources s " +
@@ -109,7 +137,4 @@ interface SourceDao {
 
     @Query("SELECT * FROM profile_source")
     suspend fun allLinks(): List<ProfileSourceCrossRef>
-
-    @Query("DELETE FROM sources")
-    suspend fun deleteAllSources()
 }

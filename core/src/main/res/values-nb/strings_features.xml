@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">Ditt eget bilde</string>
     <string name="profiles_kids">Barneprofil</string>
     <string name="profiles_kids_description">Forenklet, trygg navigering</string>
+    <string name="profiles_allow_downloads">Tillat nedlastinger</string>
+    <string name="profiles_allow_downloads_description">Av skjuler alle nedlastingsknapper for denne profilen</string>
     <string name="profiles_remove_pin">Fjern PIN-lås</string>
     <string name="profiles_no_pin">Denne profilen åpnes uten PIN</string>
     <string name="profiles_change_pin">Endre PIN (tomt felt = behold)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">Opprett</string>
     <string name="profiles_save">Lagre</string>
     <string name="profiles_gate_title">Hvem ser på?</string>
+    <string name="profiles_gate_subtitle">Hver profil har sine egne favoritter og sin egen historikk</string>
     <string name="profiles_wrong_pin">Feil PIN – prøv igjen</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> – angi PIN</string>
+    <string name="profiles_protected_edit">Den har en profillås eller en innstillingslås. Skriv inn en av de to PIN-kodene for å endre den.</string>
     <string name="profiles_kids_badge">BARN</string>
     <string name="profiles_add">Legg til profil</string>
     <string name="profiles_title">Profiler</string>
-    <string name="profiles_add_button">Legg til profil</string>
     <string name="profiles_delete_title">Slett «<xliff:g id="name">%1$s</xliff:g>»?</string>
     <string name="profiles_delete_message">Fjerner denne profilen samt tilhørende favoritter og historikk. Kildene beholdes.</string>
     <string name="profiles_kids_tag">Barn</string>
@@ -32,38 +35,50 @@
     <string name="search_title">Søk</string>
     <string name="search_continue">Fortsett å se</string>
     <string name="search_unwatched">Usett</string>
-    <string name="search_hint">Søk etter kanaler, filmer og serier…</string>
     <string name="search_recent">Nylige søk</string>
-    <string name="search_recent_empty">De nylige søkene dine vises her.</string>
-    <string name="search_minimum_query">Skriv inn minst 2 tegn for å søke i alt.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> – ingen resultater.</string>
     <string name="search_nothing_in_list">Ingenting i <xliff:g id="list">%1$s</xliff:g> ennå.</string>
     <string name="search_clear">Tøm</string>
     <string name="search_jump_to">Gå til</string>
-    <string name="search_watch_live">Se direkte</string>
-    <string name="search_play">Spill av</string>
     <string name="search_open_series">Åpne serier</string>
     <string name="search_movie">Film</string>
     <string name="search_series">Serier</string>
     <string name="search_channels">Kanaler</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">Fortsett å se</string>
-    <string name="home_play_next">Spill av neste</string>
-    <string name="home_tune_in">Se direkte</string>
-    <string name="home_recent_live">Nylig sett på Direkte-TV</string>
+    <string name="search_on_tv">TV-programmer</string>
+    <string name="search_go_to_channel">Gå til kanal</string>
+    <string name="search_go_to_movie">Gå til film</string>
+    <string name="search_clear_recent">Tøm nylige søk</string>
+    <string name="search_field_hint">Kanaler, filmer og serier</string>
+    <string name="search_voice">Talesøk</string>
+    <string name="search_voice_prompt">Si en kanal, film eller serie</string>
+    <string name="search_card_title">Finn alt i spillelistene dine</string>
+    <string name="search_card_body">Kanaler, filmer og serier fra alle spillelistene du viser. Velg et treff for å gå rett dit og spille av, laste ned eller åpne valgene der. TV-programmer som går nå eller senere i dag, finnes også på tittelen.</string>
+    <string name="search_nothing_found">Ingen treff for «<xliff:g id="query">%1$s</xliff:g>»</string>
+    <string name="search_nothing_found_body">Søket ser i navnene på kanaler, filmer og serier i spillelistene du viser. Skjulte kategorier blir ikke søkt i. TV-programmer finnes på tittelen i den nedlastede programoversikten.</string>
+    <string name="search_query_quoted">«<xliff:g id="query">%1$s</xliff:g>»</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> treff</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> treff</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other">Alle <xliff:g id="count">%1$d</xliff:g> kanaler</item>
+    </plurals>
     <string name="profiles_default_name">Profil</string>
     <string name="launcher_recent_live_title">Nylig sett på Direkte-TV</string>
     <string name="launcher_recent_live_description">Direktekanaler du nylig har sett på</string>
     <string name="launcher_movie_type">Film</string>
     <string name="launcher_episode_number">Episode <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Laster inn biblioteket · <xliff:g id="count">%1$s</xliff:g> tittel så langt</item>
+        <item quantity="other">Laster inn biblioteket · <xliff:g id="count">%1$s</xliff:g> titler så langt</item>
+    </plurals>
+    <string name="home_library_loading_trending">Populært nå vises etter hvert som biblioteket fylles.</string>
     <string name="home_no_preview">Ingenting å forhåndsvise ennå.</string>
     <string name="home_no_rows">Alle radene på startskjermen er skjult.</string>
     <string name="home_enable_rows">Slå på radene igjen under Innstillinger → Startskjerm.</string>
     <string name="home_start_watching">Begynn å se for å vise aktiviteten din her.</string>
     <string name="home_continue_empty">Elementene du kan fortsette å se, vises her når avspillingshistorikk blir tilgjengelig.</string>
     <string name="home_last_watched_now">Sist sett nå nettopp</string>
-    <string name="home_finish_by">Ferdig kl. <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">Fortsett</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Sist sett for <xliff:g id="count">%1$d</xliff:g> minutt siden</item>
         <item quantity="other">Sist sett for <xliff:g id="count">%1$d</xliff:g> minutter siden</item>
@@ -76,36 +91,22 @@
         <item quantity="one">Sist sett for <xliff:g id="count">%1$d</xliff:g> dag siden</item>
         <item quantity="other">Sist sett for <xliff:g id="count">%1$d</xliff:g> dager siden</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">Kort</string>
     <string name="home_row_keep_watching">Fortsett å se</string>
     <string name="home_row_continue_movies">Fortsett å se filmer</string>
     <string name="home_row_continue_series">Fortsett å se serier</string>
     <string name="home_row_recent_channels">Nylige kanaler</string>
     <string name="home_row_favorite_channels">Favorittkanaler</string>
+    <string name="home_row_favorite_movies">Favorittfilmer</string>
+    <string name="home_row_favorite_series">Favorittserier</string>
     <string name="home_row_on_now">Vises nå</string>
     <string name="home_row_hero_description">Den store forhåndsvisningsraden øverst</string>
     <string name="home_row_continue_movies_description">Filmer med lagret avspillingsposisjon</string>
     <string name="home_row_continue_series_description">Episoder du kan fortsette med eller spille av som neste</string>
     <string name="home_row_recent_description">Direktekanaler du nylig har sett på</string>
     <string name="home_row_favorite_description">Direktekanalene du har merket som favoritter</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · VISES NÅ</string>
-    <string name="home_ok_to_watch">Trykk OK for å se</string>
-    <string name="home_ok_to_browse">Trykk OK for å bla gjennom</string>
-    <string name="home_no_programme_details">Ingen programinformasjon</string>
-    <string name="home_guide_unavailable">Data for programoversikten er ikke tilgjengelig</string>
-    <string name="home_next">Neste</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">NÅ · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">NESTE · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanaler</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">Filmene du har merket som favoritter</string>
+    <string name="home_row_favorite_series_description">Seriene du har merket som favoritter</string>
     <string name="update_title">Appoppdatering</string>
     <string name="update_checking">Ser etter oppdateringer…</string>
     <string name="update_whats_new">Dette er nytt</string>
@@ -140,6 +141,11 @@
     <string name="home_trending_style">Oppsett for trender</string>
     <string name="home_trending_style_hero">Detaljert kort</string>
     <string name="home_trending_style_posters">Kun plakater</string>
+    <string name="home_trending_rank">#<xliff:g id="rank">%1$d</xliff:g> i Populært nå · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">I SPILLELISTEN DIN</string>
+    <string name="home_trending_style_full_bleed">Full bredde</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> t <xliff:g id="minutes">%2$02d</xliff:g> min</string>
+    <string name="home_time_left"><xliff:g id="duration">%1$s</xliff:g> igjen</string>
     <string name="settings_trending_status_off">Populært nå er slått av.</string>
     <string name="settings_trending_status_building">Populært nå klargjøres etter synkronisering av leverandøren.</string>
     <string name="settings_trending_status_metadata_disabled">Populært nå krever metadata fra TMDB. Velg Bare TMDB eller Leverandør + TMDB.</string>
@@ -161,12 +167,7 @@
     </plurals>
     <string name="home_trending_movie">Film</string>
     <string name="home_trending_series">Serier</string>
-    <string name="home_trending_section_label">POPULÆRT NÅ · ØYEBLIKKSBILDE FRA SYNKRONISERING</string>
     <string name="home_trending_provider_match">Leverandørtreff</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> språkvalg</string>
-    <string name="home_trending_english_fallback">Reservevalg på engelsk</string>
-    <string name="home_trending_untagged_fallback">Reservevalg uten språkkode</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> reservevalg</string>
     <string name="home_trending_why_label">HVORFOR DETTE ELEMENTET VISES</string>
     <string name="home_trending_reason_title">TMDB-plassering #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + leverandørtreff</string>
     <string name="home_trending_reason_preferred">Den valgte leverandørversjonen på <xliff:g id="language">%1$s</xliff:g> prioriteres foran oppføringer på andre språk.</string>
@@ -182,12 +183,12 @@
     <string name="home_trending_trailer">Trailer</string>
     <string name="home_trending_more_details">Flere detaljer</string>
     <string name="home_trending_all_versions">Alle versjoner</string>
-    <string name="home_trending_previous">Forrige</string>
+    <string name="home_trending_why_menu">Hvorfor denne tittelen er her</string>
     <string name="home_trending_pause">Pause</string>
-    <string name="home_trending_resume">Fortsett</string>
-    <string name="home_trending_next">Neste</string>
     <string name="home_trending_unavailable">Denne versjonen er ikke lenger tilgjengelig</string>
     <string name="recording_notification_title">Tar opp</string>
+    <string name="auto_start_notification_channel">Start automatisk ved oppvåkning</string>
+    <string name="auto_start_notification_text">OwnTV åpnes når TV-en våkner</string>
     <string name="recording_failed_no_space">Stoppet: ingen plass igjen</string>
     <string name="recording_failed_no_connection">Ingen ledig tilkobling fra leverandøren</string>
     <string name="recording_failed_clash">Et annet opptak brukte tilkoblingen</string>
@@ -196,21 +197,29 @@
     <string name="recording_failed_channel_gone">Kanalen finnes ikke lenger i spillelisten</string>
     <string name="recording_failed_unknown">Det ble ikke tatt opp</string>
     <string name="recording_title">Opptak</string>
-    <string name="recording_description">Direkte-TV lagret på denne enheten.</string>
-    <string name="recording_empty">Ingenting er tatt opp ennå. Åpne TV-guiden, velg et program og trykk Ta opp.</string>
+    <string name="recording_empty">Ingenting tatt opp ennå. Trykk Ta opp på et program i TV-guiden, eller hold inne en kanal for å ta den opp eller planlegge et tidspunkt.</string>
     <string name="recording_group_now">Tar opp nå</string>
     <string name="recording_group_scheduled">Planlagt</string>
     <string name="recording_group_completed">Tatt opp</string>
     <string name="recording_group_failed">Mislyktes</string>
     <string name="recording_group_missed">Gikk glipp av</string>
+    <string name="recording_group_series">Alle visninger</string>
     <string name="recording_record">Ta opp</string>
     <string name="recording_stop">Stopp opptaket</string>
+    <string name="recording_delete_message">Fjerner opptaket og filen fra denne enheten. Dette kan ikke angres.</string>
     <string name="recording_record_series">Ta opp alle visninger</string>
     <string name="recording_stop_series">Slutt å ta opp alle visninger</string>
     <string name="recording_from_archive">Ta opp fra arkivet</string>
+    <string name="recording_schedule">Planlegg opptak…</string>
+    <string name="recording_schedule_hint">Velg dag, start og slutt. Det tas opp selv om kanalen ikke har TV-guide.</string>
+    <string name="recording_schedule_start">Start</string>
+    <string name="recording_schedule_end">Slutt</string>
+    <string name="recording_schedule_next_day">neste dag</string>
+    <string name="recording_schedule_past">Det tidspunktet har allerede passert</string>
     <string name="recording_scheduled_for">Tar opp <xliff:g id="time">%1$s</xliff:g></string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line">Tar opp <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_pill_line_locked">Tar opp fra en låst kategori</string>
     <string name="recording_clash_with">Kolliderer med <xliff:g id="programme">%1$s</xliff:g></string>
     <string name="recording_settings_group">Opptak</string>
     <string name="settings_recording_reserve">Hold én strøm ledig til å se på</string>
@@ -227,8 +236,14 @@
     <string name="recording_failed_encrypted">Denne kanalen er kryptert og kan ikke tas opp</string>
     <string name="recording_failed_drm">Denne kanalen er DRM-beskyttet, så den kan ses, men ikke tas opp. Beskyttelsen kommer fra leverandøren din, ikke fra OwnTV.</string>
     <string name="recording_failed_metered">Ikke tatt opp på mobildata</string>
+    <string name="recording_card_empty_title">Ingenting tatt opp ennå</string>
+    <string name="recording_card_body">Velg et program i TV-guiden og velg Ta opp, eller hold inne en kanal og planlegg et tidspunkt. Det havner her, også mens du ser på noe annet.</string>
+    <string name="recording_open_guide">Åpne TV-guide</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> opptak</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> opptak</item>
+    </plurals>
     <string name="settings_recording_mobile_data">Ta opp på mobildata</string>
-    <string name="settings_recording_mobile_data_description">Av: et opptak som faller utenfor Wi-Fi hoppes over i stedet for å vente — et direktesendt program kommer ikke tilbake.</string>
     <string name="settings_record_watching">Ta opp det jeg ser på</string>
     <string name="settings_record_watching_description">Legger en opptaksknapp i spilleren som lagrer kanalen du ser på. Den henter kanalen selv, så den bruker en av leverandørens tilkoblinger mens den går, og fortsetter å ta opp når du bytter kanal eller forlater spilleren.</string>
     <string name="settings_record_watching_warning_title">Bare én tilkobling</string>
@@ -237,4 +252,301 @@
     <string name="settings_record_watching_turn_on">Slå på</string>
     <string name="player_recording_conflict">Leverandøren din tillater bare én strøm om gangen, og opptaket bruker den.</string>
     <string name="player_keep_watching_stop_recording">Fortsett å se (stopper opptaket)</string>
+    <string name="sports_channel_goal_alerts">Målvarsler</string>
+    <string name="sports_channel_live_match">Direkte kamp</string>
+    <string name="sports_channel_match_reminders">Kamppåminnelser</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ Mål! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Wicket! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Rødt kort · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Pause · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Slutt · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Avspark · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Utsatt · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">Avlyst · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Resultat rettet · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Avspark om <xliff:g id="minutes">%1$d</xliff:g> min: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Avspark om <xliff:g id="minutes">%1$d</xliff:g> min: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">På <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one">På <xliff:g id="channel">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> til</item>
+        <item quantity="other">På <xliff:g id="channel">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> til</item>
+    </plurals>
+    <string name="sports_action_stop_updates">Stopp oppdateringer</string>
+    <string name="sports_title">Sport</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> direkte</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> direkte</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kamp</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kamper</item>
+    </plurals>
+    <string name="sports_scores_espn">Resultater: ESPN</string>
+    <string name="sports_my_teams">Mine lag</string>
+    <string name="sports_live_now">Direkte nå</string>
+    <string name="sports_not_on_channels">Ikke på kanalene dine</string>
+    <string name="sports_on_channels_now">Sport på kanalene dine nå</string>
+    <string name="sports_on_channels_now_mobile">Sport på kanalene dine</string>
+    <string name="sports_on_channels_now_hint">Fra guiden din — også sport ESPN ikke dekker</string>
+    <string name="sports_starting_soon">Starter snart</string>
+    <string name="sports_hint_match_page">Kampside</string>
+    <string name="sports_hint_follow_remind">Følg · Påminn</string>
+    <string name="sports_hint_day_matches">Dagens kamper</string>
+    <string name="sports_hint_day">Dag</string>
+    <string name="sports_hint_week">Uke</string>
+    <string name="sports_hint_show_score">Vis resultat</string>
+    <string name="sports_hint_back_to_day">Tilbake til dagen</string>
+    <string name="sports_hint_open_league">Åpne liga</string>
+    <string name="sports_hint_sport_chips">Sportsknapper</string>
+    <string name="sports_hint_league_chips">Ligaknapper</string>
+    <string name="sports_hint_follow_unfollow">Følg · Slutt å følge</string>
+    <string name="sports_reminder_set">Påminnelse</string>
+    <string name="sports_until">til <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_set"><xliff:g id="set">%1$d</xliff:g>. sett</string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> ov</string>
+    <string name="sports_empty_nothing">Ingen kamper i dag i det du følger</string>
+    <string name="sports_empty_unreachable">Resultatene kan ikke hentes nå. Kanalene dine virker fortsatt.</string>
+    <string name="sports_paused">Resultater satt på pause — prøver igjen om noen minutter</string>
+    <string name="sports_sport_soccer">Fotball</string>
+    <string name="sports_sport_basketball">Basketball</string>
+    <string name="sports_sport_tennis">Tennis</string>
+    <string name="sports_sport_cricket">Cricket</string>
+    <string name="sports_sport_hockey">Ishockey</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">Baseball</string>
+    <string name="sports_sport_golf">Golf</string>
+    <string name="sports_sport_rugby">Rugby</string>
+    <string name="sports_sport_rugby_league">Rugby league</string>
+    <string name="sports_sport_aussie_rules">Australsk fotball</string>
+    <string name="sports_sport_volleyball">Volleyball</string>
+    <string name="sports_sport_lacrosse">Lacrosse</string>
+    <string name="sports_sport_handball">Håndball</string>
+    <string name="sports_sport_motorsport">Motorsport</string>
+    <string name="sports_sport_darts">Dart</string>
+    <string name="sports_sport_snooker">Snooker</string>
+    <string name="sports_sport_cycling">Sykling</string>
+    <string name="sports_sport_combat">Kampsport</string>
+    <string name="sports_sport_american_football">Amerikansk fotball</string>
+    <string name="sports_sport_athletics">Friidrett</string>
+    <string name="sports_sport_winter">Vintersport</string>
+    <string name="sports_sport_other">Sport</string>
+    <string name="sports_tab_timeline">Forløp</string>
+    <string name="sports_tab_stats">Statistikk</string>
+    <string name="sports_tab_lineups">Lagoppstillinger</string>
+    <string name="sports_tab_table">Tabell</string>
+    <string name="sports_following">Følger</string>
+    <string name="sports_follow">Følg</string>
+    <string name="sports_event_goal">Mål · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">Selvmål · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Straffe · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Gult kort · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Rødt kort · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Bytte · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">målgivende <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Wicket · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Avspark</string>
+    <string name="sports_event_half_time">Pause</string>
+    <string name="sports_event_full_time">Slutt</string>
+    <string name="sports_stat_red_cards">Røde kort</string>
+    <string name="sports_watch_live">Se direkte</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Se direkte · <xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other">Se direkte · <xliff:g id="count">%1$d</xliff:g> kanaler</item>
+    </plurals>
+    <string name="sports_language_first"><xliff:g id="language">%1$s</xliff:g> først · fra Innstillinger</string>
+    <string name="sports_any_country">Alle land</string>
+    <string name="sports_reason_guide">Guide: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Eventkanal · navnet nevner begge lag</string>
+    <string name="sports_reason_pick">Ditt valg for <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_reason_likely">Viser vanligvis <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_confirmed">Bekreftet av guiden</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> skjult av filtre</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> skjult av filtre</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Se i fullskjerm</string>
+    <string name="sports_preview_another">Forhåndsvis en annen kanal</string>
+    <string name="sports_always_use">Bruk alltid for <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_filter_title">Filtrer kanaler</string>
+    <string name="sports_showing_of">Viser <xliff:g id="shown">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sports_filter_country">Land</string>
+    <string name="sports_filter_match">Kamp</string>
+    <string name="sports_unknown">Ukjent</string>
+    <string name="sports_any">Alle</string>
+    <string name="sports_all_playlists">Alle spillelister</string>
+    <string name="sports_quality_hd">HD og bedre</string>
+    <string name="sports_quality_fhd">FHD og bedre</string>
+    <string name="sports_quality_uhd">Bare 4K</string>
+    <string name="sports_only_confirmed">Bare kanaler bekreftet av guiden</string>
+    <string name="sports_only_confirmed_description">Skjul «sannsynlige» og lagrede kanaler</string>
+    <string name="sports_only_confirmed_mobile">Bare bekreftet av guiden</string>
+    <string name="sports_remember_filters">Husk disse filtrene for alle kamper</string>
+    <string name="sports_remember_filters_description">Lagres i Innstillinger → Sport for denne profilen</string>
+    <string name="sports_remember_filters_mobile">Husk for alle kamper</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one">Vis <xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other">Vis <xliff:g id="count">%1$d</xliff:g> kanaler</item>
+    </plurals>
+    <string name="sports_filter_only_this">Bare denne</string>
+    <string name="sports_filter_toggle">Slå av/på</string>
+    <string name="sports_goal_toast">Mål for et lag du følger</string>
+    <string name="sports_switch">Bytt</string>
+    <string name="sports_other_channels">Andre kanaler</string>
+    <string name="sports_other_channels_count">Andre kanaler · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Andre kanaler for denne kampen</string>
+    <string name="sports_playing_now">Spilles nå</string>
+    <string name="sports_switch_channel">Bytt kanal</string>
+    <string name="sports_tab_fixtures">Terminliste</string>
+    <string name="sports_tab_results">Resultater</string>
+    <string name="sports_tab_scores">Live</string>
+    <string name="sports_tab_calendar">Kalender</string>
+    <string name="sports_tab_leagues">Ligaer</string>
+    <string name="sports_previous_month">Forrige måned</string>
+    <string name="sports_next_month">Neste måned</string>
+    <string name="sports_next">Neste: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">Neste</string>
+    <string name="sports_no_table_series">Ingen tabell — seriene skifter hver uke</string>
+    <string name="sports_follow_league">Følg liga</string>
+    <string name="sports_unfollow_league">Slutt å følge liga</string>
+    <string name="sports_no_matches_on">Ingen kamper i sportene dine <xliff:g id="day">%1$s</xliff:g></string>
+    <string name="sports_nothing_on_day">Ingenting denne dagen</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: ingenting denne dagen</string>
+    <string name="sports_change_leagues_hint">Legg til eller fjern ligaer i Innstillinger → Sport</string>
+    <string name="sports_loading_month">Laster inn <xliff:g id="month">%1$s</xliff:g>…</string>
+    <string name="sports_offline_saved">Viser det som ble lagret <xliff:g id="time">%1$s</xliff:g> — ESPN kunne ikke nås</string>
+    <string name="sports_team_page">Lagside</string>
+    <string name="sports_next_match">Neste kamp</string>
+    <string name="sports_last_five">Siste fem</string>
+    <string name="sports_league_position">Tabellplassering</string>
+    <string name="sports_in_my_teams">I Mine lag</string>
+    <string name="sports_open_match_page">Åpne kampsiden</string>
+    <string name="sports_open_team_page">Åpne lagsiden</string>
+    <string name="sports_my_teams_leagues">Ligaene lagene dine spiller i</string>
+    <string name="sports_tab_drivers">Førere</string>
+    <string name="sports_tab_constructors">Konstruktører</string>
+    <string name="sports_tab_races">Løp</string>
+    <string name="sports_tab_rankings">Rangering</string>
+    <string name="sports_tab_matches">Kamper</string>
+    <string name="sports_next_race_weekend">Neste løpshelg</string>
+    <string name="sports_last_weekend">Sist helg</string>
+    <string name="sports_session_practice_1">Trening 1</string>
+    <string name="sports_session_practice_2">Trening 2</string>
+    <string name="sports_session_practice_3">Trening 3</string>
+    <string name="sports_session_sprint_qualifying">Sprintkvalifisering</string>
+    <string name="sports_session_qualifying">Kvalifisering</string>
+    <string name="sports_session_sprint">Sprint</string>
+    <string name="sports_session_race">Løp</string>
+    <string name="sports_table_team">Lag</string>
+    <string name="sports_table_played">K</string>
+    <string name="sports_table_won">V</string>
+    <string name="sports_table_drawn">U</string>
+    <string name="sports_table_lost">T</string>
+    <string name="sports_table_difference">MF</string>
+    <string name="sports_table_points">P</string>
+    <string name="sports_table_form">Form</string>
+    <string name="sports_this_matchday">Denne runden</string>
+    <string name="sports_settings_what">Hva som vises</string>
+    <string name="sports_show_in_menu">Vis Sport i menyen</string>
+    <string name="sports_show_in_menu_description">På som standard, med eller uten spilleliste</string>
+    <string name="sports_leagues">Sporter og ligaer</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> liga</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ligaer</item>
+    </plurals>
+    <string name="sports_spoiler_free">Uten spoilere</string>
+    <string name="sports_spoiler_free_description">Skjul resultater til du trykker OK på dem</string>
+    <string name="sports_spoiler_free_description_mobile">Trykk på et resultat for å vise det</string>
+    <string name="sports_settings_watching">Visning</string>
+    <string name="sports_languages">Foretrukne kommentatorspråk</string>
+    <string name="sports_languages_mobile">Kommentatorspråk</string>
+    <string name="sports_languages_description">Først i «Se direkte»</string>
+    <string name="sports_countries">Foretrukne land</string>
+    <string name="sports_countries_description">Fra kanalprefikser som «DE|»</string>
+    <string name="sports_picture_description">Skjul kanaler under dette</string>
+    <string name="sports_settings_while_watching">Mens du ser</string>
+    <string name="sports_score_info_bar">Resultat i infolinjen</string>
+    <string name="sports_score_info_bar_description">Vises bare mens linjen er åpen, så den ikke røper et mål</string>
+    <string name="sports_score_info_bar_description_mobile">Bare når linjen er åpen</string>
+    <string name="sports_goal_alerts_description">For lagene mine, mens jeg ser noe annet</string>
+    <string name="sports_match_reminders_description">Før avspark, med den beste kanalen</string>
+    <string name="sports_remembered_channels">Lagrede kanaler</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> til</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> til</item>
+    </plurals>
+    <string name="sports_show_likely">Vis «sannsynlige» kanaler</string>
+    <string name="sports_show_likely_description">Sportskanaler uten bekreftelse i guiden</string>
+    <string name="sports_settings_data">Data</string>
+    <string name="sports_live_refresh">Direkte oppdatering</string>
+    <string name="sports_live_refresh_description">Bare mens en sportsskjerm eller et resultat vises</string>
+    <string name="sports_about">Om sportsdata</string>
+    <string name="sports_about_summary">Resultater: ESPN · kanaler: spillelisten og guiden din</string>
+    <string name="sports_alerts_when_closed">Varsler når OwnTV er lukket</string>
+    <string name="sports_alerts_when_closed_description">Ber om varslingstillatelse én gang</string>
+    <string name="sports_alert_me_about">Varsle meg om</string>
+    <string name="sports_kind_goals">Mål og wickets</string>
+    <string name="sports_kind_kickoff_full_time">Avspark og slutt</string>
+    <string name="sports_alerts_for">For</string>
+    <string name="sports_followed_leagues">Fulgte ligaer</string>
+    <string name="sports_followed_leagues_description">Alle kamper, og det kan bli mange</string>
+    <string name="sports_live_card">Direkte resultatkort</string>
+    <string name="sports_live_card_offer">Tilby et direkte resultatkort</string>
+    <string name="sports_live_card_description">Oppdateres hvert 30. sek. til slutt; du starter det fra en kamp</string>
+    <string name="sports_alerts_footnote">Når OwnTV er lukket, kommer varsler vanligvis innen ett minutt. Har telefonen ligget stille med skjermen av lenge, kan Android holde dem tilbake i opptil rundt 15 minutter. Det direkte resultatkortet holdes ikke tilbake.</string>
+    <string name="sports_search_teams">Søk etter lag, spillere, ligaer</string>
+    <string name="sports_suggested">Forslag basert på det du ser</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Du har sett <xliff:g id="count">%1$d</xliff:g> av kampene deres</item>
+        <item quantity="other">Du har sett <xliff:g id="count">%1$d</xliff:g> av kampene deres</item>
+    </plurals>
+    <string name="sports_league_label">Liga</string>
+    <string name="sports_no_playlist_title">Legg til en spilleliste for å se kamper</string>
+    <string name="sports_no_playlist_body">Resultater, tabeller og varsler virker uten. Med en spilleliste finner OwnTV alle kanaler som viser kampen.</string>
+    <string name="sports_add_playlist">Legg til spilleliste</string>
+    <string name="sports_home_row">Direkte sport</string>
+    <string name="sports_home_row_description">Fulgte kamper, mens én er direkte eller snart starter</string>
+    <string name="sports_empty_nothing_followed">Ingen sporter eller ligaer valgt ennå</string>
+    <string name="sports_empty_choose_in">Velg dem under Innstillinger → App → Sport → Sporter og ligaer.</string>
+    <string name="sports_load_time_warning">Jo flere sporter og ligaer du velger, jo lenger tar innlasting og oppbygging.</string>
+    <string name="sports_sport_buttons">Sportsknapper</string>
+    <string name="sports_sport_buttons_mine">Mine sporter</string>
+    <string name="sports_sport_buttons_all">Alle sporter</string>
+    <string name="sports_sport_buttons_description">Mine sporter: bare det du har valgt. Alle sporter: alle ligaer OwnTV kjenner, og det tar lengre tid å laste inn.</string>
+    <string name="sports_auto_rebuild">Automatisk gjenoppbygging</string>
+    <string name="sports_auto_rebuild_description">Hvor ofte resultater, kampdetaljer og tabeller hentes på nytt av seg selv</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one">Hver <xliff:g id="count">%1$d</xliff:g>. time</item>
+        <item quantity="other">Hver <xliff:g id="count">%1$d</xliff:g>. time</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">Ved hver oppstart av appen</string>
+    <string name="sports_calendar_refresh">Kalenderoppdatering</string>
+    <string name="sports_calendar_refresh_description">Hvor ofte lagrede måneder hentes på nytt</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one">Hver <xliff:g id="count">%1$d</xliff:g>. dag</item>
+        <item quantity="other">Hver <xliff:g id="count">%1$d</xliff:g>. dag</item>
+    </plurals>
+    <string name="sports_find_channels">Finn kanaler</string>
+    <string name="sports_find_channels_description">Søker etter kampen i guiden og kanalnavnene dine. Med en stor spilleliste kan det ta et øyeblikk.</string>
+    <string name="sports_finding_channels">Søker i kanalene dine…</string>
+    <string name="sports_strict_filter">Streng filtrering</string>
+    <string name="sports_strict_filter_description">På: bare kanaler som passer filtrene dine, vises. Av: alle kanaler vises, de som passer først.</string>
+    <string name="sports_rebuilding">Bygger opp sport på nytt…</string>
+    <string name="sports_rebuild_failed">Kunne ikke oppdatere sportsdata</string>
+    <string name="sports_refresh_data_now">Oppdater sportsdata nå</string>
+    <string name="sports_last_updated">Sist oppdatert <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Kanaler kan søkes fra <xliff:g id="time">%1$s</xliff:g>, 30 minutter før avspark.</string>
+    <string name="sports_find_channels_ended">Kampen er over, så det finnes ingen kanaler å finne.</string>
+    <string name="sports_tab_broadcasts">Sendinger</string>
+    <string name="sports_broadcasts_guide">I guiden din</string>
+    <string name="sports_broadcasts_espn">Fra ESPN (kun USA)</string>
+    <string name="sports_broadcasts_find_first">Bruk Finn kanaler for å se kanalene i guiden din som viser kampen.</string>
+    <string name="sports_broadcasts_none">Ingen oppført</string>
+    <string name="sports_move_instructions">▲/▼ for å velge · OK for å plukke opp eller legge ned · Lagre til slutt</string>
 </resources>

@@ -7,7 +7,7 @@
 package tv.own.owntv.core.i18n
 
 /**
- * One supported locale, as consumed by the in-app language picker (Phase 2) and the locale
+ * One supported locale, as consumed by the in-app language picker and the locale
  * runtime. Mirrors ``tools/i18n/locales.json`` exactly; ``coverage`` is computed from the
  * actual resource files by the generator, never stored.
  */
@@ -36,7 +36,7 @@ data class SupportedLocale(
 object SupportedLocales {
 
     /** Community translations are promoted to shipping only at this coverage boundary. */
-    const val TRANSLATION_READINESS_THRESHOLD_PERCENT: Int = 70
+    const val TRANSLATION_READINESS_THRESHOLD_PERCENT: Int = 75
 
     /** Canonical Hosted Weblate project overview used by the app and generated documentation. */
     const val CONTRIBUTION_PROJECT_URL: String = "https://hosted.weblate.org/projects/owntv/"
@@ -664,6 +664,20 @@ object SupportedLocales {
             pickerVisible = false,
             coverage = 0,
         ),
+        SupportedLocale(
+            id = "eu",
+            languageTag = "eu",
+            resourceQualifier = "eu",
+            weblateCode = "eu",
+            englishName = "Basque",
+            endonym = "Euskara",
+            script = "Latn",
+            rtl = false,
+            tier = 1,
+            packaged = true,
+            pickerVisible = true,
+            coverage = 100,
+        ),
     )
 
     /** Rows the in-app picker may show after explicit catalogue promotion and readiness. */
@@ -672,7 +686,7 @@ object SupportedLocales {
             it.packaged && it.pickerVisible
     }
 
-    /** A community locale is ready for manual packaging/picker promotion at 70% or above. */
+    /** A community locale is ready for manual packaging/picker promotion at the readiness threshold or above. */
     fun isTranslationReady(coverage: Int): Boolean =
         coverage >= TRANSLATION_READINESS_THRESHOLD_PERCENT
 

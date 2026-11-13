@@ -15,6 +15,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import tv.own.owntv.core.epg.EpgMatcher
@@ -84,7 +85,7 @@ class OwnTVDatabaseMigrationTest {
             assertIndexExists(sqlite, "index_epg_programmes_natural_key")
             assertTableExists(sqlite, "content_order")
             assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
-            // D1: v8→v9 now truncates the rebuildable programme cache (instant first launch)
+            // v8→v9 truncates the rebuildable programme cache (instant first launch)
             // instead of the old row-wise de-dup; the guide re-downloads on the next EPG sync.
             // epg_channels is untouched.
             assertCount(sqlite, "epg_programmes", 0)
@@ -107,7 +108,7 @@ class OwnTVDatabaseMigrationTest {
             // Structure added along the way.
             assertTableExists(sqlite, "content_order")
             assertIndexExists(sqlite, "index_content_order_profileId_mediaType_contextKey_itemId")
-            // v24: custom category membership (issue #87).
+            // v24: custom category membership.
             assertTableExists(sqlite, "custom_category_members")
             assertIndexExists(sqlite, "index_custom_category_members_profileId_mediaType_contextKey_itemId")
             assertColumnExists(sqlite, "channels", "contentHash")
@@ -118,7 +119,15 @@ class OwnTVDatabaseMigrationTest {
             assertIndexExists(sqlite, "index_movies_sourceId_remoteId")
             assertIndexExists(sqlite, "index_series_sourceId_remoteId")
             assertIndexExists(sqlite, "index_epg_programmes_natural_key")
-            assertIndexExists(sqlite, "index_epg_programmes_sourceId_epgChannelId")
+            // v50 dropped it again: the natural key serves its reads.
+            assertIndexMissing(sqlite, "index_epg_programmes_sourceId_epgChannelId")
+            // v52: the catalogue's single-column (sourceId) / (categoryId) indexes, and channels (name).
+            for (table in listOf("channels", "movies", "series")) {
+                assertIndexMissing(sqlite, "index_${table}_sourceId")
+                assertIndexMissing(sqlite, "index_${table}_categoryId")
+            }
+            assertIndexMissing(sqlite, "index_channels_name")
+            assertIndexExists(sqlite, "index_movies_name")
             assertTableExists(sqlite, "metadata_cache")
             assertColumnExists(sqlite, "metadata_cache", "logoPath")
             assertColumnExists(sqlite, "sources", "mac")
@@ -258,7 +267,7 @@ class OwnTVDatabaseMigrationTest {
     }
 
     /**
-     * The v23 → v24 hop: custom category membership (issue #87). A user arriving from a v23 dev
+     * The v23 → v24 hop: custom category membership. A user arriving from a v23 dev
      * build (or the next public release built on it) must gain the table with zero data loss —
      * content_order rows made before the upgrade survive, and the new table is empty but fully
      * indexed. `everyExportedSchemaVersionMigratesToCurrent` covers the schema-validity half of
@@ -352,7 +361,7 @@ class OwnTVDatabaseMigrationTest {
             // Simulate the interrupted-import drift.
             db12.execSQL("DROP INDEX IF EXISTS `index_movies_sourceId_rating_name`")
             db12.execSQL("DROP INDEX IF EXISTS `index_series_categoryId_rating_name`")
-            db12.execSQL("DROP INDEX IF EXISTS `index_channels_sourceId`")
+            db12.execSQL("DROP INDEX IF EXISTS `index_channels_sourceId_sortOrder_name`")
             db12.execSQL("DROP INDEX IF EXISTS `index_epg_programmes_stopMs`")
             db12.version = 12
         } finally {
@@ -365,7 +374,7 @@ class OwnTVDatabaseMigrationTest {
             val sqlite = openForAssertions(db)
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             assertIndexExists(sqlite, "index_series_categoryId_rating_name")
-            assertIndexExists(sqlite, "index_channels_sourceId")
+            assertIndexExists(sqlite, "index_channels_sourceId_sortOrder_name")
             assertIndexExists(sqlite, "index_epg_programmes_stopMs")
             assertColumnExists(sqlite, "metadata_cache", "logoPath")
             assertColumnExists(sqlite, "sources", "mac")
@@ -380,7 +389,7 @@ class OwnTVDatabaseMigrationTest {
     }
 
     /**
-     * D2 — the tests above each pick one interesting starting version, which leaves the hops in
+     * The tests above each pick one interesting starting version, which leaves the hops in
      * between covered only by accident. A user can arrive from *any* shipped version, so every
      * exported schema must migrate all the way to the current one and pass Room's full-schema
      * validation. This is the test that fails when a new migration is added without its predecessor
@@ -416,7 +425,7 @@ class OwnTVDatabaseMigrationTest {
     }
 
     /**
-     * D2 — MIGRATION_4_6 skips version 5 rather than shipping 4→5 and 5→6. That is only safe
+     * MIGRATION_4_6 skips version 5 rather than shipping 4→5 and 5→6. That is only safe
      * because v5 never reached a public build: it existed on dev machines for one change to
      * `favorites` that was reverted before release, so 4.json and 6.json describe the identical
      * schema (same identityHash). If a future change ever makes them differ, this no-op hop would
@@ -434,7 +443,7 @@ class OwnTVDatabaseMigrationTest {
     }
 
     /**
-     * D2 — [OwnTVDatabase.healSchema] is the last line of defence against the interrupted-import
+     * [OwnTVDatabase.healSchema] is the last line of defence against the interrupted-import
      * drift that crash-looped 4.0.x → 4.1.0. The test above proves it rescues one drifted upgrade;
      * this one proves it is complete: strip *every* object it claims to guarantee (all non-unique
      * indexes on the bulk-synced tables and all four external-content FTS tables) from a current
@@ -497,7 +506,7 @@ class OwnTVDatabaseMigrationTest {
     /**
      * v40 → v41: the matcher's normalized names become stored columns, and a time index appears.
      *
-     * The upgrade path that matters is the owner's: a database already full of guide rows, upgraded
+     * The upgrade path that matters is the common one: a database already full of guide rows, upgraded
      * in place. What is proved here is that the columns and indexes arrive, that existing rows are
      * backfilled with the same answer [EpgMatcher.normalizeForEpg] would have given, and — the part a
      * schema check cannot see — that no guide row is lost on the way.
@@ -529,6 +538,304 @@ class OwnTVDatabaseMigrationTest {
             // otherwise it would drop out of the picker's search.
             assertEquals(null, normNameOf(sqlite, "nameless"))
             assertEquals(EpgMatcher.normalizeForEpg("nameless"), normIdOf(sqlite, "nameless"))
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * v43 → v44, from the published baseline (core-1.0.57 ships v43). Additive only: the
+     * remembered zoom / volume / delay a user already has must survive untouched and read as
+     * "no playlist known" (`sourceId = -1`) until the startup step fills it in; the new table and
+     * every new column must exist, and a new quirk row must be writable.
+     */
+    @Test
+    fun migrateVersion43To44_addsPlaybackQuirksAndPerPlaylistColumns_keepingPrefs() {
+        context.deleteDatabase(DB_NAME)
+        val db43 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db43, "tv.own.owntv.core.database.OwnTVDatabase/43.json")
+            db43.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            db43.execSQL(
+                "INSERT INTO playback_prefs (profileId, contentKey, zoomMode, volumeBoost, audioDelayMs, updatedAt) " +
+                    "VALUES (1, '10:LIVE:bbc-one', 'FILL', 130, 250, 5)",
+            )
+            db43.version = 43
+        } finally {
+            db43.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertTableExists(sqlite, "playback_quirks")
+            assertIndexExists(sqlite, "index_playback_quirks_sourceId")
+            assertIndexExists(sqlite, "index_playback_prefs_sourceId")
+            listOf("sourceId", "audioLang", "subtitleLang").forEach { assertColumnExists(sqlite, "playback_prefs", it) }
+            listOf("catchupTimezone", "catchupOffsetMin", "vodEnginePreference", "liveTuneTimeoutSecs", "httpReferer")
+                .forEach { assertColumnExists(sqlite, "sources", it) }
+
+            // The user's row came through whole, with the new columns at their "unknown" values.
+            assertCount(sqlite, "playback_prefs", 1)
+            sqlite.prepare("SELECT zoomMode, volumeBoost, audioDelayMs, sourceId, audioLang, subtitleLang FROM playback_prefs").use {
+                assertTrue(it.step())
+                assertEquals("FILL", it.getText(0))
+                assertEquals(130L, it.getLong(1))
+                assertEquals(250L, it.getLong(2))
+                assertEquals(-1L, it.getLong(3))
+                assertTrue(it.isNull(4))
+                assertTrue(it.isNull(5))
+            }
+
+            assertCount(sqlite, "playback_quirks", 0)
+            sqlite.execSQL(
+                "INSERT INTO playback_quirks (contentKey, sourceId, mediaType, enginePin, audioOnly, audioDelayMs, updatedAt) " +
+                    "VALUES ('10:LIVE:bbc-one', 10, 'LIVE', 'MPV', NULL, 250, 6)",
+            )
+            assertCount(sqlite, "playback_quirks", 1)
+        } finally {
+            db.close()
+        }
+    }
+
+    @Test
+    fun migrateVersion44To45_addsOriginalLanguage_keepingCachedRows() {
+        context.deleteDatabase(DB_NAME)
+        val db44 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db44, "tv.own.owntv.core.database.OwnTVDatabase/44.json")
+            db44.execSQL(
+                "INSERT INTO metadata_cache (`key`, tmdbId, imdbId, type, title, year, overview, posterPath, backdropPath, " +
+                    "rating, genresJson, castJson, trailerKey, logoPath, updatedAt, airDate) " +
+                    "VALUES ('movie:496243', 496243, NULL, 'movie', 'Parasite', 2019, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, NULL)",
+            )
+            db44.version = 44
+        } finally {
+            db44.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertColumnExists(sqlite, "metadata_cache", "originalLanguage")
+            // The cached row came through; its language is unknown until the title is played.
+            assertCount(sqlite, "metadata_cache", 1)
+            sqlite.prepare("SELECT title, originalLanguage FROM metadata_cache").use {
+                assertTrue(it.step())
+                assertEquals("Parasite", it.getText(0))
+                assertTrue(it.isNull(1))
+            }
+        } finally {
+            db.close()
+        }
+    }
+
+    @Test
+    fun migrateVersion45To46_dropsSoftwareDecode_keepingQuirkRows() {
+        context.deleteDatabase(DB_NAME)
+        val db45 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db45, "tv.own.owntv.core.database.OwnTVDatabase/45.json")
+            db45.execSQL(
+                "INSERT INTO playback_quirks (contentKey, sourceId, mediaType, enginePin, audioOnly, audioDelayMs, softwareDecode, updatedAt) " +
+                    "VALUES ('10:LIVE:bbc-one', 10, 'LIVE', 'MPV', 1, 250, NULL, 6)",
+            )
+            db45.version = 45
+        } finally {
+            db45.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertEquals(0L, countRows(sqlite, "SELECT COUNT(*) FROM pragma_table_info('playback_quirks') WHERE name = 'softwareDecode'"))
+            assertIndexExists(sqlite, "index_playback_quirks_sourceId")
+            // The pin, the sound-only mark and the delay came through untouched.
+            sqlite.prepare("SELECT enginePin, audioOnly, audioDelayMs FROM playback_quirks WHERE contentKey = '10:LIVE:bbc-one'").use {
+                assertTrue(it.step())
+                assertEquals("MPV", it.getText(0))
+                assertEquals(1L, it.getLong(1))
+                assertEquals(250L, it.getLong(2))
+            }
+        } finally {
+            db.close()
+        }
+    }
+
+    /** v46 is the public baseline (v5.0.4, core 1.0.61): its guide and user data must come through. */
+    @Test
+    fun migrateVersion46To47_addsEpgDetailsAndReminders_keepingGuideAndUserData() {
+        context.deleteDatabase(DB_NAME)
+        val db46 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db46, "tv.own.owntv.core.database.OwnTVDatabase/46.json")
+            db46.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            db46.execSQL("INSERT INTO content_order (profileId, mediaType, contextKey, itemId, position) VALUES (1, '${MediaType.LIVE.name}', '10:cat-live', 30, 0)")
+            db46.execSQL(
+                "INSERT INTO epg_programmes (sourceId, epgChannelId, startMs, stopMs, title, description, contentHash) " +
+                    "VALUES (10, 'sky.cinema.family', 1000, 2000, 'Toy Story 4', 'Woody and friends', 42)",
+            )
+            db46.version = 46
+        } finally {
+            db46.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            listOf("categories", "year", "rating", "lengthMin", "episode").forEach { assertColumnExists(sqlite, "epg_programmes", it) }
+            // The guide row came through as it was; its details stay empty until the next sync fills them.
+            sqlite.prepare("SELECT title, description, contentHash, categories, year, rating, lengthMin, episode FROM epg_programmes").use {
+                assertTrue(it.step())
+                assertEquals("Toy Story 4", it.getText(0))
+                assertEquals("Woody and friends", it.getText(1))
+                assertEquals(42L, it.getLong(2))
+                (3..7).forEach { col -> assertTrue(it.isNull(col)) }
+            }
+            assertCount(sqlite, "profiles", 1)
+            assertCount(sqlite, "content_order", 1)
+
+            assertTableExists(sqlite, "programme_reminders")
+            assertIndexExists(sqlite, "index_programme_reminders_profileId")
+            assertIndexExists(sqlite, "index_programme_reminders_startMs")
+            assertIndexExists(sqlite, "index_programme_reminders_profileId_channelId_startMs")
+            sqlite.execSQL("PRAGMA foreign_keys = ON")
+            sqlite.execSQL(
+                "INSERT INTO programme_reminders (profileId, channelId, channelName, epgChannelId, title, startMs, stopMs, leadMinutes, createdAt) " +
+                    "VALUES (1, 259, 'Sky Cinema Family', 'sky.cinema.family', 'Toy Story 4', 1000, 2000, 5, 1)",
+            )
+            assertCount(sqlite, "programme_reminders", 1)
+            // A deleted profile takes its reminders with it.
+            sqlite.execSQL("DELETE FROM profiles WHERE id = 1")
+            assertCount(sqlite, "programme_reminders", 0)
+        } finally {
+            db.close()
+        }
+    }
+
+    /** v47 adds nothing a download depends on: every row, failed ones included, comes through with no reason. */
+    @Test
+    fun migrateVersion47To48_addsDownloadReason_keepingDownloads() {
+        context.deleteDatabase(DB_NAME)
+        val db47 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db47, "tv.own.owntv.core.database.OwnTVDatabase/47.json")
+            db47.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            db47.execSQL(
+                "INSERT INTO downloads (profileId, mediaType, itemId, title, posterUrl, streamUrl, filePath, status, downloadedBytes, totalBytes, createdAt, updatedAt) " +
+                    "VALUES (1, '${MediaType.MOVIE.name}', 30, 'Heat', NULL, 'http://example.test/30.mkv', '/x/Heat.mkv', 'FAILED', 250, 1000, 1, 2)",
+            )
+            db47.version = 47
+        } finally {
+            db47.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertColumnExists(sqlite, "downloads", "reason")
+            assertColumnExists(sqlite, "downloads", "httpCode")
+            sqlite.prepare("SELECT title, status, downloadedBytes, totalBytes, reason, httpCode FROM downloads").use {
+                assertTrue(it.step())
+                assertEquals("Heat", it.getText(0))
+                assertEquals("FAILED", it.getText(1))
+                assertEquals(250L, it.getLong(2))
+                assertEquals(1000L, it.getLong(3))
+                assertTrue(it.isNull(4))
+                assertTrue(it.isNull(5))
+            }
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * v49: the panel's time zone on the source and the M3U catch-up correction
+     * on the channel. Existing rows come through whole and read "not known" (null / 0) — exactly what
+     * builds the catch-up URLs they built before — until the next sync fills them.
+     */
+    @Test
+    fun migrateVersion48To49_addsServerTimeZoneAndCatchupCorrection_keepingSourcesAndChannels() {
+        context.deleteDatabase(DB_NAME)
+        val db48 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db48, "tv.own.owntv.core.database.OwnTVDatabase/48.json")
+            db48.execSQL(
+                "INSERT INTO sources (id, name, type, url, username, password, syncLive, syncMovies, syncSeries, hlsSupported, " +
+                    "preferHls, livePrerollSecs, liveLatencyCustomSecs, maxConnections, maxConnectionsProbedAt, createdAt, catchupTimezone) " +
+                    "VALUES (10, 'Playlist', '${SourceType.XTREAM.name}', 'https://example.test', 'user', 'pass', 1, 1, 1, 0, " +
+                    "0, -1, -1, 1, 0, 2, 'MANUAL')",
+            )
+            db48.execSQL(
+                "INSERT INTO channels (id, sourceId, name, streamUrl, remoteId, sortOrder, catchup, catchupDays, catchupType, contentHash) " +
+                    "VALUES (30, 10, 'News', 'https://example.test/live.ts', 'ch-30', 0, 1, 7, 'shift', 42)",
+            )
+            db48.version = 48
+        } finally {
+            db48.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertColumnExists(sqlite, "sources", "serverTimeZone")
+            assertColumnExists(sqlite, "channels", "catchupCorrectionMin")
+            sqlite.prepare("SELECT name, maxConnections, catchupTimezone, serverTimeZone FROM sources").use {
+                assertTrue(it.step())
+                assertEquals("Playlist", it.getText(0))
+                assertEquals(1L, it.getLong(1))
+                assertEquals("MANUAL", it.getText(2))
+                assertTrue(it.isNull(3))
+            }
+            sqlite.prepare("SELECT name, catchupDays, catchupType, contentHash, catchupCorrectionMin FROM channels").use {
+                assertTrue(it.step())
+                assertEquals("News", it.getText(0))
+                assertEquals(7L, it.getLong(1))
+                assertEquals("shift", it.getText(2))
+                // Unchanged hash: the next resync must not rewrite every channel.
+                assertEquals(42L, it.getLong(3))
+                assertEquals(0L, it.getLong(4))
+            }
+            sqlite.execSQL("UPDATE sources SET serverTimeZone = 'Europe/London' WHERE id = 10")
+            sqlite.execSQL("UPDATE channels SET catchupCorrectionMin = -60 WHERE id = 30")
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * v50: the guide's (sourceId) and (sourceId, epgChannelId) indexes are dropped. Every programme
+     * comes through untouched, hash included (a changed hash would rewrite the guide on the next sync),
+     * and the natural key that now serves those reads is still there.
+     */
+    @Test
+    fun migrateVersion49To50_dropsRedundantGuideIndexes_keepingProgrammes() {
+        context.deleteDatabase(DB_NAME)
+        val db49 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db49, "tv.own.owntv.core.database.OwnTVDatabase/49.json")
+            db49.execSQL(
+                "INSERT INTO epg_programmes (id, sourceId, epgChannelId, startMs, stopMs, title, description, contentHash) " +
+                    "VALUES (10, -1, 'news', 1000, 2000, 'News One', 'A', 77)",
+            )
+            db49.version = 49
+        } finally {
+            db49.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = openForAssertions(db)
+            assertIndexMissing(sqlite, "index_epg_programmes_sourceId")
+            assertIndexMissing(sqlite, "index_epg_programmes_sourceId_epgChannelId")
+            assertIndexExists(sqlite, "index_epg_programmes_natural_key")
+            sqlite.prepare("SELECT id, epgChannelId, title, contentHash FROM epg_programmes WHERE sourceId = -1").use {
+                assertTrue(it.step())
+                assertEquals(10L, it.getLong(0))
+                assertEquals("news", it.getText(1))
+                assertEquals("News One", it.getText(2))
+                assertEquals(77L, it.getLong(3))
+            }
         } finally {
             db.close()
         }
@@ -777,6 +1084,10 @@ class OwnTVDatabaseMigrationTest {
         assertEquals(1L, countRows(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'index' AND name = ?", arrayOf<Any?>(index)))
     }
 
+    private fun assertIndexMissing(db: SQLiteConnection, index: String) {
+        assertEquals(0L, countRows(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'index' AND name = ?", arrayOf<Any?>(index)))
+    }
+
     private fun assertColumnExists(db: SQLiteConnection, table: String, column: String) {
         assertEquals(
             1L,
@@ -820,9 +1131,9 @@ class OwnTVDatabaseMigrationTest {
     /**
      * A driver connection to the test database file.
      *
-     * Phase B configures a SQLiteDriver, and `RoomDatabase.openHelper` throws once one is set — so
-     * this test can no longer reach the file that way, and it should not want to: the whole point
-     * of the phase is that the driver path is the one users run. Room's public `useWriterConnection`
+     * Production configures a SQLiteDriver, and `RoomDatabase.openHelper` throws once one is set — so
+     * this test can no longer reach the file that way, and it should not want to: the driver path
+     * is the one users run. Room's public `useWriterConnection`
      * hands back a `Transactor`, which is not a `SQLiteConnection`, so the schema assertions open
      * their own connection to the same file instead.
      */

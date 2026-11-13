@@ -3,7 +3,7 @@ package tv.own.owntv.core.repository
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/** A playlist header may advertise several XMLTV feeds in one comma-separated `url-tvg` (issue #171). */
+/** A playlist header may advertise several XMLTV feeds in one comma-separated `url-tvg`. */
 class SplitGuideUrlsTest {
 
     @Test

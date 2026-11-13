@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">Kendi resminiz</string>
     <string name="profiles_kids">Çocuk profili</string>
     <string name="profiles_kids_description">Basitleştirilmiş, güvenli gezinme</string>
+    <string name="profiles_allow_downloads">İndirmelere izin ver</string>
+    <string name="profiles_allow_downloads_description">Kapalıyken bu profilde tüm İndir düğmeleri gizlenir</string>
     <string name="profiles_remove_pin">PIN kilidini kaldır</string>
     <string name="profiles_no_pin">Bu profil PIN olmadan açılır</string>
     <string name="profiles_change_pin">PIN\'i değiştir (boş bırakırsanız korunur)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">Oluştur</string>
     <string name="profiles_save">Kaydet</string>
     <string name="profiles_gate_title">Kim izliyor?</string>
+    <string name="profiles_gate_subtitle">Her profil kendi favorilerini ve geçmişini tutar</string>
     <string name="profiles_wrong_pin">Yanlış PIN — tekrar deneyin</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN\'i girin</string>
+    <string name="profiles_protected_edit">Bir profil kilidi veya ayarlar kilidi var. Değiştirmek için iki PIN’den birini girin.</string>
     <string name="profiles_kids_badge">ÇOCUK</string>
     <string name="profiles_add">Profil ekle</string>
     <string name="profiles_title">Profiller</string>
-    <string name="profiles_add_button">Profil ekle</string>
     <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” silinsin mi?</string>
     <string name="profiles_delete_message">Bu profil ile favorilerini ve geçmişini kaldırır. Kaynaklar korunur.</string>
     <string name="profiles_kids_tag">Çocuk</string>
@@ -32,38 +35,50 @@
     <string name="search_title">Arama</string>
     <string name="search_continue">İzlemeye devam et</string>
     <string name="search_unwatched">İzlenmemiş</string>
-    <string name="search_hint">Kanallarda, filmlerde ve dizilerde ara…</string>
     <string name="search_recent">Son aramalar</string>
-    <string name="search_recent_empty">Son aramalarınız burada gösterilecek.</string>
-    <string name="search_minimum_query">Her yerde arama yapmak için en az 2 karakter yazın.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — sonuç bulunamadı.</string>
     <string name="search_nothing_in_list">Henüz <xliff:g id="list">%1$s</xliff:g> listesinde hiçbir şey yok.</string>
     <string name="search_clear">Temizle</string>
     <string name="search_jump_to">Şuraya git</string>
-    <string name="search_watch_live">Canlı izle</string>
-    <string name="search_play">Oynat</string>
     <string name="search_open_series">Diziyi aç</string>
     <string name="search_movie">Film</string>
     <string name="search_series">Dizi</string>
     <string name="search_channels">Kanallar</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">İzlemeye devam et</string>
-    <string name="home_play_next">Sonrakini oynat</string>
-    <string name="home_tune_in">Yayını aç</string>
-    <string name="home_recent_live">Son izlenen canlı yayın</string>
+    <string name="search_on_tv">TV Programları</string>
+    <string name="search_go_to_channel">Kanala git</string>
+    <string name="search_go_to_movie">Filme git</string>
+    <string name="search_clear_recent">Son aramaları temizle</string>
+    <string name="search_field_hint">Kanallar, filmler ve diziler</string>
+    <string name="search_voice">Sesli arama</string>
+    <string name="search_voice_prompt">Bir kanal, film veya dizi söyleyin</string>
+    <string name="search_card_title">Oynatma listelerinizdeki her şeyi bulun</string>
+    <string name="search_card_body">Gösterdiğiniz tüm oynatma listelerinden kanallar, filmler ve diziler. Doğrudan ona gitmek için bir sonuç seçin; orada oynatın, indirin veya seçeneklerini açın. Şu an veya bugün daha sonra yayınlanan TV programları da adlarıyla bulunur.</string>
+    <string name="search_nothing_found">“<xliff:g id="query">%1$s</xliff:g>” için hiçbir şey bulunamadı</string>
+    <string name="search_nothing_found_body">Arama, gösterdiğiniz oynatma listelerindeki kanal, film ve dizi adlarına bakar. Gizli kategoriler aranmaz. TV programları indirilen rehberde adlarıyla aranır.</string>
+    <string name="search_query_quoted">“<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sonuç</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sonuç</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other">Tüm <xliff:g id="count">%1$d</xliff:g> kanal</item>
+    </plurals>
     <string name="profiles_default_name">Profil</string>
     <string name="launcher_recent_live_title">Son canlı yayınlar</string>
     <string name="launcher_recent_live_description">Son izlenen canlı kanallar</string>
     <string name="launcher_movie_type">Film</string>
     <string name="launcher_episode_number">Bölüm <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Kitaplığınız yükleniyor · şimdiye kadar <xliff:g id="count">%1$s</xliff:g> içerik</item>
+        <item quantity="other">Kitaplığınız yükleniyor · şimdiye kadar <xliff:g id="count">%1$s</xliff:g> içerik</item>
+    </plurals>
+    <string name="home_library_loading_trending">Şu Anda Trend Olanlar, kitaplığınız doldukça görünür.</string>
     <string name="home_no_preview">Henüz önizlenecek bir şey yok.</string>
     <string name="home_no_rows">Tüm ana ekran satırları gizli.</string>
     <string name="home_enable_rows">Ayarlar → Ana ekran bölümünden satırları yeniden açın.</string>
     <string name="home_start_watching">Etkinliğinizi burada görmek için izlemeye başlayın.</string>
     <string name="home_continue_empty">Oynatma geçmişi kullanılabilir olduğunda izlemeye devam edeceğiniz içerikler burada gösterilecek.</string>
     <string name="home_last_watched_now">Son izleme: az önce</string>
-    <string name="home_finish_by">Tahmini bitiş: <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">Devam et</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Son izleme: <xliff:g id="count">%1$d</xliff:g> dakika önce</item>
         <item quantity="other">Son izleme: <xliff:g id="count">%1$d</xliff:g> dakika önce</item>
@@ -76,36 +91,22 @@
         <item quantity="one">Son izleme: <xliff:g id="count">%1$d</xliff:g> gün önce</item>
         <item quantity="other">Son izleme: <xliff:g id="count">%1$d</xliff:g> gün önce</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> B<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">B<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">Kartlar</string>
     <string name="home_row_keep_watching">İzlemeye devam et</string>
     <string name="home_row_continue_movies">Filmleri izlemeye devam et</string>
     <string name="home_row_continue_series">Dizileri izlemeye devam et</string>
     <string name="home_row_recent_channels">Son kanallar</string>
     <string name="home_row_favorite_channels">Favori kanallar</string>
+    <string name="home_row_favorite_movies">Favori filmler</string>
+    <string name="home_row_favorite_series">Favori diziler</string>
     <string name="home_row_on_now">Şimdi yayında</string>
     <string name="home_row_hero_description">Üstteki büyük önizleme satırı</string>
     <string name="home_row_continue_movies_description">Oynatma konumu kaydedilmiş filmler</string>
     <string name="home_row_continue_series_description">Devam edilecek veya sıradaki bölümü oynatılacak diziler</string>
     <string name="home_row_recent_description">Yakın zamanda açtığınız canlı kanallar</string>
     <string name="home_row_favorite_description">Favorilere eklediğiniz canlı kanallar</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · ŞİMDİ YAYINDA</string>
-    <string name="home_ok_to_watch">İzlemek için OK\'e basın</string>
-    <string name="home_ok_to_browse">Göz atmak için OK\'e basın</string>
-    <string name="home_no_programme_details">Program ayrıntıları yok</string>
-    <string name="home_guide_unavailable">Program rehberi verileri kullanılamıyor</string>
-    <string name="home_next">Sonraki</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">ŞİMDİ · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">SIRADA · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanal</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">Favorilere eklediğiniz filmler</string>
+    <string name="home_row_favorite_series_description">Favorilere eklediğiniz diziler</string>
     <string name="update_title">Uygulama güncellemesi</string>
     <string name="update_checking">Güncellemeler denetleniyor…</string>
     <string name="update_whats_new">Yenilikler</string>
@@ -135,11 +136,16 @@
     <string name="recovery_backup_hint">Bir yedekleme dosyanız varsa uygulamayı sıfırlayıp ardından bu dosyadan geri yükleyebilirsiniz. Sıfırlama işlemi bu cihazda depolanan her şeyi siler.</string>
     <string name="recovery_confirm_reset">Onay: tüm uygulama verilerini sil</string>
     <string name="recovery_reset">Uygulama verilerini sıfırla (son çare)</string>
-    <string name="home_row_now_trending">Şu Anda Popüler</string>
+    <string name="home_row_now_trending">Şu anda popüler</string>
     <string name="home_row_trending_description">Yalnızca TMDB trend başlıkları sağlayıcı kataloğunuzdaki film veya dizilerle eşleştiğinde 4–10 öğe gösterir.</string>
     <string name="home_trending_style">Trend düzeni</string>
     <string name="home_trending_style_hero">Ayrıntılı kart</string>
     <string name="home_trending_style_posters">Yalnızca posterler</string>
+    <string name="home_trending_rank">Trendlerde #<xliff:g id="rank">%1$d</xliff:g> · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">OYNATMA LİSTENDE</string>
+    <string name="home_trending_style_full_bleed">Tam ekran</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> sa <xliff:g id="minutes">%2$02d</xliff:g> dk</string>
+    <string name="home_time_left"><xliff:g id="duration">%1$s</xliff:g> kaldı</string>
     <string name="settings_trending_status_off">Şu Anda Popüler kapalı.</string>
     <string name="settings_trending_status_building">Şu Anda Popüler, sağlayıcı eşitlemesinden sonra hazırlanıyor.</string>
     <string name="settings_trending_status_metadata_disabled">Şu Anda Popüler için TMDB meta verisi gereklidir. Yalnızca TMDB veya Sağlayıcı + TMDB seçeneğini belirleyin.</string>
@@ -161,12 +167,7 @@
     </plurals>
     <string name="home_trending_movie">Film</string>
     <string name="home_trending_series">Dizi</string>
-    <string name="home_trending_section_label">ŞU ANDA POPÜLER · EŞİTLEME ANLIK GÖRÜNTÜSÜ</string>
     <string name="home_trending_provider_match">Sağlayıcı eşleşmesi</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> dil seçimi</string>
-    <string name="home_trending_english_fallback">EN geri dönüş seçimi</string>
-    <string name="home_trending_untagged_fallback">Etiketsiz geri dönüş seçimi</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> geri dönüş seçimi</string>
     <string name="home_trending_why_label">BU ÖĞE NEDEN GÖSTERİLİYOR</string>
     <string name="home_trending_reason_title">TMDB sıralaması #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + sağlayıcı eşleşmesi</string>
     <string name="home_trending_reason_preferred">Seçilen <xliff:g id="language">%1$s</xliff:g> sağlayıcı sürümü, başka bir dildeki girdilerden önce tercih edilir.</string>
@@ -181,13 +182,13 @@
     <string name="home_trending_open_episodes">Bölümleri aç</string>
     <string name="home_trending_trailer">Fragman</string>
     <string name="home_trending_more_details">Daha Fazla Ayrıntı</string>
-    <string name="home_trending_all_versions">Tüm Sürümler</string>
-    <string name="home_trending_previous">Önceki</string>
+    <string name="home_trending_all_versions">Tüm sürümler</string>
+    <string name="home_trending_why_menu">Bu başlık neden burada</string>
     <string name="home_trending_pause">Duraklat</string>
-    <string name="home_trending_resume">Devam Et</string>
-    <string name="home_trending_next">Sonraki</string>
     <string name="home_trending_unavailable">Bu sürüm artık kullanılamıyor</string>
     <string name="recording_notification_title">Kaydediliyor</string>
+    <string name="auto_start_notification_channel">Uyanınca otomatik başlat</string>
+    <string name="auto_start_notification_text">TV uyandığında OwnTV açılır</string>
     <string name="recording_failed_no_space">Durduruldu: yer kalmadı</string>
     <string name="recording_failed_no_connection">Sağlayıcınızda boş bağlantı yok</string>
     <string name="recording_failed_clash">Bağlantıyı başka bir kayıt kullanıyordu</string>
@@ -196,21 +197,29 @@
     <string name="recording_failed_channel_gone">Bu kanal artık oynatma listenizde yok</string>
     <string name="recording_failed_unknown">Kayıt yapılmadı</string>
     <string name="recording_title">Kayıtlar</string>
-    <string name="recording_description">Bu cihaza kaydedilen canlı TV.</string>
-    <string name="recording_empty">Henüz kayıt yok. TV rehberini açın, bir program seçin ve Kaydet’e basın.</string>
+    <string name="recording_empty">Henüz kayıt yok. TV rehberinde bir programda Kaydet’e basın ya da bir kanala uzun basarak onu kaydedin veya bir saat zamanlayın.</string>
     <string name="recording_group_now">Şimdi kaydediliyor</string>
     <string name="recording_group_scheduled">Zamanlanmış</string>
     <string name="recording_group_completed">Kaydedildi</string>
     <string name="recording_group_failed">Başarısız</string>
     <string name="recording_group_missed">Kaçırıldı</string>
+    <string name="recording_group_series">Her yayın</string>
     <string name="recording_record">Kaydet</string>
     <string name="recording_stop">Kaydı durdur</string>
+    <string name="recording_delete_message">Kaydı ve dosyasını bu cihazdan kaldırır. Bu işlem geri alınamaz.</string>
     <string name="recording_record_series">Her yayını kaydet</string>
     <string name="recording_stop_series">Her yayını kaydetmeyi bırak</string>
     <string name="recording_from_archive">Arşivden kaydet</string>
+    <string name="recording_schedule">Kayıt zamanla…</string>
+    <string name="recording_schedule_hint">Günü, başlangıcı ve bitişi seçin. Bu kanalın TV rehberi olmasa da kayıt yapılır.</string>
+    <string name="recording_schedule_start">Başlangıç</string>
+    <string name="recording_schedule_end">Bitiş</string>
+    <string name="recording_schedule_next_day">ertesi gün</string>
+    <string name="recording_schedule_past">Bu saat zaten geçti</string>
     <string name="recording_scheduled_for"><xliff:g id="time">%1$s</xliff:g> kaydedecek</string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> kaydediliyor</string>
+    <string name="recording_pill_line_locked">Kilitli bir kategoriden kaydediliyor</string>
     <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g> ile çakışıyor</string>
     <string name="recording_settings_group">Kayıt</string>
     <string name="settings_recording_reserve">İzlemek için bir bağlantıyı boş bırak</string>
@@ -227,8 +236,14 @@
     <string name="recording_failed_encrypted">Bu kanal şifreli olduğu için kaydedilemez</string>
     <string name="recording_failed_drm">Bu kanal DRM korumalı olduğundan izlenebilir ancak kaydedilemez. Bu koruma OwnTV\'den değil, sağlayıcınızdan geliyor.</string>
     <string name="recording_failed_metered">Mobil veriyle kaydedilmedi</string>
+    <string name="recording_card_empty_title">Henüz kayıt yok</string>
+    <string name="recording_card_body">TV rehberinde bir program seçip Kaydet’i seçin ya da bir kanala uzun basıp bir saat zamanlayın. Siz başka bir şey izlerken bile buraya gelir.</string>
+    <string name="recording_open_guide">TV rehberini aç</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kayıt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kayıt</item>
+    </plurals>
     <string name="settings_recording_mobile_data">Mobil veriyle kaydet</string>
-    <string name="settings_recording_mobile_data_description">Kapalı: Wi-Fi dışında denk gelen bir kayıt beklemek yerine atlanır — canlı bir yayın tekrar etmez.</string>
     <string name="settings_record_watching">İzlediğimi kaydet</string>
     <string name="settings_record_watching_description">Oynatıcıya, izlediğiniz kanalı kaydeden bir kayıt düğmesi ekler. Kanalı kendisi çeker, bu yüzden çalışırken sağlayıcınızın bağlantılarından birini kullanır ve kanalı değiştirseniz veya oynatıcıdan çıksanız da kaydetmeyi sürdürür.</string>
     <string name="settings_record_watching_warning_title">Yalnızca tek bağlantı</string>
@@ -237,4 +252,301 @@
     <string name="settings_record_watching_turn_on">Aç</string>
     <string name="player_recording_conflict">Sağlayıcınız aynı anda yalnızca bir yayına izin veriyor ve şu anda kayıt onu kullanıyor.</string>
     <string name="player_keep_watching_stop_recording">İzlemeye devam et (kaydı durdurur)</string>
+    <string name="sports_channel_goal_alerts">Gol uyarıları</string>
+    <string name="sports_channel_live_match">Canlı maç</string>
+    <string name="sports_channel_match_reminders">Maç hatırlatıcıları</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ Gol! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Wicket! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Kırmızı kart · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Devre arası · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Maç sonu · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Başlama vuruşu · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Ertelendi · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">İptal edildi · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Skor düzeltildi · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Maç <xliff:g id="minutes">%1$d</xliff:g> dk sonra: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Maç <xliff:g id="minutes">%1$d</xliff:g> dk sonra: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on"><xliff:g id="channel">%1$s</xliff:g>’de</string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one"><xliff:g id="channel">%1$s</xliff:g> ve <xliff:g id="count">%2$d</xliff:g> kanalda daha</item>
+        <item quantity="other"><xliff:g id="channel">%1$s</xliff:g> ve <xliff:g id="count">%2$d</xliff:g> kanalda daha</item>
+    </plurals>
+    <string name="sports_action_stop_updates">Güncellemeleri durdur</string>
+    <string name="sports_title">Spor</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canlı</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> canlı</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> maç</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> maç</item>
+    </plurals>
+    <string name="sports_scores_espn">Skorlar: ESPN</string>
+    <string name="sports_my_teams">Takımlarım</string>
+    <string name="sports_live_now">Şimdi canlı</string>
+    <string name="sports_not_on_channels">Kanallarında yok</string>
+    <string name="sports_on_channels_now">Şimdi kanallarındaki spor</string>
+    <string name="sports_on_channels_now_mobile">Kanallarındaki spor</string>
+    <string name="sports_on_channels_now_hint">Rehberinden — ESPN’in kapsamadığı sporlar dahil</string>
+    <string name="sports_starting_soon">Birazdan başlıyor</string>
+    <string name="sports_hint_match_page">Maç sayfası</string>
+    <string name="sports_hint_follow_remind">Takip et · Hatırlat</string>
+    <string name="sports_hint_day_matches">Günün maçları</string>
+    <string name="sports_hint_day">Gün</string>
+    <string name="sports_hint_week">Hafta</string>
+    <string name="sports_hint_show_score">Skoru göster</string>
+    <string name="sports_hint_back_to_day">Güne dön</string>
+    <string name="sports_hint_open_league">Ligi aç</string>
+    <string name="sports_hint_sport_chips">Spor düğmeleri</string>
+    <string name="sports_hint_league_chips">Lig düğmeleri</string>
+    <string name="sports_hint_follow_unfollow">Takip et · Takipten çık</string>
+    <string name="sports_reminder_set">Hatırlatıcı</string>
+    <string name="sports_until"><xliff:g id="time">%1$s</xliff:g>’e kadar</string>
+    <string name="sports_set"><xliff:g id="set">%1$d</xliff:g>. set</string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> over</string>
+    <string name="sports_empty_nothing">Bugün takip ettiklerinde maç yok</string>
+    <string name="sports_empty_unreachable">Skorlara şu an ulaşılamıyor. Kanalların çalışmaya devam ediyor.</string>
+    <string name="sports_paused">Skorlar duraklatıldı — birkaç dakika içinde yeniden denenecek</string>
+    <string name="sports_sport_soccer">Futbol</string>
+    <string name="sports_sport_basketball">Basketbol</string>
+    <string name="sports_sport_tennis">Tenis</string>
+    <string name="sports_sport_cricket">Kriket</string>
+    <string name="sports_sport_hockey">Buz hokeyi</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">Beyzbol</string>
+    <string name="sports_sport_golf">Golf</string>
+    <string name="sports_sport_rugby">Ragbi</string>
+    <string name="sports_sport_rugby_league">Ragbi ligi</string>
+    <string name="sports_sport_aussie_rules">Avustralya futbolu</string>
+    <string name="sports_sport_volleyball">Voleybol</string>
+    <string name="sports_sport_lacrosse">Lakros</string>
+    <string name="sports_sport_handball">Hentbol</string>
+    <string name="sports_sport_motorsport">Motor sporları</string>
+    <string name="sports_sport_darts">Dart</string>
+    <string name="sports_sport_snooker">Snooker</string>
+    <string name="sports_sport_cycling">Bisiklet</string>
+    <string name="sports_sport_combat">Dövüş sporları</string>
+    <string name="sports_sport_american_football">Amerikan futbolu</string>
+    <string name="sports_sport_athletics">Atletizm</string>
+    <string name="sports_sport_winter">Kış sporları</string>
+    <string name="sports_sport_other">Spor</string>
+    <string name="sports_tab_timeline">Akış</string>
+    <string name="sports_tab_stats">İstatistik</string>
+    <string name="sports_tab_lineups">Kadrolar</string>
+    <string name="sports_tab_table">Puan durumu</string>
+    <string name="sports_following">Takip ediliyor</string>
+    <string name="sports_follow">Takip et</string>
+    <string name="sports_event_goal">Gol · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">Kendi kalesine · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Penaltı · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Sarı kart · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Kırmızı kart · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Oyuncu değişikliği · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">asist <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Wicket · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Başlama vuruşu</string>
+    <string name="sports_event_half_time">Devre arası</string>
+    <string name="sports_event_full_time">Maç sonu</string>
+    <string name="sports_stat_red_cards">Kırmızı kartlar</string>
+    <string name="sports_watch_live">Canlı izle</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Canlı izle · <xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other">Canlı izle · <xliff:g id="count">%1$d</xliff:g> kanal</item>
+    </plurals>
+    <string name="sports_language_first">Önce <xliff:g id="language">%1$s</xliff:g> · Ayarlar’dan</string>
+    <string name="sports_any_country">Tüm ülkeler</string>
+    <string name="sports_reason_guide">Rehber: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Etkinlik kanalı · adında iki takım da var</string>
+    <string name="sports_reason_pick"><xliff:g id="competition">%1$s</xliff:g> için seçimin</string>
+    <string name="sports_reason_likely">Genelde <xliff:g id="competition">%1$s</xliff:g> yayınlar</string>
+    <string name="sports_confirmed">Rehberle doğrulandı</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> filtrelerle gizli</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> filtrelerle gizli</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Tam ekran izle</string>
+    <string name="sports_preview_another">Başka kanalı önizle</string>
+    <string name="sports_always_use"><xliff:g id="competition">%1$s</xliff:g> için hep bunu kullan</string>
+    <string name="sports_filter_title">Kanalları filtrele</string>
+    <string name="sports_showing_of"><xliff:g id="total">%2$d</xliff:g> kanaldan <xliff:g id="shown">%1$d</xliff:g> gösteriliyor</string>
+    <string name="sports_filter_country">Ülke</string>
+    <string name="sports_filter_match">Maç</string>
+    <string name="sports_unknown">Bilinmiyor</string>
+    <string name="sports_any">Tümü</string>
+    <string name="sports_all_playlists">Tüm oynatma listeleri</string>
+    <string name="sports_quality_hd">HD ve üstü</string>
+    <string name="sports_quality_fhd">FHD ve üstü</string>
+    <string name="sports_quality_uhd">Yalnızca 4K</string>
+    <string name="sports_only_confirmed">Yalnızca rehberle doğrulanan kanallar</string>
+    <string name="sports_only_confirmed_description">“Olası” ve hatırlanan kanalları gizle</string>
+    <string name="sports_only_confirmed_mobile">Yalnızca rehberle doğrulanan</string>
+    <string name="sports_remember_filters">Bu filtreleri her maç için hatırla</string>
+    <string name="sports_remember_filters_description">Bu profil için Ayarlar → Spor’a kaydedilir</string>
+    <string name="sports_remember_filters_mobile">Her maç için hatırla</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanalı göster</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanalı göster</item>
+    </plurals>
+    <string name="sports_filter_only_this">Yalnızca bu</string>
+    <string name="sports_filter_toggle">Aç/kapat</string>
+    <string name="sports_goal_toast">Takip ettiğin takımdan gol</string>
+    <string name="sports_switch">Geç</string>
+    <string name="sports_other_channels">Diğer kanallar</string>
+    <string name="sports_other_channels_count">Diğer kanallar · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Bu maç için diğer kanallar</string>
+    <string name="sports_playing_now">Şimdi oynatılıyor</string>
+    <string name="sports_switch_channel">Kanalı değiştir</string>
+    <string name="sports_tab_fixtures">Fikstür</string>
+    <string name="sports_tab_results">Sonuçlar</string>
+    <string name="sports_tab_scores">Skorlar</string>
+    <string name="sports_tab_calendar">Takvim</string>
+    <string name="sports_tab_leagues">Ligler</string>
+    <string name="sports_previous_month">Önceki ay</string>
+    <string name="sports_next_month">Sonraki ay</string>
+    <string name="sports_next">Sıradaki: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">Sıradaki</string>
+    <string name="sports_no_table_series">Puan tablosu yok — seriler her hafta değişir</string>
+    <string name="sports_follow_league">Ligi takip et</string>
+    <string name="sports_unfollow_league">Ligi takipten çık</string>
+    <string name="sports_no_matches_on"><xliff:g id="day">%1$s</xliff:g>: sporlarında maç yok</string>
+    <string name="sports_nothing_on_day">Bu gün bir şey yok</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: bu gün bir şey yok</string>
+    <string name="sports_change_leagues_hint">Ligleri Ayarlar → Spor bölümünden ekle veya kaldır</string>
+    <string name="sports_loading_month"><xliff:g id="month">%1$s</xliff:g> yükleniyor…</string>
+    <string name="sports_offline_saved">Kaydedilen gösteriliyor (<xliff:g id="time">%1$s</xliff:g>) — ESPN’e ulaşılamadı</string>
+    <string name="sports_team_page">Takım sayfası</string>
+    <string name="sports_next_match">Sıradaki maç</string>
+    <string name="sports_last_five">Son beş</string>
+    <string name="sports_league_position">Ligdeki sıra</string>
+    <string name="sports_in_my_teams">Takımlarımda</string>
+    <string name="sports_open_match_page">Maç sayfasını aç</string>
+    <string name="sports_open_team_page">Takım sayfasını aç</string>
+    <string name="sports_my_teams_leagues">Takımlarının oynadığı ligler</string>
+    <string name="sports_tab_drivers">Pilotlar</string>
+    <string name="sports_tab_constructors">Konstrüktörler</string>
+    <string name="sports_tab_races">Yarışlar</string>
+    <string name="sports_tab_rankings">Sıralama</string>
+    <string name="sports_tab_matches">Maçlar</string>
+    <string name="sports_next_race_weekend">Sıradaki yarış hafta sonu</string>
+    <string name="sports_last_weekend">Geçen hafta sonu</string>
+    <string name="sports_session_practice_1">Antrenman 1</string>
+    <string name="sports_session_practice_2">Antrenman 2</string>
+    <string name="sports_session_practice_3">Antrenman 3</string>
+    <string name="sports_session_sprint_qualifying">Sprint sıralama turları</string>
+    <string name="sports_session_qualifying">Sıralama turları</string>
+    <string name="sports_session_sprint">Sprint</string>
+    <string name="sports_session_race">Yarış</string>
+    <string name="sports_table_team">Takım</string>
+    <string name="sports_table_played">O</string>
+    <string name="sports_table_won">G</string>
+    <string name="sports_table_drawn">B</string>
+    <string name="sports_table_lost">M</string>
+    <string name="sports_table_difference">AV</string>
+    <string name="sports_table_points">P</string>
+    <string name="sports_table_form">Form</string>
+    <string name="sports_this_matchday">Bu hafta</string>
+    <string name="sports_settings_what">Ne gösterilsin</string>
+    <string name="sports_show_in_menu">Menüde Spor’u göster</string>
+    <string name="sports_show_in_menu_description">Varsayılan olarak açık, oynatma listesi olsun ya da olmasın</string>
+    <string name="sports_leagues">Sporlar ve ligler</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> lig</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> lig</item>
+    </plurals>
+    <string name="sports_spoiler_free">Spoiler yok</string>
+    <string name="sports_spoiler_free_description">OK’a basana kadar skorları gizle</string>
+    <string name="sports_spoiler_free_description_mobile">Görmek için skora dokun</string>
+    <string name="sports_settings_watching">İzleme</string>
+    <string name="sports_languages">Tercih edilen yorum dilleri</string>
+    <string name="sports_languages_mobile">Yorum dilleri</string>
+    <string name="sports_languages_description">“Canlı izle”de önce gösterilir</string>
+    <string name="sports_countries">Tercih edilen ülkeler</string>
+    <string name="sports_countries_description">“DE|” gibi kanal öneklerinden</string>
+    <string name="sports_picture_description">Bunun altındaki kanalları gizle</string>
+    <string name="sports_settings_while_watching">İzlerken</string>
+    <string name="sports_score_info_bar">Bilgi çubuğunda skor</string>
+    <string name="sports_score_info_bar_description">Yalnızca çubuk açıkken görünür, golü önceden göstermez</string>
+    <string name="sports_score_info_bar_description_mobile">Yalnızca çubuk açıkken</string>
+    <string name="sports_goal_alerts_description">Takımlarım için, başka bir şey izlerken</string>
+    <string name="sports_match_reminders_description">Başlama vuruşundan önce, en iyi kanalla</string>
+    <string name="sports_remembered_channels">Hatırlanan kanallar</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> daha</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> daha</item>
+    </plurals>
+    <string name="sports_show_likely">“Olası” kanalları göster</string>
+    <string name="sports_show_likely_description">Rehberle doğrulanmamış spor kanalları</string>
+    <string name="sports_settings_data">Veri</string>
+    <string name="sports_live_refresh">Canlı yenileme</string>
+    <string name="sports_live_refresh_description">Yalnızca bir spor ekranı veya skor görünürken</string>
+    <string name="sports_about">Spor verileri hakkında</string>
+    <string name="sports_about_summary">Skorlar: ESPN · kanallar: oynatma listen ve rehberin</string>
+    <string name="sports_alerts_when_closed">OwnTV kapalıyken uyarılar</string>
+    <string name="sports_alerts_when_closed_description">Bildirim iznini bir kez ister</string>
+    <string name="sports_alert_me_about">Bana şunları bildir</string>
+    <string name="sports_kind_goals">Goller ve wicket’lar</string>
+    <string name="sports_kind_kickoff_full_time">Başlangıç ve maç sonu</string>
+    <string name="sports_alerts_for">Kimin için</string>
+    <string name="sports_followed_leagues">Takip edilen ligler</string>
+    <string name="sports_followed_leagues_description">Her maç; çok fazla olabilir</string>
+    <string name="sports_live_card">Canlı skor kartı</string>
+    <string name="sports_live_card_offer">Canlı skor kartı öner</string>
+    <string name="sports_live_card_description">Maç sonuna kadar 30 sn’de bir güncellenir; bir maçtan başlatırsın</string>
+    <string name="sports_alerts_footnote">OwnTV kapalıyken uyarılar genellikle bir dakika içinde gelir. Telefon uzun süre ekranı kapalı ve hareketsiz kaldıysa Android bunları yaklaşık 15 dakikaya kadar geciktirebilir. Canlı skor kartı geciktirilmez.</string>
+    <string name="sports_search_teams">Takım, oyuncu, lig ara</string>
+    <string name="sports_suggested">İzlediklerine göre öneriler</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Maçlarından <xliff:g id="count">%1$d</xliff:g> tanesini izledin</item>
+        <item quantity="other">Maçlarından <xliff:g id="count">%1$d</xliff:g> tanesini izledin</item>
+    </plurals>
+    <string name="sports_league_label">Lig</string>
+    <string name="sports_no_playlist_title">Maçları izlemek için oynatma listesi ekle</string>
+    <string name="sports_no_playlist_body">Skorlar, puan durumları ve uyarılar onsuz da çalışır. Oynatma listesiyle OwnTV bu maçı gösteren her kanalı bulur.</string>
+    <string name="sports_add_playlist">Oynatma listesi ekle</string>
+    <string name="sports_home_row">Canlı spor</string>
+    <string name="sports_home_row_description">Takip edilen maçlar; biri canlıyken ya da başlamak üzereyken</string>
+    <string name="sports_empty_nothing_followed">Henüz spor ya da lig seçmedin</string>
+    <string name="sports_empty_choose_in">Bunları Ayarlar → Uygulama → Spor → Sporlar ve ligler bölümünden seç.</string>
+    <string name="sports_load_time_warning">Ne kadar çok spor ve lig seçersen yükleme ve oluşturma o kadar uzun sürer.</string>
+    <string name="sports_sport_buttons">Spor düğmeleri</string>
+    <string name="sports_sport_buttons_mine">Sporlarım</string>
+    <string name="sports_sport_buttons_all">Tüm sporlar</string>
+    <string name="sports_sport_buttons_description">Sporlarım: yalnızca seçtiklerin. Tüm sporlar: OwnTV’nin bildiği her lig, yüklemesi daha uzun sürer.</string>
+    <string name="sports_auto_rebuild">Otomatik yeniden oluşturma</string>
+    <string name="sports_auto_rebuild_description">Skorların, maç ayrıntılarının ve puan tablolarının kendiliğinden ne sıklıkla yeniden alınacağı</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> saatte bir</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> saatte bir</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">Uygulama her açıldığında</string>
+    <string name="sports_calendar_refresh">Takvim yenileme</string>
+    <string name="sports_calendar_refresh_description">Kaydedilen ayların ne sıklıkla yeniden alınacağı</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> günde bir</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> günde bir</item>
+    </plurals>
+    <string name="sports_find_channels">Kanalları bul</string>
+    <string name="sports_find_channels_description">Bu maçı rehberinde ve kanal adlarında arar. Büyük bir oynatma listesinde biraz sürebilir.</string>
+    <string name="sports_finding_channels">Kanalların aranıyor…</string>
+    <string name="sports_strict_filter">Sıkı filtreleme</string>
+    <string name="sports_strict_filter_description">Açık: yalnızca filtrelerine uyan kanallar listelenir. Kapalı: tüm kanallar listelenir, uyanlar önce.</string>
+    <string name="sports_rebuilding">Spor yeniden oluşturuluyor…</string>
+    <string name="sports_rebuild_failed">Spor verileri güncellenemedi</string>
+    <string name="sports_refresh_data_now">Spor verilerini şimdi yenile</string>
+    <string name="sports_last_updated">Son güncelleme: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Kanallar <xliff:g id="time">%1$s</xliff:g> itibarıyla, başlama vuruşundan 30 dakika önce aranabilir.</string>
+    <string name="sports_find_channels_ended">Bu maç bitti, bulunacak kanal yok.</string>
+    <string name="sports_tab_broadcasts">Yayınlar</string>
+    <string name="sports_broadcasts_guide">Rehberinde</string>
+    <string name="sports_broadcasts_espn">ESPN’den (yalnızca ABD)</string>
+    <string name="sports_broadcasts_find_first">Bu maçı veren rehber kanallarını görmek için Kanalları bul’u kullan.</string>
+    <string name="sports_broadcasts_none">Yok</string>
+    <string name="sports_move_instructions">▲/▼ seç · OK al veya bırak · Bitince Kaydet</string>
 </resources>

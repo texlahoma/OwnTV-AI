@@ -5,7 +5,7 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 /**
- * Charset normalisation for local subtitle files (subtitle plan §7.2 / review R6). Local .srt/.ass
+ * Charset normalisation for local subtitle files. Local .srt/.ass
  * files are frequently NOT UTF-8 — Windows-1256 (Arabic), Windows-1252 and ISO-8859 variants are
  * common — and both engines assume UTF-8, so a raw copy would render mojibake. Detection uses
  * juniversalchardet (Mozilla's universalchardet port).

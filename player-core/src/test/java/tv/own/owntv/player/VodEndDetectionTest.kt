@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * P5 — "did this item finish?" decides whether a resume position is kept and whether a queue
+ * "Did this item finish?" decides whether a resume position is kept and whether a queue
  * auto-advances. The old flat 8 s tolerance said yes at position 0 for anything shorter than 8 s.
  */
 class VodEndDetectionTest {

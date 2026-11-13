@@ -65,6 +65,13 @@ class CompanionHttpServerTest {
     }
 
     @Test
+    fun `an edit may leave the password empty`() {
+        val p = protocol.parsePayload(form, "type=xtream&server=http://h&user=u&pass=", SourceType.XTREAM, requireFields = false)!!
+        assertEquals("", p.pass)
+        assertEquals("u", p.user)
+    }
+
+    @Test
     fun `legacy boolean sync fields map to Now or Off`() {
         val off = protocol.parsePayload(
             form,
@@ -172,7 +179,7 @@ class CompanionHttpServerTest {
 
     // ---- robustness ----
 
-    // ---- body cap (C1) ----
+    // ---- body cap ----
 
     private fun read(body: String, contentLength: String, limit: Int): String? =
         protocol.readBody(
@@ -207,9 +214,10 @@ class CompanionHttpServerTest {
         assertNull(read("x".repeat(200), "200", 64))
     }
 
-    @Test
-    fun `a truncated body does not hang or throw`() {
-        assertEquals("abc", read("abc", "500", CompanionHttpProtocol.FORM_BODY_LIMIT))
+    /** It must not hang either; the server catches the throw and drops the request unanswered. */
+    @Test(expected = java.io.EOFException::class)
+    fun `a body that stops short of its Content-Length is refused, not kept in part`() {
+        read("abc", "500", CompanionHttpProtocol.FORM_BODY_LIMIT)
     }
 
     /** A JSON null must be dropped, not turned into the string "null" — the sender omits optional

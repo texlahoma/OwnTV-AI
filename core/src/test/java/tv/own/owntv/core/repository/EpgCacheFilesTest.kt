@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Phase 4 / E1 — the tee'd XMLTV cache used to be written straight to its final name, so a download
+ * The tee'd XMLTV cache used to be written straight to its final name, so a download
  * cut short by a network drop left a truncated guide that was indistinguishable from a complete one
  * for the whole 24h TTL. A later smart-match reading it concluded the missing channels simply had no
  * schedule.

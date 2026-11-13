@@ -7,6 +7,7 @@ import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.parser.XtreamClient
+import tv.own.owntv.core.parser.XtreamM3uLink
 import tv.own.owntv.core.stalker.StalkerAuthManager
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.stalkerCredentials
@@ -105,8 +106,17 @@ class SourceTester(
     private suspend fun testM3u(source: SourceEntity): SourceTestResult {
         // A local-file playlist has no host; if the sync could read it, there is nothing to reach.
         if (!source.url.startsWith("http", ignoreCase = true)) return SourceTestResult.Ok()
+        // A `get.php` link to an Xtream panel is added as Xtream (SourceImporter.m3u), so test an
+        // unsaved one as Xtream — the panel may refuse the M3U export while the account is fine. A saved
+        // M3U row still syncs through get.php, so it keeps the plain test that says whether that works.
+        if (source.id == 0L) XtreamM3uLink.parse(source.url)?.let { link ->
+            val asXtream = source.copy(
+                type = SourceType.XTREAM, url = link.server, username = link.username, password = link.password,
+            )
+            if (xtreamClient.isXtreamAccount(asXtream)) return testXtream(asXtream)
+        }
         return try {
-            val head = http.get(source.url, source.userAgent) { input ->
+            val head = http.get(XtreamM3uLink.clean(source.url), source.userAgent) { input ->
                 val buf = ByteArray(PLAYLIST_PROBE_BYTES)
                 val read = input.read(buf).coerceAtLeast(0)
                 String(buf, 0, read, Charsets.UTF_8)
@@ -151,7 +161,8 @@ class SourceTester(
 
     private fun classify(e: Exception): SourceTestResult = when {
         // The host answered — it just said no. That is an account answer, not a network one.
-        e is HttpClient.HttpStatusException && (e.code == 401 || e.code == 403) -> SourceTestResult.AuthFailed
+        // 513 is how some Xtream panels refuse a username or password — see `classifySyncFailure`.
+        e is HttpClient.HttpStatusException && (e.code == 401 || e.code == 403 || e.code == 513) -> SourceTestResult.AuthFailed
         // Same answer from a portal. 403 is a throttle while *crawling* a portal (see
         // `StalkerClient.httpFailure`), but the one request this test makes cannot be throttling
         // anybody — here it means the portal refused this MAC, which is what the user needs told.

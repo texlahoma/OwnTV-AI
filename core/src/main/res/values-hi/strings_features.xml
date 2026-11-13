@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">अपनी खुद की तस्वीर</string>
     <string name="profiles_kids">बच्चों की प्रोफ़ाइल</string>
     <string name="profiles_kids_description">सरल और सुरक्षित ब्राउज़िंग</string>
+    <string name="profiles_allow_downloads">डाउनलोड की अनुमति दें</string>
+    <string name="profiles_allow_downloads_description">बंद करने पर इस प्रोफ़ाइल में सभी डाउनलोड बटन छिप जाते हैं</string>
     <string name="profiles_remove_pin">PIN लॉक हटाएँ</string>
     <string name="profiles_no_pin">यह प्रोफ़ाइल PIN के बिना खुलती है</string>
     <string name="profiles_change_pin">PIN बदलें (खाली छोड़ें = मौजूदा PIN रखें)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">बनाएँ</string>
     <string name="profiles_save">सेव करें</string>
     <string name="profiles_gate_title">कौन देख रहा है?</string>
+    <string name="profiles_gate_subtitle">हर प्रोफ़ाइल अपने पसंदीदा और इतिहास अलग रखती है</string>
     <string name="profiles_wrong_pin">गलत PIN — फिर से कोशिश करें</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — PIN दर्ज करें</string>
+    <string name="profiles_protected_edit">इस पर प्रोफ़ाइल लॉक या सेटिंग लॉक है। इसे बदलने के लिए दोनों में से कोई एक PIN डालें।</string>
     <string name="profiles_kids_badge">बच्चे</string>
     <string name="profiles_add">प्रोफ़ाइल जोड़ें</string>
     <string name="profiles_title">प्रोफ़ाइलें</string>
-    <string name="profiles_add_button">प्रोफ़ाइल जोड़ें</string>
     <string name="profiles_delete_title">“<xliff:g id="name">%1$s</xliff:g>” को हटाएँ?</string>
     <string name="profiles_delete_message">यह इस प्रोफ़ाइल और इसके पसंदीदा व इतिहास को हटा देता है। स्रोत रखे जाते हैं।</string>
     <string name="profiles_kids_tag">बच्चों की</string>
@@ -32,38 +35,50 @@
     <string name="search_title">खोज</string>
     <string name="search_continue">देखना जारी रखें</string>
     <string name="search_unwatched">नहीं देखा गया</string>
-    <string name="search_hint">चैनल, फ़िल्में और सीरीज़ खोजें…</string>
     <string name="search_recent">हाल की खोजें</string>
-    <string name="search_recent_empty">आपकी हाल की खोजें यहाँ दिखाई देंगी।</string>
-    <string name="search_minimum_query">सभी सामग्री में खोजने के लिए कम से कम 2 अक्षर लिखें।</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — कोई परिणाम नहीं।</string>
     <string name="search_nothing_in_list"><xliff:g id="list">%1$s</xliff:g> में अभी कुछ नहीं है।</string>
     <string name="search_clear">साफ़ करें</string>
     <string name="search_jump_to">सीधे जाएँ</string>
-    <string name="search_watch_live">लाइव देखें</string>
-    <string name="search_play">चलाएँ</string>
     <string name="search_open_series">सीरीज़ खोलें</string>
     <string name="search_movie">फ़िल्म</string>
     <string name="search_series">सीरीज़</string>
     <string name="search_channels">चैनल</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">देखना जारी रखें</string>
-    <string name="home_play_next">अगला चलाएँ</string>
-    <string name="home_tune_in">लाइव देखें</string>
-    <string name="home_recent_live">हाल में देखा गया लाइव टीवी</string>
+    <string name="search_on_tv">टीवी कार्यक्रम</string>
+    <string name="search_go_to_channel">चैनल पर जाएँ</string>
+    <string name="search_go_to_movie">फ़िल्म पर जाएँ</string>
+    <string name="search_clear_recent">हाल की खोजें साफ़ करें</string>
+    <string name="search_field_hint">चैनल, फ़िल्में और सीरीज़</string>
+    <string name="search_voice">आवाज़ से खोज</string>
+    <string name="search_voice_prompt">किसी चैनल, फ़िल्म या सीरीज़ का नाम बोलें</string>
+    <string name="search_card_title">अपनी प्लेलिस्ट में कुछ भी खोजें</string>
+    <string name="search_card_body">आपकी दिखाई गई सभी प्लेलिस्ट से चैनल, फ़िल्में और सीरीज़। सीधे वहाँ जाने के लिए कोई परिणाम चुनें, फिर वहीं चलाएँ, डाउनलोड करें या उसके विकल्प खोलें। अभी या आज बाद में आने वाले टीवी कार्यक्रम भी उनके शीर्षक से मिलते हैं।</string>
+    <string name="search_nothing_found">“<xliff:g id="query">%1$s</xliff:g>” के लिए कुछ नहीं मिला</string>
+    <string name="search_nothing_found_body">खोज आपकी दिखाई गई प्लेलिस्ट में चैनल, फ़िल्म और सीरीज़ के नामों में देखती है। छिपी हुई श्रेणियाँ नहीं खोजी जातीं। टीवी कार्यक्रम डाउनलोड की गई गाइड में उनके शीर्षक से खोजे जाते हैं।</string>
+    <string name="search_query_quoted">“<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> परिणाम</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> परिणाम</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> चैनल</item>
+        <item quantity="other">सभी <xliff:g id="count">%1$d</xliff:g> चैनल</item>
+    </plurals>
     <string name="profiles_default_name">प्रोफ़ाइल</string>
     <string name="launcher_recent_live_title">हाल का लाइव टीवी</string>
     <string name="launcher_recent_live_description">हाल में देखे गए लाइव चैनल</string>
     <string name="launcher_movie_type">फ़िल्म</string>
     <string name="launcher_episode_number">एपिसोड <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">आपकी लाइब्रेरी लोड हो रही है · अब तक <xliff:g id="count">%1$s</xliff:g> शीर्षक</item>
+        <item quantity="other">आपकी लाइब्रेरी लोड हो रही है · अब तक <xliff:g id="count">%1$s</xliff:g> शीर्षक</item>
+    </plurals>
+    <string name="home_library_loading_trending">लाइब्रेरी भरने के साथ अभी लोकप्रिय सूची दिखाई देगी।</string>
     <string name="home_no_preview">अभी पूर्वावलोकन के लिए कुछ नहीं है।</string>
     <string name="home_no_rows">होम स्क्रीन की सभी पंक्तियाँ छिपी हुई हैं।</string>
     <string name="home_enable_rows">सेटिंग → होम स्क्रीन में पंक्तियाँ फिर से चालू करें।</string>
     <string name="home_start_watching">अपनी गतिविधि यहाँ देखने के लिए देखना शुरू करें।</string>
     <string name="home_continue_empty">प्लेबैक इतिहास उपलब्ध होने पर वे आइटम यहाँ दिखाई देंगे जिन्हें आप देखना जारी रख सकते हैं।</string>
     <string name="home_last_watched_now">आख़िरी बार अभी-अभी देखा गया</string>
-    <string name="home_finish_by"><xliff:g id="time">%1$s</xliff:g> तक पूरा होगा</string>
-    <string name="home_resume">जारी रखें</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">आख़िरी बार <xliff:g id="count">%1$d</xliff:g> मिनट पहले देखा गया</item>
         <item quantity="other">आख़िरी बार <xliff:g id="count">%1$d</xliff:g> मिनट पहले देखा गया</item>
@@ -76,36 +91,22 @@
         <item quantity="one">आख़िरी बार <xliff:g id="count">%1$d</xliff:g> दिन पहले देखा गया</item>
         <item quantity="other">आख़िरी बार <xliff:g id="count">%1$d</xliff:g> दिन पहले देखा गया</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">कार्ड</string>
     <string name="home_row_keep_watching">देखना जारी रखें</string>
     <string name="home_row_continue_movies">फ़िल्में देखना जारी रखें</string>
     <string name="home_row_continue_series">सीरीज़ देखना जारी रखें</string>
     <string name="home_row_recent_channels">हाल के चैनल</string>
     <string name="home_row_favorite_channels">पसंदीदा चैनल</string>
+    <string name="home_row_favorite_movies">पसंदीदा फ़िल्में</string>
+    <string name="home_row_favorite_series">पसंदीदा सीरीज़</string>
     <string name="home_row_on_now">अभी प्रसारित</string>
     <string name="home_row_hero_description">सबसे ऊपर मौजूद बड़ी पूर्वावलोकन पंक्ति</string>
     <string name="home_row_continue_movies_description">सेव की गई स्थिति वाली फ़िल्में</string>
     <string name="home_row_continue_series_description">जारी रखने या अगला चलाने वाले एपिसोड</string>
     <string name="home_row_recent_description">वे लाइव चैनल जिन्हें आपने हाल में देखा</string>
     <string name="home_row_favorite_description">आपके पसंदीदा लाइव चैनल</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · अभी प्रसारित</string>
-    <string name="home_ok_to_watch">देखने के लिए OK दबाएँ</string>
-    <string name="home_ok_to_browse">ब्राउज़ करने के लिए OK दबाएँ</string>
-    <string name="home_no_programme_details">कार्यक्रम का विवरण उपलब्ध नहीं है</string>
-    <string name="home_guide_unavailable">कार्यक्रम गाइड का डेटा उपलब्ध नहीं है</string>
-    <string name="home_next">अगला</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">अभी · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">इसके बाद · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> चैनल</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> चैनल</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">आपकी पसंदीदा फ़िल्में</string>
+    <string name="home_row_favorite_series_description">आपकी पसंदीदा सीरीज़</string>
     <string name="update_title">ऐप अपडेट</string>
     <string name="update_checking">अपडेट की जाँच की जा रही है…</string>
     <string name="update_whats_new">नया क्या है</string>
@@ -140,6 +141,11 @@
     <string name="home_trending_style">ट्रेंडिंग लेआउट</string>
     <string name="home_trending_style_hero">विस्तृत कार्ड</string>
     <string name="home_trending_style_posters">केवल पोस्टर</string>
+    <string name="home_trending_rank">ट्रेंडिंग में #<xliff:g id="rank">%1$d</xliff:g> · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">आपकी प्लेलिस्ट में</string>
+    <string name="home_trending_style_full_bleed">पूरी चौड़ाई</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> घं <xliff:g id="minutes">%2$02d</xliff:g> मि</string>
+    <string name="home_time_left"><xliff:g id="duration">%1$s</xliff:g> शेष</string>
     <string name="settings_trending_status_off">अभी ट्रेंड में बंद है।</string>
     <string name="settings_trending_status_building">प्रदाता सिंक के बाद अभी ट्रेंड में को तैयार किया जा रहा है।</string>
     <string name="settings_trending_status_metadata_disabled">अभी ट्रेंड में के लिए TMDB मेटाडेटा आवश्यक है। केवल TMDB या प्रदाता + TMDB चुनें।</string>
@@ -161,12 +167,7 @@
     </plurals>
     <string name="home_trending_movie">फ़िल्म</string>
     <string name="home_trending_series">सीरीज़</string>
-    <string name="home_trending_section_label">अभी ट्रेंड में · सिंक स्नैपशॉट</string>
     <string name="home_trending_provider_match">प्रदाता से मेल</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> भाषा का विकल्प</string>
-    <string name="home_trending_english_fallback">अंग्रेज़ी फ़ॉलबैक विकल्प</string>
-    <string name="home_trending_untagged_fallback">बिना भाषा टैग वाला फ़ॉलबैक विकल्प</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> फ़ॉलबैक विकल्प</string>
     <string name="home_trending_why_label">यह आइटम क्यों दिखाई दे रहा है</string>
     <string name="home_trending_reason_title">TMDB रैंक #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + प्रदाता से मेल</string>
     <string name="home_trending_reason_preferred">चुना गया <xliff:g id="language">%1$s</xliff:g> प्रदाता संस्करण दूसरी भाषा की प्रविष्टियों पर प्राथमिकता पाता है।</string>
@@ -182,12 +183,12 @@
     <string name="home_trending_trailer">ट्रेलर</string>
     <string name="home_trending_more_details">अधिक जानकारी</string>
     <string name="home_trending_all_versions">सभी संस्करण</string>
-    <string name="home_trending_previous">पिछला</string>
+    <string name="home_trending_why_menu">यह शीर्षक यहाँ क्यों है</string>
     <string name="home_trending_pause">रोकें</string>
-    <string name="home_trending_resume">फिर से शुरू करें</string>
-    <string name="home_trending_next">अगला</string>
     <string name="home_trending_unavailable">यह संस्करण अब उपलब्ध नहीं है</string>
     <string name="recording_notification_title">रिकॉर्ड हो रहा है</string>
+    <string name="auto_start_notification_channel">जागने पर अपने-आप शुरू करें</string>
+    <string name="auto_start_notification_text">टीवी जागने पर OwnTV खुल जाता है</string>
     <string name="recording_failed_no_space">रुक गया: जगह नहीं बची</string>
     <string name="recording_failed_no_connection">आपके प्रदाता के पास कोई खाली कनेक्शन नहीं है</string>
     <string name="recording_failed_clash">कनेक्शन दूसरी रिकॉर्डिंग इस्तेमाल कर रही थी</string>
@@ -196,21 +197,29 @@
     <string name="recording_failed_channel_gone">वह चैनल अब आपकी प्लेलिस्ट में नहीं है</string>
     <string name="recording_failed_unknown">रिकॉर्ड नहीं हुआ</string>
     <string name="recording_title">रिकॉर्डिंग</string>
-    <string name="recording_description">इस डिवाइस पर सहेजा गया लाइव टीवी।</string>
-    <string name="recording_empty">अभी कुछ रिकॉर्ड नहीं हुआ। टीवी गाइड खोलें, कोई कार्यक्रम चुनें और रिकॉर्ड दबाएँ।</string>
+    <string name="recording_empty">अभी तक कुछ रिकॉर्ड नहीं हुआ। टीवी गाइड में किसी कार्यक्रम पर रिकॉर्ड करें दबाएँ, या किसी चैनल को देर तक दबाकर उसे रिकॉर्ड करें या समय शेड्यूल करें।</string>
     <string name="recording_group_now">अभी रिकॉर्ड हो रहा है</string>
     <string name="recording_group_scheduled">निर्धारित</string>
     <string name="recording_group_completed">रिकॉर्ड हो गया</string>
     <string name="recording_group_failed">विफल</string>
     <string name="recording_group_missed">छूट गया</string>
+    <string name="recording_group_series">हर प्रसारण</string>
     <string name="recording_record">रिकॉर्ड करें</string>
     <string name="recording_stop">रिकॉर्डिंग रोकें</string>
+    <string name="recording_delete_message">इस डिवाइस से रिकॉर्डिंग और उसकी फ़ाइल हटाता है। इसे पूर्ववत नहीं किया जा सकता।</string>
     <string name="recording_record_series">हर प्रसारण रिकॉर्ड करें</string>
     <string name="recording_stop_series">हर प्रसारण रिकॉर्ड करना बंद करें</string>
     <string name="recording_from_archive">आर्काइव से रिकॉर्ड करें</string>
+    <string name="recording_schedule">रिकॉर्डिंग शेड्यूल करें…</string>
+    <string name="recording_schedule_hint">दिन, शुरू और खत्म होने का समय चुनें। इस चैनल का टीवी गाइड न हो तब भी रिकॉर्डिंग होगी।</string>
+    <string name="recording_schedule_start">शुरू</string>
+    <string name="recording_schedule_end">खत्म</string>
+    <string name="recording_schedule_next_day">अगला दिन</string>
+    <string name="recording_schedule_past">वह समय पहले ही बीत चुका है</string>
     <string name="recording_scheduled_for"><xliff:g id="time">%1$s</xliff:g> को रिकॉर्ड होगा</string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> रिकॉर्ड हो रहा है</string>
+    <string name="recording_pill_line_locked">लॉक की गई श्रेणी से रिकॉर्ड हो रहा है</string>
     <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g> से टकराव है</string>
     <string name="recording_settings_group">रिकॉर्डिंग</string>
     <string name="settings_recording_reserve">देखने के लिए एक स्ट्रीम खाली रखें</string>
@@ -227,8 +236,14 @@
     <string name="recording_failed_encrypted">यह चैनल एन्क्रिप्टेड है और इसे रिकॉर्ड नहीं किया जा सकता</string>
     <string name="recording_failed_drm">यह चैनल DRM-सुरक्षित है, इसलिए इसे देखा जा सकता है लेकिन रिकॉर्ड नहीं किया जा सकता। यह सुरक्षा आपके प्रोवाइडर की ओर से है, OwnTV की ओर से नहीं।</string>
     <string name="recording_failed_metered">मोबाइल डेटा पर रिकॉर्ड नहीं हुआ</string>
+    <string name="recording_card_empty_title">अभी तक कुछ रिकॉर्ड नहीं हुआ</string>
+    <string name="recording_card_body">टीवी गाइड में कोई कार्यक्रम चुनें और रिकॉर्ड करें चुनें, या किसी चैनल को देर तक दबाकर समय शेड्यूल करें। आप कुछ और देख रहे हों तब भी यह यहाँ आ जाता है।</string>
+    <string name="recording_open_guide">टीवी गाइड खोलें</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> रिकॉर्डिंग</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> रिकॉर्डिंग</item>
+    </plurals>
     <string name="settings_recording_mobile_data">मोबाइल डेटा पर रिकॉर्ड करें</string>
-    <string name="settings_recording_mobile_data_description">बंद होने पर, Wi-Fi के बाहर पड़ने वाली रिकॉर्डिंग इंतज़ार करने के बजाय छोड़ दी जाती है — लाइव कार्यक्रम दोबारा नहीं आता।</string>
     <string name="settings_record_watching">जो देख रहा हूँ उसे रिकॉर्ड करें</string>
     <string name="settings_record_watching_description">प्लेयर में एक रिकॉर्ड बटन जोड़ता है, जो आपका देखा जा रहा चैनल सहेजता है। यह चैनल खुद लाता है, इसलिए चलते समय आपके प्रदाता का एक कनेक्शन लेता है, और चैनल बदलने या प्लेयर छोड़ने के बाद भी रिकॉर्ड करता रहता है।</string>
     <string name="settings_record_watching_warning_title">सिर्फ़ एक कनेक्शन</string>
@@ -237,4 +252,301 @@
     <string name="settings_record_watching_turn_on">चालू करें</string>
     <string name="player_recording_conflict">आपका प्रदाता एक समय में केवल एक स्ट्रीम देता है, और रिकॉर्डिंग उसे इस्तेमाल कर रही है।</string>
     <string name="player_keep_watching_stop_recording">देखते रहें (रिकॉर्डिंग रुक जाएगी)</string>
+    <string name="sports_channel_goal_alerts">गोल अलर्ट</string>
+    <string name="sports_channel_live_match">लाइव मैच</string>
+    <string name="sports_channel_match_reminders">मैच रिमाइंडर</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ गोल! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">विकेट! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">लाल कार्ड · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">हाफ़ टाइम · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">फ़ुल टाइम · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">किक-ऑफ़ · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">स्थगित · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">रद्द · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">स्कोर सुधारा गया · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">किक-ऑफ़ <xliff:g id="minutes">%1$d</xliff:g> मिनट में: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">किक-ऑफ़ <xliff:g id="minutes">%1$d</xliff:g> मिनट में: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on"><xliff:g id="channel">%1$s</xliff:g> पर</string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one"><xliff:g id="channel">%1$s</xliff:g> और <xliff:g id="count">%2$d</xliff:g> अन्य पर</item>
+        <item quantity="other"><xliff:g id="channel">%1$s</xliff:g> और <xliff:g id="count">%2$d</xliff:g> अन्य पर</item>
+    </plurals>
+    <string name="sports_action_stop_updates">अपडेट रोकें</string>
+    <string name="sports_title">खेल</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> लाइव</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> लाइव</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> मैच</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> मैच</item>
+    </plurals>
+    <string name="sports_scores_espn">स्कोर: ESPN</string>
+    <string name="sports_my_teams">मेरी टीमें</string>
+    <string name="sports_live_now">अभी लाइव</string>
+    <string name="sports_not_on_channels">आपके चैनलों पर नहीं</string>
+    <string name="sports_on_channels_now">अभी आपके चैनलों पर खेल</string>
+    <string name="sports_on_channels_now_mobile">आपके चैनलों पर खेल</string>
+    <string name="sports_on_channels_now_hint">आपकी गाइड से — इसमें वे खेल भी हैं जो ESPN कवर नहीं करता</string>
+    <string name="sports_starting_soon">जल्द शुरू</string>
+    <string name="sports_hint_match_page">मैच पेज</string>
+    <string name="sports_hint_follow_remind">फ़ॉलो करें · याद दिलाएँ</string>
+    <string name="sports_hint_day_matches">दिन के मैच</string>
+    <string name="sports_hint_day">दिन</string>
+    <string name="sports_hint_week">सप्ताह</string>
+    <string name="sports_hint_show_score">स्कोर दिखाएँ</string>
+    <string name="sports_hint_back_to_day">दिन पर वापस</string>
+    <string name="sports_hint_open_league">लीग खोलें</string>
+    <string name="sports_hint_sport_chips">खेल बटन</string>
+    <string name="sports_hint_league_chips">लीग बटन</string>
+    <string name="sports_hint_follow_unfollow">फ़ॉलो करें · अनफ़ॉलो करें</string>
+    <string name="sports_reminder_set">रिमाइंडर</string>
+    <string name="sports_until"><xliff:g id="time">%1$s</xliff:g> तक</string>
+    <string name="sports_set">सेट <xliff:g id="set">%1$d</xliff:g></string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> ओवर</string>
+    <string name="sports_empty_nothing">आप जो फ़ॉलो करते हैं उसमें आज कोई मैच नहीं</string>
+    <string name="sports_empty_unreachable">अभी स्कोर नहीं मिल पा रहे। आपके चैनल फिर भी चलते हैं।</string>
+    <string name="sports_paused">स्कोर रुके हुए हैं — कुछ मिनट में फिर कोशिश होगी</string>
+    <string name="sports_sport_soccer">फ़ुटबॉल</string>
+    <string name="sports_sport_basketball">बास्केटबॉल</string>
+    <string name="sports_sport_tennis">टेनिस</string>
+    <string name="sports_sport_cricket">क्रिकेट</string>
+    <string name="sports_sport_hockey">आइस हॉकी</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">बेसबॉल</string>
+    <string name="sports_sport_golf">गोल्फ़</string>
+    <string name="sports_sport_rugby">रग्बी</string>
+    <string name="sports_sport_rugby_league">रग्बी लीग</string>
+    <string name="sports_sport_aussie_rules">ऑस्ट्रेलियन फ़ुटबॉल</string>
+    <string name="sports_sport_volleyball">वॉलीबॉल</string>
+    <string name="sports_sport_lacrosse">लैक्रोस</string>
+    <string name="sports_sport_handball">हैंडबॉल</string>
+    <string name="sports_sport_motorsport">मोटरस्पोर्ट</string>
+    <string name="sports_sport_darts">डार्ट्स</string>
+    <string name="sports_sport_snooker">स्नूकर</string>
+    <string name="sports_sport_cycling">साइकिलिंग</string>
+    <string name="sports_sport_combat">युद्ध खेल</string>
+    <string name="sports_sport_american_football">अमेरिकन फ़ुटबॉल</string>
+    <string name="sports_sport_athletics">एथलेटिक्स</string>
+    <string name="sports_sport_winter">शीतकालीन खेल</string>
+    <string name="sports_sport_other">खेल</string>
+    <string name="sports_tab_timeline">टाइमलाइन</string>
+    <string name="sports_tab_stats">आँकड़े</string>
+    <string name="sports_tab_lineups">लाइन-अप</string>
+    <string name="sports_tab_table">अंक तालिका</string>
+    <string name="sports_following">फ़ॉलो कर रहे हैं</string>
+    <string name="sports_follow">फ़ॉलो करें</string>
+    <string name="sports_event_goal">गोल · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">आत्मघाती गोल · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">पेनल्टी · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">पीला कार्ड · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">लाल कार्ड · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">बदलाव · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">असिस्ट <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">विकेट · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">किक-ऑफ़</string>
+    <string name="sports_event_half_time">हाफ़ टाइम</string>
+    <string name="sports_event_full_time">फ़ुल टाइम</string>
+    <string name="sports_stat_red_cards">लाल कार्ड</string>
+    <string name="sports_watch_live">लाइव देखें</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">लाइव देखें · <xliff:g id="count">%1$d</xliff:g> चैनल</item>
+        <item quantity="other">लाइव देखें · <xliff:g id="count">%1$d</xliff:g> चैनल</item>
+    </plurals>
+    <string name="sports_language_first">पहले <xliff:g id="language">%1$s</xliff:g> · सेटिंग्स से</string>
+    <string name="sports_any_country">कोई भी देश</string>
+    <string name="sports_reason_guide">गाइड: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">इवेंट चैनल · नाम में दोनों टीमें</string>
+    <string name="sports_reason_pick"><xliff:g id="competition">%1$s</xliff:g> के लिए आपकी पसंद</string>
+    <string name="sports_reason_likely">आमतौर पर <xliff:g id="competition">%1$s</xliff:g> दिखाता है</string>
+    <string name="sports_confirmed">गाइड से पुष्टि</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ फ़िल्टर से <xliff:g id="count">%1$d</xliff:g> छिपा</item>
+        <item quantity="other">+ फ़िल्टर से <xliff:g id="count">%1$d</xliff:g> छिपे</item>
+    </plurals>
+    <string name="sports_watch_full_screen">फ़ुल स्क्रीन में देखें</string>
+    <string name="sports_preview_another">दूसरे चैनल का प्रीव्यू</string>
+    <string name="sports_always_use"><xliff:g id="competition">%1$s</xliff:g> के लिए हमेशा इसे इस्तेमाल करें</string>
+    <string name="sports_filter_title">चैनल फ़िल्टर करें</string>
+    <string name="sports_showing_of"><xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="shown">%1$d</xliff:g> दिख रहे</string>
+    <string name="sports_filter_country">देश</string>
+    <string name="sports_filter_match">मैच</string>
+    <string name="sports_unknown">अज्ञात</string>
+    <string name="sports_any">कोई भी</string>
+    <string name="sports_all_playlists">सभी प्लेलिस्ट</string>
+    <string name="sports_quality_hd">HD और बेहतर</string>
+    <string name="sports_quality_fhd">FHD और बेहतर</string>
+    <string name="sports_quality_uhd">केवल 4K</string>
+    <string name="sports_only_confirmed">केवल गाइड से पुष्ट चैनल</string>
+    <string name="sports_only_confirmed_description">“संभावित” और याद रखे गए चैनल छिपाएँ</string>
+    <string name="sports_only_confirmed_mobile">केवल गाइड से पुष्ट</string>
+    <string name="sports_remember_filters">हर मैच के लिए ये फ़िल्टर याद रखें</string>
+    <string name="sports_remember_filters_description">इस प्रोफ़ाइल के लिए सेटिंग्स → खेल में सहेजा जाता है</string>
+    <string name="sports_remember_filters_mobile">हर मैच के लिए याद रखें</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> चैनल दिखाएँ</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> चैनल दिखाएँ</item>
+    </plurals>
+    <string name="sports_filter_only_this">केवल यह</string>
+    <string name="sports_filter_toggle">टॉगल</string>
+    <string name="sports_goal_toast">आपकी फ़ॉलो की गई टीम का गोल</string>
+    <string name="sports_switch">बदलें</string>
+    <string name="sports_other_channels">अन्य चैनल</string>
+    <string name="sports_other_channels_count">अन्य चैनल · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">इस मैच के अन्य चैनल</string>
+    <string name="sports_playing_now">अभी चल रहा है</string>
+    <string name="sports_switch_channel">चैनल बदलें</string>
+    <string name="sports_tab_fixtures">कार्यक्रम</string>
+    <string name="sports_tab_results">नतीजे</string>
+    <string name="sports_tab_scores">स्कोर</string>
+    <string name="sports_tab_calendar">कैलेंडर</string>
+    <string name="sports_tab_leagues">लीग</string>
+    <string name="sports_previous_month">पिछला महीना</string>
+    <string name="sports_next_month">अगला महीना</string>
+    <string name="sports_next">अगला: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">अगला</string>
+    <string name="sports_no_table_series">कोई तालिका नहीं — सीरीज़ हर हफ़्ते बदलती हैं</string>
+    <string name="sports_follow_league">लीग फ़ॉलो करें</string>
+    <string name="sports_unfollow_league">लीग अनफ़ॉलो करें</string>
+    <string name="sports_no_matches_on"><xliff:g id="day">%1$s</xliff:g> को आपके खेलों में कोई मैच नहीं</string>
+    <string name="sports_nothing_on_day">इस दिन कुछ नहीं</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: इस दिन कुछ नहीं</string>
+    <string name="sports_change_leagues_hint">सेटिंग्स → खेल में लीग जोड़ें या हटाएँ</string>
+    <string name="sports_loading_month"><xliff:g id="month">%1$s</xliff:g> लोड हो रहा है…</string>
+    <string name="sports_offline_saved"><xliff:g id="time">%1$s</xliff:g> पर सहेजा गया दिखाया जा रहा है — ESPN तक नहीं पहुँच सके</string>
+    <string name="sports_team_page">टीम पेज</string>
+    <string name="sports_next_match">अगला मैच</string>
+    <string name="sports_last_five">पिछले पाँच</string>
+    <string name="sports_league_position">लीग में स्थान</string>
+    <string name="sports_in_my_teams">मेरी टीमों में</string>
+    <string name="sports_open_match_page">मैच पेज खोलें</string>
+    <string name="sports_open_team_page">टीम पेज खोलें</string>
+    <string name="sports_my_teams_leagues">वे लीग जिनमें आपकी टीमें खेलती हैं</string>
+    <string name="sports_tab_drivers">ड्राइवर</string>
+    <string name="sports_tab_constructors">कंस्ट्रक्टर</string>
+    <string name="sports_tab_races">रेस</string>
+    <string name="sports_tab_rankings">रैंकिंग</string>
+    <string name="sports_tab_matches">मैच</string>
+    <string name="sports_next_race_weekend">अगला रेस वीकेंड</string>
+    <string name="sports_last_weekend">पिछला वीकेंड</string>
+    <string name="sports_session_practice_1">प्रैक्टिस 1</string>
+    <string name="sports_session_practice_2">प्रैक्टिस 2</string>
+    <string name="sports_session_practice_3">प्रैक्टिस 3</string>
+    <string name="sports_session_sprint_qualifying">स्प्रिंट क्वालिफ़ाइंग</string>
+    <string name="sports_session_qualifying">क्वालिफ़ाइंग</string>
+    <string name="sports_session_sprint">स्प्रिंट</string>
+    <string name="sports_session_race">रेस</string>
+    <string name="sports_table_team">टीम</string>
+    <string name="sports_table_played">मै</string>
+    <string name="sports_table_won">जी</string>
+    <string name="sports_table_drawn">ड्रॉ</string>
+    <string name="sports_table_lost">हा</string>
+    <string name="sports_table_difference">अंतर</string>
+    <string name="sports_table_points">अंक</string>
+    <string name="sports_table_form">फ़ॉर्म</string>
+    <string name="sports_this_matchday">यह मैचडे</string>
+    <string name="sports_settings_what">क्या दिखाएँ</string>
+    <string name="sports_show_in_menu">मेनू में खेल दिखाएँ</string>
+    <string name="sports_show_in_menu_description">डिफ़ॉल्ट रूप से चालू, प्लेलिस्ट हो या न हो</string>
+    <string name="sports_leagues">खेल और लीग</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> लीग</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> लीग</item>
+    </plurals>
+    <string name="sports_spoiler_free">स्पॉइलर-मुक्त</string>
+    <string name="sports_spoiler_free_description">OK दबाने तक स्कोर छिपाएँ</string>
+    <string name="sports_spoiler_free_description_mobile">देखने के लिए स्कोर पर टैप करें</string>
+    <string name="sports_settings_watching">देखना</string>
+    <string name="sports_languages">पसंदीदा कमेंट्री भाषाएँ</string>
+    <string name="sports_languages_mobile">कमेंट्री भाषाएँ</string>
+    <string name="sports_languages_description">“लाइव देखें” में सबसे ऊपर</string>
+    <string name="sports_countries">पसंदीदा देश</string>
+    <string name="sports_countries_description">“DE|” जैसे चैनल उपसर्गों से</string>
+    <string name="sports_picture_description">इससे कम वाले चैनल छिपाएँ</string>
+    <string name="sports_settings_while_watching">देखते समय</string>
+    <string name="sports_score_info_bar">इन्फ़ो बार में स्कोर</string>
+    <string name="sports_score_info_bar_description">केवल बार खुला होने पर दिखता है, ताकि गोल पहले न पता चले</string>
+    <string name="sports_score_info_bar_description_mobile">केवल बार खुला होने पर</string>
+    <string name="sports_goal_alerts_description">मेरी टीमों के लिए, कुछ और देखते समय</string>
+    <string name="sports_match_reminders_description">किक-ऑफ़ से पहले, सबसे अच्छे चैनल के साथ</string>
+    <string name="sports_remembered_channels">याद रखे गए चैनल</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> और</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> और</item>
+    </plurals>
+    <string name="sports_show_likely">“संभावित” चैनल दिखाएँ</string>
+    <string name="sports_show_likely_description">गाइड से पुष्टि रहित खेल चैनल</string>
+    <string name="sports_settings_data">डेटा</string>
+    <string name="sports_live_refresh">लाइव रिफ़्रेश</string>
+    <string name="sports_live_refresh_description">केवल जब खेल स्क्रीन या स्कोर दिख रहा हो</string>
+    <string name="sports_about">खेल डेटा के बारे में</string>
+    <string name="sports_about_summary">स्कोर: ESPN · चैनल: आपकी प्लेलिस्ट और गाइड</string>
+    <string name="sports_alerts_when_closed">OwnTV बंद होने पर अलर्ट</string>
+    <string name="sports_alerts_when_closed_description">सूचना अनुमति एक बार माँगता है</string>
+    <string name="sports_alert_me_about">मुझे सूचित करें</string>
+    <string name="sports_kind_goals">गोल और विकेट</string>
+    <string name="sports_kind_kickoff_full_time">किक-ऑफ़ और फ़ुल टाइम</string>
+    <string name="sports_alerts_for">किसके लिए</string>
+    <string name="sports_followed_leagues">फ़ॉलो की गई लीग</string>
+    <string name="sports_followed_leagues_description">हर मैच, जो बहुत हो सकते हैं</string>
+    <string name="sports_live_card">लाइव स्कोर कार्ड</string>
+    <string name="sports_live_card_offer">लाइव स्कोर कार्ड दिखाएँ</string>
+    <string name="sports_live_card_description">फ़ुल टाइम तक हर 30 से. अपडेट; किसी मैच से शुरू करें</string>
+    <string name="sports_alerts_footnote">OwnTV बंद होने पर अलर्ट आमतौर पर एक मिनट में आ जाते हैं। अगर फ़ोन लंबे समय तक स्क्रीन बंद करके पड़ा रहा हो, तो Android इन्हें लगभग 15 मिनट तक रोक सकता है। लाइव स्कोर कार्ड नहीं रुकता।</string>
+    <string name="sports_search_teams">टीमें, खिलाड़ी, लीग खोजें</string>
+    <string name="sports_suggested">आप जो देखते हैं उससे सुझाव</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">आपने उनका <xliff:g id="count">%1$d</xliff:g> मैच देखा</item>
+        <item quantity="other">आपने उनके <xliff:g id="count">%1$d</xliff:g> मैच देखे</item>
+    </plurals>
+    <string name="sports_league_label">लीग</string>
+    <string name="sports_no_playlist_title">मैच देखने के लिए प्लेलिस्ट जोड़ें</string>
+    <string name="sports_no_playlist_body">स्कोर, तालिकाएँ और अलर्ट इसके बिना भी चलते हैं। प्लेलिस्ट होने पर OwnTV इस मैच को दिखाने वाले सभी चैनल ढूँढ लेता है।</string>
+    <string name="sports_add_playlist">प्लेलिस्ट जोड़ें</string>
+    <string name="sports_home_row">लाइव खेल</string>
+    <string name="sports_home_row_description">फ़ॉलो किए गए मैच, जब कोई लाइव हो या शुरू होने वाला हो</string>
+    <string name="sports_empty_nothing_followed">अभी तक कोई खेल या लीग नहीं चुनी गई</string>
+    <string name="sports_empty_choose_in">इन्हें सेटिंग → ऐप → खेल → खेल और लीग में चुनें।</string>
+    <string name="sports_load_time_warning">आप जितने ज़्यादा खेल और लीग चुनेंगे, लोड होने और बनने में उतना ज़्यादा समय लगेगा।</string>
+    <string name="sports_sport_buttons">खेल बटन</string>
+    <string name="sports_sport_buttons_mine">मेरे खेल</string>
+    <string name="sports_sport_buttons_all">सभी खेल</string>
+    <string name="sports_sport_buttons_description">मेरे खेल: सिर्फ़ जो आपने चुना। सभी खेल: OwnTV को पता हर लीग, जिसे लोड होने में ज़्यादा समय लगता है।</string>
+    <string name="sports_auto_rebuild">अपने आप फिर से बनाएँ</string>
+    <string name="sports_auto_rebuild_description">स्कोर, मैच की जानकारी और तालिकाएँ कितनी बार अपने आप फिर से लाई जाएँ</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one">हर <xliff:g id="count">%1$d</xliff:g> घंटे</item>
+        <item quantity="other">हर <xliff:g id="count">%1$d</xliff:g> घंटे</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">हर बार ऐप खुलने पर</string>
+    <string name="sports_calendar_refresh">कैलेंडर रिफ़्रेश</string>
+    <string name="sports_calendar_refresh_description">सहेजे गए महीने कितनी बार फिर से लाए जाएँ</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one">हर <xliff:g id="count">%1$d</xliff:g> दिन</item>
+        <item quantity="other">हर <xliff:g id="count">%1$d</xliff:g> दिन</item>
+    </plurals>
+    <string name="sports_find_channels">चैनल खोजें</string>
+    <string name="sports_find_channels_description">आपकी गाइड और चैनल नामों में यह मैच खोजता है। बड़ी प्लेलिस्ट में इसमें थोड़ा समय लग सकता है।</string>
+    <string name="sports_finding_channels">आपके चैनल खोजे जा रहे हैं…</string>
+    <string name="sports_strict_filter">सख़्त फ़िल्टरिंग</string>
+    <string name="sports_strict_filter_description">चालू: सिर्फ़ फ़िल्टर पर खरे उतरने वाले चैनल दिखते हैं। बंद: सभी चैनल दिखते हैं, खरे उतरने वाले पहले।</string>
+    <string name="sports_rebuilding">खेल फिर से बनाए जा रहे हैं…</string>
+    <string name="sports_rebuild_failed">खेल डेटा अपडेट नहीं हो सका</string>
+    <string name="sports_refresh_data_now">खेल डेटा अभी रीफ़्रेश करें</string>
+    <string name="sports_last_updated">आख़िरी अपडेट: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">चैनल <xliff:g id="time">%1$s</xliff:g> से, यानी मैच शुरू होने से 30 मिनट पहले, खोजे जा सकते हैं।</string>
+    <string name="sports_find_channels_ended">यह मैच खत्म हो चुका है, इसलिए खोजने को कोई चैनल नहीं है।</string>
+    <string name="sports_tab_broadcasts">प्रसारण</string>
+    <string name="sports_broadcasts_guide">आपकी गाइड में</string>
+    <string name="sports_broadcasts_espn">ESPN से (केवल अमेरिका)</string>
+    <string name="sports_broadcasts_find_first">इस मैच को दिखाने वाले गाइड के चैनल देखने के लिए चैनल खोजें का उपयोग करें।</string>
+    <string name="sports_broadcasts_none">कोई नहीं</string>
+    <string name="sports_move_instructions">▲/▼ चुनें · OK उठाएँ या रखें · अंत में सहेजें</string>
 </resources>

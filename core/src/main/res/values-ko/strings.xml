@@ -13,20 +13,17 @@
     <string name="common_ok">확인</string>
     <string name="common_on">켜짐</string>
     <string name="common_off">꺼짐</string>
+    <string name="common_share">공유</string>
     <string name="common_never">안 함</string>
     <string name="common_exit">종료</string>
     <string name="common_resume">이어보기</string>
     <string name="common_start_over">처음부터 보기</string>
     <string name="common_name">이름</string>
     <string name="common_own_tv_user">OwnTV 사용자</string>
-    <string name="common_switch_profile">프로필 전환</string>
     <string name="common_proxy">프록시</string>
     <string name="common_title">제목</string>
     <string name="common_search_hint">검색…</string>
     <string name="common_search">검색</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">검색</string>
     <string name="common_nav_home">홈</string>
     <string name="common_nav_live_tv">실시간 TV</string>
@@ -34,16 +31,14 @@
     <string name="common_nav_series">시리즈</string>
     <string name="common_nav_downloads">다운로드</string>
     <string name="common_nav_guide">편성표</string>
+    <string name="common_nav_guide_short">편성표</string>
     <string name="common_nav_library">라이브러리</string>
     <string name="common_nav_more">더보기</string>
     <string name="common_cast">전송</string>
     <string name="common_nav_settings">설정</string>
     <string name="shell_no_source">소스 없음</string>
     <string name="shell_now_playing">재생 중</string>
-    <string name="common_something_went_wrong">문제가 발생했습니다</string>
-    <string name="common_move_instructions">▲/▼로 이동 · 확인을 눌러 저장 · 뒤로를 눌러 취소</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -57,7 +52,7 @@
     <string name="sync_error_interrupted">서버에서 다운로드를 중단했습니다. 다시 시도하세요.</string>
     <string name="sync_error_mac">포털에서 이 MAC 주소를 거부했습니다 — MAC 주소(및 TV의 날짜와 시간)를 확인해야 하며, 그렇지 않다면 구독이 만료되었을 수 있습니다.</string>
     <string name="sync_error_invalid_mac">잘못된 MAC 주소입니다 — AA:BB:CC:DD:EE:FF 형식을 사용하세요</string>
-    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <string name="sync_counts_success">동기화에 성공했습니다</string>
     <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g>개 동기화됨</string>
     <string name="sync_import_warnings">경고와 함께 가져옴: <xliff:g id="phases">%1$s</xliff:g></string>
@@ -85,6 +80,8 @@
     <string name="sync_status_cancelled">동기화 취소됨 · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download"><xliff:g id="title">%1$s</xliff:g> 다운로드 중</string>
     <string name="sync_status_download_with_progress"><xliff:g id="title">%1$s</xliff:g> 다운로드 중 · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">잠긴 카테고리에서 다운로드 중</string>
+    <string name="sync_status_download_locked_with_progress">잠긴 카테고리에서 다운로드 중 · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_phase_live">실시간 TV</string>
     <string name="sync_phase_movies">영화</string>
     <string name="sync_phase_series">시리즈</string>
@@ -117,16 +114,16 @@
     <string name="sync_error_secure">보안 연결에 실패했습니다 — 서버 인증서가 유효하지 않을 수 있습니다.</string>
     <string name="sync_error_malformed_guide">서버에서 받은 편성표 데이터 형식이 잘못되었습니다. 일부는 이미 불러왔을 수 있습니다 — 다시 시도하거나 EPG URL을 확인하세요.</string>
     <string name="sync_error_guide_empty">이 편성표는 현재 비어 있습니다. 제공업체가 아직 게시하지 않았을 수 있습니다 — 나중에 다시 시도해 주세요.</string>
-    <string name="common_items_per_skip">한 번에 건너뛸 항목 수</string>
+    <string name="sync_error_guide_no_matching_channels">이 편성표의 채널 중 아직 플레이리스트 채널과 일치하는 것이 없습니다. TV 편성표를 열고 EPG 자동 연결을 사용해 이름으로 연결하세요.</string>
     <string name="common_minutes">분</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g>GB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">숨기기</string>
     <string name="common_show">표시</string>
     <string name="common_qr_code_companion_url">연동 URL의 QR 코드</string>
     <string name="sync_status_trending_starting">동기화 완료 · <xliff:g id="source">%1$s</xliff:g> · 지금 인기 급상승 항목 구성 중</string>
-    <string name="sync_status_trending_matching">인기 급상승 항목을 재생목록과 일치시키는 중</string>
     <string name="sync_status_trending_detail_waiting">TMDB 후보 응답을 기다리는 중</string>
     <string name="sync_status_trending_detail_received">TMDB 후보 · 영화: <xliff:g id="movies">%1$d</xliff:g> · 시리즈: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">제공업체 제목 인덱스 · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -143,9 +140,6 @@
     <plurals name="sync_status_trending_received">
         <item quantity="other">최신 인기 급상승 항목 <xliff:g id="count">%1$d</xliff:g>개 수신됨</item>
     </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="other">일치 · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-    </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="other">지금 인기 급상승 항목 구성 중 · <xliff:g id="count">%1$d</xliff:g>개 일치</item>
     </plurals>
@@ -158,4 +152,16 @@
     <plurals name="sync_status_trending_below_minimum">
         <item quantity="other">지금 인기 급상승 항목 숨김 · 일치 항목이 <xliff:g id="count">%1$d</xliff:g>개뿐임</item>
     </plurals>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · 전환</string>
+    <string name="shell_rail_detail_last">최근: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">이어 보기: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">다음: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">설정, 즐겨찾기, 백업</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 다운로드 중 · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">오디오</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">닫기</string>
 </resources>

@@ -10,6 +10,8 @@ import android.media.AudioManager
 import android.media.MediaMetadata
 import android.media.session.MediaSession
 import android.media.session.PlaybackState
+import android.os.Build
+import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +26,7 @@ import kotlinx.coroutines.launch
 
 /**
  * The app's single point of contact with the rest of the system's audio: **audio focus** and a
- * **MediaSession** (F27). Before this, OwnTV neither requested focus nor published a session, so two
+ * **MediaSession**. Before this, OwnTV neither requested focus nor published a session, so two
  * apps could play over each other and the TV's transport keys / Assistant "pause" never reached the
  * player.
  *
@@ -41,7 +43,7 @@ import kotlinx.coroutines.launch
  * | Focus change | What we do |
  * |---|---|
  * | `LOSS_TRANSIENT_CAN_DUCK` | nothing — `setWillPauseWhenDucked(false)` means the platform attenuates our stream itself, with no HUD-visible volume change |
- * | `LOSS_TRANSIENT` | duck to [DUCK_PERCENT] ourselves and restore on the next gain |
+ * | `LOSS_TRANSIENT` | duck by [DUCK_DB] ourselves and restore on the next gain |
  * | `LOSS` (permanent) | **pause**, and abandon focus. This one is another app taking the speaker for good; continuing is the "two apps playing at once" bug |
  * | `GAIN` | restore the pre-duck volume; playback that we paused stays paused (the user chose the other app) |
  *
@@ -49,9 +51,11 @@ import kotlinx.coroutines.launch
  * That table is the right answer for a television and the wrong one for a handset: a phone call must
  * **stop** the film, not play it quietly under the caller's voice, and the user expects it back when
  * the call ends. So the policy is a constructor choice — [FocusPolicy.DUCK] is what the TV app has
- * always done and stays the default, [FocusPolicy.PAUSE] is what the mobile app passes. A short
- * notification beep still only ducks under either policy, because that is `CAN_DUCK` and the platform
- * attenuates us without ever telling us.
+ * always done and stays the default, [FocusPolicy.PAUSE] is what the mobile app passes. A notification
+ * sound still only ducks under either policy: it is `CAN_DUCK`, and the platform attenuates us itself.
+ * Under PAUSE a `CAN_DUCK` pauses only while the phone is ringing or in a call (some dialers ask for a
+ * duck, not a pause) — see [FocusPolicy.onTransientLoss]. A VoIP call that takes no focus at all is
+ * caught from the mode change itself ([FocusPolicy.pausesForMode], Android 12 and later).
  *
  * [pauseWhenOutputDisconnects] is the other phone-shaped difference: pulling headphones out mid-film
  * must not carry on through the loudspeaker. It is off by default, because a television's speakers
@@ -65,17 +69,56 @@ class PlaybackSession(
 
     /** What losing audio focus transiently should do to playback. See the class doc. */
     enum class FocusPolicy {
-        /** Quieten to [DUCK_PERCENT] and keep playing — a television. */
+        /** Quieten by [DUCK_DB] and keep playing — a television. */
         DUCK,
 
-        /** Pause, and resume on the next gain unless the user paused by hand — a phone. */
+        /** Pause for a call or another app's transient focus, duck under a notification, and resume on
+         *  the next gain unless the user paused by hand — a phone. */
         PAUSE,
+        ;
+
+        /**
+         * What a transient focus loss does under this policy. [audioMode] is `AudioManager.mode` at the
+         * moment of the loss. A phone used to ask the platform to turn every duck into a pause, so a
+         * notification sound stopped the film; now only a call does, read from the mode because some
+         * dialers hand out `CAN_DUCK` for a ringing phone.
+         */
+        internal fun onTransientLoss(canDuck: Boolean, audioMode: Int): FocusReaction = when (this) {
+            DUCK -> if (canDuck) FocusReaction.NOTHING else FocusReaction.DUCK
+            PAUSE -> if (!canDuck || audioMode in CALL_MODES) FocusReaction.PAUSE else FocusReaction.NOTHING
+        }
+
+        /**
+         * Whether a change of `AudioManager.mode` to [audioMode] pauses playback by itself. WhatsApp rings
+         * and talks without ever taking audio focus from us — it only switches the mode — so on a phone
+         * the mode is watched as well. A television never pauses for a call.
+         */
+        internal fun pausesForMode(audioMode: Int): Boolean = this == PAUSE && audioMode in CALL_MODES
     }
+
+    /** See [FocusPolicy.onTransientLoss]. NOTHING on a `CAN_DUCK` means the platform attenuates us. */
+    internal enum class FocusReaction { NOTHING, DUCK, PAUSE }
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
     private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
 
     private var engine: PlaybackEngine? = null
+
+    private val _active = MutableStateFlow(false)
+
+    /**
+     * True while an engine is attached — both apps attach whatever is playing and pass `null` only when
+     * playback has really stopped, so this is the one "is anything playing" both can share. A pause does
+     * not clear it; a switch from a channel to a film may clear it for a moment.
+     */
+    val active: StateFlow<Boolean> = _active.asStateFlow()
+
+    /**
+     * What "previous" from a headset or the media notification does on a live channel — go back to the
+     * channel watched before. A live engine has no previous item of its own, so without it the
+     * button did nothing. Assigned once by the app's live screen; null keeps the old no-op.
+     */
+    var livePrevious: (() -> Unit)? = null
     private var collectJob: Job? = null
     private var session: MediaSession? = null
 
@@ -112,10 +155,12 @@ class PlaybackSession(
         this.engine = engine
         // Publish the handoff before the early return below, so detach (null) also clears it.
         _activeEngine.value = engine
+        _active.value = engine != null
         if (engine == null) {
             unduck()
             abandonFocus()
             unregisterNoisy()
+            unregisterModeWatch()
             pausedByUs = false
             runCatching { session?.apply { isActive = false; release() } }
             session = null
@@ -127,6 +172,7 @@ class PlaybackSession(
         val s = runCatching { session ?: createSession().also { session = it } }.getOrNull()
         runCatching { s?.isActive = true }
         registerNoisy()
+        registerModeWatch()
         collectJob = combine(
             engine.isPlaying,
             engine.currentMeta,
@@ -170,7 +216,7 @@ class PlaybackSession(
         if (state.playing) requestFocus() else if (!pausedByUs) abandonFocus()
         val s = session ?: return
         runCatching {
-            // Metadata only when it actually changed (A-F10/F-F9). This is driven by a combine() that also
+            // Metadata only when it actually changed. This is driven by a combine() that also
             // carries the position, so it fires on every position tick — but the title, subtitle and
             // duration only change when the ITEM does. Rebuilding and re-publishing MediaMetadata dozens
             // of times a second was pure waste, and every controller on the TV had to process each one.
@@ -213,6 +259,32 @@ class PlaybackSession(
 
     private fun createSession(): MediaSession = MediaSession(context, SESSION_TAG).apply {
         setCallback(object : MediaSession.Callback() {
+            // The platform acts on a transport key's DOWN only. On the TCL the system sometimes hands the
+            // session the UP alone (MediaSessionService logged only ACTION_UP for Play/Pause), and the
+            // press was lost: the remote's Play/Pause did nothing on a playing channel. An UP whose DOWN
+            // never came is acted on here; a normal DOWN + UP still goes the platform's way.
+            override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
+                @Suppress("DEPRECATION")
+                val ev = mediaButtonIntent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+                    ?: return super.onMediaButtonEvent(mediaButtonIntent)
+                if (ev.keyCode in TRANSPORT_KEYS) {
+                    if (ev.action == KeyEvent.ACTION_DOWN) {
+                        transportDown = ev.keyCode
+                    } else if (ev.action == KeyEvent.ACTION_UP) {
+                        val orphan = transportDown != ev.keyCode
+                        transportDown = null
+                        if (orphan) {
+                            when (ev.keyCode) {
+                                KeyEvent.KEYCODE_MEDIA_PLAY -> onPlay()
+                                KeyEvent.KEYCODE_MEDIA_PAUSE -> onPause()
+                                else -> if (engine?.isPlaying?.value == true) onPause() else onPlay()
+                            }
+                            return true
+                        }
+                    }
+                }
+                return super.onMediaButtonEvent(mediaButtonIntent)
+            }
             // Either transport button is the user speaking for themselves, so any resume this class
             // still owed is cancelled: their choice is newer than the interruption's.
             override fun onPlay() = withEngine { pausedByUs = false; if (!it.isPlaying.value) it.togglePlayPause() }
@@ -232,7 +304,7 @@ class PlaybackSession(
                 if (!it.isLiveContent) it.seekBy(-it.seekStepMs.value)
             }
             override fun onSkipToNext() = withEngine { it.next() }
-            override fun onSkipToPrevious() = withEngine { it.previous() }
+            override fun onSkipToPrevious() = withEngine { if (it.isLiveContent) livePrevious?.invoke() else it.previous() }
         })
     }
 
@@ -250,19 +322,18 @@ class PlaybackSession(
                 unduck()
                 resumeAfterInterruption()
             }
-            // Transient: duck on a television, pause on a phone — see the class doc. Ducking a live
-            // stream costs a quiet moment; pausing one costs the live edge, which is why the TV never
-            // does it. A call, on the other hand, is not something to talk over.
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> when (focusPolicy) {
-                FocusPolicy.DUCK -> duck()
-                FocusPolicy.PAUSE -> pauseForInterruption()
-            }
-            // Under PAUSE, setWillPauseWhenDucked(true) is supposed to turn every duck into the
-            // LOSS_TRANSIENT above — but some builds (and some dialers) hand out CAN_DUCK anyway, and
-            // the result was a call that only turned the sound down while the film kept running.
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> when (focusPolicy) {
-                FocusPolicy.DUCK -> {} // the platform attenuates us; nothing to do
-                FocusPolicy.PAUSE -> pauseForInterruption()
+            // Transient: duck on a television, pause on a phone only for a call — see the class doc.
+            // Ducking a live stream costs a quiet moment; pausing one costs the live edge, which is why
+            // the TV never does it. A call, on the other hand, is not something to talk over.
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                val canDuck = change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK
+                val mode = runCatching { audioManager.mode }.getOrDefault(AudioManager.MODE_NORMAL)
+                when (focusPolicy.onTransientLoss(canDuck, mode)) {
+                    FocusReaction.DUCK -> duck()
+                    FocusReaction.PAUSE -> pauseForInterruption()
+                    FocusReaction.NOTHING -> {}
+                }
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
                 hasFocus = false
@@ -272,12 +343,14 @@ class PlaybackSession(
                 pausedByUs = false
                 withEngine { if (it.isPlaying.value) it.togglePlayPause() }
             }
-            // AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: the platform attenuates us, nothing to do.
         }
     }
 
     /** Set while playback is paused *by this class* and is owed a resume — never while the user paused. */
     private var pausedByUs = false
+
+    /** The transport key whose DOWN the session has seen and whose UP is still to come. */
+    private var transportDown: Int? = null
 
     private fun pauseForInterruption() {
         withEngine {
@@ -331,6 +404,37 @@ class PlaybackSession(
         runCatching { context.unregisterReceiver(noisyReceiver) }
     }
 
+    // --- Calls that never take focus ----------------------------------------------------------------
+
+    /** The `AudioManager.OnModeChangedListener` while registered (Android 12+, phone policy only). Typed
+     *  as Any so the class is never named on an older device. */
+    private var modeListener: Any? = null
+
+    private fun registerModeWatch() {
+        // Same reason as in requestFocus: a call on this phone has nothing to do with a cast stream.
+        if (focusPolicy != FocusPolicy.PAUSE || modeListener != null || engine?.playsLocally == false) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+        val listener = AudioManager.OnModeChangedListener(::onModeChanged)
+        if (runCatching { audioManager.addOnModeChangedListener(ContextCompat.getMainExecutor(context), listener) }.isSuccess) {
+            modeListener = listener
+        }
+    }
+
+    private fun unregisterModeWatch() {
+        val listener = modeListener ?: return
+        modeListener = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            runCatching { audioManager.removeOnModeChangedListener(listener as AudioManager.OnModeChangedListener) }
+        }
+    }
+
+    /** A call rang or started without taking focus (see [FocusPolicy.pausesForMode]); back to normal is its
+     *  end. A resume owed after a regular call arrives here and on the focus gain alike — it runs once. */
+    private fun onModeChanged(mode: Int) {
+        if (focusPolicy.pausesForMode(mode)) pauseForInterruption()
+        else if (mode == AudioManager.MODE_NORMAL) resumeAfterInterruption()
+    }
+
     private val focusRequest by lazy {
         AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
             .setAudioAttributes(
@@ -339,10 +443,10 @@ class PlaybackSession(
                     .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
                     .build(),
             )
-            // DUCK: false, so the platform attenuates us automatically instead of handing us a callback.
-            // PAUSE: true, which is what makes the system send LOSS_TRANSIENT for an incoming call
-            // rather than ducking us behind our back and never telling us to stop.
-            .setWillPauseWhenDucked(focusPolicy == FocusPolicy.PAUSE)
+            // False under both policies, so the platform attenuates us for a notification sound by
+            // itself. True made the system turn that duck into a pause on a phone; a call is caught
+            // from the audio mode instead (see onTransientLoss).
+            .setWillPauseWhenDucked(false)
             .setOnAudioFocusChangeListener(focusListener)
             .build()
     }
@@ -372,7 +476,7 @@ class PlaybackSession(
         if (preDuckVolume != null) return
         val current = e.volume.value
         preDuckVolume = current
-        val target = (current * DUCK_PERCENT / 100).coerceAtLeast(0)
+        val target = VolumeCurve.shiftedByDb(current, DUCK_DB)
         duckedTo = target
         withEngine { it.adjustVolume(target - current) }
     }
@@ -393,7 +497,16 @@ class PlaybackSession(
 
     private companion object {
         const val SESSION_TAG = "OwnTV"
-        /** How far down a manual duck goes — quiet enough to talk over, loud enough not to look broken. */
-        const val DUCK_PERCENT = 25
+        val TRANSPORT_KEYS = setOf(
+            KeyEvent.KEYCODE_MEDIA_PLAY, KeyEvent.KEYCODE_MEDIA_PAUSE, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+        )
+        /** How far down a manual duck goes — quiet enough to talk over, loud enough not to look broken.
+         *  In dB, so it is the same drop on every engine and from any starting volume (a quarter of
+         *  the HUD number used to be −12 dB on ExoPlayer and −36 dB, effectively mute, on mpv). */
+        const val DUCK_DB = -12.0
+        /** `AudioManager.mode` values meaning the phone is ringing or in a call (voice or VoIP). */
+        val CALL_MODES = setOf(
+            AudioManager.MODE_RINGTONE, AudioManager.MODE_IN_CALL, AudioManager.MODE_IN_COMMUNICATION,
+        )
     }
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.FilterInputStream
 import java.io.IOException
 import java.io.File
 import java.io.InputStream
@@ -19,10 +20,9 @@ import java.net.URLEncoder
 import java.util.TimeZone
 
 /**
- * Stalker/Ministra (MAG portal) protocol client — Phase A of `future-plan/stalker-portal-plan.md`:
- * portal-URL normalization, the MAC handshake (`handshake` → Bearer token → `get_profile`), and the
- * MAG request headers, all derived in one place. Content lists and `create_link` come in later
- * phases. Responses are small JSON wrapped as `{"js": <payload>}` and parsed with [JsonReader].
+ * Stalker/Ministra (MAG portal) protocol client: portal-URL normalization, the MAC handshake
+ * (`handshake` → Bearer token → `get_profile`), the MAG request headers, the content lists and
+ * `create_link`, all in one place. Responses are small JSON wrapped as `{"js": <payload>}` and parsed with [JsonReader].
  */
 open class StalkerClient(okHttpClient: OkHttpClient) {
 
@@ -40,8 +40,18 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     /** The MAC is not authorized / the token expired / the portal answered `{"js":false}`. */
     class StalkerAuthException(message: String) : IOException(message)
 
-    /** Non-2xx portal response, carrying the status so callers can retry transient 429/5xx. */
-    class StalkerHttpException(val code: Int, message: String) : IOException(message)
+    /**
+     * Non-2xx portal response, carrying the status so callers can retry transient 429/5xx, and the
+     * portal's own `Retry-After` (seconds → ms) when it sent one.
+     */
+    class StalkerHttpException(val code: Int, message: String, val retryAfterMs: Long? = null) : IOException(message)
+
+    /**
+     * The portal answered a request with the bare text `Authorization failed.` instead of JSON. On a
+     * session that had been working, this is how Ministra tells a MAC it is asking too fast — so it is
+     * a throttle (back off, then try again on a fresh handshake), not a login refused for good.
+     */
+    class StalkerRefusedException(message: String) : IOException(message)
 
     /** A successful probe: which API endpoint answered, and the token it handed out. */
     data class Handshake(val apiBase: String, val token: String)
@@ -66,7 +76,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     )
 
     /**
-     * A VOD (movie) or series-show item from `get_ordered_list` (§1.3). For a movie, [cmd] is the
+     * A VOD (movie) or series-show item from `get_ordered_list`. For a movie, [cmd] is the
      * portal command resolved to a real URL at play time via [createLink] (`type=vod`). For a series
      * SHOW, [cmd] carries the show command; per-episode URLs are minted with a `series=<ep>` param at
      * play time (episodes themselves are listed lazily when the show is opened). [id] is the stable
@@ -86,6 +96,9 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         // Epoch ms for the "Date added" sort, from Ministra's `video.added` column. Null on trimmed
         // reseller panels that omit it — the sort then falls through to playlist order.
         val addedAt: Long?,
+        // `is_series` on a `type=vod` row: a show filed in the film catalogue. Portals with no series
+        // section of their own list every show this way.
+        val isSeries: Boolean = false,
     )
 
     /** One page of `get_ordered_list`: the items plus the totals needed to page through the rest. */
@@ -105,7 +118,21 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         val episodes: List<Int>,
     )
 
-    /** One programme from `get_short_epg` (Phase E, §5.5) — times in epoch ms. */
+    /**
+     * A season of a show filed in the film catalogue, from Ministra's three-level VOD tree
+     * (`type=vod&movie_id=<show>&season_id=0`). Unlike [SeasonItem] it carries no episode list and no
+     * cmd: the episodes are one request further down ([getVodEpisodes]), and each episode's playable
+     * file one more ([getVodEpisodeFileCmd]).
+     */
+    data class VodSeason(val id: String, val number: Int?, val name: String?)
+
+    /** An episode row of a [VodSeason]: `series_number` is its number, `series_name` its own title. */
+    data class VodEpisode(val id: String, val number: Int?, val title: String?)
+
+    /** Where a [VodEpisode]'s file is listed: the parts of a [vodEpisodeRef]. */
+    data class VodEpisodeRef(val movieId: String, val seasonId: String, val episodeId: String)
+
+    /** One programme from `get_short_epg` — times in epoch ms. */
     data class ShortEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long)
 
     /**
@@ -117,17 +144,22 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     data class ArchiveEntry(val id: String, val startMs: Long, val stopMs: Long, val archived: Boolean)
 
     /**
-     * Probe the API-endpoint candidates for [portalUrl] (§1.1: `portal.php`, `stalker_portal/server/
+     * Probe the API-endpoint candidates for [portalUrl] (`portal.php`, `stalker_portal/server/
      * load.php`, `server/load.php`) and return the first that completes a handshake. The winning
      * [Handshake.apiBase] should be reused for every later call on this source.
+     *
+     * A portal that redirects the handshake to another host is used at that host from then on.
+     * OkHttp drops `Authorization` on a cross-host redirect, so every later call sent to the first
+     * address would reach the real portal without its token and be refused.
      */
     open suspend fun resolveHandshake(portalUrl: String, mac: String, userAgent: String? = null): Handshake {
         var lastError: Exception? = null
         apiCandidates(portalUrl).forEach { apiBase ->
             try {
-                val token = handshake(apiBase, mac, userAgent)
-                Log.i(TAG, "handshake ok apiBase=$apiBase")
-                return Handshake(apiBase, token)
+                var landed = apiBase
+                val token = handshake(apiBase, mac, userAgent) { landed = it }
+                Log.i(TAG, "handshake ok apiBase=$landed" + if (landed != apiBase) " redirectedFrom=$apiBase" else "")
+                return Handshake(landed, token)
             } catch (c: CancellationException) {
                 throw c
             } catch (e: Exception) {
@@ -139,9 +171,9 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     }
 
     /** `?type=stb&action=handshake` → the Bearer token used by every authorized call. */
-    suspend fun handshake(apiBase: String, mac: String, userAgent: String? = null): String {
+    suspend fun handshake(apiBase: String, mac: String, userAgent: String? = null, onLanded: (String) -> Unit = {}): String {
         val url = "$apiBase?type=stb&action=handshake&token=&JsHttpRequest=1-xml"
-        val js = request(url, mac, token = null, userAgent = userAgent) { readScalarFields(it) }
+        val js = request(url, mac, token = null, userAgent = userAgent, onLanded = onLanded) { readScalarFields(it) }
         return js["token"]?.takeIf { it.isNotBlank() }
             ?: throw IOException("Portal handshake returned no token")
     }
@@ -150,6 +182,20 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
      * `?type=stb&action=get_profile` (with the Bearer token) — confirms the MAC is authorized and
      * returns the STB profile (scalar fields only; nested payloads are skipped). Optional second-step
      * device identity is sent only when supplied; MAC-only sources retain the original request shape.
+     *
+     * Some portals reject device identity sent without `stb_type`: confirmed against a real portal by
+     * curl, `sn`/`device_id`/`device_id2` genuinely registered to this MAC were refused — "Device
+     * conflict - device_id mismatch" — with `stb_type` omitted or naming the wrong model, and accepted
+     * with the correct one. So the first request is exactly the one every working source already
+     * makes, and only a conflict answer to a request carrying identity is retried once with
+     * `stb_type` = [magModel] of the effective User-Agent. A source that works today sends one request,
+     * unchanged; sending a guessed model up front could break a portal that checks it.
+     *
+     * That rejection comes back as an ordinary `200 OK` with a profile-shaped object (`status`, `msg`,
+     * `block_msg` — no `id` and none of the real STB fields), so it reads as success to anything that
+     * only checks "is this empty". Treated as fatal here instead of being cached as a working session:
+     * silently accepting it meant the actual failure only surfaced later, as a bare-text `Authorization
+     * failed.` on the next unrelated call.
      */
     open suspend fun getProfile(
         apiBase: String,
@@ -157,15 +203,29 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         token: String,
         userAgent: String? = null,
         identity: StalkerDeviceIdentity = StalkerDeviceIdentity(),
-    ): Map<String, String> {
-        val url = profileUrl(apiBase, identity)
-        val profile = request(url, mac, token, userAgent) { readScalarFields(it) }
-        if (profile.isEmpty()) throw StalkerAuthException("Portal accepted the handshake but returned an empty profile — the MAC may not be authorized")
-        return profile
+    ): Map<String, String> = resolveProfile(identity, userAgent) { stbType ->
+        request(profileUrl(apiBase, identity, stbType), mac, token, userAgent) { readScalarFields(it) }
     }
 
     /**
-     * `?type=account_info&action=get_main_info` — subscription status/expiry (§1.2, Phase F).
+     * `?type=stb&action=do_auth` — the login some portals ask for on top of the MAC, sent between the
+     * handshake and `get_profile`, and only when the playlist has a login. `{"js":true}` (or any
+     * object) is a yes; `{"js":false}` is a refused login, reported as such rather than as a MAC
+     * problem so the user is pointed at the right field.
+     */
+    open suspend fun doAuth(
+        apiBase: String, mac: String, token: String, userAgent: String?,
+        login: String, password: String, identity: StalkerDeviceIdentity = StalkerDeviceIdentity(),
+    ) {
+        val url = doAuthUrl(apiBase, login, password, identity)
+        val accepted = request(url, mac, token, userAgent, scalarJs = true) { reader ->
+            if (reader.peek() == JsonToken.BOOLEAN) reader.nextBoolean() else { reader.skipValue(); true }
+        }
+        if (!accepted) throw StalkerAuthException("Portal login rejected — check the username and password")
+    }
+
+    /**
+     * `?type=account_info&action=get_main_info` — subscription status/expiry.
      * Optional and portal-quirky (expiry is often surfaced oddly, e.g. in `phone`); callers must
      * treat a failure or an empty map as "no account info", never as an error.
      */
@@ -174,7 +234,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         return request(url, mac, token, userAgent) { readScalarFields(it) }
     }
 
-    // --- Content lists (Phase C) ---
+    // --- Content lists ---
 
     /** `?type=itv&action=get_genres` → live TV genres (the js payload is an array). */
     suspend fun getGenres(apiBase: String, mac: String, token: String, userAgent: String? = null): List<Genre> {
@@ -196,7 +256,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
 
     /**
      * `?type=itv&action=get_short_epg&ch_id=<id>&size=<n>` → the channel's now/next programmes
-     * (Phase E, §5.5 — the safe per-channel path; the OOM-prone bulk `get_epg_info` is never used).
+     * (the safe per-channel path; the OOM-prone bulk `get_epg_info` is never used).
      * The js payload is an array (some portals wrap it as `{data:[…]}`); entries with no readable
      * start/stop are dropped.
      */
@@ -300,29 +360,11 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     }
 
     /**
-     * `?type=itv&action=get_epg_info&period=<days>` → **the whole portal guide**, streamed.
+     * Download the whole portal guide (`?type=itv&action=get_epg_info&period=<days>`) to [dest]
+     * **without parsing a byte of it**, returning the size.
      *
      * This is the call STBEmu and TiviMate make, and the reason their users see a full guide and a
-     * working catch-up list on portals where we showed only now/next. It was avoided here as an OOM
-     * risk, which it is *if the reply is collected into a list* — a week of a thousand channels is
-     * hundreds of thousands of programmes. It is not a risk when the reply is never held: [onEntry]
-     * is called as each programme is read, so the caller can write in batches and nothing bigger than
-     * one programme is alive at a time. Exactly how the Xtream catalog lists are already handled.
-     *
-     * Both payload shapes are accepted, because portals disagree: an object keyed by channel id
-     * (`{"data":{"1234":[…]}}` or `{"1234":[…]}`), or one flat array whose entries carry `ch_id`.
-     * Entries with no readable start/stop or no title are skipped rather than failing the crawl.
-     */
-    open suspend fun streamEpgInfo(
-        apiBase: String, mac: String, token: String, userAgent: String?, periodDays: Int,
-        onEntry: suspend (channelId: String, entry: ShortEpgEntry) -> Unit,
-    ) {
-        val url = "$apiBase?type=itv&action=get_epg_info&period=$periodDays&JsHttpRequest=1-xml"
-        request(url, mac, token, userAgent) { reader -> readEpgInfo(reader, onEntry) }
-    }
-
-    /**
-     * Download the whole portal guide to [dest] **without parsing a byte of it**, returning the size.
+     * working catch-up list on portals that offer only now/next otherwise.
      *
      * Written this way because of what a real portal did. The guide itself is quick — a measured
      * 9 MB in about a second for a 12 000-channel panel — but the first attempt parsed it as it
@@ -343,9 +385,17 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         return requestToFile(url, mac, token, userAgent, dest)
     }
 
-    /** Parse a guide previously fetched by [downloadEpgInfo]. No network, no time limit. */
+    /**
+     * Parse a guide previously fetched by [downloadEpgInfo]. No network, no time limit. [onEntry] is
+     * called as each programme is read, so the caller writes in batches and nothing bigger than one
+     * programme is held — a week of a thousand channels is hundreds of thousands of programmes.
+     *
+     * Both payload shapes are accepted, because portals disagree: an object keyed by channel id
+     * (`{"data":{"1234":[…]}}` or `{"1234":[…]}`), or one flat array whose entries carry `ch_id`.
+     * Entries with no readable start/stop or no title are skipped rather than failing the crawl.
+     */
     open suspend fun parseEpgInfoFile(file: File, onEntry: suspend (channelId: String, entry: ShortEpgEntry) -> Unit) {
-        file.inputStream().buffered().use { input -> parseEnvelope(input) { reader -> readEpgInfo(reader, onEntry) } }
+        file.inputStream().buffered().use { input -> parseEnvelope(input, scalarJs = false) { reader -> readEpgInfo(reader, onEntry) } }
     }
 
     private suspend fun readEpgInfo(reader: JsonReader, onEntry: suspend (String, ShortEpgEntry) -> Unit) {
@@ -401,7 +451,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         apiBase: String, mac: String, token: String, userAgent: String?, categoryId: String, page: Int,
     ): Page<VodItem> {
         val url = "$apiBase?type=vod&action=get_ordered_list&category=${enc(categoryId)}&sortby=added&p=$page&JsHttpRequest=1-xml"
-        return request(url, mac, token, userAgent) { readVodPage(it) }
+        return request(url, mac, token, userAgent) { readVodPage(it, apiBase) }
     }
 
     /** `?type=series&action=get_ordered_list&category=<id>&p=<page>` → one page of series shows + totals. */
@@ -409,20 +459,87 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         apiBase: String, mac: String, token: String, userAgent: String?, categoryId: String, page: Int,
     ): Page<VodItem> {
         val url = "$apiBase?type=series&action=get_ordered_list&category=${enc(categoryId)}&sortby=added&p=$page&JsHttpRequest=1-xml"
-        return request(url, mac, token, userAgent) { readVodPage(it) }
+        return request(url, mac, token, userAgent) { readVodPage(it, apiBase) }
     }
 
     /**
      * `?type=series&action=get_ordered_list&movie_id=<show remoteId>&p=<page>` → one page of the
-     * show's SEASONS, each carrying its `series` episode-number array (§1.3). Category is included
-     * because some portals require it alongside movie_id.
+     * show's SEASONS, each carrying its `series` episode-number array. Category is included
+     * because some portals require it alongside movie_id. [type] is `vod` for a show the portal
+     * files in its film catalogue (see [VodItem.isSeries]).
      */
     suspend fun getSeriesSeasons(
         apiBase: String, mac: String, token: String, userAgent: String?, categoryId: String?, movieId: String, page: Int,
+        type: String = "series",
     ): Page<SeasonItem> {
         val cat = categoryId?.takeIf { it.isNotBlank() }?.let { "&category=${enc(it)}" } ?: ""
-        val url = "$apiBase?type=series&action=get_ordered_list$cat&movie_id=${enc(movieId)}&p=$page&JsHttpRequest=1-xml"
+        val url = "$apiBase?type=${enc(type)}&action=get_ordered_list$cat&movie_id=${enc(movieId)}&p=$page&JsHttpRequest=1-xml"
         return request(url, mac, token, userAgent) { readSeasonPage(it) }
+    }
+
+    /** `?type=vod&action=get_ordered_list&movie_id=<show>&season_id=0&p=<page>` → the seasons of a [VodSeason] show. */
+    open suspend fun getVodSeasons(
+        apiBase: String, mac: String, token: String, userAgent: String?, movieId: String, page: Int,
+    ): Page<VodSeason> {
+        val url = "$apiBase?type=vod&action=get_ordered_list&movie_id=${enc(movieId)}&season_id=0&episode_id=0&p=$page&JsHttpRequest=1-xml"
+        return request(url, mac, token, userAgent) { reader ->
+            readScalarPage(reader) { f ->
+                val id = f["id"]?.takeIf { it.isNotBlank() } ?: return@readScalarPage null
+                VodSeason(id, f["season_number"]?.trim()?.toIntOrNull(), (f["season_name"] ?: f["name"])?.takeIf { it.isNotBlank() })
+            }
+        }
+    }
+
+    /** `…&movie_id=<show>&season_id=<season>&p=<page>` → one page of that season's episodes. */
+    open suspend fun getVodEpisodes(
+        apiBase: String, mac: String, token: String, userAgent: String?, movieId: String, seasonId: String, page: Int,
+    ): Page<VodEpisode> {
+        val url = "$apiBase?type=vod&action=get_ordered_list&movie_id=${enc(movieId)}&season_id=${enc(seasonId)}&episode_id=0&p=$page&JsHttpRequest=1-xml"
+        return request(url, mac, token, userAgent) { reader ->
+            readScalarPage(reader) { f ->
+                val id = f["id"]?.takeIf { it.isNotBlank() } ?: return@readScalarPage null
+                VodEpisode(id, f["series_number"]?.trim()?.toIntOrNull(), f["series_name"]?.takeIf { it.isNotBlank() })
+            }
+        }
+    }
+
+    /**
+     * `…&movie_id=<show>&season_id=<season>&episode_id=<episode>` → the episode's files. Returns the
+     * first file's cmd (`/media/file_<id>.mpg`), which [createLink] turns into a URL like a film's.
+     */
+    open suspend fun getVodEpisodeFileCmd(
+        apiBase: String, mac: String, token: String, userAgent: String?, movieId: String, seasonId: String, episodeId: String,
+    ): String? {
+        val url = "$apiBase?type=vod&action=get_ordered_list&movie_id=${enc(movieId)}&season_id=${enc(seasonId)}&episode_id=${enc(episodeId)}&p=1&JsHttpRequest=1-xml"
+        val files = request(url, mac, token, userAgent) { reader -> readScalarPage(reader) { f -> f["cmd"]?.takeIf { it.isNotBlank() } } }
+        return files.items.firstOrNull()
+    }
+
+    /** A `get_ordered_list` page whose rows only need their scalar fields; [row] drops a row by returning null. */
+    private fun <T> readScalarPage(reader: JsonReader, row: (Map<String, String>) -> T?): Page<T> {
+        var total = 0
+        var maxPer = 0
+        val items = ArrayList<T>()
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return Page(0, 0, items) }
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "total_items" -> total = nextIntLenient(reader) ?: 0
+                "max_page_items" -> maxPer = nextIntLenient(reader) ?: 0
+                "data" -> if (reader.peek() == JsonToken.BEGIN_ARRAY) {
+                    reader.beginArray()
+                    while (reader.hasNext()) {
+                        if (reader.peek() == JsonToken.BEGIN_OBJECT) row(readScalarFields(reader))?.let { items.add(it) } else reader.skipValue()
+                    }
+                    reader.endArray()
+                } else {
+                    reader.skipValue()
+                }
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        return Page(total, maxPer, items)
     }
 
     private fun readSeasonPage(reader: JsonReader): Page<SeasonItem> {
@@ -477,16 +594,9 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
             id = id,
             name = fields["name"]?.takeIf { it.isNotBlank() },
             cmd = fields["cmd"]?.takeIf { it.isNotBlank() },
-            seasonNumber = parseSeasonNumber(id, fields["name"]),
+            seasonNumber = seasonNumberOf(id, fields["name"]),
             episodes = episodes.distinct().sorted(),
         )
-    }
-
-    private fun parseSeasonNumber(id: String, name: String?): Int? {
-        // "280:2" — the suffix after ':' is the season on classic portals.
-        id.substringAfterLast(':', "").toIntOrNull()?.let { return it }
-        // Else a trailing number in the name ("Season 2", "S02").
-        return name?.let { Regex("(\\d+)\\s*$").find(it.trim())?.value?.toIntOrNull() }
     }
 
     private fun readGenreArray(reader: JsonReader): List<Genre> {
@@ -506,7 +616,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         return out
     }
 
-    private fun readVodPage(reader: JsonReader): Page<VodItem> {
+    private fun readVodPage(reader: JsonReader, apiBase: String): Page<VodItem> {
         var total = 0
         var maxPer = 0
         val items = ArrayList<VodItem>()
@@ -518,7 +628,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
                 "max_page_items" -> maxPer = nextIntLenient(reader) ?: 0
                 "data" -> if (reader.peek() == JsonToken.BEGIN_ARRAY) {
                     reader.beginArray()
-                    while (reader.hasNext()) readVodItem(reader)?.let { items.add(it) }
+                    while (reader.hasNext()) readVodItem(reader, apiBase)?.let { items.add(it) }
                     reader.endArray()
                 } else {
                     reader.skipValue()
@@ -530,22 +640,23 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         return Page(total, maxPer, items)
     }
 
-    private fun readVodItem(reader: JsonReader): VodItem? {
+    private fun readVodItem(reader: JsonReader, apiBase: String): VodItem? {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return null }
         // Nested fields (the series episode list, actors arrays) are skipped by readScalarFields — the
-        // show/movie row only needs the scalar metadata; episodes are fetched lazily on open (Phase D-2).
+        // show/movie row only needs the scalar metadata; episodes are fetched lazily on open.
         val f = readScalarFields(reader)
         val id = f["id"]?.takeIf { it.isNotBlank() } ?: return null
         return VodItem(
             id = id,
             name = f["name"] ?: f["o_name"] ?: id,
             cmd = f["cmd"]?.takeIf { it.isNotBlank() },
-            poster = (f["screenshot_uri"] ?: f["poster"] ?: f["cover"])?.takeIf { it.isNotBlank() && it != "0" },
+            poster = absoluteArt(f["screenshot_uri"] ?: f["poster"] ?: f["cover"], apiBase),
             year = parseYear(f["year"]),
             plot = f["description"]?.takeIf { it.isNotBlank() },
             rating = (f["rating_imdb"] ?: f["rating"])?.trim()?.toDoubleOrNull()?.takeIf { it > 0 },
             categoryId = (f["category_id"] ?: f["category"])?.takeIf { it.isNotBlank() && it != "*" },
             addedAt = parseAddedAt(f["added"]),
+            isSeries = isFlagSet(f["is_series"]),
         )
     }
 
@@ -628,12 +739,12 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
 
     /**
      * `?type=itv&action=create_link&cmd=<cmd>` → the real, short-lived stream URL (the leading
-     * `ffmpeg `/`auto ` prefix stripped). This is the one call that mints a playable URL (§1.4);
+     * `ffmpeg `/`auto ` prefix stripped). This is the one call that mints a playable URL;
      * resolve immediately before playback, never at sync.
      */
     open suspend fun createLink(
         apiBase: String, mac: String, token: String, userAgent: String?, cmd: String,
-        // "itv" for live; "vod" for movies AND series episodes (§1.4). [episode] is the series episode
+        // "itv" for live; "vod" for movies AND series episodes. [episode] is the series episode
         // number minted into the URL via `series=<ep>` — null for live/movies.
         type: String = "itv", episode: Int? = null,
     ): String {
@@ -697,7 +808,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     /**
      * GET a portal URL with the MAG headers, unwrap the `{"js": <payload>}` envelope, and hand the
      * reader — positioned at the `js` value — to [parseJs]. `{"js": false/null/""}` (the portal's
-     * "not authorized / token dead" shape) throws [StalkerAuthException] (§5.2: "re-handshake").
+     * "not authorized / token dead" shape) throws [StalkerAuthException] ("re-handshake").
      */
     /**
      * GET [url] straight to [dest], returning the bytes written. Same headers and cancellation as
@@ -755,17 +866,14 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     }
 
     private suspend fun <T> request(
-        url: String, mac: String, token: String?, userAgent: String?, parseJs: suspend (JsonReader) -> T,
+        url: String, mac: String, token: String?, userAgent: String?,
+        /** Told the URL the answer came from once redirects are followed, without its query. */
+        onLanded: (String) -> Unit = {},
+        /** Hand a `true`/`false` payload to [parseJs] instead of reading `false` as a dead token. */
+        scalarJs: Boolean = false,
+        parseJs: suspend (JsonReader) -> T,
     ): T = withContext(Dispatchers.IO) {
-        val referer = "${portalRoot(url.substringBefore('?'))}/c/"
-        val builder = Request.Builder()
-            .url(url)
-            .header("User-Agent", userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_MAG_USER_AGENT)
-            .header("Cookie", "mac=${URLEncoder.encode(mac, "UTF-8")}; stb_lang=en; timezone=${TimeZone.getDefault().id}")
-            .header("X-User-Agent", "Model: MAG250; Link: WiFi")
-            .header("Referer", referer)
-        if (token != null) builder.header("Authorization", "Bearer $token")
-        val httpRequest = builder.build()
+        val httpRequest = portalRequest(url, mac, token, userAgent)
 
         val coroutineContext = currentCoroutineContext()
         val startedAt = SystemClock.elapsedRealtime()
@@ -778,10 +886,11 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         Log.d(TAG, "GET start url=$safeUrl action=$action")
         try {
             call.execute().use { response ->
-                if (!response.isSuccessful) throw httpFailure(response.code, safeUrl)
+                if (!response.isSuccessful) throw httpFailure(response.code, safeUrl, response.header("Retry-After"))
+                onLanded(response.request.url.newBuilder().query(null).build().toString())
                 val body = response.body
                 body.byteStream().use { input ->
-                    parseEnvelope(input, parseJs).also {
+                    parseEnvelope(input, scalarJs, parseJs).also {
                         Log.d(TAG, "GET done url=$safeUrl action=$action totalMs=${SystemClock.elapsedRealtime() - startedAt}")
                     }
                 }
@@ -797,11 +906,23 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
      * [parseJs] is a *suspending* function so that a reader can do real work per item — the guide
      * crawl writes each batch to the database as it parses, and therefore never holds the whole
      * payload. Callers that just build a value pass an ordinary lambda and are unaffected.
+     *
+     * [input] is wrapped in [HeadPeekingInputStream] so a "not JSON" failure can log what the
+     * portal actually sent — a handful of bytes, never the whole body (which for the guide crawl can
+     * be up to [MAX_GUIDE_BYTES]). This is diagnostic only: [reader]'s lenient mode is what decides
+     * whether the response parses, not this peek. The quote goes to the log, not into the exception:
+     * an exception's message reaches the sync error and warning text the user reads.
      */
-    private suspend fun <T> parseEnvelope(input: InputStream, parseJs: suspend (JsonReader) -> T): T {
-        JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+    private suspend fun <T> parseEnvelope(input: InputStream, scalarJs: Boolean, parseJs: suspend (JsonReader) -> T): T {
+        val peeking = HeadPeekingInputStream(input, RESPONSE_PEEK_BYTES)
+        JsonReader(peeking.reader(Charsets.UTF_8)).use { reader ->
             reader.isLenient = true // some portals prefix/pad the JSON
-            if (reader.peek() != JsonToken.BEGIN_OBJECT) throw IOException("Portal response is not JSON (got ${reader.peek()})")
+            if (reader.peek() != JsonToken.BEGIN_OBJECT) {
+                val got = reader.peek()
+                Log.w(TAG, "portal response is not JSON (got $got): ${redactForLog(peeking.head())}")
+                if (isRefusal(peeking.head())) throw StalkerRefusedException("Portal refused the request (Authorization failed)")
+                throw IOException("Portal response is not JSON (got $got)")
+            }
             reader.beginObject()
             var result: T? = null
             var found = false
@@ -809,6 +930,11 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
                 if (reader.nextName() == "js") {
                     when (reader.peek()) {
                         JsonToken.BEGIN_OBJECT, JsonToken.BEGIN_ARRAY -> { result = parseJs(reader); found = true }
+                        JsonToken.BOOLEAN -> if (scalarJs) {
+                            result = parseJs(reader); found = true
+                        } else {
+                            reader.skipValue(); throw StalkerAuthException("Portal returned an empty payload — token expired or MAC not authorized")
+                        }
                         // {"js":false} / {"js":null} / {"js":""} — token expired / MAC not authorized.
                         else -> { reader.skipValue(); throw StalkerAuthException("Portal returned an empty payload — token expired or MAC not authorized") }
                     }
@@ -853,6 +979,34 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
     companion object {
         private const val TAG = "StalkerClient"
 
+        /** A season row's number: the id suffix ("280:2"), 0 for Specials, else a trailing number in its name. */
+        internal fun seasonNumberOf(id: String, name: String?): Int? {
+            // "280:2" — the suffix after ':' is the season on classic portals.
+            id.substringAfterLast(':', "").toIntOrNull()?.let { return it }
+            // A "Specials" season is season 0. Without this it had no number, took its list position,
+            // and — listed first — merged into Season 1.
+            if (name != null && SPECIALS.containsMatchIn(name)) return 0
+            // Else a trailing number in the name ("Season 2", "S02").
+            return name?.let { Regex("(\\d+)\\s*$").find(it.trim())?.value?.toIntOrNull() }
+        }
+
+        /** "Specials", "Special", "Season 0 - Specials": the provider's season 0. */
+        private val SPECIALS = Regex("""\bspecials?\b""", RegexOption.IGNORE_CASE)
+
+        /**
+         * A poster or cover as a loadable URL. Many portals send a server path
+         * (`/stalker_portal/screenshots/…`), which is resolved against the API base's origin — not
+         * its path, which would double `/stalker_portal`. Absolute URLs are kept; blank and `"0"`
+         * mean none.
+         */
+        internal fun absoluteArt(raw: String?, apiBase: String): String? {
+            val value = raw?.trim()?.takeIf { it.isNotEmpty() && it != "0" } ?: return null
+            if (value.toHttpUrlOrNull() != null) return value
+            val origin = apiBase.toHttpUrlOrNull()?.newBuilder()?.encodedPath("/")?.query(null)?.build() ?: return value
+            return origin.resolve(value)?.toString() ?: value
+        }
+
+
         /** Ministra states an archive length in hours; the app stores and shows days. */
         private const val HOURS_PER_DAY = 24
 
@@ -862,19 +1016,94 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         /** A portal guide larger than this is not a guide; refuse it rather than fill the device. */
         private const val MAX_GUIDE_BYTES = 192L * 1024 * 1024
 
-        /** Classic MAG-box UA most portals accept (§1.1); overridable per source (MAG254/270/420 presets in Phase B). */
+        /** How much of a non-JSON response is worth quoting in the error — enough to name the shape, not the whole body. */
+        private const val RESPONSE_PEEK_BYTES = 200
+
+        /** Classic MAG-box UA most portals accept; overridable per source (MAG254/270/420 presets). */
         const val DEFAULT_MAG_USER_AGENT =
             "Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 4 rev: 2721 Safari/533.3"
 
-        internal fun profileUrl(apiBase: String, identity: StalkerDeviceIdentity): String = buildString {
+        /** Fallback model when [userAgent] carries none of the recognized MAG tokens — matches the default UA above. */
+        private const val DEFAULT_MAG_MODEL = "MAG200"
+
+        /** The MAG model tokens actually issued in the wild, longest-prefix-safe order doesn't matter: exact word match. */
+        private val KNOWN_MAG_MODELS = listOf(
+            "MAG522", "MAG520", "MAG425", "MAG424", "MAG420", "MAG352", "MAG351", "MAG349",
+            "MAG345", "MAG322", "MAG315", "MAG295", "MAG275", "MAG270", "MAG254", "MAG250", "MAG245", "MAG200",
+        )
+
+        /**
+         * The `MAGnnn` token for a given [userAgent] — one of the MAG preset strings in
+         * `MAG_USER_AGENTS` (`SetupText.kt`), each of which embeds its own model name. Used only for
+         * `get_profile`'s `stb_type` on a device-conflict retry (see [getProfile]); `X-User-Agent`'s
+         * `Model:` in [portalRequest] deliberately stays a fixed `MAG250`, as it always has. Falls
+         * back to [DEFAULT_MAG_MODEL] for a custom `User-Agent` that names no known model — which is
+         * the normal case for a hand-typed UA that mirrors a real STB client's generic string (those
+         * always say "MAG200" regardless of actual hardware); such a source should pick the matching
+         * preset instead of typing the UA, so the real model still reaches `stb_type`.
+         */
+        internal fun magModel(userAgent: String): String =
+            KNOWN_MAG_MODELS.firstOrNull { userAgent.contains(it, ignoreCase = true) } ?: DEFAULT_MAG_MODEL
+
+        /**
+         * [stbType] is only meaningful alongside device identity — a portal that checks `device_id`
+         * against it has nothing to check for a MAC-only source, and MAC-only sources must keep their
+         * original request shape (see [getProfile]'s kdoc), so it is omitted whenever [identity] is
+         * empty, same as the identity fields themselves.
+         */
+        /** [doAuth]'s request: the login, plus the device ids when the playlist has them. */
+        internal fun doAuthUrl(apiBase: String, login: String, password: String, identity: StalkerDeviceIdentity): String = buildString {
+            append(apiBase)
+            append("?type=stb&action=do_auth")
+            append("&login=${URLEncoder.encode(login, "UTF-8")}")
+            append("&password=${URLEncoder.encode(password, "UTF-8")}")
+            append("&device_id=${URLEncoder.encode(identity.deviceId.orEmpty(), "UTF-8")}")
+            append("&device_id2=${URLEncoder.encode(identity.deviceId2.orEmpty(), "UTF-8")}")
+            append("&JsHttpRequest=1-xml")
+        }
+
+        internal fun profileUrl(apiBase: String, identity: StalkerDeviceIdentity, stbType: String? = null): String = buildString {
             append(apiBase)
             append("?type=stb&action=get_profile&hd=1&auth_second_step=")
             append(if (identity.hasAny) '1' else '0')
             identity.serialNumber?.takeIf { it.isNotBlank() }?.let { append("&sn=${URLEncoder.encode(it, "UTF-8")}") }
+            if (identity.hasAny) stbType?.takeIf { it.isNotBlank() }?.let { append("&stb_type=${URLEncoder.encode(it, "UTF-8")}") }
             identity.deviceId?.takeIf { it.isNotBlank() }?.let { append("&device_id=${URLEncoder.encode(it, "UTF-8")}") }
             identity.deviceId2?.takeIf { it.isNotBlank() }?.let { append("&device_id2=${URLEncoder.encode(it, "UTF-8")}") }
             identity.signature?.takeIf { it.isNotBlank() }?.let { append("&signature=${URLEncoder.encode(it, "UTF-8")}") }
             append("&JsHttpRequest=1-xml")
+        }
+
+        /**
+         * `get_profile`'s rejection shape: a device-identity mismatch comes back as an ordinary
+         * `200 OK` object carrying `msg`/`block_msg` but none of the real profile fields (no `id`).
+         * Confirmed against a real portal with `sn`/`device_id`/`device_id2` that were genuinely
+         * registered to the MAC but sent with no `stb_type`, or the wrong one — see [getProfile].
+         * Returns the message worth showing, or `null` for an ordinary profile.
+         */
+        internal fun deviceConflictMessage(profile: Map<String, String>): String? {
+            if (!profile["id"].isNullOrBlank()) return null
+            return profile["msg"]?.takeIf { it.isNotBlank() } ?: profile["block_msg"]?.takeIf { it.isNotBlank() }
+        }
+
+        /**
+         * [getProfile]'s decision, apart from the network: [fetch] with no `stb_type` first, and once
+         * more with one only after a device conflict on a request that carried identity.
+         */
+        internal suspend fun resolveProfile(
+            identity: StalkerDeviceIdentity,
+            userAgent: String?,
+            fetch: suspend (stbType: String?) -> Map<String, String>,
+        ): Map<String, String> {
+            var profile = fetch(null)
+            if (identity.hasAny && profile.isNotEmpty() && deviceConflictMessage(profile) != null) {
+                val model = magModel(userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_MAG_USER_AGENT)
+                Log.i(TAG, "get_profile device conflict — retrying once with stb_type=$model")
+                profile = fetch(model)
+            }
+            if (profile.isEmpty()) throw StalkerAuthException("Portal accepted the handshake but returned an empty profile — the MAC may not be authorized")
+            deviceConflictMessage(profile)?.let { throw StalkerAuthException(it) }
+            return profile
         }
 
         /**
@@ -922,11 +1151,22 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
             return if (value < HOURS_PER_DAY) value else value / HOURS_PER_DAY
         }
 
-        internal fun httpFailure(code: Int, safeUrl: String): IOException =
+        internal fun httpFailure(code: Int, safeUrl: String, retryAfter: String? = null): IOException =
             if (code == 401) StalkerAuthException("Portal rejected the request (HTTP $code)")
-            else StalkerHttpException(code, "HTTP $code for $safeUrl")
+            else StalkerHttpException(code, "HTTP $code for $safeUrl", retryAfterMs(retryAfter))
 
-        /** Play-command prefixes minted by `create_link` (§1.4) — everything after them is the playable URL. */
+        /** `Retry-After` in seconds → ms. The HTTP-date form is not used by portals and is ignored. */
+        internal fun retryAfterMs(header: String?): Long? =
+            header?.trim()?.toLongOrNull()?.takeIf { it >= 0 }?.let { it * 1_000L }
+
+        /** A portal flag: `1`, `"1"` or `true`. */
+        internal fun isFlagSet(raw: String?): Boolean = raw?.trim()?.let { it == "1" || it.equals("true", ignoreCase = true) } == true
+
+        /** Ministra's bare-text refusal, `Authorization failed.`, as opposed to any other non-JSON body. */
+        internal fun isRefusal(body: String): Boolean =
+            body.trim().startsWith("Authorization failed", ignoreCase = true)
+
+        /** Play-command prefixes minted by `create_link` — everything after them is the playable URL. */
         private val CMD_PREFIXES = listOf("ffmpeg ", "ffrt2 ", "ffrt3 ", "ffrt ", "auto ")
 
         /**
@@ -952,7 +1192,7 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         }
 
         /**
-         * API-endpoint candidates for a portal URL, in probe order (§1.1). A pasted direct `.php`
+         * API-endpoint candidates for a portal URL, in probe order. A pasted direct `.php`
          * endpoint is honored first; otherwise try `portal.php`, then the stalker_portal layouts.
          */
         fun apiCandidates(input: String): List<String> {
@@ -984,6 +1224,37 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
         }
 
         /**
+         * [cmd] without its `play_token` query value. Portals that embed the playable URL in the
+         * channel list mint a new token on every `get_all_channels`, so a cmd compared with it in
+         * place differs on every re-sync and the whole live list is rewritten each time. It is left
+         * out of the comparison only; the newest token is still stored (see [hasPlayToken]).
+         */
+        fun withoutPlayToken(cmd: String): String = cmd.replace(PLAY_TOKEN, "")
+
+        /**
+         * What an episode of a [VodSeason] show stores as its stream URL. Such an episode has no cmd of
+         * its own until its file is listed, and that listing is a request per episode — so the
+         * listing stores where the file is, and [StreamUrlResolver] fetches it at play time.
+         */
+        fun vodEpisodeRef(movieId: String, seasonId: String, episodeId: String): String =
+            "$VOD_EPISODE_SCHEME$movieId/$seasonId/$episodeId"
+
+        /** The parts of a [vodEpisodeRef], or null for any other stored URL. */
+        fun parseVodEpisodeRef(stored: String): VodEpisodeRef? {
+            if (!stored.startsWith(VOD_EPISODE_SCHEME)) return null
+            val parts = stored.removePrefix(VOD_EPISODE_SCHEME).split('/')
+            if (parts.size != 3 || parts.any { it.isBlank() }) return null
+            return VodEpisodeRef(parts[0], parts[1], parts[2])
+        }
+
+        private const val VOD_EPISODE_SCHEME = "stalker-vod-episode://"
+
+        /** True when [cmd] carries a `play_token`, so its stored copy is renewed on each re-sync. */
+        fun hasPlayToken(cmd: String): Boolean = PLAY_TOKEN.containsMatchIn(cmd)
+
+        private val PLAY_TOKEN = Regex("(?i)[?&]play_token=[^&\\s]*(?=&|\\s|$)")
+
+        /**
          * True when a prefix-stripped channel `cmd` is ALREADY a complete, playable URL (some portals
          * embed the real stream URL — mac/stream/token — directly in the channel list, e.g.
          * `…/play/live.php?mac=…&stream=12345&…`). Those must be played AS-IS: routing them through
@@ -999,4 +1270,29 @@ open class StalkerClient(okHttpClient: OkHttpClient) {
             return url.querySize > 0 || url.encodedPath.contains(".")
         }
     }
+}
+
+/**
+ * Passes bytes through unchanged, but remembers the first [limit] of them so a caller that gave up
+ * partway through the stream (e.g. [StalkerClient]'s "not JSON" check) can still say what the portal
+ * actually sent. Never buffers past [limit] — the guide crawl can be tens of megabytes, and this exists
+ * to describe a failure, not to re-implement the body.
+ */
+private class HeadPeekingInputStream(input: InputStream, private val limit: Int) : FilterInputStream(input) {
+    private val captured = java.io.ByteArrayOutputStream(minOf(limit, 64))
+
+    override fun read(): Int {
+        val b = super.read()
+        if (b != -1 && captured.size() < limit) captured.write(b)
+        return b
+    }
+
+    override fun read(b: ByteArray, off: Int, len: Int): Int {
+        val n = super.read(b, off, len)
+        if (n > 0 && captured.size() < limit) captured.write(b, off, minOf(n, limit - captured.size()))
+        return n
+    }
+
+    /** The bytes seen so far, up to [limit], decoded as UTF-8 (replacing anything that isn't valid). */
+    fun head(): String = captured.toByteArray().toString(Charsets.UTF_8)
 }

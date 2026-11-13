@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.dao.DownloadDao
 import tv.own.owntv.core.database.entity.DownloadEntity
+import tv.own.owntv.core.model.DownloadReason
 import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.storage.MediaRoot
@@ -20,25 +21,28 @@ import tv.own.owntv.core.storage.StorageAccess
 import tv.own.owntv.core.settings.SettingsRepository
 
 /** Free/total bytes of the volume backing the download root. */
-data class DownloadStorageInfo(val freeBytes: Long, val totalBytes: Long) {
-    val usedBytes: Long get() = (totalBytes - freeBytes).coerceAtLeast(0L)
-    val usedFraction: Float get() = if (totalBytes > 0) (usedBytes.toFloat() / totalBytes).coerceIn(0f, 1f) else 0f
-}
+data class DownloadStorageInfo(
+    val freeBytes: Long,
+    val totalBytes: Long,
+    /** The chosen folder is missing (USB removed, permission withdrawn), so the app's own folder is in use. */
+    val usingFallback: Boolean = false,
+)
 
 /**
- * Phase 12 — downloads movies & series episodes for offline playback. Files go under the user-chosen
+ * Downloads movies & series episodes for offline playback. Files go under the user-chosen
  * download folder, organised as `Movies/<name>.<ext>` and `Series/<show>/Season N/<episode>.<ext>`.
  *
  * This is the queue-control half only: it writes [DownloadDao] rows and hands the actual transfers
  * to [DownloadWorker]/[DownloadEngine], which run in a foreground service and therefore survive the
- * user leaving the app (audit item DL1). [DownloadDao] remains the single source of truth, and
- * downloads still run strictly one at a time.
+ * user leaving the app. [DownloadDao] remains the single source of truth, and
+ * downloads still run strictly one at a time (each one possibly over several connections).
  */
 class DownloadManager(
     private val context: Context,
     private val downloadDao: DownloadDao,
     private val settings: SettingsRepository,
     private val engine: DownloadEngine,
+    private val watchSession: tv.own.owntv.core.live.WatchSession,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -55,6 +59,14 @@ class DownloadManager(
                 DownloadWorker.kick(context, wifiOnly, replace = true)
             }
         }
+        // A download waiting for the user to stop watching a one-stream playlist starts once they have.
+        scope.launch {
+            var before = emptySet<Long>()
+            watchSession.watching.collect { now ->
+                if ((before - now).isNotEmpty()) kick()
+                before = now
+            }
+        }
     }
 
     fun observe(profileId: Long): Flow<List<DownloadEntity>> = downloadDao.observeForProfile(profileId)
@@ -64,9 +76,14 @@ class DownloadManager(
 
     /** Free/total space of the volume holding the current download root (for the Downloads storage bar). */
     suspend fun storageInfo(): DownloadStorageInfo = withContext(Dispatchers.IO) {
-        val space = runCatching { MediaRoot.of(context, settings.downloadRoot.first()).space() }
+        val configured = settings.downloadRoot.first()
+        val space = runCatching { MediaRoot.of(context, configured).space() }
             .getOrNull() ?: MediaRoot.Path(StorageAccess.defaultRoot(context)).space()
-        DownloadStorageInfo(freeBytes = space.freeBytes, totalBytes = space.totalBytes)
+        DownloadStorageInfo(
+            freeBytes = space.freeBytes,
+            totalBytes = space.totalBytes,
+            usingFallback = runCatching { MediaRoot.isFallback(context, configured) }.getOrDefault(false),
+        )
     }
 
     /**
@@ -76,16 +93,20 @@ class DownloadManager(
      * the row's `filePath` has to name something real — a SAF document has to be created before it
      * has a URI at all, where a path could simply be written down.
      *
-     * A root that cannot produce one — an unmounted card, a folder grant the user has withdrawn —
-     * still gets a row, with no path. The engine then fails it in the ordinary way and the user sees
+     * A chosen folder that is missing right now falls back to the app's own folder ([MediaRoot.of]).
+     * A root that still cannot produce a file — the volume went away mid-way — still gets a row, with no path. The engine then fails it in the ordinary way and the user sees
      * a failed download saying so, which is what happened before this could fail at all. Queuing
      * nothing would leave the Download button looking broken.
+     *
+     * A profile with downloads switched off queues nothing: the apps hide every Download action for
+     * it, and this is the guard behind them, so a path that was missed still cannot fill the box.
      */
     fun enqueue(
         profileId: Long, mediaType: MediaType, itemId: Long, title: String, posterUrl: String?,
         streamUrl: String, relativeDir: String, fileName: String,
     ) {
         scope.launch {
+            if (!settings.downloadsAllowed(profileId).first()) return@launch
             val root = MediaRoot.of(context, settings.downloadRoot.first())
             val target = root.child(relativeDir, fileName)
             if (target == null) {
@@ -112,7 +133,7 @@ class DownloadManager(
                 // away the entry the user's folder grant points at, and the retry would then have
                 // nowhere to write at all. For an ordinary file the two are the same thing.
                 MediaTarget.of(context, download.filePath)?.truncate()
-                downloadDao.updateProgress(download.id, DownloadStatus.QUEUED, 0, download.totalBytes, System.currentTimeMillis())
+                downloadDao.updateProgress(download.id, DownloadStatus.QUEUED, 0, download.totalBytes, System.currentTimeMillis(), null, null)
             } finally {
                 engine.release(download.id)
             }
@@ -122,28 +143,40 @@ class DownloadManager(
 
     /** Stop the running download but keep the partial file so it can resume. */
     fun pause(download: DownloadEntity) {
-        scope.launch {
-            // Wait for the writer to actually stop before recording how far it got (DL2) — cancel()
-            // alone returns while the transfer is still appending bytes.
-            engine.suspendTransfer(download.id)
-            try {
-                val d = downloadDao.getById(download.id) ?: download
-                val bytes = DownloadResume.bytesOnDisk(MediaTarget.of(context, d.filePath), d.downloadedBytes)
-                downloadDao.updateProgress(d.id, DownloadStatus.PAUSED, bytes, d.totalBytes, System.currentTimeMillis())
-            } finally {
-                engine.release(download.id)
-            }
+        scope.launch { pauseNow(download.id, null) }
+    }
+
+    /**
+     * Pause [id] because the user is watching on a playlist that allows one stream
+     * ([DownloadWatchGuard]). The row says so; it does not resume by itself.
+     */
+    internal suspend fun pauseForWatching(id: Long) = pauseNow(id, DownloadReason.PAUSED_FOR_WATCHING)
+
+    private suspend fun pauseNow(id: Long, reason: DownloadReason?) {
+        // Wait for the writer to actually stop before recording how far it got — cancel()
+        // alone returns while the transfer is still appending bytes.
+        engine.suspendTransfer(id)
+        try {
+            val d = downloadDao.getById(id) ?: return
+            downloadDao.updateProgress(d.id, DownloadStatus.PAUSED, bytesOf(d), d.totalBytes, System.currentTimeMillis(), reason, null)
+        } finally {
+            engine.release(id)
         }
     }
 
+    /** What is really written: the file is always a clean prefix of the download. */
+    private fun bytesOf(d: DownloadEntity): Long =
+        DownloadResume.bytesOnDisk(MediaTarget.of(context, d.filePath), d.downloadedBytes)
+
     /** Continue a paused download from where it stopped (HTTP Range). */
     fun resume(download: DownloadEntity) {
-        scope.launch {
-            val d = downloadDao.getById(download.id) ?: download
-            val bytes = DownloadResume.bytesOnDisk(MediaTarget.of(context, d.filePath), d.downloadedBytes)
-            downloadDao.updateProgress(d.id, DownloadStatus.QUEUED, bytes, d.totalBytes, System.currentTimeMillis())
-            kick()
-        }
+        scope.launch { resumeNow(download.id) }
+    }
+
+    internal suspend fun resumeNow(id: Long) {
+        val d = downloadDao.getById(id) ?: return
+        downloadDao.updateProgress(d.id, DownloadStatus.QUEUED, bytesOf(d), d.totalBytes, System.currentTimeMillis(), null, null)
+        kick()
     }
 
     fun delete(download: DownloadEntity) {

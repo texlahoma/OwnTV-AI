@@ -31,6 +31,7 @@ class CatalogSyncWorker(
     private val connectivity: ConnectivityObserver,
     private val epgRepository: tv.own.owntv.core.repository.EpgRepository,
     private val settings: SettingsRepository,
+    private val watchSession: tv.own.owntv.core.live.WatchSession,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -56,6 +57,12 @@ class CatalogSyncWorker(
         val source = sourceRepository.getById(sourceId) ?: run {
             Log.w(TAG, "Source $sourceId not found — skipping ($reason)")
             return Result.failure()
+        }
+        // An automatic refresh never runs under a film or channel: it waits until playback stops
+        // (WorkManager restarts it later if the wait outlives the job's time limit).
+        if (reason == tv.own.owntv.core.sync.AutoRefresh.REASON && watchSession.watching.value.isNotEmpty()) {
+            Log.i(TAG, "auto refresh waiting for playback to stop sourceId=$sourceId")
+            watchSession.awaitIdle()
         }
 
         val effective = contentTypes.effectiveFor(source)
@@ -99,7 +106,7 @@ class CatalogSyncWorker(
                 if (deferIndexes) {
                     catalogSyncScheduler.enqueueContentIndexBuild(reason = "fresh_sync")
                 }
-                // S9: a guide sync filters the feed to the channels the user owned when it *started*,
+                // A guide sync filters the feed to the channels the user owned when it *started*,
                 // so channels this pass just added have no programmes. Repair them from the cached
                 // feed (no network). A no-op for the usual case where nothing new appeared.
                 val gapFillStartedAt = SystemClock.elapsedRealtime()
@@ -122,11 +129,6 @@ class CatalogSyncWorker(
                 }
                     .onFailure { Log.w(TAG, "Trending Home visibility read failed sourceId=${source.id}; skip enqueue", it) }
                     .getOrDefault(false)
-                // Reading this as "incomplete" on failure is the safe direction: skipping a snapshot
-                // costs a refresh, taking a bad one costs days of a wrong row.
-                val catalogueIncomplete = runCatching { !sourceRepository.catalogueComplete(source.id) }
-                    .onFailure { Log.w(TAG, "Catalogue completeness read failed sourceId=${source.id}; skip enqueue", it) }
-                    .getOrDefault(true)
                 if (
                     shouldScheduleTrendingRefresh(
                         sourceWasNeverSynced = source.lastSyncAt == null,
@@ -135,7 +137,6 @@ class CatalogSyncWorker(
                         enabledScope = SyncContentTypes.enabledFor(source),
                         metadataEnabled = metadataEnabled,
                         trendingVisible = trendingVisible,
-                        catalogueIncomplete = catalogueIncomplete,
                     )
                 ) {
                     catalogSyncScheduler.enqueueTrendingRefresh(source.id)
@@ -269,17 +270,12 @@ internal fun shouldScheduleTrendingRefresh(
     enabledScope: SyncContentTypes,
     metadataEnabled: Boolean,
     trendingVisible: Boolean,
-    /**
-     * True while a lazily-added Stalker catalogue is still draining (plan N1f-2).
-     *
-     * Trending is a *snapshot* sitting behind a multi-day timer, so one taken while the source holds
-     * a few per cent of its titles is wrong for days. `CatalogBackfillWorker` takes it instead, once
-     * the drain reaches the portal's own totals.
-     */
-    catalogueIncomplete: Boolean = false,
 ): Boolean {
+    // A lazily-added catalogue that is still draining schedules too. Its page-1 sweep already holds each
+    // category's newest titles, which is where trending titles sit, and only the first build calls TMDB:
+    // `CatalogBackfillWorker` re-matches the row from disk after every pass as the catalogue fills in,
+    // so an early row is never left behind the multi-day fetch timer.
     if (!metadataEnabled || !trendingVisible) return false
-    if (catalogueIncomplete) return false
     val incompleteFirstPass =
         sourceWasNeverSynced && !completesInitialSync && !effective.isCompleteFor(enabledScope)
     if (incompleteFirstPass) return false

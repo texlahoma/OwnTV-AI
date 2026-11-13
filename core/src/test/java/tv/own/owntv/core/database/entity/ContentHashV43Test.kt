@@ -122,6 +122,17 @@ class ContentHashV43Test {
         )
     }
 
+    /** v49: a `catchup-correction` is folded in only when non-zero (the base tests above prove the zero
+     *  case), and a changed one still reaches the database. */
+    @Test
+    fun `a catch-up correction changes a channel hash`() {
+        assertNotEquals(channel().computeContentHash(), channel().copy(catchupCorrectionMin = 60).computeContentHash())
+        assertNotEquals(
+            channel(catchupType = "shift").copy(catchupCorrectionMin = 60).computeContentHash(),
+            channel(catchupType = "shift").copy(catchupCorrectionMin = -60).computeContentHash(),
+        )
+    }
+
     @Test
     fun `declaring a manifest type changes a movie hash`() {
         assertNotEquals(movie().computeContentHash(), movie(manifestType = "mpd").computeContentHash())

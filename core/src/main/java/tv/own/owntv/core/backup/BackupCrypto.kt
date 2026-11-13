@@ -90,12 +90,16 @@ object BackupCrypto {
         return iv + cipher.doFinal(plaintext)
     }
 
-    /** Opens an [encryptBytes] blob. Throws on a wrong passphrase (GCM tag mismatch) or truncation. */
-    fun decryptBytes(key: SecretKey, blob: ByteArray): ByteArray {
-        require(blob.size > IV_BYTES) { "Truncated encrypted backup" }
+    /**
+     * Opens an [encryptBytes] blob that starts at [offset] in [bytes] — read in place, because a
+     * backup can be tens of MB and a copy of it is one more allocation a TV may not have room for.
+     * Throws `AEADBadTagException` on a wrong passphrase (GCM tag mismatch) or truncation.
+     */
+    fun decryptBytes(key: SecretKey, bytes: ByteArray, offset: Int): ByteArray {
+        require(bytes.size - offset > IV_BYTES) { "Truncated encrypted backup" }
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, blob.copyOf(IV_BYTES)))
-        return cipher.doFinal(blob, IV_BYTES, blob.size - IV_BYTES)
+        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, bytes, offset, IV_BYTES))
+        return cipher.doFinal(bytes, offset + IV_BYTES, bytes.size - offset - IV_BYTES)
     }
 
     /** True if [value] is an encrypted secret object (vs a legacy plaintext string). */

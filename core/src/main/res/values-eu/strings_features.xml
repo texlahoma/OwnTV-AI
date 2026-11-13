@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="profiles_pin">PINa</string>
+    <string name="profiles_new">Profil berria</string>
+    <string name="profiles_edit">Editatu profila</string>
+    <string name="profiles_name">Izena</string>
+    <string name="profiles_name_hint">adib. Ane</string>
+    <string name="profiles_avatar">AVATARRA</string>
+    <string name="profiles_avatar_own_picture">Zure irudia</string>
+    <string name="profiles_kids">Haurren profila</string>
+    <string name="profiles_kids_description">Arakatze sinplifikatu eta segurua</string>
+    <string name="profiles_allow_downloads">Baimendu deskargak</string>
+    <string name="profiles_allow_downloads_description">Desaktibatuta, profil honetan deskargatzeko botoi guztiak ezkutatzen dira</string>
+    <string name="profiles_remove_pin">Kendu PIN blokeoa</string>
+    <string name="profiles_no_pin">Profil hau PIN gabe irekitzen da</string>
+    <string name="profiles_change_pin">Aldatu PINa (hutsik = mantendu)</string>
+    <string name="profiles_optional_pin">PINa (aukerakoa)</string>
+    <string name="profiles_pin_digits">4–6 digitu</string>
+    <string name="profiles_pin_placeholder">····</string>
+    <string name="profiles_name_taken">Izen hau hartuta dago — aukeratu beste izen bat.</string>
+    <string name="profiles_create">Sortu</string>
+    <string name="profiles_save">Gorde</string>
+    <string name="profiles_gate_title">Nor ari da ikusten?</string>
+    <string name="profiles_gate_subtitle">Profil bakoitzak bere gogokoak eta historia gordetzen ditu</string>
+    <string name="profiles_wrong_pin">PIN okerra — saiatu berriro</string>
+    <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — idatzi PINa</string>
+    <string name="profiles_protected_edit">Profil-blokeoa edo ezarpenen blokeoa du. Sartu bi PINetako bat aldatzeko.</string>
+    <string name="profiles_kids_badge">HAURRAK</string>
+    <string name="profiles_add">Gehitu profila</string>
+    <string name="profiles_title">Profilak</string>
+    <string name="profiles_delete_title">Ezabatu “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <string name="profiles_delete_message">Profil hau eta bere gogokoak eta historia kentzen ditu. Iturburuak mantentzen dira.</string>
+    <string name="profiles_kids_tag">Haurrak</string>
+    <string name="profiles_locked_tag">PINez blokeatuta</string>
+    <string name="search_title">Bilatu</string>
+    <string name="search_continue">Jarraitu ikusten</string>
+    <string name="search_unwatched">Ikusi gabeak</string>
+    <string name="search_recent">Azken bilaketak</string>
+    <string name="search_nothing_in_list">Oraindik ez dago ezer <xliff:g id="list">%1$s</xliff:g> zerrendan.</string>
+    <string name="search_clear">Garbitu</string>
+    <string name="search_jump_to">Joan hona</string>
+    <string name="search_open_series">Ireki telesaila</string>
+    <string name="search_movie">Filma</string>
+    <string name="search_series">Telesaila</string>
+    <string name="search_channels">Kanalak</string>
+    <string name="search_on_tv">Telebista-programak</string>
+    <string name="search_go_to_channel">Joan kanalera</string>
+    <string name="search_go_to_movie">Joan filmera</string>
+    <string name="search_clear_recent">Garbitu azken bilaketak</string>
+    <string name="search_field_hint">Kanalak, filmak eta telesailak</string>
+    <string name="search_voice">Ahots bidezko bilaketa</string>
+    <string name="search_voice_prompt">Esan kanal, film edo telesail bat</string>
+    <string name="search_card_title">Aurkitu edozer zure erreprodukzio-zerrendetan</string>
+    <string name="search_card_body">Erakusten dituzun erreprodukzio-zerrenda guztietako kanalak, filmak eta telesailak. Aukeratu emaitza bat zuzenean joateko, eta bertan erreproduzitu, deskargatu edo ireki bere aukerak. Orain edo gaur beranduago emititzen diren telebista-programak ere izenburuaren arabera aurkitzen dira.</string>
+    <string name="search_nothing_found">Ez da ezer aurkitu “<xliff:g id="query">%1$s</xliff:g>” bilaketarako</string>
+    <string name="search_nothing_found_body">Bilaketak erakusten dituzun erreprodukzio-zerrendetako kanal-, film- eta telesail-izenetan begiratzen du. Ezkutuko kategoriak ez dira bilatzen. Telebista-programak deskargatutako gidan izenburuaren arabera aurkitzen dira.</string>
+    <string name="search_query_quoted">“<xliff:g id="query">%1$s</xliff:g>”</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> emaitza</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> emaitza</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kanal</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kanal guztiak</item>
+    </plurals>
+    <string name="profiles_default_name">Profila</string>
+    <string name="launcher_recent_live_title">Zuzeneko azkenak</string>
+    <string name="launcher_recent_live_description">Duela gutxi zuzenean ikusitako kanalak</string>
+    <string name="launcher_movie_type">Filma</string>
+    <string name="launcher_episode_number"><xliff:g id="episode">%1$d</xliff:g>. atala</string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Liburutegia kargatzen · <xliff:g id="count">%1$s</xliff:g> titulu orain arte</item>
+        <item quantity="other">Liburutegia kargatzen · <xliff:g id="count">%1$s</xliff:g> titulu orain arte</item>
+    </plurals>
+    <string name="home_library_loading_trending">Orain joeran dagoena liburutegia bete ahala agertuko da.</string>
+    <string name="home_no_preview">Oraindik ez dago aurreikusteko ezer.</string>
+    <string name="home_no_rows">Hasierako errenkada guztiak ezkutatuta daude.</string>
+    <string name="home_enable_rows">Aktibatu errenkadak berriro Ezarpenak → Hasierako pantaila atalean.</string>
+    <string name="home_start_watching">Hasi ikusten zure jarduera hemen ikusteko.</string>
+    <string name="home_continue_empty">Zure jarraitu-ikusten elementuak hemen agertuko dira erreprodukzio-historia eskuragarri dagoenean.</string>
+    <string name="home_last_watched_now">Orain ikusi berri da</string>
+    <plurals name="home_last_watched_minutes">
+        <item quantity="one">Duela <xliff:g id="count">%1$d</xliff:g> minutu ikusia</item>
+        <item quantity="other">Duela <xliff:g id="count">%1$d</xliff:g> minutu ikusia</item>
+    </plurals>
+    <plurals name="home_last_watched_hours">
+        <item quantity="one">Duela <xliff:g id="count">%1$d</xliff:g> ordu ikusia</item>
+        <item quantity="other">Duela <xliff:g id="count">%1$d</xliff:g> ordu ikusia</item>
+    </plurals>
+    <plurals name="home_last_watched_days">
+        <item quantity="one">Duela <xliff:g id="count">%1$d</xliff:g> egun ikusia</item>
+        <item quantity="other">Duela <xliff:g id="count">%1$d</xliff:g> egun ikusia</item>
+    </plurals>
+    <string name="home_row_cards">Txartelak</string>
+    <string name="home_row_now_trending">Orain joeran</string>
+    <string name="home_row_keep_watching">Jarraitu ikusten</string>
+    <string name="home_row_continue_movies">Jarraitu filmak ikusten</string>
+    <string name="home_row_continue_series">Jarraitu telesailak ikusten</string>
+    <string name="home_row_recent_channels">Azken kanalak</string>
+    <string name="home_row_favorite_channels">Gogoko kanalak</string>
+    <string name="home_row_favorite_movies">Gogoko filmak</string>
+    <string name="home_row_favorite_series">Gogoko telesailak</string>
+    <string name="home_row_on_now">Orain emititzen</string>
+    <string name="home_row_hero_description">Goiko aldeko aurrebista-errenkada handia</string>
+    <string name="home_row_trending_description">4–10 elementu erakusten ditu TMDBren joerako izenburuek zure hornitzailearen katalogoko filmekin edo telesailekin bat egiten dutenean soilik.</string>
+    <string name="home_trending_style">Joeren diseinua</string>
+    <string name="home_trending_style_hero">Txartel zehatza</string>
+    <string name="home_trending_style_posters">Posterrak soilik</string>
+    <string name="home_trending_rank"><xliff:g id="rank">%1$d</xliff:g>. postua Joeretan · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">ZURE ERREPRODUKZIO-ZERRENDAN</string>
+    <string name="home_trending_style_full_bleed">Pantaila osoa</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> h <xliff:g id="minutes">%2$02d</xliff:g> min</string>
+    <string name="home_time_left"><xliff:g id="duration">%1$s</xliff:g> falta dira</string>
+    <string name="settings_trending_status_off">Orain joeran desaktibatuta dago.</string>
+    <string name="settings_trending_status_building">Orain joeran prestatzen ari da hornitzailea sinkronizatu ondoren.</string>
+    <string name="settings_trending_status_metadata_disabled">Orain joeran TMDB metadatuak behar ditu. Aukeratu TMDB soilik edo Hornitzailea + TMDB.</string>
+    <string name="settings_trending_status_no_vod">Orain joeran ezkutatuta dago hornitzaile honek ez duelako Filmik edo Telesailik gaituta.</string>
+    <string name="settings_trending_status_no_matches">Orain joeran ezkutatuta dago hornitzailearen izenburuek ez dutelako bat egin.</string>
+    <string name="settings_trending_status_failed">Orain joeran ezin izan da eguneratu. Saiatu hornitzailea berriro sinkronizatzen.</string>
+    <string name="settings_trending_status_waiting">Osatu hornitzailearen sinkronizazio bat Orain joeran sortzeko.</string>
+    <plurals name="settings_trending_status_below_threshold">
+        <item quantity="one">Orain joeran ezkutatuta dago hornitzailearen <xliff:g id="count">%1$d</xliff:g> izenburuk bakarrik egin duelako bat. Gutxienez 4 behar dira.</item>
+        <item quantity="other">Orain joeran ezkutatuta dago hornitzailearen <xliff:g id="count">%1$d</xliff:g> izenburuk bakarrik egin dutelako bat. Gutxienez 4 behar dira.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing">
+        <item quantity="one">Orain joeran parekatutako <xliff:g id="count">%1$d</xliff:g> izenburu erakusten ari da.</item>
+        <item quantity="other">Orain joeran parekatutako <xliff:g id="count">%1$d</xliff:g> izenburu erakusten ari da.</item>
+    </plurals>
+    <plurals name="settings_trending_status_showing_refresh_failed">
+        <item quantity="one">Orain joeran azken eguneraketa arrakastatsuko <xliff:g id="count">%1$d</xliff:g> izenburu erakusten ari da.</item>
+        <item quantity="other">Orain joeran azken eguneraketa arrakastatsuko <xliff:g id="count">%1$d</xliff:g> izenburu erakusten ari da.</item>
+    </plurals>
+    <string name="home_trending_movie">Filma</string>
+    <string name="home_trending_series">Telesaila</string>
+    <string name="home_trending_provider_match">Hornitzailearen parekatzea</string>
+    <string name="home_trending_why_label">ZERGATIK AGERTZEN DEN ELEMENTU HAU</string>
+    <string name="home_trending_reason_title">TMDB #<xliff:g id="rank">%1$d</xliff:g> postua <xliff:g id="media_type">%2$s</xliff:g> + hornitzailearen parekatzea</string>
+    <string name="home_trending_reason_preferred">Hautatutako <xliff:g id="language">%1$s</xliff:g> hizkuntzako hornitzailearen bertsioak lehentasuna du beste hizkuntza bateko sarreren aurrean.</string>
+    <string name="home_trending_reason_english">Ez da <xliff:g id="language">%1$s</xliff:g> hizkuntzako hornitzailearen bertsiorik parekatu, beraz ingelesezko hornitzailearen sarrera hautatu da.</string>
+    <string name="home_trending_reason_untagged">Ez da <xliff:g id="language">%1$s</xliff:g> edo ingeles hizkuntza-etiketarik parekatu, beraz etiketarik gabeko hornitzailearen sarrera hautatu da.</string>
+    <string name="home_trending_reason_other">Erreproduzitzeko hornitzailearen bertsio hurbilena hautatu da, lehenetsitako hizkuntzako eta ingelesezko sarrerak erabilgarri ez zeudelako.</string>
+    <plurals name="home_trending_seasons">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> denboraldi</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> denboraldi</item>
+    </plurals>
+    <string name="home_trending_play">Erreproduzitu</string>
+    <string name="home_trending_open_episodes">Ireki atalak</string>
+    <string name="home_trending_trailer">Trailerra</string>
+    <string name="home_trending_more_details">Xehetasun gehiago</string>
+    <string name="home_trending_all_versions">Bertsio guztiak</string>
+    <string name="home_trending_why_menu">Zergatik dagoen izenburu hau hemen</string>
+    <string name="home_trending_pause">Pausatu</string>
+    <string name="home_trending_unavailable">Bertsio hau ez dago eskuragarri jada</string>
+    <string name="home_row_continue_movies_description">Posizioa gordeta duten filmak</string>
+    <string name="home_row_continue_series_description">Jarraitzeko edo hurrengo erreproduzitzeko atalak</string>
+    <string name="home_row_recent_description">Duela gutxi sintonizatu dituzun zuzeneko kanalak</string>
+    <string name="home_row_favorite_description">Zure gogoko zuzeneko kanalak</string>
+    <string name="home_row_favorite_movies_description">Zure gogoko filmak</string>
+    <string name="home_row_favorite_series_description">Zure gogoko telesailak</string>
+    <string name="update_title">Aplikazioaren eguneraketa</string>
+    <string name="update_checking">Eguneraketak bilatzen…</string>
+    <string name="update_whats_new">Zer berri</string>
+    <string name="update_downloading">Eguneraketa deskargatzen… <xliff:g id="percent">%1$d</xliff:g>%%</string>
+    <string name="update_available">Eguneraketa eskuragarri</string>
+    <string name="update_latest">Azken bertsioa duzu (v<xliff:g id="version">%1$s</xliff:g>).</string>
+    <string name="update_available_version"><xliff:g id="available">%1$s</xliff:g> bertsioa eskuragarri dago (v<xliff:g id="current">%2$s</xliff:g> duzu).</string>
+    <string name="update_installer">Sistemaren instalatzailea irekitzen da deskarga amaitzen denean.</string>
+    <string name="update_later">Geroago</string>
+    <string name="update_now">Eguneratu orain</string>
+    <string name="update_try_again">Saiatu berriro</string>
+    <string name="update_failed_check">Ezin izan dira eguneraketak bilatu.</string>
+    <string name="update_failed_check_http">Eguneraketa-zerbitzariak HTTP <xliff:g id="code">%1$s</xliff:g> itzuli du bilatzean.</string>
+    <string name="update_no_compatible_apk">Ez da gailu honetarako eguneraketa-paketerik aurkitu bertsioan.</string>
+    <string name="update_invalid_release_response">Eguneraketa-zerbitzariak bertsio-azalpen baliogabea itzuli du.</string>
+    <string name="update_failed_download">Ezin izan da eguneraketa deskargatu sareko eskaerak huts egin duelako.</string>
+    <string name="update_failed_download_http">Eguneraketaren deskargak HTTP <xliff:g id="code">%1$s</xliff:g> itzuli du.</string>
+    <string name="update_empty_download">Eguneraketa-zerbitzariak APK huts bat itzuli du.</string>
+    <string name="update_install_failed">Sistemaren instalatzaileak ezin izan du deskargatutako eguneraketa ireki.</string>
+    <string name="update_not_enough_space">Ez dago biltegiratze libre nahikorik eguneraketarako. Askatu gutxi gorabehera <xliff:g id="size">%1$s</xliff:g> eta saiatu berriro.</string>
+    <string name="update_damaged_download">Eguneraketa ez da guztiz deskargatu. Egiaztatu konexioa eta saiatu berriro.</string>
+    <string name="update_install_rejected">Sistemaren instalatzaileak eguneraketa baztertu du: <xliff:g id="reason">%1$s</xliff:g></string>
+    <string name="update_ready">OwnTV v<xliff:g id="available">%1$s</xliff:g> prest dago (v<xliff:g id="current">%2$s</xliff:g> duzu).</string>
+    <string name="recovery_title">OwnTVk ezin izan du bere datu-basea ireki</string>
+    <string name="recovery_data_safe_full">Zure profilak, erreprodukzio-zerrendak, gogokoak eta historia EZ dira ezabatu — datu-baseen bertsio-berritzeak huts egin du, eta datuak gailu honetan daude oraindik.\n\nInformatu hau konpon dadin, eta sartu beheko mezua.</string>
+    <string name="recovery_retry">Saiatu berriro</string>
+    <string name="recovery_backup_hint">Babeskopia-fitxategi bat baduzu, aplikazioa berrezarri eta gero leheneratu dezakezu. Berrezartzeak gailu honetan gordetako guztia ezabatzen du.</string>
+    <string name="recovery_confirm_reset">Berretsi: ezabatu aplikazioaren datu guztiak</string>
+    <string name="recovery_reset">Berrezarri aplikazioaren datuak (azken aukera)</string>
+    <string name="recording_notification_title">Grabatzen</string>
+    <string name="auto_start_notification_channel">Abiarazi automatikoki esnatzean</string>
+    <string name="auto_start_notification_text">OwnTV irekiko da telebista esnatzen denean</string>
+    <string name="recording_failed_no_space">Gelditu da: ez dago lekurik</string>
+    <string name="recording_failed_no_connection">Zure hornitzaileak ez du konexio librerik</string>
+    <string name="recording_failed_clash">Beste grabazio batek konexioa erabiltzen zuen</string>
+    <string name="recording_failed_network">Konexioa galdu da</string>
+    <string name="recording_failed_unavailable">Kanalak ez du erreproduzitzen</string>
+    <string name="recording_failed_channel_gone">Kanal hori ez dago jada zure erreprodukzio-zerrendan</string>
+    <string name="recording_failed_unknown">Ez da grabatu</string>
+    <string name="recording_title">Grabazioak</string>
+    <string name="recording_empty">Oraindik ez da ezer grabatu. Ireki telebista-gida, aukeratu programa bat eta sakatu Grabatu.</string>
+    <string name="recording_group_now">Orain grabatzen</string>
+    <string name="recording_group_scheduled">Programatuta</string>
+    <string name="recording_group_completed">Grabatuta</string>
+    <string name="recording_group_failed">Huts egin dutenak</string>
+    <string name="recording_group_missed">Galduak</string>
+    <string name="recording_group_series">Emankizun guztiak</string>
+    <string name="recording_record">Grabatu</string>
+    <string name="recording_stop">Gelditu grabazioa</string>
+    <string name="recording_delete_message">Grabazioa eta haren fitxategia gailu honetatik kentzen ditu. Ezin da desegin.</string>
+    <string name="recording_record_series">Grabatu emankizun guztiak</string>
+    <string name="recording_stop_series">Gelditu emankizun guztien grabazioa</string>
+    <string name="recording_from_archive">Grabatu berrikustetik</string>
+    <string name="recording_schedule">Programatu grabazioa…</string>
+    <string name="recording_schedule_hint">Aukeratu eguna, hasiera eta amaiera. Grabatu egiten da kanal honek telebista-gidarik ez badu ere.</string>
+    <string name="recording_schedule_start">Hasiera</string>
+    <string name="recording_schedule_end">Amaiera</string>
+    <string name="recording_schedule_next_day">hurrengo eguna</string>
+    <string name="recording_schedule_past">Ordu hori igaro da dagoeneko</string>
+    <string name="recording_scheduled_for">Grabatuko da: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> grabatzen</string>
+    <string name="recording_pill_line_locked">Blokeatutako kategoria batetik grabatzen</string>
+    <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g> programarekin talka egiten du</string>
+    <string name="recording_settings_group">Grabazioa</string>
+    <string name="settings_recording_reserve">Mantendu jario bat libre ikusteko</string>
+    <string name="settings_recording_reserve_description">Grabazioek zure hornitzailearen konexioetako bat libre uzten dute, beti ikusteko bat egon dadin. Desaktibatu hau konexio guztietan grabatzeko.</string>
+    <string name="settings_recording_pre_roll">Hasi lehenago</string>
+    <string name="settings_recording_pre_roll_description">Hasi zerrendatutako hasiera-ordua baino hainbeste lehenago, apur bat goiz doan gida batek hasiera ere harrapa dezan.</string>
+    <string name="settings_recording_post_roll">Jarraitu amaiera ondoren</string>
+    <string name="settings_recording_post_roll_description">Jarraitu zerrendatutako amaiera-ordua baino hainbeste geroago, luzatzen den programa bat moztu ez dadin.</string>
+    <string name="settings_recording_timers_inexact">Gailu honek ez dio OwnTVri alarma zehatzak ezartzen uzten, beraz baliteke grabazio bat minutu batzuk berandu hastea. Grabazioak lehenago hasten dira hori konpentsatzeko.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minutu</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutu</item>
+    </plurals>
+    <string name="recording_failed_encrypted">Kanal hau kodetuta dago eta ezin da grabatu</string>
+    <string name="recording_failed_drm">Kanal hau DRM bidez babestuta dago, beraz ikusi daiteke baina ezin da grabatu. Babesa zure hornitzailearengandik dator, ez OwnTVtik.</string>
+    <string name="recording_failed_metered">Ez da grabatu datu mugikorrekin</string>
+    <string name="recording_card_empty_title">Oraindik ez da ezer grabatu</string>
+    <string name="recording_card_body">Aukeratu programa bat Telebista-gidan eta sakatu Grabatu, edo luze sakatu kanal bat eta programatu ordu bat. Hemen agertzen da, beste zerbait ikusten ari zaren bitartean ere.</string>
+    <string name="recording_open_guide">Ireki Telebista-gida</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> grabazio</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> grabazio</item>
+    </plurals>
+    <string name="settings_recording_mobile_data">Grabatu datu mugikorrekin</string>
+    <string name="settings_record_watching">Grabatu ikusten ari naizena</string>
+    <string name="settings_record_watching_description">Erreproduzigailuari grabatzeko botoi bat gehitzen dio, ikusten ari zaren kanala gordetzen duena. Kanala bere kabuz eskuratzen du, beraz zure hornitzailearen konexioetako bat erabiltzen du martxan dagoen bitartean, eta grabatzen jarraitzen du kanalez aldatu edo erreproduzigailua utzi ondoren ere.</string>
+    <string name="settings_record_watching_warning_title">Konexio bakarra</string>
+    <string name="settings_record_watching_warning_description">Grabatzeak kanala bigarren aldiz eskuratzen du, beraz zure hornitzailearen beste konexio bat erabiltzen du. Bakarra onartzen duen kontu batean, grabazioa baztertzen da ikusten ari zaren bitartean. Hasi ondoren, bere kabuz jarraitzen du — aldatu kanalez, utzi erreproduzigailua, eta programa amaitu arte jarraituko du, edo Grabazioak atalean gelditu arte.</string>
+    <string name="settings_record_watching_keep_off">Mantendu desaktibatuta</string>
+    <string name="settings_record_watching_turn_on">Aktibatu</string>
+    <string name="player_recording_conflict">Zure hornitzaileak jario bakarra onartzen du aldi berean, eta grabazioak erabiltzen ari da.</string>
+    <string name="player_keep_watching_stop_recording">Jarraitu ikusten (grabazioa gelditzen du)</string>
+    <string name="sports_channel_goal_alerts">Gol-alertak</string>
+    <string name="sports_channel_live_match">Partida zuzenean</string>
+    <string name="sports_channel_match_reminders">Partiden oroigarriak</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ Gola! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Wicketa! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Txartel gorria · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Atsedena · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Amaiera · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Hasiera · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Atzeratua · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">Bertan behera · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Emaitza zuzendua · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Hasiera <xliff:g id="minutes">%1$d</xliff:g> minutu barru: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Hasiera <xliff:g id="minutes">%1$d</xliff:g> minutu barru: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">Hemen: <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one">Hemen: <xliff:g id="channel">%1$s</xliff:g> eta beste <xliff:g id="count">%2$d</xliff:g></item>
+        <item quantity="other">Hemen: <xliff:g id="channel">%1$s</xliff:g> eta beste <xliff:g id="count">%2$d</xliff:g></item>
+    </plurals>
+    <string name="sports_action_stop_updates">Gelditu eguneraketak</string>
+    <string name="sports_title">Kirola</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zuzenean</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zuzenean</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> partida</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> partida</item>
+    </plurals>
+    <string name="sports_scores_espn">Emaitzak: ESPN</string>
+    <string name="sports_my_teams">Nire taldeak</string>
+    <string name="sports_live_now">Orain zuzenean</string>
+    <string name="sports_not_on_channels">Ez dago zure kateetan</string>
+    <string name="sports_on_channels_now">Kirola zure kateetan orain</string>
+    <string name="sports_on_channels_now_mobile">Kirola zure kateetan</string>
+    <string name="sports_on_channels_now_hint">Zure gidatik — ESPNk jasotzen ez dituen kirolak barne</string>
+    <string name="sports_starting_soon">Laster hasiko da</string>
+    <string name="sports_hint_match_page">Partidaren orria</string>
+    <string name="sports_hint_follow_remind">Jarraitu · Gogorarazi</string>
+    <string name="sports_hint_day_matches">Eguneko partidak</string>
+    <string name="sports_hint_day">Eguna</string>
+    <string name="sports_hint_week">Astea</string>
+    <string name="sports_hint_show_score">Erakutsi emaitza</string>
+    <string name="sports_hint_back_to_day">Itzuli egunera</string>
+    <string name="sports_hint_open_league">Ireki liga</string>
+    <string name="sports_hint_sport_chips">Kirol-botoiak</string>
+    <string name="sports_hint_league_chips">Liga-botoiak</string>
+    <string name="sports_hint_follow_unfollow">Jarraitu · Utzi jarraitzeari</string>
+    <string name="sports_reminder_set">Oroigarria</string>
+    <string name="sports_until"><xliff:g id="time">%1$s</xliff:g> arte</string>
+    <string name="sports_set"><xliff:g id="set">%1$d</xliff:g>. seta</string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> over</string>
+    <string name="sports_empty_nothing">Gaur ez dago partidarik jarraitzen duzunean</string>
+    <string name="sports_empty_unreachable">Ezin da emaitzetara iritsi orain. Zure kateek badabiltza oraindik.</string>
+    <string name="sports_paused">Emaitzak pausatuta — minutu batzuen buruan berriro saiatuko da</string>
+    <string name="sports_sport_soccer">Futbola</string>
+    <string name="sports_sport_basketball">Saskibaloia</string>
+    <string name="sports_sport_tennis">Tenisa</string>
+    <string name="sports_sport_cricket">Kriketa</string>
+    <string name="sports_sport_hockey">Izotz hockeya</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">Beisbola</string>
+    <string name="sports_sport_golf">Golfa</string>
+    <string name="sports_sport_rugby">Errugbia</string>
+    <string name="sports_sport_rugby_league">Rugby liga</string>
+    <string name="sports_sport_aussie_rules">Australiar futbola</string>
+    <string name="sports_sport_volleyball">Boleibola</string>
+    <string name="sports_sport_lacrosse">Lacrossea</string>
+    <string name="sports_sport_handball">Eskubaloia</string>
+    <string name="sports_sport_motorsport">Motor kirola</string>
+    <string name="sports_sport_darts">Dardoak</string>
+    <string name="sports_sport_snooker">Snookerra</string>
+    <string name="sports_sport_cycling">Txirrindularitza</string>
+    <string name="sports_sport_combat">Borroka kirolak</string>
+    <string name="sports_sport_american_football">Futbol amerikarra</string>
+    <string name="sports_sport_athletics">Atletismoa</string>
+    <string name="sports_sport_winter">Neguko kirolak</string>
+    <string name="sports_sport_other">Kirola</string>
+    <string name="sports_tab_timeline">Kronologia</string>
+    <string name="sports_tab_stats">Estatistikak</string>
+    <string name="sports_tab_lineups">Hamaikakoak</string>
+    <string name="sports_tab_table">Sailkapena</string>
+    <string name="sports_following">Jarraitzen</string>
+    <string name="sports_follow">Jarraitu</string>
+    <string name="sports_event_goal">Gola · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">Bere atean · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Penaltia · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Txartel horia · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Txartel gorria · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Aldaketa · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">asistentzia: <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Wicketa · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Hasiera</string>
+    <string name="sports_event_half_time">Atsedena</string>
+    <string name="sports_event_full_time">Amaiera</string>
+    <string name="sports_stat_red_cards">Txartel gorriak</string>
+    <string name="sports_watch_live">Ikusi zuzenean</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Ikusi zuzenean · <xliff:g id="count">%1$d</xliff:g> kate</item>
+        <item quantity="other">Ikusi zuzenean · <xliff:g id="count">%1$d</xliff:g> kate</item>
+    </plurals>
+    <string name="sports_language_first">Lehenik <xliff:g id="language">%1$s</xliff:g> · ezarpenetatik</string>
+    <string name="sports_any_country">Edozein herrialde</string>
+    <string name="sports_reason_guide">Gida: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Gertaera-katea · izenean bi taldeak daude</string>
+    <string name="sports_reason_pick">Zure aukera <xliff:g id="competition">%1$s</xliff:g>-rako</string>
+    <string name="sports_reason_likely">Normalean <xliff:g id="competition">%1$s</xliff:g> ematen du</string>
+    <string name="sports_confirmed">Gidak berretsia</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> iragazkiek ezkutatua</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> iragazkiek ezkutatuak</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Ikusi pantaila osoan</string>
+    <string name="sports_preview_another">Aurreikusi beste kate bat</string>
+    <string name="sports_always_use">Erabili beti <xliff:g id="competition">%1$s</xliff:g>-rako</string>
+    <string name="sports_filter_title">Iragazi kateak</string>
+    <string name="sports_showing_of"><xliff:g id="total">%2$d</xliff:g>-tik <xliff:g id="shown">%1$d</xliff:g> erakusten</string>
+    <string name="sports_filter_country">Herrialdea</string>
+    <string name="sports_filter_match">Partida</string>
+    <string name="sports_unknown">Ezezaguna</string>
+    <string name="sports_any">Edozein</string>
+    <string name="sports_all_playlists">Erreprodukzio-zerrenda guztiak</string>
+    <string name="sports_quality_hd">HD eta hobea</string>
+    <string name="sports_quality_fhd">FHD eta hobea</string>
+    <string name="sports_quality_uhd">4K soilik</string>
+    <string name="sports_only_confirmed">Gidak berretsitako kateak soilik</string>
+    <string name="sports_only_confirmed_description">Ezkutatu «litekeena» eta gogoratutako kateak</string>
+    <string name="sports_only_confirmed_mobile">Gidak berretsiak soilik</string>
+    <string name="sports_remember_filters">Gogoratu iragazki hauek partida guztietarako</string>
+    <string name="sports_remember_filters_description">Profil honetarako Ezarpenak → Kirola atalean gordetzen da</string>
+    <string name="sports_remember_filters_mobile">Gogoratu partida guztietarako</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one">Erakutsi <xliff:g id="count">%1$d</xliff:g> kate</item>
+        <item quantity="other">Erakutsi <xliff:g id="count">%1$d</xliff:g> kate</item>
+    </plurals>
+    <string name="sports_filter_only_this">Hau bakarrik</string>
+    <string name="sports_filter_toggle">Aldatu</string>
+    <string name="sports_goal_toast">Jarraitzen duzun talde baten gola</string>
+    <string name="sports_switch">Aldatu</string>
+    <string name="sports_other_channels">Beste kate batzuk</string>
+    <string name="sports_other_channels_count">Beste kate batzuk · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Partida honetarako beste kateak</string>
+    <string name="sports_playing_now">Orain erreproduzitzen</string>
+    <string name="sports_switch_channel">Aldatu katea</string>
+    <string name="sports_tab_fixtures">Egutegia</string>
+    <string name="sports_tab_results">Emaitzak</string>
+    <string name="sports_tab_scores">Zuzenean</string>
+    <string name="sports_tab_calendar">Agenda</string>
+    <string name="sports_tab_leagues">Ligak</string>
+    <string name="sports_previous_month">Aurreko hilabetea</string>
+    <string name="sports_next_month">Hurrengo hilabetea</string>
+    <string name="sports_next">Hurrengoa: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">Hurrengoa</string>
+    <string name="sports_no_table_series">Sailkapenik ez — serieak astero aldatzen dira</string>
+    <string name="sports_follow_league">Jarraitu ligari</string>
+    <string name="sports_unfollow_league">Utzi ligari jarraitzeari</string>
+    <string name="sports_no_matches_on"><xliff:g id="day">%1$s</xliff:g>: ez dago partidarik zure kiroletan</string>
+    <string name="sports_nothing_on_day">Ezer ez egun honetan</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: ezer ez egun honetan</string>
+    <string name="sports_change_leagues_hint">Gehitu edo kendu ligak Ezarpenak → Kirola atalean</string>
+    <string name="sports_loading_month"><xliff:g id="month">%1$s</xliff:g> kargatzen…</string>
+    <string name="sports_offline_saved">Gordetakoa erakusten (<xliff:g id="time">%1$s</xliff:g>) — ezin izan da ESPNra iritsi</string>
+    <string name="sports_team_page">Taldearen orria</string>
+    <string name="sports_next_match">Hurrengo partida</string>
+    <string name="sports_last_five">Azken bostak</string>
+    <string name="sports_league_position">Postua ligan</string>
+    <string name="sports_in_my_teams">Nire taldeak atalean</string>
+    <string name="sports_open_match_page">Ireki partidaren orria</string>
+    <string name="sports_open_team_page">Ireki taldearen orria</string>
+    <string name="sports_my_teams_leagues">Zure taldeek jokatzen duten ligak</string>
+    <string name="sports_tab_drivers">Gidariak</string>
+    <string name="sports_tab_constructors">Eraikitzaileak</string>
+    <string name="sports_tab_races">Lasterketak</string>
+    <string name="sports_tab_rankings">Rankinga</string>
+    <string name="sports_tab_matches">Partidak</string>
+    <string name="sports_next_race_weekend">Hurrengo lasterketa-asteburua</string>
+    <string name="sports_last_weekend">Azken asteburua</string>
+    <string name="sports_session_practice_1">Entrenamendu librea 1</string>
+    <string name="sports_session_practice_2">Entrenamendu librea 2</string>
+    <string name="sports_session_practice_3">Entrenamendu librea 3</string>
+    <string name="sports_session_sprint_qualifying">Sprint sailkapena</string>
+    <string name="sports_session_qualifying">Sailkapena</string>
+    <string name="sports_session_sprint">Sprinta</string>
+    <string name="sports_session_race">Lasterketa</string>
+    <string name="sports_table_team">Taldea</string>
+    <string name="sports_table_played">J</string>
+    <string name="sports_table_won">I</string>
+    <string name="sports_table_drawn">B</string>
+    <string name="sports_table_lost">G</string>
+    <string name="sports_table_difference">Ald</string>
+    <string name="sports_table_points">P</string>
+    <string name="sports_table_form">Forma</string>
+    <string name="sports_this_matchday">Jardunaldi hau</string>
+    <string name="sports_settings_what">Zer erakutsi</string>
+    <string name="sports_show_in_menu">Erakutsi Kirola menuan</string>
+    <string name="sports_show_in_menu_description">Lehenespenez aktibatuta, zerrendarekin edo gabe</string>
+    <string name="sports_leagues">Kirolak eta ligak</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> liga</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> liga</item>
+    </plurals>
+    <string name="sports_spoiler_free">Spoilerrik gabe</string>
+    <string name="sports_spoiler_free_description">Ezkutatu emaitzak OK sakatu arte</string>
+    <string name="sports_spoiler_free_description_mobile">Ukitu emaitza bat ikusteko</string>
+    <string name="sports_settings_watching">Ikustea</string>
+    <string name="sports_languages">Iruzkinen hizkuntza hobetsiak</string>
+    <string name="sports_languages_mobile">Iruzkinen hizkuntzak</string>
+    <string name="sports_languages_description">Lehenik «Ikusi zuzenean» atalean</string>
+    <string name="sports_countries">Herrialde hobetsiak</string>
+    <string name="sports_countries_description">Kateen aurrizkietatik, «DE|» bezala</string>
+    <string name="sports_picture_description">Ezkutatu honen azpiko kateak</string>
+    <string name="sports_settings_while_watching">Ikusten ari zarela</string>
+    <string name="sports_score_info_bar">Emaitza informazio-barran</string>
+    <string name="sports_score_info_bar_description">Barra irekita dagoenean bakarrik ageri da, gola ez aurreratzeko</string>
+    <string name="sports_score_info_bar_description_mobile">Barra irekita dagoenean soilik</string>
+    <string name="sports_goal_alerts_description">Nire taldeentzat, beste zerbait ikusten ari naizela</string>
+    <string name="sports_match_reminders_description">Hasiera baino lehen, kate onenarekin</string>
+    <string name="sports_remembered_channels">Gogoratutako kateak</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> gehiago</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> gehiago</item>
+    </plurals>
+    <string name="sports_show_likely">Erakutsi «litekeena» diren kateak</string>
+    <string name="sports_show_likely_description">Gidak berretsi gabeko kirol-kateak</string>
+    <string name="sports_settings_data">Datuak</string>
+    <string name="sports_live_refresh">Zuzeneko freskatzea</string>
+    <string name="sports_live_refresh_description">Kirol-pantaila edo emaitza bat ikusten den bitartean soilik</string>
+    <string name="sports_about">Kirol-datuei buruz</string>
+    <string name="sports_about_summary">Emaitzak: ESPN · kateak: zure zerrenda eta gida</string>
+    <string name="sports_alerts_when_closed">Alertak OwnTV itxita dagoenean</string>
+    <string name="sports_alerts_when_closed_description">Jakinarazpen-baimena behin eskatzen du</string>
+    <string name="sports_alert_me_about">Jakinarazi</string>
+    <string name="sports_kind_goals">Golak eta wicketak</string>
+    <string name="sports_kind_kickoff_full_time">Hasiera eta amaiera</string>
+    <string name="sports_alerts_for">Norentzat</string>
+    <string name="sports_followed_leagues">Jarraitutako ligak</string>
+    <string name="sports_followed_leagues_description">Partida guztiak, asko izan daitezke</string>
+    <string name="sports_live_card">Zuzeneko emaitza-txartela</string>
+    <string name="sports_live_card_offer">Eskaini zuzeneko emaitza-txartela</string>
+    <string name="sports_live_card_description">30 s-ro eguneratzen da amaiera arte; partida batetik abiarazten duzu</string>
+    <string name="sports_alerts_footnote">OwnTV itxita dagoenean, alertak minutu batean iristen dira normalean. Telefonoa denbora luzez geldi eta pantaila itzalita egon bada, Androidek 15 minutu inguru atzera ditzake. Zuzeneko emaitza-txartela ez da atzeratzen.</string>
+    <string name="sports_search_teams">Bilatu taldeak, jokalariak, ligak</string>
+    <string name="sports_suggested">Ikusten duzunaren araberako iradokizunak</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Haien <xliff:g id="count">%1$d</xliff:g> partida ikusi duzu</item>
+        <item quantity="other">Haien <xliff:g id="count">%1$d</xliff:g> partida ikusi dituzu</item>
+    </plurals>
+    <string name="sports_league_label">Liga</string>
+    <string name="sports_no_playlist_title">Gehitu zerrenda bat partidak ikusteko</string>
+    <string name="sports_no_playlist_body">Emaitzak, sailkapenak eta alertak gabe ere badabiltza. Zerrenda batekin, OwnTVk partida hau ematen duen kate oro aurkitzen du.</string>
+    <string name="sports_add_playlist">Gehitu zerrenda</string>
+    <string name="sports_home_row">Kirola zuzenean</string>
+    <string name="sports_home_row_description">Jarraitutako partidak, bat zuzenean edo hastear dagoen bitartean</string>
+    <string name="sports_empty_nothing_followed">Oraindik ez duzu kirolik edo ligarik aukeratu</string>
+    <string name="sports_empty_choose_in">Aukeratu itzazu hemen: Ezarpenak → Aplikazioa → Kirola → Kirolak eta ligak.</string>
+    <string name="sports_load_time_warning">Zenbat eta kirol eta liga gehiago aukeratu, orduan eta gehiago irauten dute kargatzeak eta eraikitzeak.</string>
+    <string name="sports_sport_buttons">Kirol-botoiak</string>
+    <string name="sports_sport_buttons_mine">Nire kirolak</string>
+    <string name="sports_sport_buttons_all">Kirol guztiak</string>
+    <string name="sports_sport_buttons_description">Nire kirolak: zuk aukeratutakoa soilik. Kirol guztiak: OwnTV-k ezagutzen dituen liga guztiak, kargatzeko denbora gehiago behar dute.</string>
+    <string name="sports_auto_rebuild">Berreraikitze automatikoa</string>
+    <string name="sports_auto_rebuild_description">Emaitzak, partiden xehetasunak eta sailkapenak zenbatean behin berriro eskuratzen diren beren kabuz</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> orduro</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> orduro</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">Aplikazioa abiarazten den bakoitzean</string>
+    <string name="sports_calendar_refresh">Agendaren freskatzea</string>
+    <string name="sports_calendar_refresh_description">Gordetako hilabeteak zenbatean behin berriro eskuratzen diren</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> egunean behin</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> egunean behin</item>
+    </plurals>
+    <string name="sports_find_channels">Bilatu kateak</string>
+    <string name="sports_find_channels_description">Partida hau zure gidan eta kateen izenetan bilatzen du. Erreprodukzio-zerrenda handi batean denbora pixka bat behar izan dezake.</string>
+    <string name="sports_finding_channels">Zure kateak bilatzen…</string>
+    <string name="sports_strict_filter">Iragazte zorrotza</string>
+    <string name="sports_strict_filter_description">Aktibatuta: iragazkiak gainditzen dituzten kateak soilik zerrendatzen dira. Desaktibatuta: kate guztiak, gainditzen dituztenak lehenik.</string>
+    <string name="sports_rebuilding">Kirolak berreraikitzen…</string>
+    <string name="sports_rebuild_failed">Ezin izan dira kirol-datuak eguneratu</string>
+    <string name="sports_refresh_data_now">Freskatu kirol-datuak orain</string>
+    <string name="sports_last_updated">Azken eguneratzea: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Kateak <xliff:g id="time">%1$s</xliff:g>-(e)tik bila daitezke, hasiera baino 30 minutu lehenago.</string>
+    <string name="sports_find_channels_ended">Partida hau amaitu da; ez dago bilatzeko katerik.</string>
+    <string name="sports_tab_broadcasts">Emankizunak</string>
+    <string name="sports_broadcasts_guide">Zure gidan</string>
+    <string name="sports_broadcasts_espn">ESPNtik (Estatu Batuak soilik)</string>
+    <string name="sports_broadcasts_find_first">Erabili Bilatu kateak partida hau ematen duten gidako kateak ikusteko.</string>
+    <string name="sports_broadcasts_none">Bat ere ez</string>
+    <string name="sports_move_instructions">▲/▼ aukeratzeko · OK hartzeko edo uzteko · Amaitzean Gorde</string>
+</resources>

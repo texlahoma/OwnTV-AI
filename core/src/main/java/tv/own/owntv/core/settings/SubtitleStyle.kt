@@ -1,7 +1,7 @@
 package tv.own.owntv.core.settings
 
 /**
- * Shared contract for the custom subtitle look (#96) — the single place the three very different
+ * Shared contract for the custom subtitle look — the single place the three very different
  * subtitle renderers agree on values, defaults and geometry:
  *
  *  - mpv's own OSD (`sub-scale` / `sub-color` / `sub-back-color` / `sub-pos` / `sub-align-x`),

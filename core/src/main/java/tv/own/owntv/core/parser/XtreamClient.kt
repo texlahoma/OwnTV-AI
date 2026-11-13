@@ -39,6 +39,44 @@ data class XtEpisode(
 )
 data class XtSeriesInfo(val episodes: List<XtEpisode>)
 
+/**
+ * [value] as one URL path segment, for the Xtream stream paths (`…/live/{user}/{pass}/{id}.ts`).
+ * Only what a segment cannot hold raw is percent-encoded — `/ ? # %`, spaces, other ASCII outside
+ * RFC 3986's `pchar`, and non-ASCII bytes — so a credential made of letters, digits and the usual
+ * punctuation keeps exactly the URL it always had, while one with a `#` or `/` no longer cuts the
+ * URL short. The `player_api.php` calls already encode the same values, as query parameters.
+ */
+internal fun xtreamPathSegment(value: String?): String {
+    val bytes = value.orEmpty().toByteArray(Charsets.UTF_8)
+    val out = StringBuilder(bytes.size)
+    for (b in bytes) {
+        val c = b.toInt() and 0xFF
+        if (c < 0x80 && c.toChar().let { it.isLetterOrDigit() || it in PATH_SEGMENT_SAFE }) {
+            out.append(c.toChar())
+        } else {
+            out.append('%').append(HEX[c shr 4]).append(HEX[c and 0x0F])
+        }
+    }
+    return out.toString()
+}
+
+private const val PATH_SEGMENT_SAFE = "-._~!$&'()*+,;=:@"
+private const val HEX = "0123456789ABCDEF"
+
+/**
+ * An episode whose `episode_num` the panel left blank (or 0) takes its position within its season
+ * instead — panels still list them in order, and otherwise every one of them reads as "episode 0"
+ * (other Xtream clients lost such shows outright). Numbered episodes are left exactly as sent.
+ */
+internal fun numberBlankEpisodes(episodes: List<XtEpisode>): List<XtEpisode> {
+    val position = HashMap<Int, Int>()
+    return episodes.map { e ->
+        val p = (position[e.seasonNumber] ?: 0) + 1
+        position[e.seasonNumber] = p
+        if (e.episodeNumber > 0) e else e.copy(episodeNumber = p)
+    }
+}
+
 /** What a real request for an `.m3u8` live URL got back — see [XtreamClient.probeHls]. */
 sealed interface HlsProbe {
     /** A playlist came back. Proof the panel serves HLS, whatever it advertises. */
@@ -66,7 +104,8 @@ sealed interface HlsInconclusiveReason {
 
 /** Declaration + real probe. [declared] is null when the panel couldn't be reached at all. */
 data class HlsTest(val declared: Boolean?, val probe: HlsProbe)
-data class XtEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long)
+/** A schedule row. [programmeId] is the stored programme's id, or 0 for a row only the provider gave. */
+data class XtEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long, val programmeId: Long = 0)
 
 /**
  * Xtream Codes `player_api.php` client. Category lists are small and collected to a list; the large
@@ -80,20 +119,21 @@ class XtreamClient(private val http: HttpClient) {
     suspend fun vodCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_vod_categories", onProgress)
     suspend fun seriesCategories(s: SourceEntity, onProgress: ((Long, Long?) -> Unit)? = null) = categories(s, "get_series_categories", onProgress)
 
-    private suspend fun categories(s: SourceEntity, action: String, onProgress: ((Long, Long?) -> Unit)? = null): List<XtCategory> {
+    private suspend fun categories(s: SourceEntity, action: String, onProgress: ((Long, Long?) -> Unit)? = null): List<XtCategory> =
+        http.get(api(s, action), s.userAgent, onProgress, maxAttempts = CATEGORY_MAX_ATTEMPTS) { readCategories(it) }
+
+    internal suspend fun readCategories(input: InputStream): List<XtCategory> {
         val out = ArrayList<XtCategory>()
-        http.get(api(s, action), s.userAgent, onProgress, maxAttempts = CATEGORY_MAX_ATTEMPTS) { input ->
-            streamObjects(input) { m ->
-                val id = m["category_id"] ?: return@streamObjects
-                out.add(XtCategory(id, m["category_name"] ?: id))
-            }
+        streamObjects(input) { m ->
+            val id = m["category_id"] ?: return@streamObjects
+            out.add(XtCategory(id, m["category_name"] ?: id))
         }
         return out
     }
 
     // --- Streams (callback-streamed) ---
     // Each returns true if the full list parsed cleanly, false if the server truncated it mid-stream
-    // (issue #15) — the sync uses that to fall back to per-category fetching. [categoryId] filters the
+    // the sync uses that to fall back to per-category fetching. [categoryId] filters the
     // request server-side (`&category_id=X`), keeping payloads small enough to dodge the truncation.
     suspend fun streamLive(
         s: SourceEntity,
@@ -217,27 +257,35 @@ class XtreamClient(private val http: HttpClient) {
      * that showed no episodes on stricter panels now populate.
      */
     suspend fun getSeriesInfo(s: SourceEntity, seriesId: String): XtSeriesInfo {
+        // One retry: a panel that drops a kept-alive connection answers the first request with
+        // "unexpected end of stream", and a single miss here shows the user an empty show.
+        val episodes = http.get(
+            api(s, "get_series_info", "&series_id=$seriesId"), s.userAgent, maxAttempts = SERIES_INFO_MAX_ATTEMPTS,
+        ) { input -> readSeriesInfoEpisodes(input) }
+        return XtSeriesInfo(numberBlankEpisodes(episodes))
+    }
+
+    /** The episodes of a `get_series_info` body, in panel order. */
+    internal fun readSeriesInfoEpisodes(input: InputStream): List<XtEpisode> {
         val episodes = ArrayList<XtEpisode>()
-        http.get(api(s, "get_series_info", "&series_id=$seriesId"), s.userAgent) { input ->
-            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
-                reader.isLenient = true
-                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
-                reader.beginObject()
-                while (reader.hasNext()) {
-                    if (reader.nextName() == "episodes") {
-                        when (reader.peek()) {
-                            JsonToken.BEGIN_OBJECT -> readEpisodesObject(reader, episodes) // { "1": [ep,…], … }
-                            JsonToken.BEGIN_ARRAY -> readEpisodesArray(reader, episodes)    // [ ep, ep, … ]
-                            else -> reader.skipValue()
-                        }
-                    } else {
-                        reader.skipValue()
+        JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+            reader.isLenient = true
+            if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
+            reader.beginObject()
+            while (reader.hasNext()) {
+                if (reader.nextName() == "episodes") {
+                    when (reader.peek()) {
+                        JsonToken.BEGIN_OBJECT -> readEpisodesObject(reader, episodes) // { "1": [ep,…], … }
+                        JsonToken.BEGIN_ARRAY -> readEpisodesArray(reader, episodes)    // [ ep, ep, … ]
+                        else -> reader.skipValue()
                     }
+                } else {
+                    reader.skipValue()
                 }
-                reader.endObject()
             }
+            reader.endObject()
         }
-        return XtSeriesInfo(episodes)
+        return episodes
     }
 
     /** `episodes` as `{ season → [episodes] }`. */
@@ -245,24 +293,84 @@ class XtreamClient(private val http: HttpClient) {
         reader.beginObject()
         while (reader.hasNext()) {
             val season = reader.nextName().toIntOrNull() ?: 0
-            if (reader.peek() != JsonToken.BEGIN_ARRAY) { reader.skipValue(); continue }
-            reader.beginArray()
-            while (reader.hasNext()) readEpisode(reader, out, season)
-            reader.endArray()
+            when (reader.peek()) {
+                JsonToken.BEGIN_ARRAY -> {
+                    reader.beginArray()
+                    while (reader.hasNext()) readEpisode(reader, out, season)
+                    reader.endArray()
+                }
+                JsonToken.BEGIN_OBJECT -> {
+                    reader.beginObject()
+                    readKeyedEpisodes(reader, out, season, firstKey = null)
+                }
+                else -> reader.skipValue()
+            }
         }
         reader.endObject()
     }
 
-    /** `episodes` as a flat `[episodes]` — season comes from each episode's own field. */
+    /**
+     * `episodes` as an array — either flat `[ep, ep, …]` (season from each episode's own field), or
+     * `[[ep,…], [ep,…], …]`: the season map itself, which PHP encodes as an array whenever the season
+     * numbers run 0, 1, 2… without a gap — i.e. a show with Specials. Skipping those inner arrays lost
+     * every episode of such a show (SpongeBob: 0 of 545), so they are read, the index as the season.
+     */
     private fun readEpisodesArray(reader: JsonReader, out: MutableList<XtEpisode>) {
         reader.beginArray()
-        while (reader.hasNext()) readEpisode(reader, out, 0)
+        var index = 0
+        while (reader.hasNext()) {
+            when (reader.peek()) {
+                JsonToken.BEGIN_ARRAY -> {
+                    reader.beginArray()
+                    while (reader.hasNext()) readEpisode(reader, out, index)
+                    reader.endArray()
+                }
+                // Either an episode of a flat list, or a season whose own list came out keyed (see
+                // readKeyedEpisodes). Only the first key tells them apart: an episode's are field names.
+                JsonToken.BEGIN_OBJECT -> {
+                    reader.beginObject()
+                    if (!reader.hasNext()) {
+                        reader.endObject()
+                    } else {
+                        val first = reader.nextName()
+                        if (first.toIntOrNull() != null) {
+                            readKeyedEpisodes(reader, out, index, firstKey = first)
+                        } else {
+                            readEpisodeFields(reader, out, 0, firstName = first)
+                        }
+                    }
+                }
+                else -> reader.skipValue()
+            }
+            index++
+        }
         reader.endArray()
+    }
+
+    /**
+     * A season's episode list that PHP encoded as an object — `{"0": ep, "2": ep}` — because its
+     * indexes have a gap. Called with the object already open (and [firstKey] already read, when the
+     * caller had to look at it); only numeric keys are episodes, anything else is skipped.
+     */
+    private fun readKeyedEpisodes(reader: JsonReader, out: MutableList<XtEpisode>, season: Int, firstKey: String?) {
+        var key = firstKey
+        while (key != null || reader.hasNext()) {
+            val name = key ?: reader.nextName()
+            key = null
+            if (name.toIntOrNull() != null) readEpisode(reader, out, season) else reader.skipValue()
+        }
+        reader.endObject()
     }
 
     /** One episode object — tolerant of string/number/null fields and an in-object `season`. */
     private fun readEpisode(reader: JsonReader, out: MutableList<XtEpisode>, seasonFallback: Int) {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return }
+        reader.beginObject()
+        readEpisodeFields(reader, out, seasonFallback, firstName = null)
+    }
+
+    /** The fields of an episode object that is already open; [firstName] is a key the caller already read. */
+    private fun readEpisodeFields(reader: JsonReader, out: MutableList<XtEpisode>, seasonFallback: Int, firstName: String?) {
         var id: String? = null
         var epNum = 0
         var title = ""
@@ -270,9 +378,11 @@ class XtreamClient(private val http: HttpClient) {
         var season = seasonFallback
         var airDate: Long? = null
         var added: Long? = null
-        reader.beginObject()
-        while (reader.hasNext()) {
-            when (reader.nextName()) {
+        var pending = firstName
+        while (pending != null || reader.hasNext()) {
+            val name = pending ?: reader.nextName()
+            pending = null
+            when (name) {
                 "id" -> id = reader.nextStringOrNull()
                 "episode_num" -> epNum = reader.nextIntOrNull() ?: epNum
                 "title" -> title = reader.nextStringOrNull() ?: title
@@ -282,9 +392,9 @@ class XtreamClient(private val http: HttpClient) {
                 // object may carry it directly, or bury it in `info`. Whichever arrives first and
                 // parses wins, and `added` (when the panel got the file) is the last resort.
                 "release_date", "releaseDate", "releasedate", "air_date", "airdate" ->
-                    airDate = airDate ?: parseEpisodeDate(reader.nextStringOrNull())
+                    airDate = firstOf(airDate, parseEpisodeDate(reader.nextStringOrNull()))
                 "added" -> added = reader.nextStringOrNull()?.toLongOrNull()?.takeIf { it > 0 }?.times(1000)
-                "info" -> airDate = airDate ?: readEpisodeInfoDate(reader)
+                "info" -> airDate = firstOf(airDate, readEpisodeInfoDate(reader))
                 else -> reader.skipValue()
             }
         }
@@ -302,13 +412,21 @@ class XtreamClient(private val http: HttpClient) {
         while (reader.hasNext()) {
             when (reader.nextName()) {
                 "release_date", "releaseDate", "releasedate", "air_date", "airdate" ->
-                    date = date ?: parseEpisodeDate(reader.nextStringOrNull())
+                    date = firstOf(date, parseEpisodeDate(reader.nextStringOrNull()))
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
         return date
     }
+
+    /**
+     * [current] if there is one, else [next]. A function, not `current ?: read()`, on purpose: its
+     * arguments are always evaluated, so the reader always consumes the value. With `?:` a second date
+     * key was never read once the first had matched, the reader stood on a value where it expected a
+     * name, and the whole show lost its episodes.
+     */
+    private fun firstOf(current: Long?, next: Long?): Long? = current ?: next
 
     /**
      * A panel's episode date, as epoch ms. `yyyy-MM-dd` is what they overwhelmingly send (sometimes
@@ -323,22 +441,34 @@ class XtreamClient(private val http: HttpClient) {
         return tv.own.owntv.core.content.AirDate.parse(text)
     }
 
-    /** Reads a string, coercing numbers and tolerating JSON null. */
-    private fun JsonReader.nextStringOrNull(): String? =
-        if (peek() == JsonToken.NULL) { nextNull(); null } else nextString()
-
-    /** Reads an int from a number or a numeric string, tolerating null/other. */
-    private fun JsonReader.nextIntOrNull(): Int? = when (peek()) {
-        JsonToken.NUMBER -> nextInt()
-        JsonToken.STRING -> nextString().trim().toIntOrNull()
+    /**
+     * Reads a string, coercing numbers; JSON null, a boolean, an array or an object reads as null.
+     * `nextString()` throws on those, and one `"title": false` used to cost the whole show its episodes.
+     */
+    private fun JsonReader.nextStringOrNull(): String? = when (peek()) {
+        JsonToken.STRING, JsonToken.NUMBER -> nextString()
         JsonToken.NULL -> { nextNull(); null }
         else -> { skipValue(); null }
     }
 
-    /** Reads a long from a number or a numeric string, tolerating null/other. */
+    /**
+     * Reads an int from a number or a numeric string, tolerating null/other. The text is read and
+     * parsed here rather than with `nextInt()`, which throws on `1.5` or an overflow and took the
+     * whole show down with it; a whole `1.0` still reads as 1.
+     */
+    private fun JsonReader.nextIntOrNull(): Int? = when (peek()) {
+        JsonToken.NUMBER, JsonToken.STRING -> nextString().trim().let { text ->
+            text.toIntOrNull() ?: text.toDoubleOrNull()?.let { d -> d.toInt().takeIf { it.toDouble() == d } }
+        }
+        JsonToken.NULL -> { nextNull(); null }
+        else -> { skipValue(); null }
+    }
+
+    /** Reads a long from a number or a numeric string, tolerating null/other — leniently, as [nextIntOrNull]. */
     private fun JsonReader.nextLongOrNull(): Long? = when (peek()) {
-        JsonToken.NUMBER -> nextLong()
-        JsonToken.STRING -> nextString().trim().toLongOrNull()
+        JsonToken.NUMBER, JsonToken.STRING -> nextString().trim().let { text ->
+            text.toLongOrNull() ?: text.toDoubleOrNull()?.let { d -> d.toLong().takeIf { it.toDouble() == d } }
+        }
         JsonToken.NULL -> { nextNull(); null }
         else -> { skipValue(); null }
     }
@@ -376,27 +506,70 @@ class XtreamClient(private val http: HttpClient) {
         return out.sortedBy { it.startMs }
     }
 
-    private fun readEpgListings(reader: JsonReader, out: MutableList<XtEpgEntry>) {
+    /**
+     * A live channel's whole schedule as the provider keeps it, via `get_simple_data_table`: past
+     * programmes as far back as its archive goes, which is often several days more than `xmltv.php`
+     * carries. Same entry format as [getShortEpg]; untitled entries and those the panel marks as not
+     * archived are left out. Sorted by start.
+     */
+    suspend fun getArchiveSchedule(s: SourceEntity, streamId: String): List<XtEpgEntry> {
+        val out = ArrayList<XtEpgEntry>()
+        http.get(api(s, "get_simple_data_table", "&stream_id=$streamId"), s.userAgent) { input ->
+            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+                reader.isLenient = true
+                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    if (reader.nextName() == "epg_listings" && reader.peek() == JsonToken.BEGIN_ARRAY) {
+                        readEpgListings(reader, out, keepUntitled = false, archivedOnly = true)
+                    } else {
+                        reader.skipValue()
+                    }
+                }
+                reader.endObject()
+            }
+        }
+        return out.sortedBy { it.startMs }
+    }
+
+    /**
+     * [archivedOnly]: drop the programmes the panel marks `has_archive: 0`. Panels whose archive has
+     * holes list every programme of the schedule, playable or not; an entry without the field is kept.
+     */
+    private fun readEpgListings(
+        reader: JsonReader,
+        out: MutableList<XtEpgEntry>,
+        keepUntitled: Boolean = true,
+        archivedOnly: Boolean = false,
+    ) {
         reader.beginArray()
         while (reader.hasNext()) {
             var title = ""
             var desc: String? = null
             var startTs = 0L
             var stopTs = 0L
+            var archived: Boolean? = null
             reader.beginObject()
             while (reader.hasNext()) {
                 val name = reader.nextName()
                 if (reader.peek() == JsonToken.NULL) { reader.nextNull(); continue }
                 when (name) {
                     "title" -> title = decodeBase64(reader.nextString())
-                    "description" -> desc = decodeBase64(reader.nextString()).takeIf { it.isNotBlank() }
+                    "description" -> desc = EpgText.clean(decodeBase64(reader.nextString()))
                     "start_timestamp" -> startTs = reader.nextString().toLongOrNull() ?: 0
                     "stop_timestamp" -> stopTs = reader.nextString().toLongOrNull() ?: 0
+                    // 1 / "1" / true on the panels seen; anything else that parses means no archive.
+                    "has_archive" -> archived = if (reader.peek() == JsonToken.BOOLEAN) {
+                        reader.nextBoolean()
+                    } else {
+                        reader.nextString().trim() == "1"
+                    }
                     else -> reader.skipValue()
                 }
             }
             reader.endObject()
-            if (startTs > 0 && stopTs > startTs) {
+            if (archivedOnly && archived == false) continue
+            if (startTs > 0 && stopTs > startTs && (keepUntitled || title.isNotBlank())) {
                 out.add(XtEpgEntry(title.ifBlank { "—" }, desc, startTs * 1000, stopTs * 1000))
             }
         }
@@ -410,7 +583,7 @@ class XtreamClient(private val http: HttpClient) {
     // Live uses the raw MPEG-TS endpoint (.ts) — the universal Xtream live format. The .m3u8/HLS
     // wrapper isn't served by every panel (mpegts-only providers 404 on it, so channels won't load),
     // whereas every panel serves .ts and mpv plays it natively.
-    fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${s.username}/${s.password}/$streamId.ts"
+    fun liveUrl(s: SourceEntity, streamId: String) = "${base(s)}/live/${credentials(s)}/$streamId.ts"
 
     /**
      * Catch-up (timeshift) URL for a past programme:
@@ -419,19 +592,19 @@ class XtreamClient(private val http: HttpClient) {
      */
     fun timeshiftUrl(s: SourceEntity, streamId: String, startMs: Long, durationMinutes: Int, tz: java.util.TimeZone = java.util.TimeZone.getTimeZone("UTC"), ext: String = "ts"): String {
         val fmt = java.text.SimpleDateFormat("yyyy-MM-dd:HH-mm", java.util.Locale.US).apply { timeZone = tz }
-        return "${base(s)}/timeshift/${s.username}/${s.password}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext"
+        return "${base(s)}/timeshift/${credentials(s)}/$durationMinutes/${fmt.format(java.util.Date(startMs))}/$streamId.$ext"
     }
     fun movieUrl(s: SourceEntity, streamId: String, ext: String?) =
-        "${base(s)}/movie/${s.username}/${s.password}/$streamId.${ext ?: "mp4"}"
+        "${base(s)}/movie/${credentials(s)}/$streamId.${ext ?: "mp4"}"
     fun seriesEpisodeUrl(s: SourceEntity, episodeId: String, ext: String?) =
-        "${base(s)}/series/${s.username}/${s.password}/$episodeId.${ext ?: "mp4"}"
+        "${base(s)}/series/${credentials(s)}/$episodeId.${ext ?: "mp4"}"
 
     /** Full XMLTV guide for the whole account (all channels) — the bulk EPG used by the guide grid. */
     data class XtAccountDetails(
         val expiryMs: Long? = null,
         val hlsSupported: Boolean = false,
         /** `user_info.max_connections` — simultaneous streams the account may open; 0 when the panel
-         *  omits it or reports nonsense. `1` is the one that changes playback (F30). */
+         *  omits it or reports nonsense. `1` is the one that changes playback. */
         val maxConnections: Int = 0,
         /** `user_info.active_cons` — streams open right now; -1 when the panel omits it. */
         val activeConnections: Int = -1,
@@ -442,6 +615,8 @@ class XtreamClient(private val http: HttpClient) {
         val authOk: Boolean = true,
         /** `user_info.is_trial` — "1" on a trial line. */
         val trial: Boolean = false,
+        /** The panel's own time zone from `server_info` — see [xtreamServerTimeZone]; null when unknown. */
+        val serverTimeZone: String? = null,
     )
 
     /**
@@ -475,12 +650,31 @@ class XtreamClient(private val http: HttpClient) {
             var status: String? = null
             var authOk = true
             var trial = false
+            var zoneName: String? = null
+            var timeNow: String? = null
+            var timestampNow: Long? = null
             JsonReader(java.io.InputStreamReader(input, Charsets.UTF_8)).use { r ->
                 r.isLenient = true
                 if (r.peek() != JsonToken.BEGIN_OBJECT) return@use
                 r.beginObject()
                 while (r.hasNext()) {
-                    if (r.nextName() == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
+                    val section = r.nextName()
+                    if (section == "server_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
+                        r.beginObject()
+                        while (r.hasNext()) {
+                            when (r.nextName()) {
+                                "timezone" -> zoneName = if (r.peek() == JsonToken.STRING) r.nextString() else { r.skipValue(); null }
+                                "time_now" -> timeNow = if (r.peek() == JsonToken.STRING) r.nextString() else { r.skipValue(); null }
+                                "timestamp_now" -> timestampNow = when (r.peek()) {
+                                    JsonToken.STRING -> r.nextString().trim().toLongOrNull()
+                                    JsonToken.NUMBER -> r.nextLong()
+                                    else -> { r.skipValue(); null }
+                                }
+                                else -> r.skipValue()
+                            }
+                        }
+                        r.endObject()
+                    } else if (section == "user_info" && r.peek() == JsonToken.BEGIN_OBJECT) {
                         r.beginObject()
                         while (r.hasNext()) {
                             when (r.nextName()) {
@@ -565,8 +759,23 @@ class XtreamClient(private val http: HttpClient) {
                 status = status,
                 authOk = authOk,
                 trial = trial,
+                serverTimeZone = xtreamServerTimeZone(zoneName, timeNow, timestampNow),
             )
         }
+    }
+
+    /**
+     * Whether [s] answers as an Xtream account at all — `player_api.php` returned a `user_info` with a
+     * status or an explicit `auth: 0`. A plain web server serving a `get.php` playlist parses to the
+     * all-defaults [XtAccountDetails], so the defaults alone never count. Any failure is "no".
+     */
+    suspend fun isXtreamAccount(s: SourceEntity): Boolean = try {
+        fetchAccountStatus(s).let { it.status != null || !it.authOk }
+    } catch (c: kotlinx.coroutines.CancellationException) {
+        throw c
+    } catch (e: Exception) {
+        Log.i(TAG, "isXtreamAccount: no (${e.message})")
+        false
     }
 
     /** Convenience delegate returning only [XtAccountDetails.expiryMs]. */
@@ -614,7 +823,7 @@ class XtreamClient(private val http: HttpClient) {
      * and never plays anything, so it costs one short request.
      */
     suspend fun probeHls(s: SourceEntity, streamId: String): HlsProbe {
-        val url = "${base(s)}/live/${s.username}/${s.password}/$streamId.m3u8"
+        val url = "${base(s)}/live/${credentials(s)}/$streamId.m3u8"
         return try {
             http.get(url, s.userAgent) { input ->
                 val head = ByteArray(HLS_PROBE_BYTES)
@@ -697,6 +906,9 @@ class XtreamClient(private val http: HttpClient) {
     // --- helpers ---
     private fun base(s: SourceEntity) = s.url.trimEnd('/')
 
+    /** The `{user}/{pass}` pair of a stream path, each encoded as a path segment. */
+    private fun credentials(s: SourceEntity) = "${xtreamPathSegment(s.username)}/${xtreamPathSegment(s.password)}"
+
     private fun api(s: SourceEntity, action: String, extra: String = ""): String {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
         val p = URLEncoder.encode(s.password.orEmpty(), "UTF-8")
@@ -738,7 +950,7 @@ class XtreamClient(private val http: HttpClient) {
 
     /**
      * Streams a top-level JSON array. Returns true if the array parsed to its end, false if the server
-     * truncated it mid-stream (issue #15). A failure before any item is read is fatal and rethrown.
+     * truncated it mid-stream. A failure before any item is read is fatal and rethrown.
      */
     private suspend fun streamArray(label: String, input: InputStream, readItem: suspend (JsonReader, StreamMetrics) -> Unit): Boolean {
         val ctx = currentCoroutineContext()
@@ -812,6 +1024,8 @@ class XtreamClient(private val http: HttpClient) {
         val DEBUG = Log.isLoggable(TAG, Log.DEBUG)
         /** Category lists are tiny; a retry on a connect/DNS blip saves the whole sync phase. */
         const val CATEGORY_MAX_ATTEMPTS = 3
+        /** A show's episode list — see [getSeriesInfo]. */
+        const val SERIES_INFO_MAX_ATTEMPTS = 2
         /** Enough of an HLS response to see `#EXTM3U` (or that an HTML error page came instead). */
         const val HLS_PROBE_BYTES = 512
     }
@@ -987,7 +1201,9 @@ class XtreamClient(private val http: HttpClient) {
                     map[name] = null
                 }
                 JsonToken.BEGIN_ARRAY, JsonToken.BEGIN_OBJECT -> reader.skipValue()
-                else -> map[name] = reader.nextString()
+                // nextScalarStringOrNull, not nextString: a panel sending `"is_adult": false` in its
+                // category list failed the whole import on "Expected a string but was BOOLEAN".
+                else -> map[name] = reader.nextScalarStringOrNull()
             }
         }
         reader.endObject()
@@ -1006,4 +1222,27 @@ class XtreamClient(private val http: HttpClient) {
             null
         }
     }
+}
+
+/**
+ * The time zone an Xtream panel runs on, as a `java.util.TimeZone` ID — what its timeshift `start` is
+ * written in. [name] is `server_info.timezone` and wins when it is a real zone ID. Otherwise the
+ * offset between `server_info.time_now` (panel-local "yyyy-MM-dd HH:mm:ss") and `timestamp_now` (unix
+ * seconds) gives a fixed `GMT±hh:mm`, rounded to the quarter hour every real zone sits on. Null when
+ * neither is usable, so the caller falls back to the device's zone.
+ */
+internal fun xtreamServerTimeZone(name: String?, timeNow: String?, timestampNowSec: Long?): String? {
+    val id = name?.trim()
+    if (!id.isNullOrEmpty() && id in java.util.TimeZone.getAvailableIDs()) return id
+    if (timeNow.isNullOrBlank() || timestampNowSec == null || timestampNowSec <= 0) return null
+    val localAsUtc = runCatching {
+        java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
+            .apply { timeZone = java.util.TimeZone.getTimeZone("UTC"); isLenient = false }
+            .parse(timeNow.trim())?.time
+    }.getOrNull() ?: return null
+    val quarterHours = Math.round((localAsUtc - timestampNowSec * 1000) / 900_000.0).toInt()
+    if (quarterHours !in -12 * 4..14 * 4) return null
+    val minutes = kotlin.math.abs(quarterHours) * 15
+    val sign = if (quarterHours < 0) '-' else '+'
+    return "GMT$sign${(minutes / 60).toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}"
 }

@@ -24,7 +24,7 @@ import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.model.SourceType
 
 /**
- * T2 — [UserDataResolver] is the reason favorites, history and resume positions survive a re-sync.
+ * [UserDataResolver] is the reason favorites, history and resume positions survive a re-sync.
  * Content rows are clear-then-insert, so every id a user-data row points at is invalidated on every
  * refresh; the resolver exports each record against a stable identity beforehand and re-attaches it
  * afterwards. If it silently fails to re-attach, the user just finds their favorites gone — no

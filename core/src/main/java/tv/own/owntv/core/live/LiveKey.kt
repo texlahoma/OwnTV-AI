@@ -9,7 +9,7 @@ sealed interface LiveKey {
     data object Catchup : LiveKey
     data object All : LiveKey
     data class Folder(val id: Long) : LiveKey
-    /** A user-created combined category (issue #87); [id] is its "custom:<uuid>" customization key. */
+    /** A user-created combined category; [id] is its "custom:<uuid>" customization key. */
     data class Custom(val id: String) : LiveKey
 }
 

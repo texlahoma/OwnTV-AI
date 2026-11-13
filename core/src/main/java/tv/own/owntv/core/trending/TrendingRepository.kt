@@ -25,6 +25,7 @@ import tv.own.owntv.core.metadata.MetadataType
 import tv.own.owntv.core.metadata.TrendingCandidate
 import tv.own.owntv.core.metadata.TrendingFeedPage
 import tv.own.owntv.core.model.MediaType
+import tv.own.owntv.core.repository.EpisodeLoad
 import tv.own.owntv.core.repository.SeriesRepository
 import tv.own.owntv.core.sync.SyncContentTypes
 import tv.own.owntv.core.settings.SettingsRepository
@@ -335,7 +336,7 @@ class TrendingRepository(
         selectedSeries.forEachIndexed { index, selection ->
             val seriesId = selection.variant.item.id
             val loaded = runCatching {
-                seriesDao.getSeriesById(seriesId)?.let { seriesRepository.loadEpisodes(it) } == true
+                seriesDao.getSeriesById(seriesId)?.let { seriesRepository.loadEpisodes(it) } == EpisodeLoad.Ready
             }.onFailure {
                 Log.w(TAG, "sourceId=$sourceId provider season load failed seriesId=$seriesId", it)
             }.getOrDefault(false)

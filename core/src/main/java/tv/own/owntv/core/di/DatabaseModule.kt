@@ -22,14 +22,13 @@ val databaseModule = module {
     single {
         Room.databaseBuilder(androidContext(), OwnTVDatabase::class.java, OwnTVDatabase.NAME)
             .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
-            // Plan Phase C. Phase B moved to the driver API on the platform engine so that any
-            // breakage there could only be the rewrite's fault; this is the engine swap itself, and
-            // it really is one line — which was the whole reason for splitting the two phases.
+            // The engine swap: SQLite ships inside the APK. Moving to the driver API and swapping the
+            // engine are deliberately separate, so this stays one line.
             //
             // What it buys: minSdk 26 means an Android 8 device runs SQLite 3.18, which has no
             // UPSERT (3.24), no window functions (3.25), no UPDATE…FROM (3.33) and no RETURNING
             // (3.35). Bundling the engine makes those available on every device instead of none,
-            // which is what Phase D spends.
+            // and the DAOs use them.
             //
             // Revert path, if 3.x ever misbehaves on a specific device: change this to
             // AndroidSQLiteDriver(). Nothing else in the codebase knows the difference.
@@ -41,7 +40,7 @@ val databaseModule = module {
                 // now but fails Room's full-schema validation at the NEXT version bump (the
                 // 4.0.x → 4.1.0 crash-loop). Healing here repairs drift long before that migration.
                 //
-                // ST4: gated behind a single sqlite_master count so a healthy open pays one index
+                // Gated behind a single sqlite_master count so a healthy open pays one index
                 // lookup instead of ~30 DDL statements on the thread issuing the first query. The
                 // heal itself stays in onOpen — moving it off would let a query beat it to a missing
                 // index. The OwnTVPerf timeline reports both the cost and whether it healed.
@@ -63,7 +62,7 @@ val databaseModule = module {
                         connection.execSQL("PRAGMA synchronous=NORMAL")
                         connection.execSQL("PRAGMA cache_size=-8000")
                     }
-                    // Plan B5, answered in code rather than by reading a log off a device.
+                    // Answered in code rather than by reading a log off a device.
                     // `setJournalMode(WRITE_AHEAD_LOGGING)` is a Support-path builder API and it is
                     // undocumented whether it still applies once a driver is configured. Losing WAL
                     // silently would look like a general slowdown with no cause, so this reads the
@@ -78,7 +77,7 @@ val databaseModule = module {
                     } else {
                         false
                     }
-                    // Plan C2: record which engine actually ran, so a release logcat answers it
+                    // Record which engine actually ran, so a release logcat answers it
                     // without guesswork. Release builds are obfuscated — ask for mapping.txt
                     // alongside any crash trace from this phase.
                     val engineVersion = runCatching {
@@ -110,12 +109,14 @@ val databaseModule = module {
     single { get<OwnTVDatabase>().progressDao() }
     single { get<OwnTVDatabase>().contentOrderDao() }
     single { get<OwnTVDatabase>().playbackPrefsDao() }
+    single { get<OwnTVDatabase>().playbackQuirkDao() }
     single { get<OwnTVDatabase>().customCategoryDao() }
     single { get<OwnTVDatabase>().seriesSortOrderDao() }
     single { get<OwnTVDatabase>().tombstoneDao() }
     single { get<OwnTVDatabase>().tvProviderProgramDao() }
     single { get<OwnTVDatabase>().downloadDao() }
     single { get<OwnTVDatabase>().recordingDao() }
+    single { get<OwnTVDatabase>().reminderDao() }
     single { get<OwnTVDatabase>().catalogBackfillDao() }
     single { get<OwnTVDatabase>().epgDao() }
     single { get<OwnTVDatabase>().metadataDao() }

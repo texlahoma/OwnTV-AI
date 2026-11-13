@@ -4,7 +4,7 @@ package tv.own.owntv.core.stalker
  * Pull a subscription end date out of a Stalker `account_info` / `get_profile` map.
  *
  * Portals are inconsistent: proper `end_date` / `exp_date` keys, or a date-looking string stuffed
- * into `phone` (§1.2). Values like "0000-00-00", "null" or empty are ignored. Returned verbatim —
+ * into `phone`. Values like "0000-00-00", "null" or empty are ignored. Returned verbatim —
  * portals write the date in their own format and re-parsing it invents wrong dates.
  */
 fun stalkerExpiryOf(fields: Map<String, String>): String? {

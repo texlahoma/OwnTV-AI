@@ -1,7 +1,7 @@
 package tv.own.owntv.core.player
 
 /**
- * P6 — the stable identity a per-item engine pin ([ForceMpvStore] live "compatibility mode",
+ * The stable identity a per-item engine pin ([ForceMpvStore] live "compatibility mode",
  * [VodEngineStore] VOD gear toggle) is keyed on.
  *
  * Both stores originally keyed on the item's stream URL, which is stable for M3U and Xtream but
@@ -21,3 +21,22 @@ package tv.own.owntv.core.player
  */
 fun enginePinKey(sourceId: Long, mediaType: String, remoteId: String?): String? =
     remoteId?.takeIf { it.isNotBlank() }?.let { "$sourceId:$mediaType:$it" }
+
+/**
+ * The one key for everything played out of [channel]'s archive, catch-up programmes and live
+ * rewinds alike. Their URLs carry the time (and the credentials), so a pin or a remembered zoom/volume
+ * keyed on the URL never matched again and piled up. Its own media type, `CATCHUP`, rather than the
+ * channel's `LIVE` key: live and film-style pins share one table and are told apart by that type, so
+ * an archive pin under the live key would re-pin the live channel and never be read back for the archive.
+ */
+fun catchupPinKey(channel: tv.own.owntv.core.database.entity.ChannelEntity): String? =
+    enginePinKey(channel.sourceId, CATCHUP_PIN_TYPE, channel.remoteId)
+
+private const val CATCHUP_PIN_TYPE = "CATCHUP"
+
+/** The playlist an [enginePinKey] belongs to, or `-1` for a legacy stream-URL key. */
+fun sourceIdOfPinKey(key: String): Long = key.substringBefore(':').toLongOrNull() ?: -1L
+
+/** The media type an [enginePinKey] names (`LIVE`, `MOVIE`, `EPISODE`, `CATCHUP`), or null for a stream-URL key. */
+fun mediaTypeOfPinKey(key: String): String? =
+    if (sourceIdOfPinKey(key) < 0) null else key.substringAfter(':').substringBefore(':').takeIf { it.isNotEmpty() }

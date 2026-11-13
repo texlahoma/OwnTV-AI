@@ -47,14 +47,22 @@ class ProxyConfigHolder(configFlow: Flow<ProxyConfig>) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private val firstRead = FirstRead("proxy")
+
     init {
-        configFlow.onEach { current = it }.launchIn(scope)
+        configFlow.onEach { current = it; firstRead.arrived() }.launchIn(scope)
     }
 
     fun snapshot(): ProxyConfig = current
 
+    /** [current] once the stored setting has been read — what every request and mpv load routes by. */
+    private fun live(): ProxyConfig {
+        firstRead.await()
+        return current
+    }
+
     private fun activeProxy(): Proxy? {
-        val c = current
+        val c = live()
         // createUnresolved: let the connection layer resolve the proxy host; the destination host is
         // resolved by the proxy itself (correct behavior for an HTTP forward proxy).
         return if (c.usable) Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(c.host, c.port)) else null
@@ -62,7 +70,9 @@ class ProxyConfigHolder(configFlow: Flow<ProxyConfig>) {
 
     /** Routes every OkHttp request through the active proxy, or DIRECT when the proxy is off/invalid. */
     val proxySelector: ProxySelector = object : ProxySelector() {
-        override fun select(uri: URI?): List<Proxy> = listOf(activeProxy() ?: Proxy.NO_PROXY)
+        // Loopback is the app's own timeshift server: a proxy elsewhere on the network cannot reach it.
+        override fun select(uri: URI?): List<Proxy> =
+            if (uri?.host == LOOPBACK) listOf(Proxy.NO_PROXY) else listOf(activeProxy() ?: Proxy.NO_PROXY)
         override fun connectFailed(uri: URI?, sa: SocketAddress?, ioe: IOException?) { /* no-op: surfaced as a normal request failure */ }
     }
 
@@ -72,7 +82,7 @@ class ProxyConfigHolder(configFlow: Flow<ProxyConfig>) {
      * cleanly instead of looping). Credentials are never logged.
      */
     val proxyAuthenticator: Authenticator = Authenticator { _, response ->
-        val c = current
+        val c = live()
         if (!c.usable || !c.hasAuth) return@Authenticator null
         if (response.request.header("Proxy-Authorization") != null) return@Authenticator null
         response.request.newBuilder()
@@ -86,7 +96,7 @@ class ProxyConfigHolder(configFlow: Flow<ProxyConfig>) {
      * NEVER log the returned string — use [HttpClient.redactUrl] if it must appear anywhere.
      */
     fun mpvProxyUrl(): String? {
-        val c = current
+        val c = live()
         if (!c.usable) return null
         val auth = if (c.hasAuth) {
             val u = URLEncoder.encode(c.username, "UTF-8")
@@ -96,5 +106,9 @@ class ProxyConfigHolder(configFlow: Flow<ProxyConfig>) {
             ""
         }
         return "http://$auth${c.host}:${c.port}"
+    }
+
+    private companion object {
+        const val LOOPBACK = "127.0.0.1"
     }
 }

@@ -34,7 +34,7 @@ class ImportFinalizer(
     suspend fun finalize(source: SourceEntity, deferIndexes: Boolean = false): SyncCounts {
         val counts = contentCounts(source.id)
         registerPortalGuide(source)
-        // C4: bounded TTL eviction of the TMDB caches — they grow without limit as the user
+        // Bounded TTL eviction of the TMDB caches — they grow without limit as the user
         // browses. Piggy-backed here (the operation that changes data), never on cold start.
         // Indexed DELETE on updatedAt; evicted rows simply re-fetch on next focus.
         runCatching {
@@ -59,7 +59,7 @@ class ImportFinalizer(
     /**
      * A Stalker portal that publishes no XMLTV feed still HAS a guide — its own — and until now there
      * was no way to reach it, so those users saw an empty Guide and no catch-up list while the same
-     * portal worked in other players. Put it on the Settings → EPG list once the portal has synced, so
+     * portal worked in other players. Put it on the Settings → EPG Sources list once the portal has synced, so
      * it is there to be pressed.
      *
      * Deliberately register-only. Nothing is downloaded here: EPG has been user-initiated since
@@ -127,7 +127,7 @@ class ImportFinalizer(
     companion object {
         private const val TAG = "ImportFinalizer"
 
-        /** TMDB cache TTL (C4): entries untouched for this long are evicted after a sync.
+        /** TMDB cache TTL: entries untouched for this long are evicted after a sync.
          *  90 days ≫ the repository's own refresh window, so this only drops long-abandoned rows. */
         private const val METADATA_TTL_MS = 90L * 24 * 60 * 60 * 1000
     }

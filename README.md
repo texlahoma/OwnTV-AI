@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="extras/logo.png" alt="OwnTV" width="360">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="extras/brand/app-logos/logo_eggshell_light.png">
+    <img src="extras/brand/app-logos/logo_eggshell.png" alt="OwnTV" width="360">
+  </picture>
 </p>
 
 <p align="center">
@@ -56,7 +59,7 @@ Questions, ideas, bug reports — or just want to follow along? **Join the OwnTV
 
 Scan to join from your phone:
 
-<a href="https://t.me/owntvplayer"><img src="extras/telegram_qr_code.jpg" alt="Scan to join the OwnTV Telegram group" width="170"></a>
+<a href="https://t.me/owntvplayer"><img src="extras/qr-codes/telegram_qr_code.jpg" alt="Scan to join the OwnTV Telegram group" width="170"></a>
 
 ---
 
@@ -68,16 +71,20 @@ have numbers that can disagree.
 | Module | Namespace | What it is |
 |---|---|---|
 | **`:core`** | `tv.own.owntv.core` | Room database and migrations, sync, parsers, EPG, backup, profiles, downloads, settings, metadata, and every string. |
-| **`:player-core`** | `tv.own.owntv.playercore` | The playback engine — libmpv plus the Media3/ExoPlayer handoff, the fallback ladder, watchdogs and stream diagnostics. Depends on `:core`. |
+| **`:player-core`** | `tv.own.owntv.playercore` | The playback engine — libmpv plus the Media3/ExoPlayer handoff, the fallback ladder, watchdogs, live tuning shared by both apps (`LiveTuneController`) and stream diagnostics. Depends on `:core`. |
 
 ## ✨ What's inside
 
 ### 🎬 Playback (`:player-core`)
 - **Dual engine** — libmpv (FFmpeg) for maximum codec compatibility, ExoPlayer (Media3) for
   near-instant Live TV, with an automatic fallback ladder between them
+- **Every sound format on both engines** — ExoPlayer falls back to the FFmpeg that ships with the mpv
+  engine for audio the device can't decode (DTS, TrueHD, MP2…), after the device's own decoders and
+  passthrough
 - **HLS, MPEG-DASH and raw MPEG-TS**, chosen from what the playlist declares, what the response
   actually is, and what the panel has already been caught doing — plus **Widevine / ClearKey** for
-  channels that publish a licence server (ExoPlayer only; mpv has no CDM)
+  channels that publish a licence server, and ClearKey keys written into the playlist itself
+  (ExoPlayer only; mpv has no CDM)
 - **Watchdogs that assume the stream is hostile** — no-frame detection, stall recovery, surface
   resets, reconnect logic, and a live diagnostics log
 - Zero-copy **4K HDR** direct rendering, frame-rate matching, throughput tracking, resolution and
@@ -121,7 +128,7 @@ app pins a core version by hand.
 
 ## 🛠️ Building
 
-Requires **JDK 21** and an Android SDK. Put the SDK path in `local.properties`:
+Requires **JDK 25** and an Android SDK. Put the SDK path in `local.properties`:
 
 ```properties
 sdk.dir=C:/Path/To/Android/Sdk
@@ -144,28 +151,25 @@ real data — installing a test APK wipes the catalog, playlists, profiles and h
 
 ## 📥 Consuming core from an app
 
-Core publishes to **GitHub Packages** as `tv.own.owntv:core` and `tv.own.owntv:player-core`:
+Core publishes `tv.own.owntv:core` and `tv.own.owntv:player-core` to OwnTV's own Maven repository —
+public, **no account or token needed**. It also serves `tv.own.owntv:libmpv`, the mpv engine built by
+[OwnTV_libmpv](https://github.com/ahXN00/OwnTV_libmpv), which `player-core` depends on.
 
 ```kotlin
-implementation("tv.own.owntv:core:1.0.43")
-implementation("tv.own.owntv:player-core:1.0.43")
-```
-
-GitHub's Maven registry asks who you are even for public packages, so add the repository with
-credentials from a [personal access token (classic)](https://github.com/settings/tokens) carrying
-only **`read:packages`**:
-
-```kotlin
+// settings.gradle.kts
 maven {
-    url = uri("https://maven.pkg.github.com/ahXN00/OwnTV_Core")
-    credentials {
-        username = providers.gradleProperty("gpr.user").orNull
-        password = providers.gradleProperty("gpr.token").orNull
-    }
+    url = uri("https://ahxn00.github.io/OwnTV_Core/maven")
+    content { includeGroup("tv.own.owntv") }
 }
+
+// build.gradle.kts
+implementation("tv.own.owntv:core:1.0.58")
+implementation("tv.own.owntv:player-core:1.0.58")
 ```
 
-Keep the token in `~/.gradle/gradle.properties` — **never** in a repository.
+The repository is this repo's `gh-pages` branch, written only by the publish workflows (the newest 30
+core versions are kept). Versions up to 1.0.57 were also published to GitHub Packages, which needs a
+token.
 
 ### Local development against core's source
 
@@ -179,7 +183,7 @@ resolves the published artifact instead, which is what CI does.
 
 ### Hooks an app must supply
 
-Core deliberately knows nothing about the app hosting it. Four hooks are assigned in the
+Core deliberately knows nothing about the app hosting it. Five hooks are assigned in the
 application's `onCreate`, **before Koin starts** — `CrashRecorder` reads the version before the
 container exists:
 
@@ -189,6 +193,13 @@ container exists:
 | `CrashRecorder.diagnostics` | the live diagnostics log |
 | `LiveSessionLimit.report` | per-provider stream quirks |
 | `SubtitleFontAssets.resourceOf` | the app's bundled subtitle fonts |
+| `AppIconSwitcher.mainActivityClass` | the app's `MainActivity`; the icon colours are it + `AppIcon.activitySuffix` |
+
+`onCreate` also **returns at once when `AppIconSwitcher.isRestartProcess(this)`** — the few
+milliseconds core's `AppRestartActivity` runs in its own process to reopen the app after an icon
+change, where nothing may start. After Koin it calls `AppIconSwitcher.start()` and
+`PlaybackStartup.start(...)`. The two engines are built with player-core's `ownTVPlayer()` and
+`livePreviewEngine()` inside the app's own Koin module (player-core ships none).
 
 One more is supplied from the playback screen rather than `onCreate`, because it is a live signal
 rather than a value:
@@ -227,11 +238,13 @@ python tools/i18n/check_text_overflow.py
 ## 🔢 Versioning
 
 Core versions are **independent of the TV app's `v4.x` releases** and must never be confused with
-them. Tags are prefixed — `core-1.0.0` — and pushing one publishes both modules from CI.
+them. Tags are prefixed — `core-1.0.0` — and pushing one publishes both modules from CI. The
+**Release core** workflow (Actions tab → Run workflow) pushes that tag for you: it reads `coreVersion`
+from `main` and refuses if the tag already exists or `CHANGELOG.md` has no section for it.
 
 Every published version also gets a [**GitHub Release**](https://github.com/ahXN00/OwnTV_Core/releases),
-and the order is deliberate: CI runs the unit tests, pushes both artifacts to GitHub Packages, and
-only then publishes the release. So a release exists only for a version that actually built and
+and the order is deliberate: CI runs the full gate, publishes both artifacts to the Maven repository, waits
+until they are served, and only then publishes the release. So a release exists only for a version that actually built and
 shipped — and it is the release, not the tag, that opens the pull request moving each app onto the
 new version. A tag whose tests fail stops there, with nothing downstream moved.
 
@@ -246,24 +259,25 @@ Contributions, bug reports and ideas are welcome. Two things to know before open
 
 ## 🙏 Credits
 
-<img src="extras/Weblate_logo.svg" alt="Weblate" width="200">
+<img src="extras/partner-logos/Weblate_logo.svg" alt="Weblate" width="200">
 
 Core holds every string in the suite, and it speaks 26 languages because people translate it on
 [**Weblate**](https://weblate.org/), which hosts the project free of charge for libre software.
 Thank you to Weblate and to every translator who has given OwnTV their language.
 
-<img src="extras/tmdb_logo.svg" alt="TMDB" width="200">
+<img src="extras/partner-logos/tmdb_logo.svg" alt="TMDB" width="200">
 
 Movie & series metadata and trailers are provided by [TMDB](https://www.themoviedb.org/).
 **This product uses the TMDB API but is not endorsed or certified by TMDB.**
 
-<img src="extras/opensubtitles_logo.svg" alt="OpenSubtitles" width="200">
+<img src="extras/partner-logos/opensubtitles_logo.svg" alt="OpenSubtitles" width="200">
 
 Subtitle search and downloads are powered by [OpenSubtitles](https://www.opensubtitles.com/).
 
 ### ▶️ Playback engines
 
-[libmpv / mpv](https://mpv.io/) (FFmpeg) · [Media3 / ExoPlayer](https://developer.android.com/media/media3)
+[libmpv / mpv](https://mpv.io/) (FFmpeg), built for OwnTV by [OwnTV_libmpv](https://github.com/ahXN00/OwnTV_libmpv) from
+[jarnedemeulemeester/libmpv-android](https://github.com/jarnedemeulemeester/libmpv-android) · [Media3 / ExoPlayer](https://developer.android.com/media/media3)
 
 ### 🧩 Built with
 
@@ -274,6 +288,11 @@ Subtitle search and downloads are powered by [OpenSubtitles](https://www.opensub
 [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) —
 and the wider Kotlin / AndroidX open-source ecosystem. Thank you to all their maintainers. See each
 project for its own license.
+
+### 🎨 Brand
+
+The lowercase **owntv** wordmark was designed for OwnTV by [@m3th0d93](https://github.com/m3th0d93)
+in [issue #227](https://github.com/ahXN00/OwnTV/issues/227).
 
 ## ⚖️ Legal
 

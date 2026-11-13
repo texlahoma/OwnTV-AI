@@ -1,6 +1,6 @@
 # Dependencies for tools/i18n/seed_translations.py only.
 #
-# This is a manual, one-off supply-chain tool for the Phase 4a community-translation
+# This is a manual, one-off supply-chain tool for the community-translation
 # seed. Install into a throwaway local venv; never install this file in CI or as part
 # of a normal `pip install -r requirements.txt` for the repo.
 #

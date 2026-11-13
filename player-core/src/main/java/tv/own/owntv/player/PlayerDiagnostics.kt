@@ -135,7 +135,7 @@ sealed interface PlaybackFailure {
     /**
      * The device has no video decoder left to give — every hardware instance is already in use. Not
      * the same as [DecoderBusy]: waiting a moment does not help, because something else on screen is
-     * holding the decoder. This is what a fourth Multiview tile hits on cheap TV silicon (D5: the
+     * holding the decoder. This is what a fourth Multiview tile hits on cheap TV silicon (the
      * tile explains itself, the grid stays up).
      */
     data object DecoderExhausted : PlaybackFailure
@@ -160,7 +160,11 @@ sealed interface PlaybackFailure {
     data object CastUnsupported : PlaybackFailure
     /** Fixed mpv diagnostics produced by OwnTV, not provider text; resolve at the UI boundary. */
     data object MpvOpenDecode : PlaybackFailure
+    /** HTTP 458: the account is already streaming elsewhere — said plainly, so nobody blames the stream. */
+    data object AccountInUse : PlaybackFailure
     data object MpvStreamNeverStarted : PlaybackFailure
+    /** The playlist marks the stream as Apple FairPlay protected, which no Android device can decrypt. */
+    data object FairPlay : PlaybackFailure
     /** Genuine unknown engine/provider text; intentionally not translated. */
     data class Raw(val message: String) : PlaybackFailure
 }
@@ -209,7 +213,9 @@ fun PlaybackFailure.describe(resolve: (Int, List<Any>) -> String): String {
         )
         PlaybackFailure.CastUnsupported -> str(R.string.player_error_cast_unsupported)
         PlaybackFailure.MpvOpenDecode -> str(R.string.player_error_mpv_open_decode)
+        PlaybackFailure.AccountInUse -> str(R.string.player_error_account_in_use)
         PlaybackFailure.MpvStreamNeverStarted -> str(R.string.player_error_mpv_stream_never_started)
+        PlaybackFailure.FairPlay -> str(R.string.player_error_fairplay)
         is PlaybackFailure.Raw -> message
     }
 }
@@ -326,6 +332,9 @@ object PlayerErrors {
 
     /** Prefer genuine provider text, otherwise keep the caller's localized semantic failure. */
     fun visibleFailure(raw: String?, url: String?, fallback: PlaybackFailure): PlaybackFailure {
+        // "Account already in use" is not a broken stream: the generic "offline or unsupported format"
+        // title read as one, on live channels and films alike.
+        if (raw != null && httpStatusIn(raw) == 458) return PlaybackFailure.AccountInUse
         val providerText = raw?.let { providerMessageFor(it, url) }
         return providerText?.let(PlaybackFailure::Raw) ?: fallback
     }

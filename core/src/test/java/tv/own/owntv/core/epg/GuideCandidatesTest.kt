@@ -31,7 +31,7 @@ class GuideCandidatesTest {
 
     @Test
     fun `a named channel with no programmes is offered but flagged`() {
-        // Not filtered out: a feed may name a channel today and schedule it tomorrow. But Phase 4
+        // Not filtered out: a feed may name a channel today and schedule it tomorrow. But auto-match
         // must be able to tell the difference, which is what hasProgrammes is for.
         val merged = GuideCandidates.merge(
             named = listOf(named("sky1", "Sky One")),

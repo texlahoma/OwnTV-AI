@@ -181,11 +181,12 @@ class RecordingCatchUpTest {
 
     @Test
     fun `a channel that claims catch-up but gives nothing to build from yields no URL`() {
-        // Better no recording than a recording of an error page.
+        // Better no recording than a recording of an error page. (A bare "default" is not this case any
+        // more: like Kodi, it appends the shift query.)
         assertNull(
             CatchupUrl.forM3u(
                 liveUrl = "http://example.invalid/live/ch1.ts",
-                catchupType = "default",
+                catchupType = null,
                 catchupSource = null,
                 startMs = programmeStart,
                 endMs = programmeStop,

@@ -34,8 +34,8 @@ interface SeriesSortOrderDao {
      * minSdk here is 26, so on an older device the statement failed to compile with
      * `near "ON": syntax error`.
      *
-     * The engine now ships inside the APK (plan Phase C), so every device has UPSERT and the two
-     * statements collapse into one. Plan D4: this is a workaround that had become pure cost.
+     * The engine now ships inside the APK, so every device has UPSERT and the two statements
+     * collapse into one; the two-statement workaround had become pure cost.
      */
     @Query(
         "INSERT INTO series_sort_order (profileId, seriesId, seasonsDescending, episodesDescending) " +

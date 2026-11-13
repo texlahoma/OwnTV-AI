@@ -13,20 +13,17 @@
     <string name="common_ok">ശരി</string>
     <string name="common_on">ഓൺ</string>
     <string name="common_off">ഓഫ്</string>
+    <string name="common_share">പങ്കിടുക</string>
     <string name="common_never">ഒരിക്കലും വേണ്ട</string>
     <string name="common_exit">പുറത്തുകടക്കുക</string>
     <string name="common_resume">തുടരുക</string>
     <string name="common_start_over">ആദ്യം മുതൽ</string>
     <string name="common_name">പേര്</string>
     <string name="common_own_tv_user">OwnTV ഉപയോക്താവ്</string>
-    <string name="common_switch_profile">പ്രൊഫൈൽ മാറ്റുക</string>
     <string name="common_proxy">പ്രോക്സി</string>
     <string name="common_title">ശീർഷകം</string>
     <string name="common_search_hint">തിരയുക…</string>
     <string name="common_search">തിരയൽ</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">തിരയൽ</string>
     <string name="common_nav_home">ഹോം</string>
     <string name="common_nav_live_tv">തത്സമയ ടിവി</string>
@@ -34,16 +31,14 @@
     <string name="common_nav_series">സീരീസ്</string>
     <string name="common_nav_downloads">ഡൗൺലോഡുകൾ</string>
     <string name="common_nav_guide">പരിപാടികളുടെ ഗൈഡ്</string>
+    <string name="common_nav_guide_short">ഗൈഡ്</string>
     <string name="common_nav_library">ലൈബ്രറി</string>
     <string name="common_nav_more">കൂടുതൽ</string>
     <string name="common_cast">കാസ്റ്റ് ചെയ്യുക</string>
     <string name="common_nav_settings">ക്രമീകരണങ്ങൾ</string>
     <string name="shell_no_source">ഉറവിടമില്ല</string>
     <string name="shell_now_playing">ഇപ്പോൾ പ്ലേ ചെയ്യുന്നു</string>
-    <string name="common_something_went_wrong">എന്തോ പിശക് സംഭവിച്ചു</string>
-    <string name="common_move_instructions">നീക്കാൻ ▲/▼ · സംരക്ഷിക്കാൻ OK · റദ്ദാക്കാൻ തിരികെ</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -57,7 +52,7 @@
     <string name="sync_error_interrupted">ഡൗൺലോഡ് സെർവർ തടസ്സപ്പെടുത്തി. വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="sync_error_mac">പോർട്ടൽ ഈ MAC വിലാസം നിരസിച്ചു. MAC-ഉം (ടിവിയുടെ തീയതിയും സമയവും) പരിശോധിക്കുക — അല്ലെങ്കിൽ സബ്‌സ്‌ക്രിപ്ഷൻ കാലഹരണപ്പെട്ടിരിക്കാം.</string>
     <string name="sync_error_invalid_mac">MAC വിലാസം അസാധുവാണ് — AA:BB:CC:DD:EE:FF ഉപയോഗിക്കുക</string>
-    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <string name="sync_counts_success">വിജയകരമായി സമന്വയിപ്പിച്ചു</string>
     <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> സമന്വയിപ്പിച്ചു</string>
     <string name="sync_import_warnings">മുന്നറിയിപ്പുകളോടെ ഇമ്പോർട്ട് ചെയ്തു: <xliff:g id="phases">%1$s</xliff:g></string>
@@ -87,6 +82,8 @@
     <string name="sync_status_cancelled">സമന്വയിപ്പിക്കൽ റദ്ദാക്കി · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download"><xliff:g id="title">%1$s</xliff:g> ഡൗൺലോഡ് ചെയ്യുന്നു</string>
     <string name="sync_status_download_with_progress"><xliff:g id="title">%1$s</xliff:g> ഡൗൺലോഡ് ചെയ്യുന്നു · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">ലോക്ക് ചെയ്ത വിഭാഗത്തിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുന്നു</string>
+    <string name="sync_status_download_locked_with_progress">ലോക്ക് ചെയ്ത വിഭാഗത്തിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുന്നു · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_phase_live">തത്സമയ ടിവി</string>
     <string name="sync_phase_movies">സിനിമകൾ</string>
     <string name="sync_phase_series">സീരീസ്</string>
@@ -126,16 +123,16 @@
     <string name="sync_error_secure">സുരക്ഷിത കണക്ഷൻ പരാജയപ്പെട്ടു — സെർവറിന്റെ സർട്ടിഫിക്കറ്റ് അസാധുവായിരിക്കാം.</string>
     <string name="sync_error_malformed_guide">സെർവറിൽ നിന്നുള്ള പരിപാടികളുടെ ഗൈഡ് ഡാറ്റ ശരിയായ ഫോർമാറ്റിലായിരുന്നില്ല. അതിലെ ചില ഭാഗങ്ങൾ ലോഡ് ആയിട്ടുണ്ടാകാം — വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ EPG URL പരിശോധിക്കുക.</string>
     <string name="sync_error_guide_empty">ഈ ഗൈഡ് ഇപ്പോൾ ശൂന്യമാണ്. ദാതാവ് ഇത് ഇതുവരെ പ്രസിദ്ധീകരിച്ചിട്ടുണ്ടാകില്ല — പിന്നീട് വീണ്ടും ശ്രമിക്കുക.</string>
-    <string name="common_items_per_skip">ഓരോ സ്കിപ്പിലുമുള്ള ഇനങ്ങൾ</string>
+    <string name="sync_error_guide_no_matching_channels">ഈ ഗൈഡിലെ ഒരു ചാനലും ഇതുവരെ നിങ്ങളുടെ പ്ലേലിസ്റ്റിലെ ചാനലുകളുമായി പൊരുത്തപ്പെടുന്നില്ല. ടിവി ഗൈഡ് തുറന്ന് പേര് ഉപയോഗിച്ച് ജോടിയാക്കാൻ EPG സ്വയമേവ പൊരുത്തപ്പെടുത്തുക ഉപയോഗിക്കുക.</string>
     <string name="common_minutes">മിനിറ്റ്</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> GB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">മറയ്ക്കുക</string>
     <string name="common_show">കാണിക്കുക</string>
     <string name="common_qr_code_companion_url">സഹായി URL-നുള്ള QR കോഡ്</string>
     <string name="sync_status_trending_starting">സമന്വയം പൂർത്തിയായി · <xliff:g id="source">%1$s</xliff:g> · ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു</string>
-    <string name="sync_status_trending_matching">ട്രെൻഡിങ് ഇനങ്ങൾ നിങ്ങളുടെ പ്ലേലിസ്റ്റുമായി പൊരുത്തപ്പെടുത്തുന്നു</string>
     <string name="sync_status_trending_detail_waiting">TMDB സ്ഥാനാർഥികളുടെ പ്രതികരണത്തിനായി കാത്തിരിക്കുന്നു</string>
     <string name="sync_status_trending_detail_received">TMDB സ്ഥാനാർഥികൾ · സിനിമകൾ: <xliff:g id="movies">%1$d</xliff:g> · സീരീസുകൾ: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">ദാതാവിന്റെ ശീർഷക സൂചിക · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -153,10 +150,6 @@
         <item quantity="one">ഏറ്റവും പുതിയ <xliff:g id="count">%1$d</xliff:g> ട്രെൻഡിങ് ഇനം ലഭിച്ചു</item>
         <item quantity="other">ഏറ്റവും പുതിയ <xliff:g id="count">%1$d</xliff:g> ട്രെൻഡിങ് ഇനങ്ങൾ ലഭിച്ചു</item>
     </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="one">പൊരുത്തപ്പെട്ടു <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">പൊരുത്തപ്പെട്ടു <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-    </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തം</item>
         <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് തയ്യാറാക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ</item>
@@ -173,4 +166,17 @@
         <item quantity="one">ഇപ്പോൾ ട്രെൻഡിങ് മറച്ചിരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തം മാത്രം</item>
         <item quantity="other">ഇപ്പോൾ ട്രെൻഡിങ് മറച്ചിരിക്കുന്നു · <xliff:g id="count">%1$d</xliff:g> പൊരുത്തങ്ങൾ മാത്രം</item>
     </plurals>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · മാറ്റുക</string>
+    <string name="shell_rail_detail_last">അവസാനം: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">തുടരുക: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">അടുത്തത്: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">ക്രമീകരണങ്ങൾ, പ്രിയപ്പെട്ടവ, ബാക്കപ്പ്</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> ഡൗൺലോഡ് ചെയ്യുന്നു · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ഡൗൺലോഡ് ചെയ്യുന്നു · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">ഓഡിയോ</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">ഒഴിവാക്കുക</string>
 </resources>

@@ -19,6 +19,7 @@ import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.dao.TrendingDao
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.MovieEntity
@@ -150,6 +151,8 @@ data class HomeFeed(
     val continueSeries: List<LauncherContinuationItem> = emptyList(),
     val recentLive: List<ChannelEntity> = emptyList(),
     val favoriteLive: List<ChannelEntity> = emptyList(),
+    val favoriteMovies: List<MovieEntity> = emptyList(),
+    val favoriteSeries: List<SeriesEntity> = emptyList(),
     val config: HomeConfig = HomeConfig(),
     val recentGuide: GuideSliceState = GuideSliceState(),
     val favoriteGuide: GuideSliceState = GuideSliceState(),
@@ -236,6 +239,17 @@ class HomeFeedReader(
             val favLive = favouritesAsync.await()
                 .filter { c -> c.sourceId in liveIds }
                 .filterNot { isChannelHidden(it, hidden) }
+            // Favourites in the user's own Favorites order, so Home and the Favorites folder agree.
+            val favMoviesAsync = async {
+                if (HomeRow.FAVORITE_MOVIES !in config.visibleOrder || movieIds.isEmpty()) emptyList()
+                else movieDao.snapshotFavoritesManual(profileId, ContentOrderEntity.FAV_CONTEXT, movieIds.toList(), FAVORITE_VOD_ROW_LIMIT)
+                    .filterNot { CustomizeKeys.movie(it) in hidden.movie.hiddenItems || (it.categoryId != null && it.categoryId in hidden.movieCats) }
+            }
+            val favSeriesAsync = async {
+                if (HomeRow.FAVORITE_SERIES !in config.visibleOrder || seriesIds.isEmpty()) emptyList()
+                else seriesDao.snapshotFavoritesManual(profileId, ContentOrderEntity.FAV_CONTEXT, seriesIds.toList(), FAVORITE_VOD_ROW_LIMIT)
+                    .filterNot { CustomizeKeys.series(it) in hidden.series.hiddenItems || (it.categoryId != null && it.categoryId in hidden.seriesCats) }
+            }
             val heroItems = buildHeroItems(items, liveWithTs, config)
             // The two guide slices read different channel sets and never depend on each other.
             val recentGuideAsync = async {
@@ -253,18 +267,23 @@ class HomeFeedReader(
                 }
             }
 
+            // Customize renames go on last: every key and guide lookup above ran on the provider's name,
+            // which is what a channel without a provider id is keyed by.
+            val names = Names(hidden.live, hidden.movie, hidden.series)
             HomeFeed(
                 trendingItems = trending,
                 trendingPreferredLanguage = preferredLanguage,
                 trendingSeasonCounts = trendingSeasonCounts,
-                heroItems = heroItems,
-                continueMovies = movies,
-                continueSeries = series,
-                recentLive = live,
-                favoriteLive = favLive,
+                heroItems = heroItems.map { names.of(it) },
+                continueMovies = movies.map { names.ofContinuation(it) },
+                continueSeries = series.map { names.ofContinuation(it) },
+                recentLive = live.map { names.of(it) },
+                favoriteLive = favLive.map { names.of(it) },
+                favoriteMovies = favMoviesAsync.await().map { names.of(it) },
+                favoriteSeries = favSeriesAsync.await().map { names.of(it) },
                 config = config,
-                recentGuide = recentGuideAsync.await(),
-                favoriteGuide = favoriteGuideAsync.await(),
+                recentGuide = recentGuideAsync.await().let { it.copy(channels = it.channels.map { ch -> names.of(ch) }) },
+                favoriteGuide = favoriteGuideAsync.await().let { it.copy(channels = it.channels.map { ch -> names.of(ch) }) },
             )
         }
     }
@@ -284,9 +303,9 @@ class HomeFeedReader(
     }
 
     private suspend fun hiddenState(profileId: Long, sourceIds: List<Long>): HiddenState {
-        val live = customize.observe(profileId, MediaType.LIVE).first()
-        val movie = customize.observe(profileId, MediaType.MOVIE).first()
-        val series = customize.observe(profileId, MediaType.SERIES).first()
+        val live = customize.observeVisible(profileId, MediaType.LIVE).first()
+        val movie = customize.observeVisible(profileId, MediaType.MOVIE).first()
+        val series = customize.observeVisible(profileId, MediaType.SERIES).first()
         val isKidsProfile = profileDao.getById(profileId)?.isKids == true
         suspend fun catIds(type: MediaType, hiddenKeys: Set<String>): Set<Long> {
             if ((hiddenKeys.isEmpty() && !isKidsProfile) || sourceIds.isEmpty()) return emptySet()
@@ -302,6 +321,35 @@ class HomeFeedReader(
             movieCats = catIds(MediaType.MOVIE, movie.hiddenCategories),
             seriesCats = catIds(MediaType.SERIES, series.hiddenCategories),
         )
+    }
+
+    /** The names the user gave items in Customize, put onto what Home draws. */
+    private inner class Names(
+        val live: SectionCustomizations,
+        val movie: SectionCustomizations,
+        val series: SectionCustomizations,
+    ) {
+        fun of(ch: ChannelEntity) = ch.copy(name = live.displayName(ch))
+        fun of(m: MovieEntity) = m.copy(name = movie.displayName(m))
+        fun of(s: SeriesEntity) = s.copy(name = series.displayName(s))
+
+        fun of(hero: HeroItem): HeroItem = when (hero) {
+            is HeroItem.MovieHero -> hero.copy(movie = of(hero.movie))
+            is HeroItem.SeriesHero -> hero.copy(series = of(hero.series))
+            is HeroItem.LiveHero -> hero.copy(channel = of(hero.channel))
+        }
+
+        /** A film's title, or a show's — and the episode title too where it fell back to the show's. */
+        suspend fun ofContinuation(item: LauncherContinuationItem): LauncherContinuationItem = when (item.kind) {
+            LauncherContinuationKind.MOVIE -> if (movie.itemNames.isEmpty()) item else
+                movieDao.getById(item.sourceItemId)?.let { item.copy(title = movie.displayName(it)) } ?: item
+            LauncherContinuationKind.EPISODE -> if (series.itemNames.isEmpty()) item else
+                seriesDao.getEpisodeById(item.targetItemId)?.let { seriesDao.getSeriesById(it.seriesId) }?.let { s ->
+                    val shown = series.displayName(s)
+                    item.copy(containerTitle = shown, title = if (item.title == s.name) shown else item.title)
+                } ?: item
+            LauncherContinuationKind.LIVE -> item
+        }
     }
 
     private fun isChannelHidden(ch: ChannelEntity, h: HiddenState): Boolean =
@@ -485,3 +533,4 @@ private const val MAX_HERO_ITEMS = 10
 private const val SLICE_WINDOW_MS = 360 * 60_000L
 private const val HALF_HOUR_MS = 30 * 60_000L
 private const val RECENT_LIVE_ROW_LIMIT = 20
+private const val FAVORITE_VOD_ROW_LIMIT = 50

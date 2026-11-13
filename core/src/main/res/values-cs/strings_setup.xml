@@ -5,7 +5,7 @@
     <string name="setup_from_device">Ze zařízení</string>
     <string name="setup_from_phone">Vzdáleně</string>
     <string name="setup_send_from_phone">Odeslat z jiného zařízení</string>
-    <string name="setup_phone_background_description">Na telefonu, tabletu nebo počítači připojeném ke stejné Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN a odešlete fotografii. Okamžitě se nastaví jako obrázek na pozadí.</string>
+    <string name="setup_phone_background_description">Na libovolném zařízení s prohlížečem ve stejné Wi-Fi — telefonu, počítači nebo jiné televizi — naskenujte QR (nebo otevřete adresu), zadejte tento PIN a pošlete fotku. Hned se z ní stane pozadí.</string>
     <string name="setup_opening_server">Spouštění serveru…</string>
     <string name="setup_enter_pin_browser">Zadejte tento PIN v prohlížeči</string>
     <string name="setup_open_url">Nebo otevřete tuto adresu URL</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">např. Moje TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">VÍTEJTE V</string>
-    <string name="setup_welcome_tagline">Váš vlastní přehrávač IPTV.</string>
     <string name="setup_get_started">Začít</string>
     <string name="setup_display_size_title">Nastav si pohodlné čtení</string>
-    <string name="setup_display_size_description">Zvol velikost rozhraní a jeho textu. Obojí můžeš později změnit v Nastavení.</string>
-    <string name="setup_display_size_preview">Pokud to ze svého místa přečteš bez námahy, je velikost správná.</string>
     <string name="setup_before_you_start">Než začnete</string>
     <string name="setup_disclaimer">OwnTV je pouze přehrávač médií. Neobsahuje žádné kanály, playlisty ani obsah. Za přidání vlastních legálně dostupných zdrojů Xtream, M3U nebo Stalker odpovídáte vy.</string>
     <string name="setup_i_understand">Rozumím</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Začněte od začátku, nebo obnovte profily, playlisty a oblíbené ze souboru zálohy či z jiného zařízení.</string>
     <string name="setup_new_profile">Nový profil</string>
     <string name="setup_create_profile_add_sources">Vytvořit profil a přidat zdroje</string>
-    <string name="setup_restore_backup">Obnovení ze zálohy</string>
     <string name="setup_import_profiles_playlists">Import profilů a playlistů ze souboru</string>
     <string name="setup_sync_device">Z jiného zařízení</string>
     <string name="setup_sync_device_description">Zkopírujte vše z druhého zařízení OwnTV přes Wi-Fi</string>
     <string name="setup_add_playlist">Přidat playlist</string>
     <string name="setup_add_playlist_description">Přidejte zdroj pro tento profil, nebo jej nastavte později.</string>
-    <string name="setup_new">Nový</string>
-    <string name="setup_add_m3u_xtream">Přidat zdroj M3U, Xtream nebo Stalker</string>
     <string name="setup_existing">Existující</string>
     <string name="setup_use_other_profile_playlists">Použít playlisty z jiného profilu</string>
     <string name="setup_import">Import</string>
@@ -75,7 +68,7 @@
     <string name="setup_invalid_mac">Neplatná MAC adresa — použijte formát AA:BB:CC:DD:EE:FF</string>
     <string name="setup_pick_backup_file">Vybrat soubor zálohy k obnovení</string>
     <string name="setup_restore_a_backup">Obnovit zálohu</string>
-    <string name="setup_restore_choice_description">Odešlete zálohu z jiného zařízení (telefonu nebo notebooku) připojeného ke stejné Wi-Fi, nebo vyberte soubor zálohy, který je již uložený v tomto zařízení.</string>
+    <string name="setup_restore_choice_description">Pošlete zálohu vzdáleně z libovolného zařízení s prohlížečem ve stejné Wi-Fi, nebo vyberte soubor zálohy, který už je v tomto zařízení.</string>
     <string name="setup_upload_from_wifi_device">Nahrát ze zařízení připojeného k vaší Wi-Fi</string>
     <string name="setup_local_file">Místní soubor</string>
     <string name="setup_pick_backup_local">Vybrat soubor zálohy v tomto zařízení</string>
@@ -87,31 +80,25 @@
     <plurals name="setup_restored_items">
         <item quantity="one">Obnovena <xliff:g id="items">%1$d</xliff:g> položka. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
         <item quantity="few">Obnoveny <xliff:g id="items">%1$d</xliff:g> položky. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
-        <item quantity="many">Obnoveno <xliff:g id="items">%1$d</xliff:g> položky. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
+        <item quantity="many">Obnoveno <xliff:g id="items">%1$d</xliff:g> položek. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
         <item quantity="other">Obnoveno <xliff:g id="items">%1$d</xliff:g> položek. Pro načtení obsahu znovu synchronizujte své zdroje.</item>
     </plurals>
     <string name="setup_passwords_omitted">Poté znovu zadejte všechna uložená hesla.</string>
+    <string name="setup_need_password">Bez uloženého hesla, proto zatím nenačteno: <xliff:g id="names">%1$s</xliff:g>. Otevřete playlist v Nastavení a zadejte jeho heslo.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zdroj byl přeskočen, protože tato verze nepodporuje jeho typ playlistu.</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> zdroje byly přeskočeny, protože tato verze nepodporuje jejich typy playlistů.</item>
-        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> zdroje bylo přeskočeno, protože tato verze nepodporuje jejich typy playlistů.</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> zdrojů bylo přeskočeno, protože tato verze nepodporuje jejich typy playlistů.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zdrojů bylo přeskočeno, protože tato verze nepodporuje jejich typy playlistů.</item>
     </plurals>
     <string name="setup_continue">Pokračovat</string>
     <string name="setup_import_failed">Import se nezdařil</string>
     <string name="setup_try_again_caps">Zkusit znovu</string>
-    <string name="setup_add_from_phone">Přidat z jiného zařízení</string>
-    <string name="setup_phone_add_description">Na telefonu, tabletu nebo počítači připojeném ke stejné Wi-Fi naskenujte QR kód (nebo otevřete adresu URL), zadejte tento PIN, vyplňte údaje playlistu a klepněte na Odeslat do TV. Jeho údaje se poté zobrazí zde a budou připravené k importu — pomocí dálkového ovladače stiskněte Spustit import.</string>
     <string name="setup_opening">Spouštění…</string>
-    <string name="setup_open_server">Spustit server</string>
-    <string name="setup_stop_server">Zastavit server</string>
     <string name="setup_add_source">Přidat zdroj</string>
-    <string name="setup_add_source_description">Vyplňte formulář na jiném zařízení, nebo zde zadejte údaje pomocí dálkového ovladače.</string>
-    <string name="setup_manual">Ručně</string>
-    <string name="setup_use_phone_same_wifi">Použít telefon, tablet nebo počítač ve stejné Wi-Fi</string>
-    <string name="setup_type_source_here">Zadat Xtream / M3U / Stalker zde</string>
     <string name="setup_edit_source">Upravit zdroj</string>
-    <string name="setup_add_your_source">Přidat vlastní zdroj</string>
+    <string name="setup_edit_from_phone">Upravit z jiného zařízení</string>
     <string name="setup_edit_source_description">Aktualizujte údaje tohoto zdroje nebo změňte nastavení jeho automatické aktualizace.</string>
     <string name="setup_byo_source_description">OwnTV je přehrávač — přidejte vlastní zdroj Xtream, M3U nebo Stalker.</string>
     <string name="setup_xtream">Xtream</string>
@@ -143,6 +130,8 @@
     <string name="setup_test_connection">Otestovat připojení</string>
     <string name="setup_user_agent_optional">User-Agent (volitelný)</string>
     <string name="setup_user_agent_example">např. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (volitelný)</string>
+    <string name="setup_referer_example">např. https://example.com/</string>
     <string name="setup_auto_refresh">Automatická aktualizace</string>
     <string name="setup_auto_refresh_description">Vypnuto, při spuštění nebo když jsou data zastaralá</string>
     <string name="setup_default_playlist">Výchozí playlist</string>
@@ -165,7 +154,6 @@
     <string name="setup_now">Nyní</string>
     <string name="setup_later">Později</string>
     <string name="setup_off">Vypnuto</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">Výchozí (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -178,13 +166,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Pokračovat</string>
     <string name="companion_pin_mismatch">Tento PIN se neshoduje — zkuste to znovu.</string>
-    <string name="companion_tmdb_page_title">Odeslat klíč TMDB</string>
-    <string name="companion_tmdb_heading">Odešlete svůj klíč TMDB</string>
-    <string name="companion_tmdb_description">Přihlaste se níže k TMDB, zkopírujte svůj klíč API (v3 auth), vložte jej sem a odešlete do televize. Osobní klíč je zdarma a prakticky nemá denní limit.</string>
-    <string name="companion_tmdb_get_key">Otevřít nastavení API TMDB</string>
-    <string name="companion_tmdb_invalid">Tohle nevypadá jako klíč API TMDB. Zkopírujte hodnotu „API Key (v3 auth)“.</string>
-    <string name="companion_tmdb_sent_body">Váš klíč TMDB je nyní v televizi. Stiskněte tam Uložit a začněte jej používat.</string>
-    <string name="companion_tmdb_sent_link">Odeslat jiný klíč</string>
     <string name="companion_service_config_empty">Zadejte klíč API, adresu Workeru nebo obojí.</string>
     <string name="companion_service_config_invalid_key">Tento klíč API nevypadá platně.</string>
     <string name="companion_service_config_invalid_url">Zadejte platnou adresu Workeru s HTTPS.</string>
@@ -204,6 +185,12 @@
     <string name="companion_saved_heading">Odesláno do televizoru ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> je nyní na obrazovce Přidat zdroj v televizoru. Zkontrolujte tam údaje a pomocí dálkového ovladače stiskněte Spustit import.</string>
     <string name="companion_saved_send_another">Odeslat další zdroj</string>
+    <string name="companion_edit_page_title">OwnTV — Upravit zdroj</string>
+    <string name="companion_edit_heading">Upravit <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">Změňte, co potřebujete, a stiskněte Odeslat do TV. Prázdné pole si ponechá současnou hodnotu. Změny se objeví na televizi — tam stiskněte na ovladači Uložit.</string>
+    <string name="companion_keep_current">Ponechte prázdné, aby zůstala současná hodnota</string>
+    <string name="companion_saved_edit_body">Změny zdroje <xliff:g id="name">%1$s</xliff:g> jsou teď na obrazovce úprav v televizi. Zkontrolujte je tam a stiskněte na ovladači Uložit.</string>
+    <string name="companion_saved_edit_again">Změnit něco dalšího</string>
     <string name="companion_saved_backup_body">Vaše záloha je nyní v televizoru. Vezměte dálkový ovladač a vyberte, které části chcete obnovit.</string>
     <string name="companion_saved_backup_link">Odeslat jiný soubor</string>
     <string name="companion_saved_image_body">Váš obrázek je nyní obrázkem na pozadí televizoru.</string>
@@ -271,4 +258,33 @@
     <string name="companion_error_pair_failed">S tímto zařízením se nepodařilo spárovat.</string>
     <string name="local_sync_browser_title">Místní synchronizace OwnTV</string>
     <string name="local_sync_browser_body">Tato adresa je určená pro aplikaci OwnTV na druhém zařízení. Otevřete tam Místní synchronizaci a vyberte ze seznamu toto zařízení.</string>
+    <string name="setup_step_display">Zobrazení</string>
+    <string name="setup_step_playlist">Playlist</string>
+    <string name="setup_step_ready">Hotovo</string>
+    <string name="setup_key_previous_step">Předchozí krok</string>
+    <string name="setup_welcome_title">Vítejte v OwnTV</string>
+    <string name="setup_welcome_sub">Váš vlastní přehrávač IPTV. Na začátek vyberte jazyk — později ho můžete změnit v Nastavení.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> jazyk</item>
+        <item quantity="few">Všechny <xliff:g id="count">%1$d</xliff:g> jazyky</item>
+        <item quantity="many">Všech <xliff:g id="count">%1$d</xliff:g> jazyků</item>
+        <item quantity="other">Všech <xliff:g id="count">%1$d</xliff:g> jazyků</item>
+    </plurals>
+    <string name="setup_display_sub">Jak velké je rozhraní a jeho text na této televizi. Řádek níže se mění průběžně.</string>
+    <string name="setup_display_sub_mobile">Jak velké je rozhraní a jeho text na tomto telefonu. Řádek níže se mění průběžně.</string>
+    <string name="setup_line_zoom">Vše na obrazovce</string>
+    <string name="setup_line_font">Jen text</string>
+    <string name="setup_line_app_icon">Jak se OwnTV zobrazí na domovské obrazovce televize</string>
+    <string name="setup_line_app_icon_mobile">Jak se OwnTV zobrazí na vaší domovské obrazovce</string>
+    <string name="setup_restore_card_line">Ze souboru, nebo vzdáleně z jiného zařízení</string>
+    <string name="setup_device_appear">Zařízení se zapnutým režimem synchronizace se zobrazí zde</string>
+    <string name="setup_device_address_hint">nebo zadejte adresu druhého zařízení</string>
+    <string name="setup_profile_sub">Profil má vlastní oblíbené, historii a Domů. Další přidáte později v Nastavení › Profil.</string>
+    <string name="setup_avatar">Avatar</string>
+    <string name="setup_avatar_line">Vyberte jeden, nebo ponechte písmeno</string>
+    <string name="setup_create_profile">Vytvořit profil</string>
+    <string name="setup_phone_card_line">Vyplňte formulář v prohlížeči na jiném zařízení — nejrychlejší</string>
+    <string name="setup_importing_title">Importuje se <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">Přidat TV průvodce</string>
+    <string name="setup_add_guide_line">Nová instalace zatím nemá průvodce</string>
 </resources>

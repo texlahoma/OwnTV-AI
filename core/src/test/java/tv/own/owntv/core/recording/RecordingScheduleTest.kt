@@ -8,13 +8,49 @@ import org.junit.Test
 import tv.own.owntv.core.database.entity.RecordingEntity
 import tv.own.owntv.core.model.RecordingStatus
 
-/** Pre-roll and post-roll arithmetic, and which recordings get in each other's way (D10). */
+/** Pre-roll and post-roll arithmetic, and which recordings get in each other's way. */
 class RecordingScheduleTest {
 
     private val minute = 60_000L
     /** 2026-09-12 21:00 and 22:00 as plain numbers — the arithmetic has no opinion about calendars. */
     private val nine = 1_757_710_800_000L
     private val ten = nine + 60 * minute
+
+    // --- A manual recording: a channel and two times, no guide (#2) ---
+
+    @Test
+    fun `a manual window ending after it starts is taken as it is`() {
+        assertEquals(nine..ten, RecordingSchedule.manualWindow(nine, ten, now = nine - 30 * minute))
+    }
+
+    @Test
+    fun `an end before the start rolls to the next day`() {
+        // 23:00 to 01:00: the user means tonight into tomorrow, not two hours back in time.
+        val eleven = nine + 120 * minute
+        val window = RecordingSchedule.manualWindow(eleven, eleven - 22 * 60 * minute, now = nine)
+        assertEquals(eleven..(eleven + 120 * minute), window)
+    }
+
+    @Test
+    fun `the same start and end is a whole day, the most allowed`() {
+        val window = RecordingSchedule.manualWindow(ten, ten, now = nine)
+        assertEquals(ten..(ten + 24 * 60 * minute), window)
+    }
+
+    @Test
+    fun `a manual window longer than a day is refused`() {
+        assertNull(RecordingSchedule.manualWindow(ten, ten + 24 * 60 * minute + minute, now = nine))
+    }
+
+    @Test
+    fun `a manual window already under way starts now`() {
+        assertEquals((nine + 10 * minute)..ten, RecordingSchedule.manualWindow(nine, ten, now = nine + 10 * minute))
+    }
+
+    @Test
+    fun `a manual window that has already ended is refused`() {
+        assertNull(RecordingSchedule.manualWindow(nine, ten, now = ten))
+    }
 
     // --- The recorded window ---
 
@@ -110,7 +146,7 @@ class RecordingScheduleTest {
 
     @Test
     fun `a different playlist is not a clash — each has its own connections`() {
-        // Two playlists with one connection each can record two programmes at once (D10).
+        // Two playlists with one connection each can record two programmes at once.
         val clashes = RecordingSchedule.clashesAmong(listOf(row(1, sourceId = 2)), sourceId = 1, startMs = nine, stopMs = ten)
         assertTrue(clashes.isEmpty())
     }

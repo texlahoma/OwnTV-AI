@@ -19,37 +19,29 @@
     <string name="player_behind_live">● Canlı yayının <xliff:g id="offset">%1$s</xliff:g> gerisinde</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">Canlıya git</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">Kaldığınız yerden devam edilsin mi?</string>
+    <string name="player_timeshift_resume_message">Siz yokken bu kanal kaydedildi.</string>
+    <string name="player_previous_channel">Önceki kanal</string>
+    <string name="player_tool_sources">Kaynaklar</string>
+    <string name="player_sources_none">Bu kanalın başka bir sürümü bulunamadı.</string>
+    <string name="player_next_channel_in_list">Sonraki kanal</string>
+    <string name="player_previous_channel_in_list">Listedeki önceki kanal</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Ses düzeyi</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Parlaklık</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Geri atla</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">İleri atla</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Ses</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">Altyazı</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">Favori</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">Geri izle</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">Hız</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Oran</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">Kalite</string>
     <string name="player_tool_mini">Mini</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">Yalnızca ses</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">Oynatıcı</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">Bilgi</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">Rapor</string>
     <string name="player_channel_not_found">Kanal bulunamadı</string>
     <string name="player_channel_number_entry">Kanal numarası</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">Kullanılabilir parça yok.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · görsel</string>
     <string name="player_av_sync">Ses/görüntü eşitleme</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">Bu gecikmeyi hatırla</string>
     <string name="player_no_offset">Gecikme yok</string>
     <string name="player_subtitles_later">Altyazılar daha sonra gösteriliyor</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">Sonraki bölüm <xliff:g id="seconds">%1$d</xliff:g> sn sonra</string>
     <string name="player_play_now">Şimdi oynat</string>
     <string name="player_volume">Ses düzeyi</string>
-    <string name="player_control_engine">Oynatıcı motoru</string>
     <string name="player_unmute">Sesi aç</string>
     <string name="player_mute">Sesi kapat</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">ExoPlayer\'a geçildi</string>
     <string name="player_switch_mpv">mpv\'ye geçildi</string>
+    <string name="player_smoothness_hint">Bu kanal kare kaybediyor. Oynatıcıyı mpv\'ye geçirmek daha akıcı oynatılmasını sağlayabilir.</string>
     <string name="player_error_image_subtitle_audio">Görsel tabanlı altyazılar bu videonun ses biçiminde kullanılamaz.</string>
     <string name="player_error_both_engines_exo_first">Her iki video motorunda da oynatma başarısız oldu (önce ExoPlayer, ardından mpv). Dosya bozuk olabilir veya bu TV\'nin oynatamadığı bir biçim kullanıyor olabilir.</string>
     <string name="player_error_both_engines_mpv_first">Her iki video motorunda da oynatma başarısız oldu (mpv ve ExoPlayer). Dosya bozuk olabilir veya bu TV\'nin oynatamadığı bir biçim kullanıyor olabilir. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">Görsel tabanlı altyazılar bu dosyanın biçiminde kullanılamaz.</string>
     <string name="player_error_image_show">Bu dosyanın görsel tabanlı altyazıları gösterilemedi.</string>
     <string name="player_external_could_not_open">Bu akış açılamadı.</string>
-    <string name="player_external_play_with">Şununla oynat</string>
-    <string name="player_external_play_with_item">“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” içeriğini şununla oynat…</string>
     <string name="player_external_not_found">Harici oynatıcı bulunamadı — VLC veya MX Player yükleyin.</string>
     <string name="player_error_audio_no_video">Ses oynatılıyor ancak video bu cihazda görüntülenemedi.</string>
     <string name="player_error_file_corrupt">Bu videonun dosyası hatalı biçimlendirilmiş veya bozuk olduğundan oynatılamıyor.</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">Bu TV\'nin video kod çözücüsü meşgul. Biraz sonra tekrar deneyin.</string>
     <string name="player_error_no_internet">İnternet bağlantısı yok. Ağınızı kontrol edip tekrar deneyin.</string>
     <string name="player_error_stream_unavailable">Bu akış oynatılamadı. Kaynak çevrimdışı olabilir veya desteklenmeyen bir biçim kullanıyor olabilir. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Bu hesap zaten başka bir cihazda veya uygulamada oynatılıyor. Orada durdurun, ardından Yeniden dene düğmesine basın.</string>
     <string name="player_error_mpv_open_decode">mpv bu dosyayı açamadı veya kodunu çözemedi.</string>
     <string name="player_error_mpv_stream_never_started">Akış, birkaç kez yeniden denenmesine rağmen mpv\'de hiç başlamadı.</string>
+    <string name="player_error_fairplay">Bu akış Apple FairPlay ile korunuyor ve Android cihazlar bunu oynatamaz. Liste Apple cihazları için hazırlanmış.</string>
     <string name="player_error_surround">Bu ses çıkışı çevresel sesi desteklemiyor — stereoya geçildi.</string>
     <string name="player_error_hardware_fallback">Bu akışın biçimi bu TV\'de donanımla çözülemediği için yazılımla kod çözmeye geçildi ancak bu yöntem TV\'yi aşırı yüklemeden <xliff:g id="resolution">%1$s</xliff:g> çözünürlüğünü sürdüremiyor. TV diğer 4K içerikleri sorunsuz oynatabilir; sorun bu akışın biçiminden kaynaklanıyor.</string>
     <string name="player_error_hardware_disabled">Donanımla kod çözme kapalı — yazılımla kod çözme <xliff:g id="resolution">%1$s</xliff:g> videoyu işleyemiyor. Ayarlar → Video oynatıcı bölümünden etkinleştirin.</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">Ses çıkışı hatası — cihaz bu ses biçimini oynatamadı</string>
     <string name="player_audio_track_number">Ses <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Altyazı <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Akış bilgileri</string>
     <string name="player_stream_engine">Motor</string>
     <string name="player_stream_format">Biçim</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Geçmeli tarama</string>
+    <string name="player_stream_progressive">Yok (aşamalı)</string>
+    <string name="player_stream_deinterlaced_by_player">Geçmeli · oynatıcı tarafından giderildi</string>
+    <string name="player_stream_deinterlaced_by_device">Geçmeli · cihaz tarafından giderildi</string>
+    <string name="player_stream_not_deinterlaced">Geçmeli · giderilmedi</string>
     <string name="player_stream_bitrate">Bit hızı</string>
     <string name="player_stream_decoder">Kod çözücü</string>
     <string name="player_stream_audio">Ses</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> sn arabelleğe alındı</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">Yalnızca ses</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">Bunda ses var ama görüntü yok. Bir sorun yok — normal şekilde oynatılıyor.</string>
     <string name="player_audio_mono">mono</string>
     <string name="player_audio_stereo">stereo</string>
@@ -224,7 +218,6 @@
     <string name="player_subtitles_free_description_full">OpenSubtitles, ücretsiz ve açık bir topluluk altyazı hizmetidir. Kendi opensubtitles.com hesabınızla oturum açın; ücretsiz hesap oluşturabilirsiniz. Bu yalnızca geçerli profil için uygulanır.</string>
     <string name="player_subtitles_session_expired">OpenSubtitles oturumunuzun süresi doldu. Altyazı aramaya ve indirmeye devam etmek için Ayarlar → Video oynatıcı → Altyazılar → OpenSubtitles bölümünden tekrar oturum açın.</string>
     <string name="player_subtitles_account_needed">OpenSubtitles hesabı gerekli\n\nAltyazı aramak ve indirmek için Ayarlar → Video oynatıcı → Altyazılar → OpenSubtitles bölümünden oturum açın. OpenSubtitles, ücretsiz ve açık bir topluluk hizmetidir — opensubtitles.com adresinden herkes ücretsiz hesap oluşturabilir.</string>
-    <string name="player_subtitles_no_matches">Eşleşen altyazı bulunamadı.</string>
     <string name="player_subtitles_show_all_languages">Tüm dilleri göster</string>
     <string name="player_subtitles_all_languages">Tüm diller</string>
     <string name="player_subtitles_try_again">Tekrar dene</string>
@@ -238,17 +231,15 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> indirme</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> indirme</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Ara</string>
     <string name="player_subtitles_connected_as">Bağlı hesap</string>
     <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> olarak bağlandı</string>
     <string name="player_subtitles_resets">Yenilenme zamanı</string>
     <string name="player_subtitles_free_account">Ücretsiz</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">OpenSubtitles kullanıcı adınızı ve parolanızı girin.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles bu hesap bilgileriyle oturum açamadı.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles\'a ulaşılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitles isteği reddetti (hata <xliff:g id="code">%1$d</xliff:g>). İnternet bağlantınız çalışıyor — daha sonra tekrar deneyin ve sorunu bildirirken bu numarayı belirtin.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles yenilenemedi. İnternet bağlantınızı kontrol edin.</string>
     <string name="player_subtitles_no_matches_all_languages">Eşleşen altyazı bulunamadı. Arama başlığını düzenlemeyi deneyin.</string>
@@ -280,18 +271,22 @@
     <string name="player_subtitles_search_language_description">Arama sonuçlarında yalnızca bu dildeki altyazılar görünür. Yine de sonuçlarda “Tüm diller” seçeneğine basarak tek bir arama için tümünü görebilirsiniz.</string>
     <string name="player_subtitles_language_not_set">Ayarlanmadı</string>
     <string name="player_frame_rate_prompt_title">Bu kanalda takılma görülebilir</string>
-    <string name="player_frame_rate_prompt_description">İçerik <xliff:g id="fps">%1$d</xliff:g> fps ile oynatılırken TV\'niz <xliff:g id="current_hz">%2$d</xliff:g> Hz\'de çalışıyor; TV bu kareleri eşit aralıklarla gösteremez, bu yüzden hareket hafifçe takılmalı görünür.\n\nOtomatik kare hızı, izlerken TV\'yi <xliff:g id="target_hz">%3$d</xliff:g> Hz\'e geçirir ve ardından eski hâline döndürür. Bazı TV\'ler kare hızı değiştiğinde bir an kararır; bunu Ayarlar → Video Oynatıcı bölümünden yeniden kapatabilirsiniz.</string>
+    <string name="player_frame_rate_prompt_description">İçerik <xliff:g id="fps">%1$d</xliff:g> fps ile oynatılırken TV\'niz <xliff:g id="current_hz">%2$d</xliff:g> Hz\'de çalışıyor; TV bu kareleri eşit aralıklarla gösteremez, bu yüzden hareket hafifçe takılmalı görünür.\n\nOtomatik kare hızı, izlerken TV\'yi <xliff:g id="target_hz">%3$d</xliff:g> Hz\'e geçirir ve ardından eski hâline döndürür. Bazı TV\'ler kare hızı değiştiğinde bir an kararır; bunu Ayarlar → Görüntü → Kare hızı bölümünden yeniden kapatabilirsiniz.</string>
     <string name="player_frame_rate_turn_on">Aç</string>
     <string name="player_reason_live_fallback">Canlı oynatma bir yedeğe geçti</string>
     <string name="player_reason_live_no_fallback">Canlı oynatma başarısız oldu — kalan yedek yok</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g> sn. içinde yeniden denenecek.</string>
     <string name="player_provider_busy">Sağlayıcı meşgul.</string>
+    <string name="player_reconnecting">Yayın kesildi. Yeniden bağlanılıyor…</string>
     <string name="player_error_data_saver">Veri tasarrufu açık, bu yüzden mobil veriyle yayın kapalı. Wi-Fi ağına bağlan ya da ayarlardan veri tasarrufunu kapat.</string>
-    <string name="player_audio_only_video_off">Görüntü kapalı · veri tasarrufu</string>
-    <string name="player_audio_only_show_video">Görüntü</string>
     <string name="player_sleep_timer">Uyku zamanlayıcısı</string>
     <string name="player_sleep_timer_end_of_programme">Programın sonu</string>
+    <string name="player_sleep_timer_end_of_movie">Film bitince</string>
+    <string name="player_sleep_timer_end_of_episode">Bölüm bitince</string>
     <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g> sonra duracak</string>
+    <string name="player_sleep_timer_screen_off">Ekranı da kapat</string>
+    <string name="player_sleep_timer_screen_off_explanation">Yalnızca zamanlayıcı bittiğinde ekranı kapatmak için kullanılır, başka hiçbir zaman kullanılmaz.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Bu cihaz, uygulamaların ekranı kapatmasına izin vermiyor.</string>
     <string name="player_pip_expand">Büyüt</string>
     <string name="player_error_cast_unsupported">Yayınladığınız cihaz bu akışı oynatamıyor. Birçok canlı kanal, bu cihazın desteklemediği bir biçim kullanıyor; bunun yerine telefonunuzda oynatın.</string>
     <string name="player_cast_playing_on"><xliff:g id="device">%1$s</xliff:g> cihazında oynatılıyor</string>
@@ -308,11 +303,10 @@
         <item quantity="other">Sağlayıcınız aynı anda <xliff:g id="count">%1$d</xliff:g> yayına izin veriyor. Bunların <xliff:g id="recording">%2$d</xliff:g> tanesi kayıtta.</item>
     </plurals>
     <string name="multiview_refused_reserved">İzlemeye devam edebilmeniz için bir bağlantı boş bırakılıyor. Her bağlantıda kayıt yapmak için bunu Ayarlar\'dan değiştirin.</string>
-    <string name="multiview_unknown_connections">OwnTV bu oynatma listesinin kaç yayına izin verdiğini öğrenemedi. Bir karo açılmazsa nedeni budur.</string>
     <string name="multiview_decoder_exhausted">Bu televizyon aynı anda bir kanal daha çözemiyor.</string>
+    <string name="multiview_decoder_exhausted_mobile">Bu cihaz aynı anda bir kanal daha çözemiyor.</string>
     <string name="multiview_tile_change_channel">Kanalı değiştir</string>
     <string name="multiview_tile_fullscreen">Tam ekran yap</string>
-    <string name="multiview_tile_record">Bunu kaydet</string>
     <string name="multiview_tile_remove">Karoyu kaldır</string>
     <string name="multiview_audio_tile">Ses bu karoda</string>
     <string name="multiview_add_to">Çoklu görünüme ekle</string>
@@ -320,4 +314,8 @@
     <string name="multiview_tile_sound_only">Yalnızca ses</string>
     <string name="multiview_tile_show_picture">Görüntüyü göster</string>
     <string name="multiview_sound_only_note">Yalnızca ses — yine de sağlayıcınızın bir yayınını kullanır</string>
+    <string name="player_trailer_skip">10 sn atla</string>
+    <string name="player_trailer_blocked_title">Bu fragman OwnTV’de oynatılamıyor</string>
+    <string name="player_trailer_blocked_body">Sahibi yalnızca YouTube’da oynatılmasına izin veriyor.</string>
+    <string name="player_trailer_open_youtube">YouTube’da aç</string>
 </resources>

@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
  *
  * The store always matched on [PairedDevice.id]; what was missing was an id that meant anything.
  * Every pairing minted a fresh random one, so the match could never hit and each pairing left another
- * identical row behind — found on the owner's own devices, three "OnePlus 13s" after three pairings.
+ * identical row behind — three "OnePlus 13s" after three pairings.
  */
 @RunWith(AndroidJUnit4::class)
 class PairedDeviceStoreTest {

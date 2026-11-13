@@ -1,7 +1,7 @@
 package tv.own.owntv.core.subtitles
 
 /**
- * Builds the engine label for an attached external subtitle (§6.5/§8.4).
+ * Builds the engine label for an attached external subtitle.
  *
  * The label is not decoration: every lookup that matters keys off it — which file a timing offset
  * shifts, which track is re-selected after a re-prepare, whether mpv's re-list treats a subtitle as

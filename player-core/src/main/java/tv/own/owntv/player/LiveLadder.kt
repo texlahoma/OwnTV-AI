@@ -142,6 +142,15 @@ class LiveLadder {
     }
 
     /**
+     * Give the tune a fresh [budgetMs] from [nowMs] (none when it has no budget). For a channel that DID
+     * open and later turned out unplayable on its engine: the budget bounds how long a tune may take to
+     * show a picture, and this one did, so the next rung must not be refused for time spent watching it.
+     */
+    fun restartDeadline(nowMs: Long, budgetMs: Long) {
+        deadlineAtMs = if (budgetMs <= NO_BUDGET) null else nowMs + budgetMs
+    }
+
+    /**
      * The next untried rung, marked spent, or null when the ladder is exhausted (the caller then leaves
      * the failure on screen — there is genuinely nothing left).
      *
@@ -197,7 +206,7 @@ class LiveLadder {
         /** An unbounded tune — every rung gets its own timeout and nothing bounds their sum. */
         const val NO_BUDGET = 0L
 
-        /** Settings → "Give up after", in seconds. Declared in core, because the settings store has
+        /** Settings → "Give up on a channel after", in seconds. Declared in core, because the settings store has
          *  to know the default before any engine exists. */
         const val DEFAULT_BUDGET_SECS = tv.own.owntv.core.player.PlaybackDefaults.LIVE_TUNE_BUDGET_SECS
 

@@ -26,17 +26,39 @@ import tv.own.owntv.core.database.entity.ChannelEntity
 class LiveTimeshift(
     private val scope: CoroutineScope,
     private val playback: Playback,
-    /** Open [ChannelEntity]'s archive starting at the given wall-clock instant. Returns false when the
-     *  URL could not be built, or the user returned to live while it was being resolved. A false ends
-     *  the rewind — see [scheduleLoad]. */
-    private val loadArchive: suspend (ChannelEntity, Long, Int) -> Boolean,
+    /** Open [ChannelEntity]'s archive starting at the given wall-clock instant, and return the instant
+     *  it really starts at (an Xtream archive starts on the minute). Returns null when the URL
+     *  could not be built, or the user returned to live while it was being resolved. A null ends the
+     *  rewind — see [scheduleLoad]. */
+    private val loadArchive: suspend (ChannelEntity, Long, Int) -> Long?,
     /** Scrubbing forward reached the live edge — or an archive could not be opened at all: the caller
      *  puts the real-time stream back on screen. */
     private val onLiveEdge: () -> Unit,
     private val nowMs: () -> Long = { System.currentTimeMillis() },
     private val coalesceMs: Long = 350,
     private val tickMs: Long = 1_000,
+    /** The channel's own saved copy, for a channel with no provider archive; null where there is none. */
+    private val local: Local? = null,
 ) {
+
+    /**
+     * A copy of the channel saved on this device while it is watched (see
+     * `tv.own.owntv.player.LiveTuneController`), rewound instead of the provider's archive when the
+     * channel has none. Everything here is the copy of the channel on screen, so the answers are null
+     * for any other channel and whenever there is no copy.
+     */
+    interface Local {
+        /** The length of rewind the copy is kept to — the rewind bar's length — or null without a copy. */
+        fun windowSec(ch: ChannelEntity): Int?
+        /** How far back the copy reaches right now, in seconds. */
+        fun depthSec(): Int
+        /** The wall-clock instant on screen. Null when nothing is playing from the copy. */
+        fun watchingWallMs(): Long?
+        /** The newest instant the copy holds — "live" for this channel. */
+        fun liveEdgeWallMs(): Long?
+        /** Show the copy from [wallMs], or from its live edge when null. */
+        fun seek(wallMs: Long?)
+    }
 
     /** The three things the counters need from whatever is playing. */
     interface Playback {
@@ -64,8 +86,12 @@ class LiveTimeshift(
      *  playback position, so one field serves the rewind and the guide catch-up paths alike. */
     private var archiveBaseWall: Long? = null
 
-    /** How deep [ch]'s archive is, in seconds — the bound every jump and scrub is clamped to. */
-    fun windowSec(ch: ChannelEntity): Int =
+    /** Whether [ch] can be rewound at all: a provider archive, or its own saved copy. */
+    fun canRewind(ch: ChannelEntity): Boolean = ch.catchup || local?.windowSec(ch) != null
+
+    /** How deep [ch]'s archive is, in seconds — the bound every jump and scrub is clamped to. A saved
+     *  copy says how long it is kept to, so the rewind bar has a steady length while the copy fills. */
+    fun windowSec(ch: ChannelEntity): Int = if (!ch.catchup) local?.windowSec(ch) ?: 0 else
         // Capped: `catchup-days` comes from the playlist, and a silly value there overflowed the
         // seconds to a NEGATIVE window, which made beginAt's coerceIn(1, window) an empty range —
         // an IllegalArgumentException in the middle of tuning. A month of archive is already more
@@ -74,15 +100,15 @@ class LiveTimeshift(
 
     /** Offsets worth offering for [ch], nearest first. Empty when the channel has no archive. */
     fun jumpOptions(ch: ChannelEntity): List<Int> =
-        if (!ch.catchup) emptyList() else CatchupJumps.optionsFor(windowSec(ch))
+        if (!canRewind(ch)) emptyList() else CatchupJumps.optionsFor(windowSec(ch))
 
     /**
      * Put [ch] at [offsetSec] behind live (absolute, not relative — this is aiming, so a second pick
      * from the "Go back to…" list must not stack on top of the first).
      */
     fun beginAt(ch: ChannelEntity, offsetSec: Int) {
-        if (!ch.catchup) return
-        val off = offsetSec.coerceIn(1, windowSec(ch))
+        if (!canRewind(ch)) return
+        val off = archiveFloor(ch, offsetSec.coerceIn(1, reachSec(ch).coerceAtLeast(1)), towardLive = false)
         _offsetSec.value = off
         scheduleLoad(ch, off)
     }
@@ -93,8 +119,8 @@ class LiveTimeshift(
      * reaching the live edge hands back to [onLiveEdge].
      */
     fun scrub(ch: ChannelEntity, deltaSec: Int) {
-        if (!ch.catchup) return
-        val next = ((_offsetSec.value ?: 0) + deltaSec).coerceIn(0, windowSec(ch))
+        if (!canRewind(ch)) return
+        val next = archiveFloor(ch, ((_offsetSec.value ?: 0) + deltaSec).coerceIn(0, reachSec(ch)), towardLive = deltaSec < 0)
         if (next == 0) { onLiveEdge(); return }
         _offsetSec.value = next
         scheduleLoad(ch, next)
@@ -124,18 +150,45 @@ class LiveTimeshift(
     fun clear() {
         loadJob?.cancel()
         tickJob?.cancel()
+        followingLocal = false
         _offsetSec.value = null
         archiveBaseWall = null
         _watchingWallMs.value = null
     }
 
+    /**
+     * A provider archive is never asked for less than [CatchupJumps.MIN_OFFSET_SEC] behind live: one 30 s
+     * rewind, floored to the current minute, asked the panel for a recording not yet written — a stream
+     * that starts with no picture. Inside that last minute a step back lands on the minimum and a
+     * step forward goes live, so the forward key always reaches the edge. The saved copy has no such gap.
+     */
+    private fun archiveFloor(ch: ChannelEntity, offsetSec: Int, towardLive: Boolean): Int = when {
+        !ch.catchup || offsetSec == 0 || offsetSec >= CatchupJumps.MIN_OFFSET_SEC -> offsetSec
+        towardLive -> 0
+        else -> CatchupJumps.MIN_OFFSET_SEC
+    }
+
+    /** How far back a jump or scrub may go: the archive's depth, or what the saved copy holds now. */
+    private fun reachSec(ch: ChannelEntity): Int =
+        if (ch.catchup) windowSec(ch) else local?.takeIf { it.windowSec(ch) != null }?.depthSec() ?: 0
+
     private fun scheduleLoad(ch: ChannelEntity, offsetSec: Int) {
         loadJob?.cancel()
         tickJob?.cancel()
+        if (!ch.catchup && local != null) {
+            // The saved copy: re-open it at the aimed instant. The follower below keeps the counters.
+            loadJob = scope.launch {
+                delay(coalesceMs)
+                val edge = local.liveEdgeWallMs() ?: nowMs()
+                localSettleUntil = nowMs() + LOCAL_SETTLE_MS
+                local.seek(edge - offsetSec * 1000L)
+            }
+            return
+        }
         loadJob = scope.launch {
             delay(coalesceMs) // coalesce rapid rewind/forward presses into one archive load
-            val startMs = nowMs() - offsetSec * 1000L
-            if (!loadArchive(ch, startMs, offsetSec)) {
+            val startMs = loadArchive(ch, nowMs() - offsetSec * 1000L, offsetSec)
+            if (startMs == null) {
                 // No archive opened — the provider has no recording, or the URL could not be built.
                 // The offset used to survive that, so the HUD went on claiming the viewer was ten
                 // minutes behind live over a picture that had never left the live edge, and the engine
@@ -143,7 +196,7 @@ class LiveTimeshift(
                 // live instead: it is the one state that is honest whichever way the rewind was entered
                 // — including from the browse list, where the channel was never tuned at all.
                 //
-                // Skipped when the offset is already null, which is the other reason for a false: the
+                // Skipped when the offset is already null, which is the other reason for a null: the
                 // user reached the live edge while this load was being resolved, and re-tuning would
                 // interrupt the stream they are already watching.
                 if (_offsetSec.value != null) {
@@ -152,13 +205,14 @@ class LiveTimeshift(
                 }
                 return@launch
             }
+            // The archive's real start, not the asked-for one: both counters are measured from it.
             archiveBaseWall = startMs
             startTick(rewinding = true)
         }
     }
 
     /**
-     * The one 1 Hz ticker (P-F2). There used to be two — one for the rewind counter, one for the
+     * The one 1 Hz ticker. There used to be two — one for the rewind counter, one for the
      * watching clock — and they were not exclusive: jumping into a rewind from a catch-up programme
      * left the clock's loop running alongside the new one, both writing the same value every second.
      *
@@ -203,5 +257,56 @@ class LiveTimeshift(
 
     private fun emitWatching() {
         _watchingWallMs.value = archiveBaseWall?.let { it + playback.positionMs }
+    }
+
+    // --- The saved copy -----------------------------------------------------------------------
+
+    /** Until then a re-opened copy is still starting, so its position says nothing yet. */
+    private var localSettleUntil = 0L
+    private var followingLocal = false
+
+    init {
+        if (local != null) scope.launch { followLocal(local) }
+    }
+
+    /**
+     * How far behind its own newest picture the copy on screen is — read once a second. Nothing has to
+     * tell this that the user paused: a paused picture simply falls behind, and the HUD's rewind chrome
+     * appears with the right figure, exactly as after a rewind. Back within [LOCAL_LIVE_SLACK_SEC] of the
+     * edge is live again. Measured against the copy's edge rather than the clock, so the few seconds a
+     * saved piece takes to arrive never read as "behind".
+     */
+    private suspend fun followLocal(l: Local) {
+        while (true) {
+            delay(tickMs)
+            if (archiveBaseWall != null) continue // the provider's archive is in charge
+            val watching = l.watchingWallMs()
+            val edge = l.liveEdgeWallMs()
+            if (watching == null || edge == null) {
+                if (followingLocal) {
+                    followingLocal = false
+                    _offsetSec.value = null
+                    _watchingWallMs.value = null
+                }
+                continue
+            }
+            if (nowMs() < localSettleUntil) continue
+            val behind = ((edge - watching) / 1000).toInt()
+            if (behind > LOCAL_LIVE_SLACK_SEC) {
+                followingLocal = true
+                _offsetSec.value = behind
+                _watchingWallMs.value = watching
+            } else if (followingLocal) {
+                followingLocal = false
+                _offsetSec.value = null
+                _watchingWallMs.value = null
+            }
+        }
+    }
+
+    private companion object {
+        /** Behind the copy's edge by no more than this is "live" (a player keeps a few seconds buffered). */
+        const val LOCAL_LIVE_SLACK_SEC = 8
+        const val LOCAL_SETTLE_MS = 3_000L
     }
 }

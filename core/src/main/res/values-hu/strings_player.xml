@@ -19,13 +19,17 @@
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> lemaradás az élőtől</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">Ugrás az élőre</string>
+    <string name="player_timeshift_resume_title">Folytatod, ahol abbahagytad?</string>
+    <string name="player_timeshift_resume_message">Ez a csatorna mentődött, amíg távol voltál.</string>
+    <string name="player_previous_channel">Előző csatorna</string>
+    <string name="player_tool_sources">Források</string>
+    <string name="player_sources_none">Nem található másik változat ehhez a csatornához.</string>
+    <string name="player_next_channel_in_list">Következő csatorna</string>
+    <string name="player_previous_channel_in_list">Előző csatorna a listában</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
     <string name="player_tool_volume">Hangerő</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Fényerő</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Ugrás vissza</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">Ugrás előre</string>
     <string name="player_tool_audio">Hang</string>
     <string name="player_tool_subtitles">Felirat</string>
@@ -33,6 +37,7 @@
     <string name="player_tool_catchup">Visszanézés</string>
     <string name="player_tool_speed">Sebesség</string>
     <string name="player_tool_aspect">Képarány</string>
+    <string name="player_tool_quality">Minőség</string>
     <string name="player_tool_mini">Mini</string>
     <string name="player_tool_audio_only">Csak hang</string>
     <string name="player_tool_engine">Lejátszó</string>
@@ -67,7 +72,6 @@
     <string name="player_next_episode">Következő rész <xliff:g id="seconds">%1$d</xliff:g> mp múlva</string>
     <string name="player_play_now">Lejátszás most</string>
     <string name="player_volume">Hangerő</string>
-    <string name="player_control_engine">Lejátszómotor</string>
     <string name="player_unmute">Némítás feloldása</string>
     <string name="player_mute">Némítás</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -84,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">Átváltva ExoPlayerre</string>
     <string name="player_switch_mpv">Átváltva MPV-re</string>
+    <string name="player_smoothness_hint">Ez a csatorna képkockákat ejt el. Ha a lejátszót MPV-re váltod, simábban futhat.</string>
     <string name="player_error_image_subtitle_audio">A képalapú feliratok nem érhetők el ennek a videónak a hangformátumához.</string>
     <string name="player_error_both_engines_exo_first">A lejátszás mindkét videómotorral meghiúsult (előbb ExoPlayer, majd mpv). Lehet, hogy a fájl sérült, vagy olyan formátumot használ, amelyet ez a tévé nem tud lejátszani.</string>
     <string name="player_error_both_engines_mpv_first">A lejátszás mindkét videómotorral meghiúsult (mpv és ExoPlayer). Lehet, hogy a fájl sérült, vagy olyan formátumot használ, amelyet ez a tévé nem tud lejátszani. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -96,8 +101,6 @@
     <string name="player_error_image_format">A képalapú feliratok nem érhetők el ennek a fájlnak a formátumához.</string>
     <string name="player_error_image_show">A képalapú feliratokat nem sikerült megjeleníteni ehhez a fájlhoz.</string>
     <string name="player_external_could_not_open">Ezt az adatfolyamot nem sikerült megnyitni.</string>
-    <string name="player_external_play_with">Lejátszás ezzel</string>
-    <string name="player_external_play_with_item">„<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” lejátszása ezzel…</string>
     <string name="player_external_not_found">Nem található külső lejátszó — telepítsd a VLC-t vagy az MX Playert.</string>
     <string name="player_error_audio_no_video">A hang szól, de a képet nem sikerült megjeleníteni ezen az eszközön.</string>
     <string name="player_error_file_corrupt">Ennek a videónak a fájlja hibás vagy sérült, ezért nem játszható le.</string>
@@ -105,8 +108,10 @@
     <string name="player_error_decoder_busy">Ennek a tévének a videódekódere le van terhelve. Próbáld újra egy pillanat múlva.</string>
     <string name="player_error_no_internet">Nincs internetkapcsolat. Ellenőrizd a hálózatot, és próbáld újra.</string>
     <string name="player_error_stream_unavailable">Ezt az adatfolyamot nem sikerült lejátszani. Lehet, hogy a forrás offline, vagy nem támogatott formátumot használ. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Ez a fiók már lejátszik egy másik eszközön vagy alkalmazásban. Állítsa le ott, majd nyomja meg az Újra gombot.</string>
     <string name="player_error_mpv_open_decode">Az mpv nem tudta megnyitni vagy dekódolni ezt a fájlt.</string>
     <string name="player_error_mpv_stream_never_started">Az adatfolyam több próbálkozás után sem indult el az mpv-ben.</string>
+    <string name="player_error_fairplay">Ezt az adatfolyamot Apple FairPlay védi, amelyet az Android-eszközök nem tudnak lejátszani. A lista Apple-eszközökre készült.</string>
     <string name="player_error_surround">Ez a hangkimenet nem támogatja a térhangzást — átváltás sztereóra.</string>
     <string name="player_error_hardware_fallback">Ennek az adatfolyamnak a formátumát nem sikerült hardveresen dekódolni ezen a tévén, ezért a szoftveres dekódolás vette át, amely a(z) <xliff:g id="resolution">%1$s</xliff:g> felbontással már nem bír a tévé túlterhelése nélkül. Más 4K-s tartalmak továbbra is gond nélkül működhetnek; az okot ennek az adatfolyamnak a formátuma jelenti.</string>
     <string name="player_error_hardware_disabled">A hardveres dekódolás ki van kapcsolva — a szoftveres dekódolás nem bír a(z) <xliff:g id="resolution">%1$s</xliff:g> felbontású videóval. Kapcsold be a Beállítások → Videolejátszó menüben.</string>
@@ -127,7 +132,7 @@
     <string name="player_reason_audio">Hangkimeneti hiba — az eszköz nem tudta lejátszani ezt a hangformátumot</string>
     <string name="player_audio_track_number"><xliff:g id="number">%1$d</xliff:g>. hangsáv</string>
     <string name="player_subtitle_track_number"><xliff:g id="number">%1$d</xliff:g>. felirat</string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Adatfolyam adatai</string>
     <string name="player_stream_engine">Motor</string>
     <string name="player_stream_format">Formátum</string>
@@ -137,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Váltottsoros</string>
+    <string name="player_stream_progressive">Nincs (progresszív)</string>
+    <string name="player_stream_deinterlaced_by_player">Váltottsoros · a lejátszó eltávolította</string>
+    <string name="player_stream_deinterlaced_by_device">Váltottsoros · az eszköz eltávolította</string>
+    <string name="player_stream_not_deinterlaced">Váltottsoros · nincs eltávolítva</string>
     <string name="player_stream_bitrate">Bitráta</string>
     <string name="player_stream_decoder">Dekóder</string>
     <string name="player_stream_audio">Hang</string>
@@ -208,7 +218,6 @@
     <string name="player_subtitles_free_description_full">Az OpenSubtitles ingyenes, nyílt közösségi feliratszolgáltatás. Jelentkezz be a saját opensubtitles.com-fiókoddal; a fiók létrehozása ingyenes. Ez csak az aktuális profilra vonatkozik.</string>
     <string name="player_subtitles_session_expired">Az OpenSubtitles-munkameneted lejárt. Ha továbbra is szeretnél feliratokat keresni és letölteni, jelentkezz be újra a Beállítások → Videolejátszó → Feliratok → OpenSubtitles menüben.</string>
     <string name="player_subtitles_account_needed">OpenSubtitles-fiók szükséges\n\nFeliratok kereséséhez és letöltéséhez jelentkezz be a Beállítások → Videolejátszó → Feliratok → OpenSubtitles menüben. Az OpenSubtitles ingyenes, nyílt közösségi szolgáltatás — bárki létrehozhat ingyenes fiókot az opensubtitles.com oldalon.</string>
-    <string name="player_subtitles_no_matches">Nem található megfelelő felirat.</string>
     <string name="player_subtitles_show_all_languages">Összes nyelv megjelenítése</string>
     <string name="player_subtitles_all_languages">Összes nyelv</string>
     <string name="player_subtitles_try_again">Újra</string>
@@ -222,13 +231,12 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> letöltés</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> letöltés</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Keresés</string>
     <string name="player_subtitles_connected_as">Bejelentkezve mint</string>
     <string name="player_subtitles_connected_user">Bejelentkezve mint <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Visszaállítás</string>
     <string name="player_subtitles_free_account">Ingyenes</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Add meg az OpenSubtitles-felhasználóneved és jelszavad.</string>
     <string name="player_subtitles_invalid_credentials">Az OpenSubtitles nem tudott bejelentkeztetni ezekkel a fiókadatokkal.</string>
     <string name="player_subtitles_sign_in_network_error">Az OpenSubtitles nem érhető el. Ellenőrizd az internetkapcsolatot, és próbáld újra.</string>
@@ -263,18 +271,22 @@
     <string name="player_subtitles_search_language_description">A találatok között csak az ezen a nyelven elérhető feliratok jelennek meg. Az eredményeknél továbbra is megnyomhatod az „Összes nyelv” gombot a keresés összes találatához.</string>
     <string name="player_subtitles_language_not_set">Nincs beállítva</string>
     <string name="player_frame_rate_prompt_title">Ennél a csatornánál akadozhat a kép</string>
-    <string name="player_frame_rate_prompt_description">A lejátszás <xliff:g id="fps">%1$d</xliff:g> fps sebességgel fut, miközben a tévéd <xliff:g id="current_hz">%2$d</xliff:g> Hz-en jár, így a tévé nem tudja egyenletesen megjeleníteni ezeket a képkockákat — a mozgás enyhén rángatottnak tűnik.\n\nAz automatikus képkockasebesség lejátszás közben <xliff:g id="target_hz">%3$d</xliff:g> Hz-re váltja a tévédet, utána pedig visszaállítja. Egyes tévéknél a képernyő rövid időre elsötétül a váltáskor; a funkciót a Beállítások → Videolejátszó menüben bármikor kikapcsolhatod.</string>
+    <string name="player_frame_rate_prompt_description">A lejátszás <xliff:g id="fps">%1$d</xliff:g> fps sebességgel fut, miközben a tévéd <xliff:g id="current_hz">%2$d</xliff:g> Hz-en jár, így a tévé nem tudja egyenletesen megjeleníteni ezeket a képkockákat — a mozgás enyhén rángatottnak tűnik.\n\nAz automatikus képkockasebesség lejátszás közben <xliff:g id="target_hz">%3$d</xliff:g> Hz-re váltja a tévédet, utána pedig visszaállítja. Egyes tévéknél a képernyő rövid időre elsötétül a váltáskor; a funkciót a Beállítások → Kép → Képkockasebesség menüben bármikor kikapcsolhatod.</string>
     <string name="player_frame_rate_turn_on">Bekapcsolás</string>
     <string name="player_reason_live_fallback">Az élő lejátszás tartalék megoldásra váltott</string>
     <string name="player_reason_live_no_fallback">Az élő lejátszás meghiúsult — nincs több tartalék megoldás</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Újrapróbálkozás <xliff:g id="seconds">%3$d</xliff:g> mp múlva.</string>
     <string name="player_provider_busy">A szolgáltató túlterhelt.</string>
+    <string name="player_reconnecting">Az adás megszakadt. Újracsatlakozás…</string>
     <string name="player_error_data_saver">Az adatforgalom-csökkentés be van kapcsolva, ezért a mobiladaton való lejátszás ki van kapcsolva. Csatlakozz Wi-Fihez, vagy kapcsold ki a beállításokban.</string>
-    <string name="player_audio_only_video_off">Kép kikapcsolva · adattakarékos</string>
-    <string name="player_audio_only_show_video">Kép</string>
     <string name="player_sleep_timer">Elalvási időzítő</string>
     <string name="player_sleep_timer_end_of_programme">A műsor vége</string>
+    <string name="player_sleep_timer_end_of_movie">A film végén</string>
+    <string name="player_sleep_timer_end_of_episode">Az epizód végén</string>
     <string name="player_sleep_timer_remaining">Leáll <xliff:g id="time">%1$s</xliff:g> múlva</string>
+    <string name="player_sleep_timer_screen_off">A képernyő kikapcsolása is</string>
+    <string name="player_sleep_timer_screen_off_explanation">Csak arra szolgál, hogy az időzítő lejártakor kikapcsolja a képernyőt, máskor soha.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Ez az eszköz nem engedi, hogy alkalmazások kikapcsolják a képernyőt.</string>
     <string name="player_pip_expand">Nagyítás</string>
     <string name="player_error_cast_unsupported">Az az eszköz, amelyre átküldöd, nem tudja lejátszani ezt az adást. Sok élő csatorna olyan formátumot használ, amelyet nem támogat – játszd le inkább a telefonon.</string>
     <string name="player_cast_playing_on">Lejátszás itt: <xliff:g id="device">%1$s</xliff:g></string>
@@ -291,11 +303,10 @@
         <item quantity="other">A szolgáltatód egyszerre <xliff:g id="count">%1$d</xliff:g> adást enged. Ebből <xliff:g id="recording">%2$d</xliff:g> vesz fel.</item>
     </plurals>
     <string name="multiview_refused_reserved">Egy kapcsolat szabadon marad, hogy tovább nézhess. A beállításokban módosíthatod, ha minden kapcsolaton fel akarsz venni.</string>
-    <string name="multiview_unknown_connections">Az OwnTV nem tudta megállapítani, hány adást enged ez a lejátszási lista. Ha egy csempe nem indul, ez az oka.</string>
     <string name="multiview_decoder_exhausted">Ez a tévé nem tud egyszerre még egy csatornát dekódolni.</string>
+    <string name="multiview_decoder_exhausted_mobile">Ez az eszköz nem tud egyszerre még egy csatornát dekódolni.</string>
     <string name="multiview_tile_change_channel">Csatorna váltása</string>
     <string name="multiview_tile_fullscreen">Teljes képernyő</string>
-    <string name="multiview_tile_record">Ennek a felvétele</string>
     <string name="multiview_tile_remove">Csempe eltávolítása</string>
     <string name="multiview_audio_tile">A hang ezen a csempén szól</string>
     <string name="multiview_add_to">Hozzáadás a Többnézethez</string>
@@ -303,4 +314,8 @@
     <string name="multiview_tile_sound_only">Csak hang</string>
     <string name="multiview_tile_show_picture">Kép megjelenítése</string>
     <string name="multiview_sound_only_note">Csak hang — ettől még egy szolgáltatói adást használ</string>
+    <string name="player_trailer_skip">10 mp ugrás</string>
+    <string name="player_trailer_blocked_title">Ez az előzetes nem játszható le az OwnTV-ben</string>
+    <string name="player_trailer_blocked_body">A tulajdonosa csak a YouTube-on engedi a lejátszást.</string>
+    <string name="player_trailer_open_youtube">Megnyitás a YouTube-on</string>
 </resources>

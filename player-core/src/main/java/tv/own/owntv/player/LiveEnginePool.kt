@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * 1. **Exactly one tile has sound.** Giving a tile the sound mutes whichever tile had it. Four
  *    engines each grabbing audio focus is precisely what must not happen.
  * 2. **The tiles without sound are asked for less video.** The focused tile keeps the full picture;
- *    the rest are capped, which is one of the only two mitigations D5 leaves for a device that runs
+ *    the rest are capped, which is one of the only two mitigations left for a device that runs
  *    out of hardware decoders (the other is the tile saying so — see
  *    [PlaybackFailure.DecoderExhausted]).
  *
@@ -28,13 +28,16 @@ import kotlinx.coroutines.flow.asStateFlow
 class LiveEnginePool(private val newEngine: () -> LivePreviewEngine) {
 
     private val engines = LinkedHashMap<Int, LivePreviewEngine>()
-    private val _audibleTile = MutableStateFlow<Int?>(null)
-
     /** The tile whose sound is playing, or null while every tile is muted. */
-    val audibleTile: StateFlow<Int?> = _audibleTile.asStateFlow()
+    private val _audibleTile = MutableStateFlow<Int?>(null)
 
     /** How many engines exist right now — tiles that have been asked for, filled or not. */
     val size: Int get() = engines.size
+
+    private val _inUse = MutableStateFlow(false)
+
+    /** True while any tile has an engine — what [PlaybackEngines] watches for memory pressure. */
+    val inUse: StateFlow<Boolean> = _inUse.asStateFlow()
 
     /**
      * The engine for [tile], building it the first time. A new engine starts muted and capped: it is
@@ -44,8 +47,9 @@ class LiveEnginePool(private val newEngine: () -> LivePreviewEngine) {
         newEngine().also {
             it.setMuted(true)
             it.setMaxVideoHeight(BACKGROUND_TILE_HEIGHT)
+            it.setTunnelingAllowed(false)
         }
-    }
+    }.also { _inUse.value = true }
 
     /** The engine for [tile] if it has one, without building one. */
     fun peek(tile: Int): LivePreviewEngine? = engines[tile]
@@ -65,7 +69,7 @@ class LiveEnginePool(private val newEngine: () -> LivePreviewEngine) {
     }
 
     /**
-     * The owner's background-audio case: one tile keeps the picture, another gives up its picture and
+     * The background-audio case: one tile keeps the picture, another gives up its picture and
      * plays only sound.
      *
      * A sound-only tile takes the sound, because sound is all it has left. It still costs a provider
@@ -86,13 +90,28 @@ class LiveEnginePool(private val newEngine: () -> LivePreviewEngine) {
     fun release(tile: Int) {
         engines.remove(tile)?.release()
         if (_audibleTile.value == tile) _audibleTile.value = null
+        _inUse.value = engines.isNotEmpty()
     }
+
+    /** Home / screensaver: every tile remembers its channel and frees its stream — the grid used to keep
+     *  playing, sound included, behind the launcher. Paired with [onAppForegrounded]. */
+    fun onAppBackgrounded() = engines.values.forEach { it.onAppBackgrounded() }
+
+    /** Back in front: every tile re-tunes the channel it had, at the live edge. */
+    fun onAppForegrounded() = engines.values.forEach { it.onAppForegrounded() }
+
+    /** Forget what [onAppForegrounded] would bring back — see [PlaybackEngines.discardBackgroundRestore]. */
+    fun discardBackgroundRestore() = engines.values.forEach { it.discardBackgroundRestore() }
+
+    /** Critical memory pressure — see [LivePreviewEngine.onMemoryPressure]. */
+    fun onMemoryPressure() = engines.values.forEach { it.onMemoryPressure() }
 
     /** Free every engine. Leaving Multiview, and the only thing a caller must not forget. */
     fun releaseAll() {
         engines.values.forEach { it.release() }
         engines.clear()
         _audibleTile.value = null
+        _inUse.value = false
     }
 
     companion object {

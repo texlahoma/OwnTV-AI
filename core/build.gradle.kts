@@ -97,17 +97,11 @@ publishing {
         }
     }
     repositories {
+        // A local staging repository; tools/publish_pages.py copies it into OwnTV's public Maven
+        // repository (this repo's gh-pages branch, https://ahxn00.github.io/OwnTV_Core/maven).
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ahXN00/OwnTV_Core")
-            // Never in the repo — these live in ~/.gradle/gradle.properties locally, and come from
-            // repository secrets in CI.
-            credentials {
-                username = providers.gradleProperty("gpr.user")
-                    .orElse(providers.environmentVariable("GITHUB_ACTOR")).orNull
-                password = providers.gradleProperty("gpr.token")
-                    .orElse(providers.environmentVariable("GITHUB_TOKEN")).orNull
-            }
+            name = "Staging"
+            url = uri(rootProject.layout.buildDirectory.dir("staging-maven"))
         }
     }
 }
@@ -204,15 +198,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // Database (Room, via KSP) + Paging. No paging-compose — that is UI.
-    // Plan Phase B: the SQLiteDriver API. `api`, not `implementation` — migrations and the open
+    // The SQLiteDriver API. `api`, not `implementation` — migrations and the open
     // callback are written against SQLiteConnection, and those types appear in core's own public
     // surface, so a consumer compiling against the published AAR needs them on its compile path.
     api(libs.androidx.sqlite)
-    // Plan Phase C: SQLite 3.x shipped inside the APK instead of whatever the TV happens to run.
+    // SQLite 3.x shipped inside the APK instead of whatever the TV happens to run.
     // minSdk 26 otherwise means an Android 8 box is stuck on SQLite 3.18 — no UPSERT, no window
-    // functions, no UPDATE…FROM — which is the wall Phase D exists to get past.
+    // functions, no UPDATE…FROM.
     implementation(libs.androidx.sqlite.bundled)
-    // Kept: AndroidSQLiteDriver is the Phase B intermediate, and the fallback if 3.x ever
+    // Kept: AndroidSQLiteDriver is the platform-engine driver, and the fallback if 3.x ever
     // misbehaves on a specific device. One line in databaseModule chooses between them.
     implementation(libs.androidx.sqlite.framework)
     implementation(libs.androidx.room.runtime)
@@ -224,6 +218,8 @@ dependencies {
     // Preferences + durable background sync
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work.runtime)
+    // Whether OwnTV is in front: "Keep auto-sync listening" runs the listener only then.
+    implementation(libs.androidx.lifecycle.process)
 
     // Android TV launcher integration (Watch Next / preview channels). TV-only in practice, but
     // core's LauncherIntegrationRepository is the facade the sync worker calls, so the publisher it
@@ -258,6 +254,11 @@ dependencies {
     // android.jar's org.json is a stub and isReturnDefaultValues silences it; backup/restore is
     // all JSON, so the tests need the real implementation. Same reason as :app.
     testImplementation(libs.org.json)
+    // android.util.JsonReader is a stub too; the test-only stand-in under src/test/java/android/util
+    // delegates to Gson's streaming reader so the Xtream and Stalker parsers can be tested.
+    testImplementation(libs.gson)
+    // Virtual time for the sports repository's refresh loop (same artifact :player-core tests with).
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     // The runner named in `testInstrumentationRunner` above. Not transitive from androidx.test.ext.
     androidTestImplementation(libs.androidx.test.runner)

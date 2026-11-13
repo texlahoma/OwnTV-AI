@@ -42,7 +42,7 @@ sealed interface MediaTarget {
     /**
      * Bytes written so far. **The file is the truth** — every resume offset and paused byte count
      * comes from here and never from an in-memory counter, which lags a write and is lost outright
-     * to a killed process (audit item DL2).
+     * to a killed process.
      */
     fun length(): Long
 
@@ -79,6 +79,7 @@ sealed interface MediaTarget {
 
     /** Open for writing, continuing after the existing bytes when [append], truncating when not. */
     fun openOutput(append: Boolean): OutputStream
+
 
     /**
      * Open for reading. Used to fingerprint a finished download for a subtitle search, which needs

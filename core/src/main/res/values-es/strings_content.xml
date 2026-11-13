@@ -15,11 +15,6 @@
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> elementos en pausa</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> elementos en pausa</item>
     </plurals>
-    <plurals name="content_downloads_failed">
-        <item quantity="one">Ha fallado <xliff:g id="count">%1$d</xliff:g> descarga</item>
-        <item quantity="many">Han fallado <xliff:g id="count">%1$d</xliff:g> descargas</item>
-        <item quantity="other">Han fallado <xliff:g id="count">%1$d</xliff:g> descargas</item>
-    </plurals>
     <string name="content_genre_action">Acción</string>
     <string name="content_genre_adult">Adultos</string>
     <string name="content_genre_anime">Anime</string>
@@ -43,19 +38,14 @@
     <string name="content_restore_incomplete_title">Una restauración no ha finalizado</string>
     <string name="content_restore_incomplete_message">La aplicación se cerró mientras se restauraba <xliff:g id="description">%1$s</xliff:g>, por lo que es posible que falte parte del contenido. No se eliminó nada; vuelve a ejecutar la misma restauración desde Ajustes → Copia de seguridad y restauración para completar lo que falta.</string>
     <string name="content_playlist_picker_title">Mostrar lista de reproducción</string>
-    <string name="content_playlist_picker_description">Elige qué lista de reproducción quieres explorar. Esto se aplica en todas partes y se recordará.</string>
     <string name="content_avatar_picker_title">Elige tu avatar</string>
     <string name="content_category_browser_title">Categorías</string>
     <string name="content_channel_overlay_title">Canales</string>
     <string name="content_live_now">En directo ahora</string>
     <string name="content_live_next">En directo después</string>
-    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
     <string name="content_archive_playing">Reproduciendo</string>
-    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
     <string name="content_archive_then">Después</string>
-    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
     <string name="content_clock_programme">Hora del programa</string>
-    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
     <string name="content_clock_current">Hora actual</string>
     <string name="content_media_overview">Sinopsis</string>
     <string name="content_media_cast">Reparto</string>
@@ -65,77 +55,79 @@
     <string name="content_mark_watched">Marcar como visto</string>
     <string name="content_mark_unwatched">Marcar como no visto</string>
     <string name="content_move">Mover</string>
+    <string name="content_category_restore_playlist">Restaurar predeterminados</string>
+    <string name="content_category_restore_custom">Restaurar predeterminados</string>
+    <string name="content_category_restore_question">Esto hará lo siguiente:</string>
+    <plurals name="content_category_restore_hidden">
+        <item quantity="one">Se volverá a mostrar <xliff:g id="count">%1$d</xliff:g> elemento oculto</item>
+        <item quantity="many">Se volverán a mostrar <xliff:g id="count">%1$d</xliff:g> elementos ocultos</item>
+        <item quantity="other">Se volverán a mostrar <xliff:g id="count">%1$d</xliff:g> elementos ocultos</item>
+    </plurals>
+    <plurals name="content_category_restore_moved">
+        <item quantity="one">Volverá <xliff:g id="count">%1$d</xliff:g> elemento movido</item>
+        <item quantity="many">Volverán <xliff:g id="count">%1$d</xliff:g> elementos movidos</item>
+        <item quantity="other">Volverán <xliff:g id="count">%1$d</xliff:g> elementos movidos</item>
+    </plurals>
+    <string name="content_category_restore_order">Se borrará el orden personalizado</string>
+    <string name="content_category_restore_nothing">La categoría ya tiene los valores de la lista</string>
+    <string name="content_category_lock">Bloquear con PIN</string>
+    <string name="content_category_locked_placeholder">Esta categoría está bloqueada</string>
+    <plurals name="content_category_pin_wait">
+        <item quantity="one">Demasiados PIN incorrectos. Inténtalo de nuevo en <xliff:g id="count">%1$d</xliff:g> segundo</item>
+        <item quantity="many">Demasiados PIN incorrectos. Inténtalo de nuevo en <xliff:g id="count">%1$d</xliff:g> segundos</item>
+        <item quantity="other">Demasiados PIN incorrectos. Inténtalo de nuevo en <xliff:g id="count">%1$d</xliff:g> segundos</item>
+    </plurals>
     <string name="content_move_to_category">Mover a la categoría…</string>
+    <string name="content_remove_from_category">Eliminar de esta categoría</string>
     <string name="content_download">Descargar</string>
     <string name="content_download_all_episodes">Descargar todos los episodios</string>
+    <plurals name="content_download_episodes_confirm">
+        <item quantity="one">¿Descargar <xliff:g id="count">%1$d</xliff:g> episodio?</item>
+        <item quantity="many">¿Descargar <xliff:g id="count">%1$d</xliff:g> de episodios?</item>
+        <item quantity="other">¿Descargar <xliff:g id="count">%1$d</xliff:g> episodios?</item>
+    </plurals>
+    <string name="content_download_episodes_confirm_message">Se guardan en este dispositivo y ocupan espacio de almacenamiento.</string>
     <string name="content_play">Reproducir</string>
-    <string name="content_next_up">A continuación</string>
     <string name="content_favorited">En favoritos</string>
     <string name="content_favorite">Añadir a favoritos</string>
-    <string name="content_show_watched">Mostrar vistos</string>
-    <string name="content_hide_watched">Ocultar vistos</string>
-    <string name="content_sorting">Ordenación</string>
-    <string name="content_episode_options">Opciones de episodios</string>
     <string name="content_seasons">Temporadas</string>
     <string name="content_episodes">Episodios</string>
     <string name="content_oldest_first">Más antiguos primero</string>
     <string name="content_newest_first">Más recientes primero</string>
-    <string name="content_last_watched">Último visto</string>
-    <string name="content_press_ok_episodes">Pulsa OK sobre el cartel para ver los episodios.</string>
-    <string name="content_play_external">Reproducir con un reproductor externo</string>
     <string name="content_delete_subtitles">Eliminar subtítulos de OpenSub</string>
-    <string name="content_tmdb_details">Detalles de TMDB</string>
     <string name="content_play_trailer">Reproducir tráiler</string>
     <string name="content_refetch_tmdb">Volver a obtener los detalles de TMDB</string>
     <string name="content_set_tmdb_name">Establecer nombre de TMDB</string>
     <string name="content_close">Cerrar</string>
-    <string name="content_focus_movie">Pon el foco en una película para ver los detalles.</string>
-    <string name="content_focus_channel">Pon el foco en un canal para verlo aquí.</string>
-    <string name="content_press_ok_fullscreen">Pulsa OK para ver a pantalla completa · Mantén pulsado para ver las opciones</string>
     <string name="content_rename_hint">Solo para este perfil. Déjalo en blanco para restaurar el nombre original.</string>
-    <string name="content_focus_series">Pon el foco en una serie y pulsa OK para ver los episodios.</string>
-    <string name="content_focus_episode">Pon el foco en un episodio para ver los detalles.</string>
     <string name="content_no_movies_here">No hay películas aquí.</string>
     <string name="content_no_series_here">No hay series aquí.</string>
     <string name="content_no_episodes">No hay episodios disponibles.</string>
+    <string name="content_episodes_load_failed">No se pudieron cargar los episodios del proveedor (<xliff:g id="reason">%1$s</xliff:g>).</string>
     <string name="content_no_movies_found">No se han encontrado películas para “<xliff:g id="query">%1$s</xliff:g>”</string>
     <plurals name="content_count_movies">
         <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> película)</item>
         <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> películas)</item>
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> películas)</item>
     </plurals>
-    <plurals name="content_count_series">
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> serie)</item>
-        <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
-    </plurals>
     <string name="content_provider">Proveedor</string>
     <string name="content_provider_name">Proveedor: %1$s</string>
     <string name="content_no_series_found">No se han encontrado series para “<xliff:g id="query">%1$s</xliff:g>”</string>
-    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
-    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_reorder_movie">Reordenar película</string>
     <string name="content_reorder_series">Reordenar serie</string>
     <string name="content_already_downloaded">Ya se ha descargado; consulta el menú Descargas.</string>
     <string name="content_refetching_tmdb">Volviendo a obtener los detalles de TMDB…</string>
     <string name="content_researching_tmdb">Volviendo a buscar en TMDB…</string>
-    <string name="content_ok_play_options">OK para reproducir · mantén pulsado para ver las opciones</string>
-    <string name="content_resume_at">Reanudar desde <xliff:g id="position">%1$s</xliff:g></string>
     <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g> h <xliff:g id="minutes">%2$d</xliff:g> min</string>
     <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> min</string>
     <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
-    <string name="content_metadata_separator">  •  </string>
-    <string name="content_genres_separator"> · </string>
+    <string name="content_metadata_separator">"  •  "</string>
     <string name="content_season_episode">T<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g></string>
     <string name="content_season_episode_title">T<xliff:g id="season">%1$d</xliff:g> · E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
     <string name="content_season">Temporada <xliff:g id="season">%1$d</xliff:g></string>
-    <string name="content_season_progress">Temporada <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
     <string name="content_no_epg">Sin EPG</string>
-    <string name="content_epg">EPG</string>
     <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
-    <string name="content_epg_days">EPG · <xliff:g id="days">%1$d</xliff:g> d</string>
     <string name="content_catchup">En diferido</string>
-    <string name="content_catchup_days">En diferido · <xliff:g id="days">%1$d</xliff:g> d</string>
     <string name="content_play_external_short">Reproducir en un reproductor externo</string>
     <string name="content_rename">Cambiar nombre</string>
     <string name="content_rename_channel">Cambiar nombre del canal</string>
@@ -144,83 +136,45 @@
     <string name="content_remove_history">Eliminar del historial</string>
     <string name="content_no_channels_here">No hay canales aquí.</string>
     <string name="content_no_channels_found">No se han encontrado canales para “<xliff:g id="query">%1$s</xliff:g>”</string>
-    <plurals name="content_count_channels">
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> canal)</item>
-        <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> canales)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> canales)</item>
-    </plurals>
-    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_match_epg">Asociar EPG</string>
     <string name="content_catchup_title">En diferido · <xliff:g id="channel">%1$s</xliff:g></string>
     <string name="content_rewind_at">Retroceso · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">Elige un programa reciente para reproducirlo desde el principio.</string>
     <string name="content_catchup_empty">Todavía no hay datos recientes de la guía para este canal; asegúrate de que su EPG esté asociado (mantenlo pulsado o usa Asociar EPG).</string>
-    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
     <string name="content_catchup_jump">Volver a…</string>
-    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
     <string name="content_catchup_jump_prompt">Elige una hora desde la que empezar a ver. No hace falta guía.</string>
-    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
     <string name="content_catchup_jump_exact">Elegir hora exacta…</string>
-    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
     <string name="content_catchup_jump_hint">Pulsa OK en el día, la hora o el minuto, cámbialo con arriba y abajo y vuelve a pulsar OK.</string>
+    <string name="content_catchup_jump_programme_start">Inicio de «<xliff:g id="title">%1$s</xliff:g>»</string>
+    <string name="content_catchup_jump_programme_start_untitled">Inicio del programa</string>
+    <string name="content_catchup_jump_programme_start_at">Empezó a las <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_match_prompt">Elige el canal de la guía para “<xliff:g id="channel">%1$s</xliff:g>”.</string>
     <string name="content_epg_match_prompt_current">Elige el canal de la guía para “<xliff:g id="channel">%1$s</xliff:g>”. Actual: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">Buscar canales de la guía…</string>
     <string name="content_no_epg_data">Todavía no hay datos de EPG; añade una fuente de EPG en Ajustes.</string>
     <string name="content_no_guide_channels">Ningún canal de la guía coincide con “<xliff:g id="query">%1$s</xliff:g>”.</string>
     <string name="content_clear_match">Borrar asociación</string>
-    <string name="content_live_now_label">AHORA</string>
-    <string name="content_live_next_label">A CONTINUACIÓN · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="content_live_later_label">MÁS TARDE</string>
     <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
     <string name="content_category_favorites">Favoritos</string>
     <string name="content_category_history">Historial</string>
     <string name="content_category_all_channels">Todos los canales</string>
-    <string name="content_category_united_kingdom">Reino Unido</string>
-    <string name="content_category_united_states">Estados Unidos</string>
-    <string name="content_category_germany">Alemania</string>
-    <string name="content_category_sports">Deportes</string>
     <string name="content_category_all_movies">Todas las películas</string>
-    <string name="content_category_action">Acción</string>
-    <string name="content_category_drama">Drama</string>
-    <string name="content_category_comedy">Comedia</string>
-    <string name="content_category_horror">Terror</string>
     <string name="content_category_all_series">Todas las series</string>
-    <string name="content_category_animation">Animación</string>
-    <string name="content_category_documentary">Documental</string>
-    <string name="content_category_all_downloads">Todas las descargas</string>
-    <string name="content_category_movies">Películas</string>
-    <string name="content_category_series">Series</string>
-    <string name="content_zero_channels">0 canales</string>
-    <string name="content_zero_movies">0 películas</string>
-    <string name="content_zero_series">0 series</string>
-    <string name="content_zero_downloads">0 descargas</string>
-    <string name="content_nothing_here">Todavía no hay nada aquí</string>
     <string name="content_add_source">Añadir una fuente</string>
     <string name="content_preview_select_channel">Selecciona un canal para previsualizarlo aquí.</string>
     <string name="content_offline_banner">No tienes conexión; la reproducción y las actualizaciones no funcionarán hasta que vuelvas a conectarte.</string>
     <string name="content_subtitle_select_file">Seleccionar archivo de subtítulos local</string>
     <string name="content_subtitle_load_failed">No se ha podido cargar el archivo de subtítulos.</string>
-    <string name="content_history">Historial</string>
     <string name="content_all_playlists">Todas las listas de reproducción</string>
     <string name="content_search_categories">Buscar categorías…</string>
-    <string name="content_no_categories_match">No hay categorías coincidentes</string>
     <string name="content_action_resume">Reanudar</string>
     <string name="content_action_play">Reproducir</string>
-    <string name="content_action_next_up">A continuación</string>
     <string name="content_action_last_channel">Último canal</string>
-    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> llegará en una fase posterior. Añade una fuente M3U o Xtream para llenar esta lista.</string>
     <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
-    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
-    <string name="content_preview_player">Tu propio reproductor de IPTV.</string>
     <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
     <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · quedan <xliff:g id="minutes">%2$d</xliff:g> min</string>
-    <string name="common_browse">Explorar</string>
     <string name="content_downloads_title">Descargas</string>
-    <string name="content_downloads_description">Películas y episodios guardados para reproducirlos sin conexión.</string>
     <string name="content_downloads_empty">Todavía no hay descargas. Abre una película o un episodio y pulsa Descargar.</string>
-    <string name="content_downloads_storage">Almacenamiento</string>
     <string name="content_downloads_options">Opciones de descarga</string>
     <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB libres de <xliff:g id="total">%2$s</xliff:g> GB</string>
     <string name="content_storage_internal">Almacenamiento interno</string>
@@ -229,21 +183,44 @@
     <string name="content_storage_choose_folder">Elegir otra carpeta…</string>
     <string name="content_storage_chosen_folder">Carpeta elegida</string>
     <string name="content_storage_folder_lost">Esa carpeta ya no está disponible. Vuelve a elegirla o selecciona otra.</string>
-    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> descargados</string>
-    <string name="content_downloads_failure_message">La descarga ha fallado: no se ha podido acceder a la fuente. Pulsa Reintentar.</string>
+    <string name="content_storage_folder_fallback">Tu carpeta de descargas no está disponible ahora, así que las descargas se guardan en la carpeta propia de OwnTV hasta que vuelva.</string>
     <string name="content_downloads_queued">En cola…</string>
-    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
-    <string name="content_downloads_active">Activas</string>
-    <string name="content_downloads_waiting">En espera</string>
-    <string name="content_downloads_completed_group">Completadas</string>
     <string name="content_downloads_failed_group">Fallidas</string>
-    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
-    <string name="content_downloads_progress_unknown">Descargando… <xliff:g id="downloaded">%1$s</xliff:g></string>
-    <string name="content_downloads_folder_separator"> › </string>
     <string name="content_downloads_play">Reproducir</string>
     <string name="content_downloads_external">Externo</string>
     <string name="content_downloads_pause">Pausar</string>
-    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_downloads_group_downloading">Descargando</string>
+    <string name="content_downloads_group_on_tv">En este televisor</string>
+    <string name="content_downloads_group_on_phone">En este teléfono</string>
+    <string name="content_downloads_ready_short">Listo</string>
+    <string name="content_downloads_ready">Listo para ver</string>
+    <string name="content_downloads_paused">En pausa</string>
+    <string name="content_downloads_file_missing">Falta el archivo: ya no está en la unidad</string>
+    <string name="content_downloads_delete_title">¿Eliminar «<xliff:g id="name">%1$s</xliff:g>»?</string>
+    <string name="content_downloads_delete_message">Elimina el archivo de este dispositivo. Se puede volver a descargar más tarde.</string>
+    <string name="content_downloads_reason_account_busy">Cuenta ocupada: otra emisión está usando la conexión</string>
+    <string name="content_downloads_reason_refused">El servidor ha rechazado el enlace</string>
+    <string name="content_downloads_reason_not_found">El servidor ya no tiene este archivo</string>
+    <string name="content_downloads_reason_server_error">Error del servidor</string>
+    <string name="content_downloads_reason_http">El servidor no ha enviado el archivo</string>
+    <string name="content_downloads_reason_connection_lost">Se ha perdido la conexión</string>
+    <string name="content_downloads_reason_folder">La carpeta de descargas no está disponible</string>
+    <string name="content_downloads_reason_no_space">No hay espacio suficiente</string>
+    <string name="content_downloads_reason_too_large">Demasiado grande para esta unidad: no puede guardar archivos de más de 4 GB. Elige otra carpeta de descargas o formatea la unidad como exFAT</string>
+    <string name="content_downloads_reason_waiting_watching">En espera: empezará cuando dejes de ver</string>
+    <string name="content_downloads_reason_paused_watching">En pausa mientras ves</string>
+    <string name="content_downloads_reason_with_code"><xliff:g id="reason">%1$s</xliff:g> (HTTP <xliff:g id="code">%2$d</xliff:g>)</string>
+    <string name="content_download_watch_title">Esta lista solo permite una emisión</string>
+    <string name="content_download_watch_body">Una descarga de <xliff:g id="playlist">%1$s</xliff:g> lo estaba usando, así que de momento está en pausa. ¿Quieres verlo, o cerrar el reproductor y seguir descargando?</string>
+    <string name="content_download_watch_watch">Pausar descarga y ver</string>
+    <string name="content_download_watch_keep">Seguir descargando</string>
+    <string name="content_download_watch_remember">No volver a preguntar</string>
+    <string name="content_download_watch_setting">Ver mientras se descarga</string>
+    <string name="content_download_watch_setting_description">En listas que solo permiten una emisión: qué ocurre con una descarga cuando empiezas a reproducir.</string>
+    <string name="content_download_watch_ask">Preguntar siempre</string>
+    <string name="content_download_watch_pause">Pausar descarga</string>
+    <string name="content_downloads_starts_after">En cola · empieza después de <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="content_downloads_speed"><xliff:g id="size">%1$s</xliff:g> MB/s</string>
     <string name="content_epg_create_profile">Crea un perfil para ver la guía.</string>
     <string name="content_epg_filter_hides_all">El filtro actual oculta todos los canales. Cambia el orden para ver la guía.</string>
     <string name="content_epg_add_playlist">Añade una lista de reproducción para ver la guía.</string>
@@ -255,29 +232,6 @@
     <string name="content_epg_no_match_data">Todavía no hay datos de EPG con los que realizar la asociación.</string>
     <string name="content_epg_all_matched">Ya está todo asociado.</string>
     <string name="content_epg_no_match">No se ha encontrado ninguna coincidencia de EPG para “<xliff:g id="channel">%1$s</xliff:g>”; prueba a elegirla manualmente.</string>
-    <plurals name="content_epg_stats_channels">
-        <item quantity="one">Guía cargada: <xliff:g id="channels">%1$d</xliff:g> canal.</item>
-        <item quantity="many">Guía cargada: <xliff:g id="channels">%1$d</xliff:g> canales.</item>
-        <item quantity="other">Guía cargada: <xliff:g id="channels">%1$d</xliff:g> canales.</item>
-    </plurals>
-    <plurals name="content_epg_stats_programmes">
-        <item quantity="one">La guía contiene <xliff:g id="programmes">%1$d</xliff:g> programa.</item>
-        <item quantity="many">La guía contiene <xliff:g id="programmes">%1$d</xliff:g> programas.</item>
-        <item quantity="other">La guía contiene <xliff:g id="programmes">%1$d</xliff:g> programas.</item>
-    </plurals>
-    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
-    <string name="content_epg_no_catchup_channels">Ningún canal admite televisión en diferido.</string>
-    <string name="content_epg_stats_no_catchup">No hay canales con televisión en diferido disponibles.</string>
-    <plurals name="content_epg_catchup_count">
-        <item quantity="one">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canal.</item>
-        <item quantity="many">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
-        <item quantity="other">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
-    </plurals>
-    <plurals name="content_epg_stats_catchup_available">
-        <item quantity="one">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canal.</item>
-        <item quantity="many">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
-        <item quantity="other">La televisión en diferido está disponible en <xliff:g id="count">%1$d</xliff:g> canales.</item>
-    </plurals>
     <plurals name="content_epg_auto_matched_applied">
         <item quantity="one">Se ha asociado automáticamente <xliff:g id="applied">%1$d</xliff:g> canal.</item>
         <item quantity="many">Se han asociado automáticamente <xliff:g id="applied">%1$d</xliff:g> canales.</item>
@@ -300,38 +254,29 @@
     <string name="content_epg_no_guide">Sin guía.</string>
     <string name="content_epg_no_programme">No hay ningún programa a esta hora.</string>
     <string name="content_epg_add_description">Añade una fuente de EPG (XMLTV) para llenar la guía de programas.</string>
-    <string name="content_epg_favourite_description">Añade este canal a favoritos o configura sus datos de la guía.</string>
     <string name="content_epg_guide_category">Categoría de la guía</string>
-    <string name="content_epg_all_categories">Todas las categorías</string>
     <string name="content_epg_search_hint">Buscar canales de la guía…</string>
     <string name="content_epg_add">Añadir EPG</string>
     <string name="content_epg_add_favourite">Añadir a favoritos</string>
     <string name="content_epg_remove_favourite">Quitar de favoritos</string>
     <string name="content_epg_jump_now">Ir a Ahora</string>
-    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g> min</string>
-    <string name="content_epg_review_matches">Revisar asociaciones de EPG</string>
+    <string name="content_epg_include_logos">Incluir logotipos de la guía</string>
     <string name="content_epg_review_description">Estos canales se han asociado por el nombre, pero la coincidencia no es fiable. Acepta los correctos y omite el resto.</string>
     <string name="content_epg_accept">Aceptar</string>
     <string name="content_epg_accept_all">Aceptar todo</string>
     <string name="content_epg_skip">Omitir</string>
     <string name="content_epg_skip_all">Omitir todo</string>
     <string name="content_epg_pick_manually">Elegir EPG manualmente</string>
-    <string name="content_epg_move_hint">Desplázate a la derecha para entrar en una fila y usa ◀ ▶ para explorar y previsualizar un programa.</string>
-    <string name="content_epg_catchup">↻ en diferido</string>
     <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
     <string name="content_epg_all">Todo</string>
     <string name="content_epg_sort_alpha">A–Z</string>
     <string name="content_epg_sort_provider">Proveedor</string>
-    <string name="content_epg_sort_live">TV en directo</string>
     <string name="content_epg_sort_catchup">En diferido</string>
     <string name="content_epg_sort_favorites">Favoritos</string>
-    <string name="content_epg_category_button">Categoría: <xliff:g id="label">%1$s</xliff:g></string>
     <string name="content_epg_sort_button">Ordenar: <xliff:g id="label">%1$s</xliff:g></string>
     <string name="content_epg_match_button">Asociar EPG automáticamente</string>
     <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
-    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
     <string name="content_epg_bits_separator">" · "</string>
-    <string name="content_epg_now">AHORA · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_watch_start">Ver desde el principio</string>
     <string name="content_epg_watch_channel">Ver canal</string>
     <string name="content_epg_favourite">Añadir a favoritos</string>
@@ -348,4 +293,104 @@
     <string name="content_epg_offset_channel_only">Solo este canal · el desfase global es <xliff:g id="offset">%1$s</xliff:g></string>
     <string name="content_epg_offset_use_global">Usar el desfase global</string>
     <string name="content_preview_single_stream">Vista previa desactivada — tu proveedor solo permite una transmisión a la vez.</string>
+    <string name="content_playlist_picker_subtitle">Se aplica en todas partes y se recuerda</string>
+    <string name="content_playlist_marks_note">Con «Todas las listas», cada fila muestra la marca de la lista de la que procede.</string>
+    <string name="content_action_next_episode">Siguiente episodio</string>
+    <string name="content_search_in">Buscar en <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="content_live_guide_view">Vista de guía</string>
+    <string name="content_key_watch">Ver</string>
+    <string name="content_key_options">Opciones</string>
+    <string name="content_live_groups">Grupos</string>
+    <string name="content_menu_group_watch">Ver</string>
+    <string name="content_menu_group_channel">Canal</string>
+    <string name="content_menu_group_guide_data">Datos de la guía</string>
+    <string name="content_menu_group_organise">Organizar</string>
+    <string name="content_epg_offset_global_short">Global</string>
+    <string name="content_live_groups_country">Grupos · <xliff:g id="country">%1$s</xliff:g></string>
+    <plurals name="content_live_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> canales</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> canales</item>
+    </plurals>
+    <string name="content_category_recently_watched">Vistos recientemente</string>
+    <string name="content_remind_me">Recordármelo</string>
+    <string name="content_remind_before"><xliff:g id="duration">%1$s</xliff:g> antes</string>
+    <string name="content_key_hold_ok">Mantén OK</string>
+    <string name="content_epg_starts_in">Empieza en <xliff:g id="duration">%1$s</xliff:g></string>
+    <string name="content_epg_today">Hoy</string>
+    <string name="content_epg_tomorrow">Mañana</string>
+    <string name="content_epg_yesterday">Ayer</string>
+    <string name="content_epg_now_short">Ahora</string>
+    <string name="content_epg_sort_catchup_first">En diferido primero</string>
+    <string name="content_epg_sort_favorites_first">Favoritos primero</string>
+    <string name="content_epg_order_title">Ordenar canales por</string>
+    <string name="content_epg_order_hint">Se abrirá así la próxima vez</string>
+    <string name="content_epg_category_hint">La misma lista que TV en directo</string>
+    <string name="content_menu_group_new">Nuevo</string>
+    <string name="content_menu_group_record">Grabación</string>
+    <string name="content_epg_after_time">después de las <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_reminder_set">Recordatorio activado</string>
+    <string name="content_live_list_view">Vista de lista</string>
+    <plurals name="content_epg_channels_matched">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> canal asociado</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de canales asociados</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> canales asociados</item>
+    </plurals>
+    <plurals name="content_epg_review_count">
+        <item quantity="one">Revisar <xliff:g id="count">%1$d</xliff:g> asociación</item>
+        <item quantity="many">Revisar <xliff:g id="count">%1$d</xliff:g> de asociaciones</item>
+        <item quantity="other">Revisar <xliff:g id="count">%1$d</xliff:g> asociaciones</item>
+    </plurals>
+    <string name="content_key_browse">Explorar</string>
+    <string name="content_key_channels">Canales</string>
+    <string name="content_key_programmes">Programas</string>
+    <string name="content_key_menu">Menú</string>
+    <string name="content_key_enter">Entrar</string>
+    <string name="content_key_select">Seleccionar</string>
+    <string name="content_key_unselect">Quitar selección</string>
+    <string name="content_key_page">Página</string>
+    <string name="content_history_overlay_hint">Los canales que viste por última vez, los más recientes primero</string>
+    <string name="content_watched_duration"><xliff:g id="value">%1$s</xliff:g> vistos</string>
+    <string name="content_menu_group_show">Mostrar</string>
+    <string name="content_epg_show_empty">Canales sin guía</string>
+    <string name="content_epg_show_preview">Vista previa de vídeo</string>
+    <string name="content_epg_view_timeline">Línea de tiempo</string>
+    <string name="content_menu_group_view">Vista</string>
+    <string name="content_vod_providers">Proveedores</string>
+    <string name="content_sort_movies_title">Ordenar películas</string>
+    <string name="content_sort_series_title">Ordenar series</string>
+    <string name="content_sort_applies_hint">Se aplica a todas las categorías de esta sección</string>
+    <string name="content_sort_provider_order">Orden del proveedor</string>
+    <string name="content_sort_provider_order_hint">El orden de tu lista</string>
+    <string name="content_sort_rating_hint">Más alta primero</string>
+    <string name="content_sort_date_added_hint">Más recientes primero</string>
+    <string name="content_menu_group_library">Biblioteca</string>
+    <string name="content_menu_group_details">Detalles</string>
+    <string name="content_programme_details">Detalles del programa</string>
+    <string name="content_programmes_earlier">Antes</string>
+    <string name="content_programmes_later">Después</string>
+    <string name="content_movie_details">Detalles de la película</string>
+    <string name="content_series_details">Detalles de la serie</string>
+    <plurals name="content_vod_title_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> título</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de títulos</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> títulos</item>
+    </plurals>
+    <plurals name="content_vod_series_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> serie</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> de series</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> series</item>
+    </plurals>
+    <string name="content_resume_episode">Reanudar <xliff:g id="episode">%1$s</xliff:g></string>
+    <string name="content_play_episode">Reproducir <xliff:g id="episode">%1$s</xliff:g></string>
+    <string name="content_download_season">Descargar temporada</string>
+    <string name="content_episode_order">Orden de episodios</string>
+    <string name="content_episode_order_hint">Se recuerda para esta serie</string>
+    <string name="content_hide_watched_episodes">Ocultar episodios vistos</string>
+    <string name="content_episode_watched">Visto</string>
+    <string name="content_play_from_start">Reproducir desde el inicio</string>
+    <string name="content_episode_details">Detalles del episodio</string>
+    <string name="content_season_specials">Especiales</string>
+    <string name="content_poster_size">Tamaño de los carteles</string>
+    <string name="content_vod_more_in">Más en <xliff:g id="category">%1$s</xliff:g></string>
 </resources>

@@ -6,7 +6,7 @@ import org.junit.Test
 import tv.own.owntv.core.model.SourceType
 
 /**
- * B4 — a backup written by a newer build can name a source type this build has never heard of.
+ * A backup written by a newer build can name a source type this build has never heard of.
  * Restore used to coerce that to M3U, producing a broken "playlist" pointing at a portal URL that
  * the user couldn't tell apart from a real one. It must be skipped and counted instead.
  */

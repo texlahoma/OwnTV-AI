@@ -39,10 +39,7 @@ class NavVisibility(
         .flatMapLatest { mode ->
             combine(dynamicCaps(), settings.navMenuHidden) { contentBased, hidden ->
                 when (mode) {
-                    SettingsRepository.NavMenuMode.STATIC ->
-                        MainSection.allBrowse - hidden.mapNotNull { name ->
-                            runCatching { MainSection.valueOf(name) }.getOrNull()
-                        }.toSet()
+                    SettingsRepository.NavMenuMode.STATIC -> MainSection.staticVisible(hidden)
                     SettingsRepository.NavMenuMode.DYNAMIC -> contentBased
                 }
             }
@@ -61,7 +58,7 @@ class NavVisibility(
 
     private fun capsFlow(sources: List<SourceEntity>, defaultId: Long): Flow<Set<MainSection>> {
         val scoped = if (defaultId > 0) sources.filter { it.id == defaultId } else sources
-        if (scoped.isEmpty()) return flowOf(setOf(MainSection.HOME))
+        if (scoped.isEmpty()) return flowOf(MainSection.dynamicVisible(hasLive = false, hasMovies = false, hasSeries = false))
         val liveIds = scoped.filter { it.syncLive }.map { it.id }
         val movieIds = scoped.filter { it.syncMovies }.map { it.id }
         val seriesIds = scoped.filter { it.syncSeries }.map { it.id }

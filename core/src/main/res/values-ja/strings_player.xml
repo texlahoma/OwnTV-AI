@@ -19,37 +19,29 @@
     <string name="player_behind_live">● ライブより<xliff:g id="offset">%1$s</xliff:g>遅れ</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">ライブへ</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">中断したところから再開しますか？</string>
+    <string name="player_timeshift_resume_message">離れている間、このチャンネルは保存されていました。</string>
+    <string name="player_previous_channel">前のチャンネル</string>
+    <string name="player_tool_sources">ソース</string>
+    <string name="player_sources_none">このチャンネルの別のバージョンは見つかりませんでした。</string>
+    <string name="player_next_channel_in_list">次のチャンネル</string>
+    <string name="player_previous_channel_in_list">リスト内の前のチャンネル</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">音量</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">明るさ</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">巻き戻し</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">早送り</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">音声</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">字幕</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">お気に入り</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">見逃し</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">速度</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">画面比</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">画質</string>
     <string name="player_tool_mini">ミニ</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">音声のみ</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">プレーヤー</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">情報</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">レポート</string>
     <string name="player_channel_not_found">チャンネルが見つかりません</string>
     <string name="player_channel_number_entry">チャンネル番号</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">利用可能なトラックはありません。</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · 画像形式</string>
     <string name="player_av_sync">A/V同期</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">この遅延を記憶する</string>
     <string name="player_no_offset">ずれなし</string>
     <string name="player_subtitles_later">字幕を遅く表示</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">次のエピソードまであと<xliff:g id="seconds">%1$d</xliff:g>秒</string>
     <string name="player_play_now">今すぐ再生</string>
     <string name="player_volume">音量</string>
-    <string name="player_control_engine">再生エンジン</string>
     <string name="player_unmute">ミュート解除</string>
     <string name="player_mute">ミュート</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">ExoPlayerに切り替えました</string>
     <string name="player_switch_mpv">mpvに切り替えました</string>
+    <string name="player_smoothness_hint">このチャンネルではフレーム落ちが発生しています。プレーヤーをmpvに切り替えると、より滑らかに再生できる場合があります。</string>
     <string name="player_error_image_subtitle_audio">このビデオの音声形式では、画像形式の字幕を利用できません。</string>
     <string name="player_error_both_engines_exo_first">両方のビデオエンジンで再生に失敗しました（ExoPlayer、次にmpv）。ファイルが破損しているか、このテレビで再生できない形式が使用されている可能性があります。</string>
     <string name="player_error_both_engines_mpv_first">両方のビデオエンジンで再生に失敗しました（mpvとExoPlayer）。ファイルが破損しているか、このテレビで再生できない形式が使用されている可能性があります。（<xliff:g id="error">%1$s</xliff:g>）</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">このファイル形式では、画像形式の字幕を利用できません。</string>
     <string name="player_error_image_show">このファイルの画像形式の字幕を表示できませんでした。</string>
     <string name="player_external_could_not_open">このストリームを開けませんでした。</string>
-    <string name="player_external_play_with">再生に使用するアプリ</string>
-    <string name="player_external_play_with_item">「<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>」を再生するアプリ…</string>
     <string name="player_external_not_found">外部プレーヤーが見つかりません — VLCまたはMX Playerをインストールしてください。</string>
     <string name="player_error_audio_no_video">音声は再生されていますが、このデバイスでは映像を表示できませんでした。</string>
     <string name="player_error_file_corrupt">このビデオのファイルは形式が不正か破損しているため、再生できません。</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">このテレビのビデオデコーダーは使用中です。しばらくしてからもう一度お試しください。</string>
     <string name="player_error_no_internet">インターネットに接続されていません。ネットワークを確認して、もう一度お試しください。</string>
     <string name="player_error_stream_unavailable">このストリームを再生できませんでした。ソースがオフラインか、未対応の形式が使用されている可能性があります。<xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">このアカウントは別のデバイスまたはアプリですでに再生中です。そちらで停止してから、再試行を押してください。</string>
     <string name="player_error_mpv_open_decode">mpvでこのファイルを開くかデコードできませんでした。</string>
     <string name="player_error_mpv_stream_never_started">数回再試行しましたが、mpvでストリームが開始されませんでした。</string>
+    <string name="player_error_fairplay">このストリームは Apple FairPlay で保護されているため、Android 端末では再生できません。このプレイリストは Apple 端末向けです。</string>
     <string name="player_error_surround">この音声出力ではサラウンドを利用できないため、ステレオに切り替えました。</string>
     <string name="player_error_hardware_fallback">このストリームの形式は、このテレビでハードウェアデコードできなかったため、ソフトウェアデコードに切り替えましたが、テレビに過剰な負荷をかけずに<xliff:g id="resolution">%1$s</xliff:g>を処理することはできません。このテレビでも他の4Kコンテンツは正常に再生できる可能性があり、問題はこのストリーム固有の形式にあります。</string>
     <string name="player_error_hardware_disabled">ハードウェアデコードがオフになっているため、ソフトウェアデコードでは<xliff:g id="resolution">%1$s</xliff:g>ビデオを処理できません。「設定」→「ビデオプレーヤー」で有効にしてください。</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">音声出力エラー — デバイスでこの音声形式を再生できませんでした</string>
     <string name="player_audio_track_number">音声<xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">字幕<xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">ストリーム情報</string>
     <string name="player_stream_engine">エンジン</string>
     <string name="player_stream_format">形式</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">インターレース</string>
+    <string name="player_stream_progressive">なし（プログレッシブ）</string>
+    <string name="player_stream_deinterlaced_by_player">インターレース · プレーヤーで解除</string>
+    <string name="player_stream_deinterlaced_by_device">インターレース · デバイスで解除</string>
+    <string name="player_stream_not_deinterlaced">インターレース · 未解除</string>
     <string name="player_stream_bitrate">ビットレート</string>
     <string name="player_stream_decoder">デコーダー</string>
     <string name="player_stream_audio">音声</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g>秒分をバッファ済み</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">音声のみ</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">この項目には音声だけがあり、映像はありません。故障ではなく、正常に再生されています。</string>
     <string name="player_audio_mono">モノラル</string>
     <string name="player_audio_stereo">ステレオ</string>
@@ -218,7 +212,6 @@
     <string name="player_subtitles_free_description_full">OpenSubtitlesは、無料でオープンなコミュニティ字幕サービスです。自分のopensubtitles.comアカウントでログインしてください。アカウントは無料で作成できます。この設定は現在のプロフィールにのみ適用されます。</string>
     <string name="player_subtitles_session_expired">OpenSubtitlesセッションの有効期限が切れました。字幕の検索とダウンロードを続けるには、「設定」→「ビデオプレーヤー」→「字幕」→「OpenSubtitles」から再度ログインしてください。</string>
     <string name="player_subtitles_account_needed">OpenSubtitlesアカウントが必要です\n\n字幕を検索してダウンロードするには、「設定」→「ビデオプレーヤー」→「字幕」→「OpenSubtitles」からログインしてください。OpenSubtitlesは無料でオープンなコミュニティサービスです — opensubtitles.comで誰でも無料アカウントを作成できます。</string>
-    <string name="player_subtitles_no_matches">一致する字幕が見つかりませんでした。</string>
     <string name="player_subtitles_show_all_languages">すべての言語を表示</string>
     <string name="player_subtitles_all_languages">すべての言語</string>
     <string name="player_subtitles_try_again">もう一度試す</string>
@@ -231,17 +224,15 @@
     <plurals name="player_subtitles_download_count">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>件のダウンロード</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">検索</string>
     <string name="player_subtitles_connected_as">接続中のユーザー</string>
     <string name="player_subtitles_connected_user"><xliff:g id="username">%1$s</xliff:g> として接続中</string>
     <string name="player_subtitles_resets">リセット</string>
     <string name="player_subtitles_free_account">無料</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">OpenSubtitlesのユーザー名とパスワードを入力してください。</string>
     <string name="player_subtitles_invalid_credentials">入力したアカウント情報ではOpenSubtitlesにログインできませんでした。</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitlesに接続できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitlesがリクエストを拒否しました（エラー <xliff:g id="code">%1$d</xliff:g>）。インターネット接続は正常です。しばらくしてからもう一度お試しください。問題を報告する際はこの番号をお知らせください。</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitlesを更新できませんでした。インターネット接続を確認してください。</string>
     <string name="player_subtitles_no_matches_all_languages">一致する字幕が見つかりませんでした。検索タイトルを編集してみてください。</string>
@@ -273,18 +264,22 @@
     <string name="player_subtitles_search_language_description">検索結果にはこの言語の字幕のみが表示されます。結果内の「すべての言語」を押せば、1回の検索で全言語を確認できます。</string>
     <string name="player_subtitles_language_not_set">未設定</string>
     <string name="player_frame_rate_prompt_title">このチャンネルはカクつく可能性があります</string>
-    <string name="player_frame_rate_prompt_description">このチャンネルは <xliff:g id="fps">%1$d</xliff:g> fps で再生されますが、TVは <xliff:g id="current_hz">%2$d</xliff:g> Hz で動作しているため、フレームを均等に表示できず、動きがややカクついて見えます。\n\n自動フレームレートは、視聴中にTVを <xliff:g id="target_hz">%3$d</xliff:g> Hz に切り替え、終了後に元に戻します。レート変更時に一瞬画面が暗くなるTVもあります。設定 → ビデオプレーヤー で再度オフにできます。</string>
+    <string name="player_frame_rate_prompt_description">このチャンネルは <xliff:g id="fps">%1$d</xliff:g> fps で再生されますが、TVは <xliff:g id="current_hz">%2$d</xliff:g> Hz で動作しているため、フレームを均等に表示できず、動きがややカクついて見えます。\n\n自動フレームレートは、視聴中にTVを <xliff:g id="target_hz">%3$d</xliff:g> Hz に切り替え、終了後に元に戻します。レート変更時に一瞬画面が暗くなるTVもあります。設定 → 映像 → フレームレート で再度オフにできます。</string>
     <string name="player_frame_rate_turn_on">オンにする</string>
     <string name="player_reason_live_fallback">ライブ再生はフォールバックに切り替わりました</string>
     <string name="player_reason_live_no_fallback">ライブ再生に失敗しました — フォールバックは残っていません</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> <xliff:g id="seconds">%3$d</xliff:g>秒後に再試行します。</string>
     <string name="player_provider_busy">プロバイダーが混み合っています。</string>
+    <string name="player_reconnecting">ストリームが中断されました。再接続しています…</string>
     <string name="player_error_data_saver">データセーバーがオンのため、モバイルデータでの再生は行いません。Wi-Fi に接続するか、設定でデータセーバーをオフにしてください。</string>
-    <string name="player_audio_only_video_off">映像オフ · データ節約中</string>
-    <string name="player_audio_only_show_video">映像</string>
     <string name="player_sleep_timer">スリープタイマー</string>
     <string name="player_sleep_timer_end_of_programme">番組の終わり</string>
+    <string name="player_sleep_timer_end_of_movie">映画の終わり</string>
+    <string name="player_sleep_timer_end_of_episode">エピソードの終わり</string>
     <string name="player_sleep_timer_remaining"><xliff:g id="time">%1$s</xliff:g>後に停止</string>
+    <string name="player_sleep_timer_screen_off">画面もオフにする</string>
+    <string name="player_sleep_timer_screen_off_explanation">タイマー終了時に画面をオフにするためだけに使用し、それ以外のときには使用しません。</string>
+    <string name="player_sleep_timer_screen_off_unavailable">このデバイスでは、アプリが画面をオフにすることはできません。</string>
     <string name="player_pip_expand">拡大</string>
     <string name="player_error_cast_unsupported">キャストしているデバイスではこのストリームを再生できません。多くのライブチャンネルは、この機器が対応していない形式を使っています。スマートフォンで再生してください。</string>
     <string name="player_cast_playing_on"><xliff:g id="device">%1$s</xliff:g> で再生中</string>
@@ -299,11 +294,10 @@
         <item quantity="other">このプロバイダーは同時に <xliff:g id="count">%1$d</xliff:g> ストリームまでです。そのうち <xliff:g id="recording">%2$d</xliff:g> が録画中です。</item>
     </plurals>
     <string name="multiview_refused_reserved">視聴を続けられるよう接続を1つ空けています。すべての接続で録画するには設定で変更してください。</string>
-    <string name="multiview_unknown_connections">このプレイリストが許可するストリーム数を OwnTV は確認できませんでした。タイルが失敗する場合はそれが原因です。</string>
     <string name="multiview_decoder_exhausted">このテレビはこれ以上のチャンネルを同時にデコードできません。</string>
+    <string name="multiview_decoder_exhausted_mobile">このデバイスはこれ以上のチャンネルを同時にデコードできません。</string>
     <string name="multiview_tile_change_channel">チャンネルを変更</string>
     <string name="multiview_tile_fullscreen">全画面にする</string>
-    <string name="multiview_tile_record">これを録画</string>
     <string name="multiview_tile_remove">タイルを削除</string>
     <string name="multiview_audio_tile">このタイルの音声が出ています</string>
     <string name="multiview_add_to">マルチビューに追加</string>
@@ -311,4 +305,8 @@
     <string name="multiview_tile_sound_only">音声のみ</string>
     <string name="multiview_tile_show_picture">映像を表示</string>
     <string name="multiview_sound_only_note">音声のみ — それでもプロバイダーのストリームを1つ使います</string>
+    <string name="player_trailer_skip">10 秒スキップ</string>
+    <string name="player_trailer_blocked_title">この予告編は OwnTV では再生できません</string>
+    <string name="player_trailer_blocked_body">所有者が YouTube での再生のみを許可しています。</string>
+    <string name="player_trailer_open_youtube">YouTube で開く</string>
 </resources>

@@ -24,14 +24,6 @@
         <item quantity="many">تم إيقاف <xliff:g id="count">%1$d</xliff:g> عنصرًا مؤقتًا</item>
         <item quantity="other">تم إيقاف <xliff:g id="count">%1$d</xliff:g> عنصر مؤقتًا</item>
     </plurals>
-    <plurals name="content_downloads_failed">
-        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> تنزيل فاشل</item>
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> تنزيل فاشل</item>
-        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> تنزيلان فاشلان</item>
-        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> تنزيلات فاشلة</item>
-        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> تنزيلًا فاشلًا</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> تنزيل فاشل</item>
-    </plurals>
     <string name="content_genre_action">أكشن</string>
     <string name="content_genre_adult">للبالغين</string>
     <string name="content_genre_anime">أنمي</string>
@@ -55,19 +47,14 @@
     <string name="content_restore_incomplete_title">لم تكتمل عملية الاستعادة</string>
     <string name="content_restore_incomplete_message">أُغلق التطبيق أثناء استعادة <xliff:g id="description">%1$s</xliff:g>، لذا قد يكون بعض المحتوى مفقودًا. لم يُحذف شيء — نفّذ عملية الاستعادة نفسها مجددًا من الإعدادات ← النسخ الاحتياطي والاستعادة لإكمال الباقي.</string>
     <string name="content_playlist_picker_title">عرض قائمة تشغيل</string>
-    <string name="content_playlist_picker_description">اختر قائمة التشغيل التي تريد تصفحها. ينطبق هذا في كل مكان ويُحفظ اختيارك.</string>
     <string name="content_avatar_picker_title">اختر صورتك الرمزية</string>
     <string name="content_category_browser_title">الفئات</string>
     <string name="content_channel_overlay_title">القنوات</string>
     <string name="content_live_now">مباشر الآن</string>
     <string name="content_live_next">مباشر التالي</string>
-    <!-- Translators: Slot label for the archived programme currently being replayed (catch-up), beside the live card. -->
     <string name="content_archive_playing">قيد التشغيل</string>
-    <!-- Translators: Slot label for the programme that aired immediately after the one being replayed. Reads as "and then this was on". -->
     <string name="content_archive_then">ثم</string>
-    <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
     <string name="content_clock_programme">وقت البرنامج</string>
-    <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
     <string name="content_clock_current">الوقت الحالي</string>
     <string name="content_media_overview">نظرة عامة</string>
     <string name="content_media_cast">طاقم التمثيل</string>
@@ -77,39 +64,67 @@
     <string name="content_mark_watched">وضع علامة «تمت المشاهدة»</string>
     <string name="content_mark_unwatched">وضع علامة «لم تتم المشاهدة»</string>
     <string name="content_move">نقل</string>
+    <string name="content_category_restore_playlist">استعادة الوضع الافتراضي</string>
+    <string name="content_category_restore_custom">استعادة الوضع الافتراضي</string>
+    <string name="content_category_restore_question">سيؤدي هذا إلى:</string>
+    <plurals name="content_category_restore_hidden">
+        <item quantity="zero">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عنصر مخفي</item>
+        <item quantity="one">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عنصر مخفي</item>
+        <item quantity="two">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عنصرين مخفيين</item>
+        <item quantity="few">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عناصر مخفية</item>
+        <item quantity="many">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عنصرًا مخفيًا</item>
+        <item quantity="other">إعادة إظهار <xliff:g id="count">%1$d</xliff:g> عنصر مخفي</item>
+    </plurals>
+    <plurals name="content_category_restore_moved">
+        <item quantity="zero">إرجاع <xliff:g id="count">%1$d</xliff:g> عنصر منقول</item>
+        <item quantity="one">إرجاع <xliff:g id="count">%1$d</xliff:g> عنصر منقول</item>
+        <item quantity="two">إرجاع <xliff:g id="count">%1$d</xliff:g> عنصرين منقولين</item>
+        <item quantity="few">إرجاع <xliff:g id="count">%1$d</xliff:g> عناصر منقولة</item>
+        <item quantity="many">إرجاع <xliff:g id="count">%1$d</xliff:g> عنصرًا منقولًا</item>
+        <item quantity="other">إرجاع <xliff:g id="count">%1$d</xliff:g> عنصر منقول</item>
+    </plurals>
+    <string name="content_category_restore_order">مسح الترتيب المخصّص</string>
+    <string name="content_category_restore_nothing">الفئة في الوضع الافتراضي لقائمة التشغيل بالفعل</string>
+    <string name="content_category_lock">قفل برمز PIN</string>
+    <string name="content_category_locked_placeholder">هذه الفئة مقفلة</string>
+    <plurals name="content_category_pin_wait">
+        <item quantity="zero">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثانية</item>
+        <item quantity="one">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثانية</item>
+        <item quantity="two">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثانيتين</item>
+        <item quantity="few">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثوانٍ</item>
+        <item quantity="many">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثانية</item>
+        <item quantity="other">محاولات PIN خاطئة كثيرة. حاول مرة أخرى بعد <xliff:g id="count">%1$d</xliff:g> ثانية</item>
+    </plurals>
     <string name="content_move_to_category">نقل إلى فئة…</string>
+    <string name="content_remove_from_category">إزالة من هذه الفئة</string>
     <string name="content_download">تنزيل</string>
     <string name="content_download_all_episodes">تنزيل جميع الحلقات</string>
+    <plurals name="content_download_episodes_confirm">
+        <item quantity="zero">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقة؟</item>
+        <item quantity="one">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقة؟</item>
+        <item quantity="two">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقتين؟</item>
+        <item quantity="few">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقات؟</item>
+        <item quantity="many">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقة؟</item>
+        <item quantity="other">تنزيل <xliff:g id="count">%1$d</xliff:g> حلقة؟</item>
+    </plurals>
+    <string name="content_download_episodes_confirm_message">تُحفَظ على هذا الجهاز وتشغل مساحة من التخزين.</string>
     <string name="content_play">تشغيل</string>
-    <string name="content_next_up">التالي للمشاهدة</string>
     <string name="content_favorited">مضاف إلى المفضّلة</string>
     <string name="content_favorite">إضافة إلى المفضّلة</string>
-    <string name="content_show_watched">إظهار ما تمت مشاهدته</string>
-    <string name="content_hide_watched">إخفاء ما تمت مشاهدته</string>
-    <string name="content_sorting">الترتيب</string>
-    <string name="content_episode_options">خيارات الحلقات</string>
     <string name="content_seasons">المواسم</string>
     <string name="content_episodes">الحلقات</string>
     <string name="content_oldest_first">الأقدم أولًا</string>
     <string name="content_newest_first">الأحدث أولًا</string>
-    <string name="content_last_watched">آخر مشاهدة</string>
-    <string name="content_press_ok_episodes">اضغط على «موافق» فوق الملصق لعرض الحلقات.</string>
-    <string name="content_play_external">تشغيل باستخدام مشغّل خارجي</string>
     <string name="content_delete_subtitles">حذف ترجمات OpenSub</string>
-    <string name="content_tmdb_details">تفاصيل TMDB</string>
     <string name="content_play_trailer">تشغيل الإعلان التشويقي</string>
     <string name="content_refetch_tmdb">إعادة جلب تفاصيل TMDB</string>
     <string name="content_set_tmdb_name">تعيين اسم TMDB</string>
     <string name="content_close">إغلاق</string>
-    <string name="content_focus_movie">ركّز على فيلم لعرض التفاصيل.</string>
-    <string name="content_focus_channel">ركّز على قناة لعرضها هنا.</string>
-    <string name="content_press_ok_fullscreen">اضغط على «موافق» للمشاهدة بملء الشاشة · اضغط مطولًا لعرض الخيارات</string>
     <string name="content_rename_hint">لهذا الملف الشخصي فقط. اتركه فارغًا لاستعادة الاسم الأصلي.</string>
-    <string name="content_focus_series">ركّز على مسلسل، ثم اضغط على «موافق» لعرض الحلقات.</string>
-    <string name="content_focus_episode">ركّز على حلقة لعرض التفاصيل.</string>
     <string name="content_no_movies_here">لا توجد أفلام هنا.</string>
     <string name="content_no_series_here">لا توجد مسلسلات هنا.</string>
     <string name="content_no_episodes">لا تتوفر حلقات.</string>
+    <string name="content_episodes_load_failed">تعذّر تحميل الحلقات من المزوّد (<xliff:g id="reason">%1$s</xliff:g>).</string>
     <string name="content_no_movies_found">لم يتم العثور على أفلام لـ «<xliff:g id="query">%1$s</xliff:g>»</string>
     <plurals name="content_count_movies">
         <item quantity="zero"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> فيلم)</item>
@@ -119,41 +134,24 @@
         <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> فيلمًا)</item>
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> فيلم)</item>
     </plurals>
-    <plurals name="content_count_series">
-        <item quantity="zero"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> مسلسل)</item>
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (مسلسل واحد: <xliff:g id="count">%2$d</xliff:g>)</item>
-        <item quantity="two"><xliff:g id="category">%1$s</xliff:g> (مسلسلان: <xliff:g id="count">%2$d</xliff:g>)</item>
-        <item quantity="few"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> مسلسلات)</item>
-        <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> مسلسلًا)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> مسلسل)</item>
-    </plurals>
     <string name="content_provider">المزوّد</string>
     <string name="content_provider_name">المزوّد: %1$s</string>
     <string name="content_no_series_found">لم يتم العثور على مسلسلات لـ «<xliff:g id="query">%1$s</xliff:g>»</string>
-    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>…</string>
-    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_reorder_movie">إعادة ترتيب الفيلم</string>
     <string name="content_reorder_series">إعادة ترتيب المسلسل</string>
     <string name="content_already_downloaded">تم تنزيله بالفعل — تحقق من قائمة التنزيلات.</string>
     <string name="content_refetching_tmdb">جارٍ إعادة جلب تفاصيل TMDB…</string>
     <string name="content_researching_tmdb">جارٍ إعادة البحث في TMDB…</string>
-    <string name="content_ok_play_options">اضغط على «موافق» للتشغيل · اضغط مطولًا لعرض الخيارات</string>
-    <string name="content_resume_at">استئناف من <xliff:g id="position">%1$s</xliff:g></string>
     <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g> س <xliff:g id="minutes">%2$d</xliff:g> د</string>
     <string name="content_duration_minutes"><xliff:g id="minutes">%1$d</xliff:g> د</string>
     <string name="content_rating">★ <xliff:g id="rating">%1$.1f</xliff:g></string>
-    <string name="content_metadata_separator">  •  </string>
-    <string name="content_genres_separator"> · </string>
+    <string name="content_metadata_separator">"  •  "</string>
     <string name="content_season_episode">م<xliff:g id="season">%1$d</xliff:g> · ح<xliff:g id="episode">%2$d</xliff:g></string>
     <string name="content_season_episode_title">م<xliff:g id="season">%1$d</xliff:g> · ح<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
     <string name="content_season">الموسم <xliff:g id="season">%1$d</xliff:g></string>
-    <string name="content_season_progress">الموسم <xliff:g id="season">%1$d</xliff:g> · <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
     <string name="content_no_epg">لا يتوفر دليل البرامج الإلكتروني</string>
-    <string name="content_epg">دليل البرامج الإلكتروني</string>
     <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> – <xliff:g id="stop">%3$s</xliff:g></string>
-    <string name="content_epg_days">دليل البرامج الإلكتروني · <xliff:g id="days">%1$d</xliff:g> ي</string>
     <string name="content_catchup">مشاهدة البث الفائت</string>
-    <string name="content_catchup_days">مشاهدة البث الفائت · <xliff:g id="days">%1$d</xliff:g> ي</string>
     <string name="content_play_external_short">تشغيل في مشغّل خارجي</string>
     <string name="content_rename">إعادة تسمية</string>
     <string name="content_rename_channel">إعادة تسمية القناة</string>
@@ -162,86 +160,45 @@
     <string name="content_remove_history">إزالة من سجل المشاهدة</string>
     <string name="content_no_channels_here">لا توجد قنوات هنا.</string>
     <string name="content_no_channels_found">لم يتم العثور على قنوات لـ «<xliff:g id="query">%1$s</xliff:g>»</string>
-    <plurals name="content_count_channels">
-        <item quantity="zero"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> قناة)</item>
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (قناة واحدة: <xliff:g id="count">%2$d</xliff:g>)</item>
-        <item quantity="two"><xliff:g id="category">%1$s</xliff:g> (قناتان: <xliff:g id="count">%2$d</xliff:g>)</item>
-        <item quantity="few"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> قنوات)</item>
-        <item quantity="many"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> قناة)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> قناة)</item>
-    </plurals>
-    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>…</string>
     <string name="content_match_epg">مطابقة دليل البرامج الإلكتروني</string>
     <string name="content_catchup_title">مشاهدة البث الفائت · <xliff:g id="channel">%1$s</xliff:g></string>
     <string name="content_rewind_at">إرجاع · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_catchup_prompt">اختر برنامجًا حديثًا لإعادة تشغيله من البداية.</string>
     <string name="content_catchup_empty">لا تتوفر حتى الآن بيانات حديثة من دليل البرامج لهذه القناة — تأكد من مطابقة دليل البرامج الإلكتروني الخاص بها (اضغط عليها مطولًا، أو استخدم «مطابقة دليل البرامج الإلكتروني»).</string>
-    <!-- Translators: Title of the list that jumps a live channel back to a chosen time in its catch-up archive. Also the label of the player button that opens it. Keep it short: it is a button label on a TV remote UI. -->
     <string name="content_catchup_jump">العودة إلى…</string>
-    <!-- Translators: Instructional text above the list of times to jump back to in a live channel's catch-up archive. -->
     <string name="content_catchup_jump_prompt">اختر وقتًا لبدء المشاهدة منه. لا حاجة إلى دليل.</string>
-    <!-- Translators: Last row of the catch-up time list, and the title of the picker it opens, where the user enters any day and time within the archive instead of picking a suggested one. -->
     <string name="content_catchup_jump_exact">اختيار وقت محدد…</string>
-    <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
     <string name="content_catchup_jump_hint">اضغط OK على اليوم أو الساعة أو الدقيقة، وغيّرها بالأعلى والأسفل، ثم اضغط OK مرة أخرى.</string>
+    <string name="content_catchup_jump_programme_start">بداية «<xliff:g id="title">%1$s</xliff:g>»</string>
+    <string name="content_catchup_jump_programme_start_untitled">بداية البرنامج</string>
+    <string name="content_catchup_jump_programme_start_at">بدأ الساعة <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_match_prompt">اختر قناة دليل البرامج المطابقة لـ «<xliff:g id="channel">%1$s</xliff:g>».</string>
     <string name="content_epg_match_prompt_current">اختر قناة دليل البرامج المطابقة لـ «<xliff:g id="channel">%1$s</xliff:g>». المطابقة الحالية: <xliff:g id="match">%2$s</xliff:g></string>
     <string name="content_search_guide_channels">بحث في قنوات دليل البرامج…</string>
     <string name="content_no_epg_data">لا تتوفر بيانات دليل البرامج الإلكتروني بعد — أضف مصدر دليل برامج إلكتروني من الإعدادات.</string>
     <string name="content_no_guide_channels">لا توجد قنوات في دليل البرامج تطابق «<xliff:g id="query">%1$s</xliff:g>».</string>
     <string name="content_clear_match">مسح المطابقة</string>
-    <string name="content_live_now_label">الآن</string>
-    <string name="content_live_next_label">التالي · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="content_live_later_label">لاحقًا</string>
     <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="stop">%2$s</xliff:g></string>
     <string name="content_category_favorites">المفضّلة</string>
     <string name="content_category_history">سجل المشاهدة</string>
     <string name="content_category_all_channels">كل القنوات</string>
-    <string name="content_category_united_kingdom">المملكة المتحدة</string>
-    <string name="content_category_united_states">الولايات المتحدة</string>
-    <string name="content_category_germany">ألمانيا</string>
-    <string name="content_category_sports">رياضة</string>
     <string name="content_category_all_movies">كل الأفلام</string>
-    <string name="content_category_action">أكشن</string>
-    <string name="content_category_drama">دراما</string>
-    <string name="content_category_comedy">كوميديا</string>
-    <string name="content_category_horror">رعب</string>
     <string name="content_category_all_series">كل المسلسلات</string>
-    <string name="content_category_animation">رسوم متحركة</string>
-    <string name="content_category_documentary">وثائقي</string>
-    <string name="content_category_all_downloads">كل التنزيلات</string>
-    <string name="content_category_movies">أفلام</string>
-    <string name="content_category_series">مسلسلات</string>
-    <string name="content_zero_channels">0 قناة</string>
-    <string name="content_zero_movies">0 فيلم</string>
-    <string name="content_zero_series">0 مسلسل</string>
-    <string name="content_zero_downloads">0 تنزيل</string>
-    <string name="content_nothing_here">لا يوجد شيء هنا بعد</string>
     <string name="content_add_source">إضافة مصدر</string>
     <string name="content_preview_select_channel">اختر قناة لمعاينتها هنا.</string>
     <string name="content_offline_banner">أنت غير متصل — لن يعمل التشغيل أو التحديثات حتى تعيد الاتصال.</string>
     <string name="content_subtitle_select_file">اختيار ملف ترجمة محلي</string>
     <string name="content_subtitle_load_failed">تعذر تحميل ملف الترجمة.</string>
-    <string name="content_history">سجل المشاهدة</string>
     <string name="content_all_playlists">كل قوائم التشغيل</string>
     <string name="content_search_categories">بحث في الفئات…</string>
-    <string name="content_no_categories_match">لا توجد فئات مطابقة</string>
     <string name="content_action_resume">استئناف</string>
     <string name="content_action_play">تشغيل</string>
-    <string name="content_action_next_up">التالي للمشاهدة</string>
     <string name="content_action_last_channel">آخر قناة</string>
-    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> · <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="content_empty_section">ستتوفر <xliff:g id="section">%1$s</xliff:g> في مرحلة لاحقة. أضف مصدر M3U أو Xtream لملء هذه القائمة.</string>
     <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
-    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
-    <string name="content_preview_player">مشغّل IPTV الخاص بك.</string>
     <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
     <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> · متبقٍ <xliff:g id="minutes">%2$d</xliff:g> د</string>
-    <string name="common_browse">تصفّح</string>
     <string name="content_downloads_title">التنزيلات</string>
-    <string name="content_downloads_description">أفلام وحلقات محفوظة للتشغيل دون اتصال.</string>
     <string name="content_downloads_empty">لا توجد تنزيلات بعد. افتح فيلمًا أو حلقة واضغط على «تنزيل».</string>
-    <string name="content_downloads_storage">التخزين</string>
     <string name="content_downloads_options">خيارات التنزيل</string>
     <string name="content_downloads_storage_free"><xliff:g id="free">%1$s</xliff:g> GB متاحة من أصل <xliff:g id="total">%2$s</xliff:g> GB</string>
     <string name="content_storage_internal">وحدة التخزين الداخلية</string>
@@ -250,21 +207,44 @@
     <string name="content_storage_choose_folder">اختيار مجلد آخر…</string>
     <string name="content_storage_chosen_folder">المجلد المختار</string>
     <string name="content_storage_folder_lost">لم يعد هذا المجلد متاحًا. اخترهُ مرة أخرى، أو اختر مجلدًا آخر.</string>
-    <string name="content_downloads_completed">تم تنزيل <xliff:g id="size">%1$s</xliff:g></string>
-    <string name="content_downloads_failure_message">فشل التنزيل — تعذر الوصول إلى المصدر. اضغط على «إعادة المحاولة».</string>
+    <string name="content_storage_folder_fallback">مجلد التنزيلات غير متاح الآن، لذا تُحفظ التنزيلات في مجلد OwnTV الخاص حتى يعود.</string>
     <string name="content_downloads_queued">في قائمة الانتظار…</string>
-    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
-    <string name="content_downloads_active">النشطة</string>
-    <string name="content_downloads_waiting">قيد الانتظار</string>
-    <string name="content_downloads_completed_group">المكتملة</string>
     <string name="content_downloads_failed_group">الفاشلة</string>
-    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% · <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
-    <string name="content_downloads_progress_unknown">جارٍ التنزيل… <xliff:g id="downloaded">%1$s</xliff:g></string>
-    <string name="content_downloads_folder_separator"> › </string>
     <string name="content_downloads_play">تشغيل</string>
     <string name="content_downloads_external">خارجي</string>
     <string name="content_downloads_pause">إيقاف مؤقت</string>
-    <string name="content_downloads_unknown_size">—</string>
+    <string name="content_downloads_group_downloading">جارٍ التنزيل</string>
+    <string name="content_downloads_group_on_tv">على هذا التلفزيون</string>
+    <string name="content_downloads_group_on_phone">على هذا الهاتف</string>
+    <string name="content_downloads_ready_short">جاهز</string>
+    <string name="content_downloads_ready">جاهز للمشاهدة</string>
+    <string name="content_downloads_paused">متوقف مؤقتًا</string>
+    <string name="content_downloads_file_missing">الملف مفقود: لم يعد موجودًا على محرك الأقراص</string>
+    <string name="content_downloads_delete_title">هل تريد حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
+    <string name="content_downloads_delete_message">يزيل الملف من هذا الجهاز. يمكن تنزيله مرة أخرى لاحقًا.</string>
+    <string name="content_downloads_reason_account_busy">الحساب مشغول: بث آخر يستخدم الاتصال</string>
+    <string name="content_downloads_reason_refused">رفض الخادم الرابط</string>
+    <string name="content_downloads_reason_not_found">لم يعد هذا الملف متوفرًا على الخادم</string>
+    <string name="content_downloads_reason_server_error">خطأ في الخادم</string>
+    <string name="content_downloads_reason_http">لم يُرسل الخادم الملف</string>
+    <string name="content_downloads_reason_connection_lost">انقطع الاتصال</string>
+    <string name="content_downloads_reason_folder">مجلد التنزيل غير متاح</string>
+    <string name="content_downloads_reason_no_space">لا توجد مساحة كافية</string>
+    <string name="content_downloads_reason_too_large">الملف كبير جدًا على محرك الأقراص هذا: لا يمكنه تخزين ملفات أكبر من 4 غيغابايت. اختر مجلد تنزيل آخر، أو هيّئ المحرك بنظام exFAT</string>
+    <string name="content_downloads_reason_waiting_watching">في الانتظار: يبدأ عندما تتوقف عن المشاهدة</string>
+    <string name="content_downloads_reason_paused_watching">متوقف مؤقتًا أثناء المشاهدة</string>
+    <string name="content_downloads_reason_with_code"><xliff:g id="reason">%1$s</xliff:g> (HTTP <xliff:g id="code">%2$d</xliff:g>)</string>
+    <string name="content_download_watch_title">تسمح قائمة التشغيل هذه ببث واحد فقط</string>
+    <string name="content_download_watch_body">كان تنزيل من <xliff:g id="playlist">%1$s</xliff:g> يستخدمه، لذلك أُوقف مؤقتًا الآن. هل تريد المشاهدة، أم إغلاق المشغل ومتابعة التنزيل؟</string>
+    <string name="content_download_watch_watch">إيقاف التنزيل مؤقتًا والمشاهدة</string>
+    <string name="content_download_watch_keep">متابعة التنزيل</string>
+    <string name="content_download_watch_remember">عدم السؤال مرة أخرى</string>
+    <string name="content_download_watch_setting">المشاهدة أثناء التنزيل</string>
+    <string name="content_download_watch_setting_description">لقوائم التشغيل التي تسمح ببث واحد فقط: ما يحدث للتنزيل عندما تبدأ التشغيل.</string>
+    <string name="content_download_watch_ask">السؤال في كل مرة</string>
+    <string name="content_download_watch_pause">إيقاف التنزيل مؤقتًا</string>
+    <string name="content_downloads_starts_after">في الانتظار · يبدأ بعد <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="content_downloads_speed"><xliff:g id="size">%1$s</xliff:g> ميغابايت/ث</string>
     <string name="content_epg_create_profile">أنشئ ملفًا شخصيًا لعرض دليل البرامج.</string>
     <string name="content_epg_filter_hides_all">كل القنوات مخفية بسبب عامل التصفية الحالي. غيّر الترتيب لعرض الدليل.</string>
     <string name="content_epg_add_playlist">أضف قائمة تشغيل لعرض دليل البرامج.</string>
@@ -276,41 +256,6 @@
     <string name="content_epg_no_match_data">لا تتوفر بعد بيانات دليل برامج إلكتروني لإجراء المطابقة معها.</string>
     <string name="content_epg_all_matched">تمت مطابقة كل القنوات بالفعل.</string>
     <string name="content_epg_no_match">لم يتم العثور على مطابقة في دليل البرامج الإلكتروني لـ «<xliff:g id="channel">%1$s</xliff:g>» — جرّب الاختيار يدويًا.</string>
-    <plurals name="content_epg_stats_channels">
-        <item quantity="zero">تم تحميل الدليل: <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
-        <item quantity="one">تم تحميل الدليل: قناة واحدة (<xliff:g id="channels">%1$d</xliff:g>).</item>
-        <item quantity="two">تم تحميل الدليل: قناتان (<xliff:g id="channels">%1$d</xliff:g>).</item>
-        <item quantity="few">تم تحميل الدليل: <xliff:g id="channels">%1$d</xliff:g> قنوات.</item>
-        <item quantity="many">تم تحميل الدليل: <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
-        <item quantity="other">تم تحميل الدليل: <xliff:g id="channels">%1$d</xliff:g> قناة.</item>
-    </plurals>
-    <plurals name="content_epg_stats_programmes">
-        <item quantity="zero">يحتوي الدليل على <xliff:g id="programmes">%1$d</xliff:g> برنامج.</item>
-        <item quantity="one">يحتوي الدليل على برنامج واحد (<xliff:g id="programmes">%1$d</xliff:g>).</item>
-        <item quantity="two">يحتوي الدليل على برنامجين (<xliff:g id="programmes">%1$d</xliff:g>).</item>
-        <item quantity="few">يحتوي الدليل على <xliff:g id="programmes">%1$d</xliff:g> برامج.</item>
-        <item quantity="many">يحتوي الدليل على <xliff:g id="programmes">%1$d</xliff:g> برنامجًا.</item>
-        <item quantity="other">يحتوي الدليل على <xliff:g id="programmes">%1$d</xliff:g> برنامج.</item>
-    </plurals>
-    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
-    <string name="content_epg_no_catchup_channels">لا توجد قنوات تدعم مشاهدة البث الفائت.</string>
-    <string name="content_epg_stats_no_catchup">لا تتوفر قنوات لمشاهدة البث الفائت.</string>
-    <plurals name="content_epg_catchup_count">
-        <item quantity="zero">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-        <item quantity="one">تتوفر مشاهدة البث الفائت على قناة واحدة (<xliff:g id="count">%1$d</xliff:g>).</item>
-        <item quantity="two">تتوفر مشاهدة البث الفائت على قناتين (<xliff:g id="count">%1$d</xliff:g>).</item>
-        <item quantity="few">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قنوات.</item>
-        <item quantity="many">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-        <item quantity="other">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-    </plurals>
-    <plurals name="content_epg_stats_catchup_available">
-        <item quantity="zero">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-        <item quantity="one">تتوفر مشاهدة البث الفائت على قناة واحدة (<xliff:g id="count">%1$d</xliff:g>).</item>
-        <item quantity="two">تتوفر مشاهدة البث الفائت على قناتين (<xliff:g id="count">%1$d</xliff:g>).</item>
-        <item quantity="few">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قنوات.</item>
-        <item quantity="many">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-        <item quantity="other">تتوفر مشاهدة البث الفائت على <xliff:g id="count">%1$d</xliff:g> قناة.</item>
-    </plurals>
     <plurals name="content_epg_auto_matched_applied">
         <item quantity="zero">تمت المطابقة التلقائية لـ <xliff:g id="applied">%1$d</xliff:g> قناة.</item>
         <item quantity="one">تمت المطابقة التلقائية لقناة واحدة (<xliff:g id="applied">%1$d</xliff:g>).</item>
@@ -342,38 +287,29 @@
     <string name="content_epg_no_guide">لا يتوفر دليل برامج.</string>
     <string name="content_epg_no_programme">لا يوجد برنامج في هذا الوقت.</string>
     <string name="content_epg_add_description">أضف مصدر دليل برامج إلكتروني (XMLTV) لملء الدليل بالبرامج.</string>
-    <string name="content_epg_favourite_description">أضف هذه القناة إلى المفضّلة، أو عيّن بيانات دليل البرامج الخاصة بها.</string>
     <string name="content_epg_guide_category">فئة دليل البرامج</string>
-    <string name="content_epg_all_categories">كل الفئات</string>
     <string name="content_epg_search_hint">بحث في قنوات دليل البرامج…</string>
     <string name="content_epg_add">إضافة دليل برامج إلكتروني</string>
     <string name="content_epg_add_favourite">إضافة إلى المفضّلة</string>
     <string name="content_epg_remove_favourite">إزالة من المفضّلة</string>
     <string name="content_epg_jump_now">الانتقال إلى الآن</string>
-    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g> د</string>
-    <string name="content_epg_review_matches">مراجعة مطابقات دليل البرامج الإلكتروني</string>
+    <string name="content_epg_include_logos">تضمين شعارات الدليل</string>
     <string name="content_epg_review_description">تمت مطابقة هذه القنوات بالاسم، لكن التطابق لم يكن مؤكدًا. اقبل المطابقات الصحيحة وتخطَّ البقية.</string>
     <string name="content_epg_accept">قبول</string>
     <string name="content_epg_accept_all">قبول الكل</string>
     <string name="content_epg_skip">تخطّي</string>
     <string name="content_epg_skip_all">تخطّي الكل</string>
     <string name="content_epg_pick_manually">اختيار دليل البرامج الإلكتروني يدويًا</string>
-    <string name="content_epg_move_hint">انتقل يمينًا إلى أحد الصفوف، ثم تصفّح باستخدام ◀ ▶ لمعاينة برنامج.</string>
-    <string name="content_epg_catchup">↻ مشاهدة البث الفائت</string>
     <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> – <xliff:g id="end">%2$s</xliff:g></string>
     <string name="content_epg_all">الكل</string>
     <string name="content_epg_sort_alpha">أ–ي</string>
     <string name="content_epg_sort_provider">المزوّد</string>
-    <string name="content_epg_sort_live">البث التلفزيوني المباشر</string>
     <string name="content_epg_sort_catchup">مشاهدة البث الفائت</string>
     <string name="content_epg_sort_favorites">المفضّلة</string>
-    <string name="content_epg_category_button">الفئة: <xliff:g id="label">%1$s</xliff:g></string>
     <string name="content_epg_sort_button">الترتيب: <xliff:g id="label">%1$s</xliff:g></string>
     <string name="content_epg_match_button">مطابقة دليل البرامج الإلكتروني تلقائيًا</string>
     <string name="content_epg_channel_score">→ <xliff:g id="name">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
-    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
     <string name="content_epg_bits_separator">" · "</string>
-    <string name="content_epg_now">الآن · <xliff:g id="time">%1$s</xliff:g></string>
     <string name="content_epg_watch_start">المشاهدة من البداية</string>
     <string name="content_epg_watch_channel">مشاهدة القناة</string>
     <string name="content_epg_favourite">إضافة إلى المفضّلة</string>
@@ -390,4 +326,119 @@
     <string name="content_epg_offset_channel_only">هذه القناة فقط · الإزاحة العامة هي <xliff:g id="offset">%1$s</xliff:g></string>
     <string name="content_epg_offset_use_global">استخدم الإزاحة العامة</string>
     <string name="content_preview_single_stream">المعاينة متوقفة — مزود الخدمة لديك يسمح ببث واحد فقط في كل مرة</string>
+    <string name="content_playlist_picker_subtitle">يُطبَّق في كل مكان ويُحفَظ</string>
+    <string name="content_playlist_marks_note">عند اختيار «كل القوائم» يعرض كل صف شارة القائمة التي جاء منها.</string>
+    <string name="content_action_next_episode">الحلقة التالية</string>
+    <string name="content_search_in">ابحث في <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="content_live_guide_view">عرض الدليل</string>
+    <string name="content_key_watch">مشاهدة</string>
+    <string name="content_key_options">الخيارات</string>
+    <string name="content_live_groups">المجموعات</string>
+    <string name="content_menu_group_watch">مشاهدة</string>
+    <string name="content_menu_group_channel">القناة</string>
+    <string name="content_menu_group_guide_data">بيانات الدليل</string>
+    <string name="content_menu_group_organise">التنظيم</string>
+    <string name="content_epg_offset_global_short">عام</string>
+    <string name="content_live_groups_country">المجموعات · <xliff:g id="country">%1$s</xliff:g></string>
+    <plurals name="content_live_channel_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="one">قناة واحدة: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">قناتان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+    </plurals>
+    <string name="content_category_recently_watched">شوهدت مؤخرًا</string>
+    <string name="content_remind_me">ذكّرني</string>
+    <string name="content_remind_before">قبل <xliff:g id="duration">%1$s</xliff:g></string>
+    <string name="content_key_hold_ok">اضغط مطولًا OK</string>
+    <string name="content_epg_starts_in">يبدأ خلال <xliff:g id="duration">%1$s</xliff:g></string>
+    <string name="content_epg_today">اليوم</string>
+    <string name="content_epg_tomorrow">غدًا</string>
+    <string name="content_epg_yesterday">أمس</string>
+    <string name="content_epg_now_short">الآن</string>
+    <string name="content_epg_sort_catchup_first">البث الفائت أولًا</string>
+    <string name="content_epg_sort_favorites_first">المفضّلة أولًا</string>
+    <string name="content_epg_order_title">ترتيب القنوات حسب</string>
+    <string name="content_epg_order_hint">يُفتح بهذا الترتيب في المرة القادمة</string>
+    <string name="content_epg_category_hint">القائمة نفسها في البث التلفزيوني المباشر</string>
+    <string name="content_menu_group_new">جديد</string>
+    <string name="content_menu_group_record">التسجيل</string>
+    <string name="content_epg_after_time">بعد <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_reminder_set">تم ضبط التذكير</string>
+    <string name="content_live_list_view">عرض القائمة</string>
+    <plurals name="content_epg_channels_matched">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة مطابقة</item>
+        <item quantity="one">قناة واحدة مطابقة: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">قناتان مطابقتان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات مطابقة</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة مطابقة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة مطابقة</item>
+    </plurals>
+    <plurals name="content_epg_review_count">
+        <item quantity="zero">مراجعة <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+        <item quantity="one">مراجعة مطابقة واحدة: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">مراجعة مطابقتين: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few">مراجعة <xliff:g id="count">%1$d</xliff:g> مطابقات</item>
+        <item quantity="many">مراجعة <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+        <item quantity="other">مراجعة <xliff:g id="count">%1$d</xliff:g> مطابقة</item>
+    </plurals>
+    <string name="content_key_browse">تصفّح</string>
+    <string name="content_key_channels">القنوات</string>
+    <string name="content_key_programmes">البرامج</string>
+    <string name="content_key_menu">القائمة</string>
+    <string name="content_key_enter">دخول</string>
+    <string name="content_key_select">اختيار</string>
+    <string name="content_key_unselect">إلغاء الاختيار</string>
+    <string name="content_key_page">صفحة</string>
+    <string name="content_history_overlay_hint">القنوات التي شاهدتها مؤخرًا، الأحدث أولًا</string>
+    <string name="content_watched_duration">تمت مشاهدة <xliff:g id="value">%1$s</xliff:g></string>
+    <string name="content_menu_group_show">العرض</string>
+    <string name="content_epg_show_empty">القنوات بلا دليل</string>
+    <string name="content_epg_show_preview">معاينة الفيديو</string>
+    <string name="content_epg_view_timeline">المخطط الزمني</string>
+    <string name="content_menu_group_view">العرض</string>
+    <string name="content_vod_providers">مقدمو الخدمة</string>
+    <string name="content_sort_movies_title">ترتيب الأفلام</string>
+    <string name="content_sort_series_title">ترتيب المسلسلات</string>
+    <string name="content_sort_applies_hint">ينطبق على كل فئة في هذا القسم</string>
+    <string name="content_sort_provider_order">ترتيب المزوّد</string>
+    <string name="content_sort_provider_order_hint">الترتيب الذي تستخدمه قائمة التشغيل</string>
+    <string name="content_sort_rating_hint">الأعلى أولًا</string>
+    <string name="content_sort_date_added_hint">الأحدث أولًا</string>
+    <string name="content_menu_group_library">المكتبة</string>
+    <string name="content_menu_group_details">التفاصيل</string>
+    <string name="content_programme_details">تفاصيل البرنامج</string>
+    <string name="content_programmes_earlier">في وقت سابق</string>
+    <string name="content_programmes_later">لاحقًا</string>
+    <string name="content_movie_details">تفاصيل الفيلم</string>
+    <string name="content_series_details">تفاصيل المسلسل</string>
+    <plurals name="content_vod_title_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> عنوان</item>
+        <item quantity="one">عنوان واحد: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">عنوانان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> عناوين</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> عنوانًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> عنوان</item>
+    </plurals>
+    <plurals name="content_vod_series_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> مسلسل</item>
+        <item quantity="one">مسلسل واحد: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="two">مسلسلان: <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> مسلسلات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> مسلسلًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> مسلسل</item>
+    </plurals>
+    <string name="content_resume_episode">استئناف <xliff:g id="episode">%1$s</xliff:g></string>
+    <string name="content_play_episode">تشغيل <xliff:g id="episode">%1$s</xliff:g></string>
+    <string name="content_download_season">تنزيل الموسم</string>
+    <string name="content_episode_order">ترتيب الحلقات</string>
+    <string name="content_episode_order_hint">يُحفظ لهذا المسلسل</string>
+    <string name="content_hide_watched_episodes">إخفاء الحلقات التي تمت مشاهدتها</string>
+    <string name="content_episode_watched">تمت المشاهدة</string>
+    <string name="content_play_from_start">التشغيل من البداية</string>
+    <string name="content_episode_details">تفاصيل الحلقة</string>
+    <string name="content_season_specials">حلقات خاصة</string>
+    <string name="content_poster_size">حجم الملصقات</string>
+    <string name="content_vod_more_in">المزيد في <xliff:g id="category">%1$s</xliff:g></string>
 </resources>

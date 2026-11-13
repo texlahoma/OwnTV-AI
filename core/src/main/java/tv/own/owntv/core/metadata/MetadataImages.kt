@@ -1,7 +1,7 @@
 package tv.own.owntv.core.metadata
 
 /**
- * Builds image.tmdb.org URLs from TMDB relative paths (plan §4). Images load directly from TMDB's free
+ * Builds image.tmdb.org URLs from TMDB relative paths. Images load directly from TMDB's free
  * CDN — no API key, never through the Worker/proxy — so quota only ever sees small JSON.
  */
 object MetadataImages {

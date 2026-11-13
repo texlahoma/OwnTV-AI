@@ -88,15 +88,6 @@ internal object CompanionHtml {
         val continueLabel = s(R.string.companion_continue)
         val pinMismatch = s(R.string.companion_pin_mismatch)
 
-        val tmdbTitle = s(R.string.companion_tmdb_page_title)
-        val tmdbHeading = s(R.string.companion_tmdb_heading)
-        val tmdbDescription = s(R.string.companion_tmdb_description)
-        val tmdbGetKey = s(R.string.companion_tmdb_get_key)
-        val tmdbKeyLabel = s(R.string.settings_tmdb_api_key)
-        val tmdbInvalid = s(R.string.companion_tmdb_invalid)
-        val tmdbSentBody = s(R.string.companion_tmdb_sent_body)
-        val tmdbSentLink = s(R.string.companion_tmdb_sent_link)
-
         val addTitle = s(R.string.companion_add_page_title)
         val addHeading = s(R.string.companion_add_heading)
         val addDescription = s(R.string.companion_add_description)
@@ -140,6 +131,12 @@ internal object CompanionHtml {
         }
         val defaultPlaylistLabel = s(R.string.companion_default_playlist)
         val sendToTv = s(R.string.companion_send_to_tv)
+
+        val editTitle = s(R.string.companion_edit_page_title)
+        val editDescription = s(R.string.companion_edit_description)
+        val keepCurrent = s(R.string.companion_keep_current)
+        val passwordKeep = s(R.string.setup_password_keep)
+        val savedEditAgain = s(R.string.companion_saved_edit_again)
 
         val savedTitle = s(R.string.companion_saved_page_title)
         val savedHeading = s(R.string.companion_saved_heading)
@@ -271,6 +268,10 @@ internal object CompanionHtml {
                 </div>
                 <label>${c.portalUrl.h()} <input name="portalUrl" placeholder="${c.portalExample.h()}" required></label>
                 <label>${context.getString(R.string.setup_mac_address).h()} <input name="mac" placeholder="${context.getString(R.string.setup_mac_example).h()}" required></label>
+                <div class="grid">
+                  <label>${context.getString(R.string.settings_username_optional).h()} <input name="user" autocomplete="username"></label>
+                  <label>${context.getString(R.string.settings_password_optional).h()} <input name="pass" type="password" autocomplete="current-password"></label>
+                </div>
                 <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3>
                 <div class="grid">
                   <label>${context.getString(R.string.setup_stalker_serial_number_optional).h()} <input name="serialNumber"></label>
@@ -297,15 +298,25 @@ internal object CompanionHtml {
                 tabs.forEach(function(x){x.classList.toggle('active',x===t)});
                 panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-k')===k)});
               });});
-              // M3U panel only. With no file chosen this stays a plain form post, exactly as before.
-              // With a file chosen the browser reads it as text and posts it as JSON, because a file
-              // input cannot travel in a normal urlencoded body and the TV has no multipart parser.
+              ${m3uUploadScript(c, pin, urlRequired = true)}
+            </script>
+        """.trimIndent())
+    }
+
+    /**
+     * The M3U form's submit handler (`m3uForm`, `m3uUrl`, `m3uFile`, `m3uSend`, `m3uStatus`). With no
+     * file chosen it stays a plain form post. With a file chosen the browser reads it as text and posts
+     * it as JSON, because a file input cannot travel in a normal urlencoded body and the TV has no
+     * multipart parser. [urlRequired] is false on the edit page, where an empty address keeps the
+     * current one.
+     */
+    private fun m3uUploadScript(c: Copy, pin: String, urlRequired: Boolean): String = """
               var mf=document.getElementById('m3uFile'), mu=document.getElementById('m3uUrl'),
                   mb=document.getElementById('m3uSend'), ms=document.getElementById('m3uStatus');
               document.getElementById('m3uForm').addEventListener('submit',function(ev){
                 var file=mf.files&&mf.files[0];
                 if(!file){
-                  if(!(mu.value||'').trim()){ms.textContent=${c.playlistUrlOrFile.js()};ev.preventDefault();return false;}
+                  if($urlRequired&&!(mu.value||'').trim()){ms.textContent=${c.playlistUrlOrFile.js()};ev.preventDefault();return false;}
                   return true; // URL only — let the browser submit the form the old way.
                 }
                 ev.preventDefault();
@@ -326,7 +337,96 @@ internal object CompanionHtml {
                 r.readAsText(file);
                 return false;
               });
-            </script>
+    """.trimIndent()
+
+    /**
+     * One playlist's edit page ([CompanionMode.EDIT_SOURCE]): only its own type's fields, filled with
+     * what [CompanionSourceEdit.prefill] allows. The secret fields start empty with a "keep" hint, and
+     * nothing is required — an empty field keeps the TV's value. The fields match the TV's edit form.
+     */
+    fun editPage(context: Context, pin: String, prefill: CompanionPayload): String {
+        val c = Copy(context)
+        fun field(label: String, name: String, value: String = "", placeholder: String = "", attrs: String = "") =
+            """<label>${label.h()} <input name="$name" value="${value.h()}" placeholder="${placeholder.h()}"$attrs></label>"""
+        val secret = " type=\"password\" autocomplete=\"off\""
+        val noFill = " autocomplete=\"off\""
+        val path: String
+        val fields: String
+        when (prefill.type) {
+            SourceType.M3U -> {
+                path = "m3u"
+                fields = """
+                    ${field(c.name, "name", prefill.name, c.defaultPlaylist)}
+                    <label>${c.playlistUrl.h()} <input id="m3uUrl" name="server" placeholder="${c.keepCurrent.h()}"></label>
+                    <label>${c.playlistFile.h()} <input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl,text/plain"></label>
+                    ${field(c.userAgent, "userAgent", prefill.userAgent, c.optional)}
+                    ${field(c.epgUrl, "epgUrl", prefill.epgUrl, c.optional)}
+                """.trimIndent()
+            }
+            SourceType.STALKER -> {
+                path = "stalker"
+                fields = """
+                    ${field(c.name, "name", prefill.name, c.defaultPortal)}
+                    ${field(c.portalUrl, "portalUrl", prefill.portalUrl, c.portalExample)}
+                    ${field(context.getString(R.string.setup_mac_address), "mac", placeholder = c.keepCurrent, attrs = secret)}
+                    <div class="grid">
+                      ${field(context.getString(R.string.settings_username_optional), "user", prefill.user, attrs = noFill)}
+                      ${field(context.getString(R.string.settings_password_optional), "pass", placeholder = c.keepCurrent, attrs = secret)}
+                    </div>
+                    <h3>${context.getString(R.string.setup_stalker_advanced_identity).h()}</h3>
+                    <div class="grid">
+                      ${field(context.getString(R.string.setup_stalker_serial_number_optional), "serialNumber", placeholder = c.keepCurrent, attrs = secret)}
+                      ${field(context.getString(R.string.setup_stalker_device_id_optional), "deviceId", placeholder = c.keepCurrent, attrs = secret)}
+                      ${field(context.getString(R.string.setup_stalker_device_id2_optional), "deviceId2", placeholder = c.keepCurrent, attrs = secret)}
+                      ${field(context.getString(R.string.setup_stalker_signature_optional), "signature", placeholder = c.keepCurrent, attrs = secret)}
+                    </div>
+                    ${field(c.userAgent, "userAgent", prefill.userAgent, c.optional)}
+                """.trimIndent()
+            }
+            SourceType.XTREAM, SourceType.LOCAL_BACKUP -> {
+                path = "xtream"
+                fields = """
+                    ${field(c.name, "name", prefill.name, c.defaultIptv)}
+                    ${field(c.serverUrl, "server", prefill.server, c.serverExample)}
+                    <div class="grid">
+                      ${field(c.username, "user", prefill.user, attrs = noFill)}
+                      ${field(c.passwordKeep, "pass", placeholder = c.keepCurrent, attrs = secret)}
+                    </div>
+                    ${field(c.userAgent, "userAgent", prefill.userAgent, c.optional)}
+                    ${field(c.epgUrl, "epgUrl", prefill.epgUrl, c.optional)}
+                """.trimIndent()
+            }
+        }
+        val m3u = prefill.type == SourceType.M3U
+        val formId = if (m3u) " id=\"m3uForm\"" else ""
+        val sendId = if (m3u) " id=\"m3uSend\"" else ""
+        val status = if (m3u) "<p id=\"m3uStatus\" class=\"hint\"></p>" else ""
+        val script = if (m3u) "<script>\n${m3uUploadScript(c, pin, urlRequired = false)}\n</script>" else ""
+        return page(context, c.editTitle, """
+            <div class="card">
+              <h1>${context.getString(R.string.companion_edit_heading, prefill.name).h()}</h1>
+              <p>${c.editDescription.h()}</p>
+              <form class="panel active"$formId method="post" action="/$path?pin=$pin">
+                <input type="hidden" name="type" value="$path">
+                $fields
+                <button class="go"$sendId type="submit">${c.sendToTv.h()}</button>
+                $status
+              </form>
+            </div>
+            $script
+        """.trimIndent())
+    }
+
+    /** After an edit was sent: the changes are on the TV's edit form, waiting for Save there. */
+    fun editSavedPage(context: Context, prefill: CompanionPayload, pin: String): String {
+        val c = Copy(context)
+        val body = context.getString(R.string.companion_saved_edit_body, prefill.name)
+        return page(context, c.savedTitle, """
+            <div class="card">
+              <h1>${c.savedHeading.h()}</h1>
+              <p>${body.h()}</p>
+              <p><a href="/?pin=$pin">${c.savedEditAgain.h()}</a></p>
+            </div>
         """.trimIndent())
     }
 
@@ -407,48 +507,6 @@ internal object CompanionHtml {
      * almost nobody switches to their own key. TMDB's own signup is not mobile-optimised either, so
      * the page links straight to the API settings page rather than making the user find it.
      */
-    fun tmdbKeyPage(context: Context, pin: String): String {
-        val c = Copy(context)
-        return page(context, c.tmdbTitle, """
-            <div class="card">
-              <h1>${c.tmdbHeading.h()}</h1>
-              <p>${c.tmdbDescription.h()}</p>
-              <p><a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">${c.tmdbGetKey.h()}</a></p>
-              <form id="f" onsubmit="return false">
-                <label>${c.tmdbKeyLabel.h()} <input id="key" type="text" autocomplete="off"
-                  autocapitalize="off" spellcheck="false" required></label>
-                <button class="go" id="send" type="submit">${c.sendToTv.h()}</button>
-              </form>
-              <p id="status" class="hint"></p>
-            </div>
-            <script>
-              var k=document.getElementById('key'), b=document.getElementById('send'), s=document.getElementById('status');
-              document.getElementById('f').addEventListener('submit',function(){
-                var v=(k.value||'').trim();
-                // Mirror of the server-side check, purely so a typo is caught before a round trip.
-                if(!/^[A-Za-z0-9._-]{16,128}$/.test(v)){s.textContent=${c.tmdbInvalid.js()};return false;}
-                b.disabled=true; s.textContent=${c.sending.js()};
-                fetch('/tmdbkey?pin=$pin',{method:'POST',headers:{'Content-Type':'text/plain'},body:v})
-                  .then(function(res){
-                    if(res.ok){document.open();res.text().then(function(t){document.write(t);document.close();});}
-                    else{b.disabled=false;s.textContent=${c.uploadFailed.js()}.replace('__STATUS__',String(res.status));}
-                  })
-                  .catch(function(){b.disabled=false;s.textContent=${c.couldNotReach.js()};});
-                return false;
-              });
-            </script>
-        """.trimIndent())
-    }
-
-    fun tmdbKeySentPage(context: Context, pin: String): String {
-        val c = Copy(context)
-        return page(context, c.savedTitle, """
-            <div class="card"><h1>${c.savedHeading.h()}</h1>
-              <p>${c.tmdbSentBody.h()}</p><p><a href="/?pin=$pin">${c.tmdbSentLink.h()}</a></p>
-            </div>
-        """.trimIndent())
-    }
-
     fun serviceConfigPage(context: Context, pin: String, openSubtitles: Boolean): String {
         val title = context.getString(if (openSubtitles) R.string.settings_open_subtitles_setup_title else R.string.settings_metadata_remote_advanced)
         val description = context.getString(if (openSubtitles) R.string.companion_open_subtitles_description else R.string.settings_metadata_remote_advanced_description)

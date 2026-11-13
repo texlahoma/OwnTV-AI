@@ -27,7 +27,7 @@ import tv.own.owntv.core.model.SourceType
  * The merge rule local sync stands on: a deletion is a fact with a time on it, and the newer of the
  * two facts wins.
  *
- * Every case here is one the owner will actually perform on his own two devices — unfavorite on the
+ * Every case here is one a user with two devices actually performs — unfavorite on the
  * television, sync, look at the phone — and every one of them fails silently if the rule is wrong.
  * The failure mode is not a crash: it is a favorite quietly coming back from the dead on every sync,
  * for ever, which is exactly the kind of thing nobody reports as a bug and everybody stops trusting.
@@ -123,7 +123,6 @@ class UserDataTombstoneTest {
      * the deletion — but the user has explicitly asked for their own snapshot back. Clearing this
      * device's markers first is what `BackupManager.ImportMode.RESTORE` does, and without it a
      * restore onto a device the user has just cleared reinstates nothing while reporting success.
-     * That is exactly what happened on the owner's television on 2026-09-20.
      */
     @Test
     fun aRestoreReinstatesWhatADeletionWouldHaveRefused() = runBlocking {
@@ -256,7 +255,7 @@ class UserDataTombstoneTest {
     //
     // A deletion already obeyed the clock; an ordinary record did not, and went in with REPLACE. So
     // the merge's answer depended on which device happened to apply last rather than on which fact
-    // was newer. These four cases are the owner's own: watch on one device, sync, look at the other.
+    // was newer. These four cases are the everyday ones: watch on one device, sync, look at the other.
 
     /** Finish an episode on the television; the phone's older position must not overwrite it. */
     @Test

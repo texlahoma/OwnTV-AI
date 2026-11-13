@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">Своё изображение</string>
     <string name="profiles_kids">Детский профиль</string>
     <string name="profiles_kids_description">Упрощённый и безопасный просмотр</string>
+    <string name="profiles_allow_downloads">Разрешить загрузки</string>
+    <string name="profiles_allow_downloads_description">Если выключено, в этом профиле скрыты все кнопки скачивания</string>
     <string name="profiles_remove_pin">Удалить блокировку с помощью PIN</string>
     <string name="profiles_no_pin">Этот профиль открывается без PIN</string>
     <string name="profiles_change_pin">Изменить PIN (пусто = сохранить текущий)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">Создать</string>
     <string name="profiles_save">Сохранить</string>
     <string name="profiles_gate_title">Кто смотрит?</string>
+    <string name="profiles_gate_subtitle">У каждого профиля своё избранное и своя история</string>
     <string name="profiles_wrong_pin">Неверный PIN — попробуйте ещё раз</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — введите PIN</string>
+    <string name="profiles_protected_edit">У него есть блокировка профиля или блокировка настроек. Введите любой из двух PIN-кодов, чтобы изменить его.</string>
     <string name="profiles_kids_badge">ДЕТСКИЙ</string>
     <string name="profiles_add">Добавить профиль</string>
     <string name="profiles_title">Профили</string>
-    <string name="profiles_add_button">Добавить профиль</string>
     <string name="profiles_delete_title">Удалить «<xliff:g id="name">%1$s</xliff:g>»?</string>
     <string name="profiles_delete_message">Этот профиль, его избранное и история будут удалены. Источники сохранятся.</string>
     <string name="profiles_kids_tag">Детский</string>
@@ -32,88 +35,90 @@
     <string name="search_title">Поиск</string>
     <string name="search_continue">Продолжить просмотр</string>
     <string name="search_unwatched">Не просмотрено</string>
-    <string name="search_hint">Поиск каналов, фильмов и сериалов…</string>
     <string name="search_recent">Недавние поисковые запросы</string>
-    <string name="search_recent_empty">Здесь появятся ваши недавние поисковые запросы.</string>
-    <string name="search_minimum_query">Введите не менее 2 символов для поиска по всему контенту.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — результатов нет.</string>
     <string name="search_nothing_in_list">В <xliff:g id="list">%1$s</xliff:g> пока ничего нет.</string>
     <string name="search_clear">Очистить</string>
     <string name="search_jump_to">Перейти</string>
-    <string name="search_watch_live">Смотреть в прямом эфире</string>
-    <string name="search_play">Воспроизвести</string>
     <string name="search_open_series">Открыть сериал</string>
     <string name="search_movie">Фильм</string>
     <string name="search_series">Сериал</string>
     <string name="search_channels">Каналы</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">Продолжить просмотр</string>
-    <string name="home_play_next">Смотреть следующую серию</string>
-    <string name="home_tune_in">Смотреть в прямом эфире</string>
-    <string name="home_recent_live">Недавно просмотрено в прямом эфире</string>
+    <string name="search_on_tv">Телепередачи</string>
+    <string name="search_go_to_channel">К каналу</string>
+    <string name="search_go_to_movie">К фильму</string>
+    <string name="search_clear_recent">Очистить недавние запросы</string>
+    <string name="search_field_hint">Каналы, фильмы и сериалы</string>
+    <string name="search_voice">Голосовой поиск</string>
+    <string name="search_voice_prompt">Назовите канал, фильм или сериал</string>
+    <string name="search_card_title">Находите всё в своих плейлистах</string>
+    <string name="search_card_body">Каналы, фильмы и сериалы из всех показываемых плейлистов. Выберите результат, чтобы сразу перейти к нему, а там — смотреть, скачать или открыть его параметры. Передачи, которые идут сейчас или позже сегодня, тоже находятся по названию.</string>
+    <string name="search_nothing_found">Ничего не найдено по запросу «<xliff:g id="query">%1$s</xliff:g>»</string>
+    <string name="search_nothing_found_body">Поиск идёт по названиям каналов, фильмов и сериалов в показываемых плейлистах. Скрытые категории не просматриваются. Передачи ищутся по названию в загруженной телепрограмме.</string>
+    <string name="search_query_quoted">«<xliff:g id="query">%1$s</xliff:g>»</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> результат</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> результата</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> результатов</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> результатов</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one">Весь <xliff:g id="count">%1$d</xliff:g> канал</item>
+        <item quantity="few">Все <xliff:g id="count">%1$d</xliff:g> канала</item>
+        <item quantity="many">Все <xliff:g id="count">%1$d</xliff:g> каналов</item>
+        <item quantity="other">Все <xliff:g id="count">%1$d</xliff:g> каналов</item>
+    </plurals>
     <string name="profiles_default_name">Профиль</string>
     <string name="launcher_recent_live_title">Недавние эфиры</string>
     <string name="launcher_recent_live_description">Каналы, недавно просмотренные в прямом эфире</string>
     <string name="launcher_movie_type">Фильм</string>
     <string name="launcher_episode_number">Серия <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Загрузка библиотеки · пока <xliff:g id="count">%1$s</xliff:g> название</item>
+        <item quantity="few">Загрузка библиотеки · пока <xliff:g id="count">%1$s</xliff:g> названия</item>
+        <item quantity="many">Загрузка библиотеки · пока <xliff:g id="count">%1$s</xliff:g> названий</item>
+        <item quantity="other">Загрузка библиотеки · пока <xliff:g id="count">%1$s</xliff:g> названий</item>
+    </plurals>
+    <string name="home_library_loading_trending">Раздел «Сейчас в тренде» появится по мере загрузки библиотеки.</string>
     <string name="home_no_preview">Пока нечего показывать.</string>
     <string name="home_no_rows">Все ряды на главном экране скрыты.</string>
     <string name="home_enable_rows">Включите ряды в разделе «Настройки» → «Главный экран».</string>
     <string name="home_start_watching">Начните смотреть, и здесь появится ваша активность.</string>
     <string name="home_continue_empty">Контент для продолжения просмотра появится здесь, когда будет доступна история воспроизведения.</string>
     <string name="home_last_watched_now">Последний просмотр: только что</string>
-    <string name="home_finish_by">Завершение к <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">Продолжить</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуту назад</item>
         <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуты назад</item>
         <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минут назад</item>
-        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минуты назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> минут назад</item>
     </plurals>
     <plurals name="home_last_watched_hours">
         <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> час назад</item>
         <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часа назад</item>
         <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часов назад</item>
-        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часа назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> часов назад</item>
     </plurals>
     <plurals name="home_last_watched_days">
         <item quantity="one">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> день назад</item>
         <item quantity="few">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дня назад</item>
         <item quantity="many">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дней назад</item>
-        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дня назад</item>
+        <item quantity="other">Последний просмотр: <xliff:g id="count">%1$d</xliff:g> дней назад</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">Карточки</string>
     <string name="home_row_keep_watching">Продолжить просмотр</string>
     <string name="home_row_continue_movies">Продолжить просмотр фильмов</string>
     <string name="home_row_continue_series">Продолжить просмотр сериалов</string>
     <string name="home_row_recent_channels">Недавние каналы</string>
     <string name="home_row_favorite_channels">Избранные каналы</string>
+    <string name="home_row_favorite_movies">Избранные фильмы</string>
+    <string name="home_row_favorite_series">Избранные сериалы</string>
     <string name="home_row_on_now">Сейчас в эфире</string>
     <string name="home_row_hero_description">Большой ряд предпросмотра в верхней части экрана</string>
     <string name="home_row_continue_movies_description">Фильмы с сохранённой позицией</string>
     <string name="home_row_continue_series_description">Серии, просмотр которых можно продолжить, или следующие серии</string>
     <string name="home_row_recent_description">Каналы прямого эфира, которые вы недавно смотрели</string>
     <string name="home_row_favorite_description">Ваши избранные каналы прямого эфира</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · СЕЙЧАС В ЭФИРЕ</string>
-    <string name="home_ok_to_watch">OK — смотреть</string>
-    <string name="home_ok_to_browse">OK — перейти к выбору</string>
-    <string name="home_no_programme_details">Нет сведений о телепередаче</string>
-    <string name="home_guide_unavailable">Данные программы передач недоступны</string>
-    <string name="home_next">Далее</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">СЕЙЧАС · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">ДАЛЕЕ · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> канал</item>
-        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> канала</item>
-        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> каналов</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> канала</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">Ваши избранные фильмы</string>
+    <string name="home_row_favorite_series_description">Ваши избранные сериалы</string>
     <string name="update_title">Обновление приложения</string>
     <string name="update_checking">Проверка обновлений…</string>
     <string name="update_whats_new">Что нового</string>
@@ -148,6 +153,11 @@
     <string name="home_trending_style">Оформление трендов</string>
     <string name="home_trending_style_hero">Подробная карточка</string>
     <string name="home_trending_style_posters">Только постеры</string>
+    <string name="home_trending_rank">№<xliff:g id="rank">%1$d</xliff:g> в трендах · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">В ВАШЕМ ПЛЕЙЛИСТЕ</string>
+    <string name="home_trending_style_full_bleed">Во весь экран</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> ч <xliff:g id="minutes">%2$02d</xliff:g> мин</string>
+    <string name="home_time_left">осталось <xliff:g id="duration">%1$s</xliff:g></string>
     <string name="settings_trending_status_off">Раздел «Сейчас в тренде» отключён.</string>
     <string name="settings_trending_status_building">Раздел «Сейчас в тренде» формируется после синхронизации с провайдером.</string>
     <string name="settings_trending_status_metadata_disabled">Для раздела «Сейчас в тренде» нужны метаданные TMDB. Выберите «Только TMDB» или «Провайдер + TMDB».</string>
@@ -159,28 +169,23 @@
         <item quantity="one">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> название провайдера. Требуется не менее 4.</item>
         <item quantity="few">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названия провайдера. Требуется не менее 4.</item>
         <item quantity="many">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названий провайдера. Требуется не менее 4.</item>
-        <item quantity="other">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названия провайдера. Требуется не менее 4.</item>
+        <item quantity="other">Раздел «Сейчас в тренде» скрыт, поскольку совпало только <xliff:g id="count">%1$d</xliff:g> названий провайдера. Требуется не менее 4.</item>
     </plurals>
     <plurals name="settings_trending_status_showing">
         <item quantity="one">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавшее название.</item>
         <item quantity="few">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавших названия.</item>
         <item quantity="many">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавших названий.</item>
-        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавшего названия.</item>
+        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> совпавших названий.</item>
     </plurals>
     <plurals name="settings_trending_status_showing_refresh_failed">
         <item quantity="one">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> название из последнего успешного обновления.</item>
         <item quantity="few">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названия из последнего успешного обновления.</item>
         <item quantity="many">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названий из последнего успешного обновления.</item>
-        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названия из последнего успешного обновления.</item>
+        <item quantity="other">В разделе «Сейчас в тренде» показано <xliff:g id="count">%1$d</xliff:g> названий из последнего успешного обновления.</item>
     </plurals>
     <string name="home_trending_movie">Фильм</string>
     <string name="home_trending_series">Сериал</string>
-    <string name="home_trending_section_label">СЕЙЧАС В ТРЕНДЕ · СНИМОК СИНХРОНИЗАЦИИ</string>
     <string name="home_trending_provider_match">Совпадение у провайдера</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> — выбранный язык</string>
-    <string name="home_trending_english_fallback">Запасной вариант на английском</string>
-    <string name="home_trending_untagged_fallback">Запасной вариант без языковой метки</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> — запасной вариант</string>
     <string name="home_trending_why_label">ПОЧЕМУ ЭТОТ МАТЕРИАЛ ПОКАЗАН</string>
     <string name="home_trending_reason_title">Позиция в рейтинге TMDB: №<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + совпадение у провайдера</string>
     <string name="home_trending_reason_preferred">Выбранная версия провайдера на языке <xliff:g id="language">%1$s</xliff:g> имеет приоритет перед версиями на других языках.</string>
@@ -191,19 +196,19 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> сезон</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> сезона</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> сезонов</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> сезона</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> сезонов</item>
     </plurals>
     <string name="home_trending_play">Смотреть</string>
     <string name="home_trending_open_episodes">Открыть серии</string>
     <string name="home_trending_trailer">Трейлер</string>
     <string name="home_trending_more_details">Подробнее</string>
     <string name="home_trending_all_versions">Все версии</string>
-    <string name="home_trending_previous">Предыдущий</string>
+    <string name="home_trending_why_menu">Почему здесь этот фильм или сериал</string>
     <string name="home_trending_pause">Пауза</string>
-    <string name="home_trending_resume">Продолжить</string>
-    <string name="home_trending_next">Следующий</string>
     <string name="home_trending_unavailable">Эта версия больше недоступна</string>
     <string name="recording_notification_title">Идёт запись</string>
+    <string name="auto_start_notification_channel">Автозапуск при пробуждении</string>
+    <string name="auto_start_notification_text">OwnTV откроется, когда телевизор проснётся</string>
     <string name="recording_failed_no_space">Остановлено: нет свободного места</string>
     <string name="recording_failed_no_connection">У провайдера нет свободных подключений</string>
     <string name="recording_failed_clash">Подключение занимала другая запись</string>
@@ -212,21 +217,29 @@
     <string name="recording_failed_channel_gone">Этого канала больше нет в вашем плейлисте</string>
     <string name="recording_failed_unknown">Запись не выполнена</string>
     <string name="recording_title">Записи</string>
-    <string name="recording_description">Прямой эфир, сохранённый на этом устройстве.</string>
-    <string name="recording_empty">Пока ничего не записано. Откройте телегид, выберите передачу и нажмите «Записать».</string>
+    <string name="recording_empty">Записей пока нет. Нажмите «Записать» у передачи в телегиде или удерживайте канал, чтобы записать его или запланировать время.</string>
     <string name="recording_group_now">Записывается сейчас</string>
     <string name="recording_group_scheduled">Запланировано</string>
     <string name="recording_group_completed">Записано</string>
     <string name="recording_group_failed">Не удалось</string>
     <string name="recording_group_missed">Пропущено</string>
+    <string name="recording_group_series">Каждый показ</string>
     <string name="recording_record">Записать</string>
     <string name="recording_stop">Остановить запись</string>
+    <string name="recording_delete_message">Запись и её файл будут удалены с этого устройства. Это действие нельзя отменить.</string>
     <string name="recording_record_series">Записывать каждый показ</string>
     <string name="recording_stop_series">Больше не записывать каждый показ</string>
     <string name="recording_from_archive">Записать из архива</string>
+    <string name="recording_schedule">Запланировать запись…</string>
+    <string name="recording_schedule_hint">Выберите день, начало и конец. Запись пройдёт, даже если у канала нет телегида.</string>
+    <string name="recording_schedule_start">Начало</string>
+    <string name="recording_schedule_end">Конец</string>
+    <string name="recording_schedule_next_day">следующий день</string>
+    <string name="recording_schedule_past">Это время уже прошло</string>
     <string name="recording_scheduled_for">Запишется <xliff:g id="time">%1$s</xliff:g></string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line">Идёт запись: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_pill_line_locked">Запись из заблокированной категории</string>
     <string name="recording_clash_with">Пересекается с <xliff:g id="programme">%1$s</xliff:g></string>
     <string name="recording_settings_group">Запись</string>
     <string name="settings_recording_reserve">Оставлять одно подключение для просмотра</string>
@@ -240,13 +253,21 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> минута</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> минуты</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> минут</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> минуты</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> минут</item>
     </plurals>
     <string name="recording_failed_encrypted">Этот канал зашифрован, запись невозможна</string>
     <string name="recording_failed_drm">Этот канал защищён технологией DRM, поэтому его можно смотреть, но нельзя записывать. Защиту устанавливает ваш провайдер, а не OwnTV.</string>
     <string name="recording_failed_metered">Не записано через мобильный интернет</string>
+    <string name="recording_card_empty_title">Записей пока нет</string>
+    <string name="recording_card_body">Выберите передачу в телегиде и нажмите «Записать» или удерживайте канал и запланируйте время. Запись появится здесь, даже пока вы смотрите что-то другое.</string>
+    <string name="recording_open_guide">Открыть телегид</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> запись</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> записи</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> записей</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> записей</item>
+    </plurals>
     <string name="settings_recording_mobile_data">Записывать через мобильный интернет</string>
-    <string name="settings_recording_mobile_data_description">Выключено: запись, выпавшая на время без Wi-Fi, пропускается, а не ждёт — прямой эфир не повторится.</string>
     <string name="settings_record_watching">Записывать то, что смотрю</string>
     <string name="settings_record_watching_description">Добавляет в плеер кнопку записи, которая сохраняет канал, который вы смотрите. Канал загружается отдельно, поэтому во время записи занято одно из подключений провайдера, и запись продолжается после смены канала или выхода из плеера.</string>
     <string name="settings_record_watching_warning_title">Только одно подключение</string>
@@ -255,4 +276,325 @@
     <string name="settings_record_watching_turn_on">Включить</string>
     <string name="player_recording_conflict">Ваш провайдер разрешает только один поток одновременно, и его занимает запись.</string>
     <string name="player_keep_watching_stop_recording">Продолжить просмотр (остановит запись)</string>
+    <string name="sports_channel_goal_alerts">Оповещения о голах</string>
+    <string name="sports_channel_live_match">Матч в эфире</string>
+    <string name="sports_channel_match_reminders">Напоминания о матчах</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ Гол! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Уикет! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Красная карточка · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Перерыв · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Конец матча · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Начало матча · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Перенесён · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">Отменён · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Счёт исправлен · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Начало через <xliff:g id="minutes">%1$d</xliff:g> мин: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="few">Начало через <xliff:g id="minutes">%1$d</xliff:g> мин: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="many">Начало через <xliff:g id="minutes">%1$d</xliff:g> мин: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Начало через <xliff:g id="minutes">%1$d</xliff:g> мин: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">На <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one">На <xliff:g id="channel">%1$s</xliff:g> и ещё <xliff:g id="count">%2$d</xliff:g></item>
+        <item quantity="few">На <xliff:g id="channel">%1$s</xliff:g> и ещё <xliff:g id="count">%2$d</xliff:g></item>
+        <item quantity="many">На <xliff:g id="channel">%1$s</xliff:g> и ещё <xliff:g id="count">%2$d</xliff:g></item>
+        <item quantity="other">На <xliff:g id="channel">%1$s</xliff:g> и ещё <xliff:g id="count">%2$d</xliff:g></item>
+    </plurals>
+    <string name="sports_action_stop_updates">Остановить обновления</string>
+    <string name="sports_title">Спорт</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> в эфире</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> в эфире</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> в эфире</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> в эфире</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> матч</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> матча</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> матчей</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> матчей</item>
+    </plurals>
+    <string name="sports_scores_espn">Счёт: ESPN</string>
+    <string name="sports_my_teams">Мои команды</string>
+    <string name="sports_live_now">Сейчас в эфире</string>
+    <string name="sports_not_on_channels">Нет на ваших каналах</string>
+    <string name="sports_on_channels_now">Спорт на ваших каналах сейчас</string>
+    <string name="sports_on_channels_now_mobile">Спорт на ваших каналах</string>
+    <string name="sports_on_channels_now_hint">Из вашей телепрограммы — включая виды спорта, которых нет в ESPN</string>
+    <string name="sports_starting_soon">Скоро начало</string>
+    <string name="sports_hint_match_page">Страница матча</string>
+    <string name="sports_hint_follow_remind">Следить · Напомнить</string>
+    <string name="sports_hint_day_matches">Матчи дня</string>
+    <string name="sports_hint_day">День</string>
+    <string name="sports_hint_week">Неделя</string>
+    <string name="sports_hint_show_score">Показать счёт</string>
+    <string name="sports_hint_back_to_day">Назад ко дню</string>
+    <string name="sports_hint_open_league">Открыть лигу</string>
+    <string name="sports_hint_sport_chips">Кнопки видов спорта</string>
+    <string name="sports_hint_league_chips">Кнопки лиг</string>
+    <string name="sports_hint_follow_unfollow">Следить · Не следить</string>
+    <string name="sports_reminder_set">Напоминание</string>
+    <string name="sports_until">до <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_set">Сет <xliff:g id="set">%1$d</xliff:g></string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> ов.</string>
+    <string name="sports_empty_nothing">Сегодня нет матчей в том, за чем вы следите</string>
+    <string name="sports_empty_unreachable">Счёт сейчас недоступен. Ваши каналы по-прежнему работают.</string>
+    <string name="sports_paused">Счёт приостановлен — повтор через несколько минут</string>
+    <string name="sports_sport_soccer">Футбол</string>
+    <string name="sports_sport_basketball">Баскетбол</string>
+    <string name="sports_sport_tennis">Теннис</string>
+    <string name="sports_sport_cricket">Крикет</string>
+    <string name="sports_sport_hockey">Хоккей</string>
+    <string name="sports_sport_football">НФЛ</string>
+    <string name="sports_sport_mma">ММА</string>
+    <string name="sports_sport_baseball">Бейсбол</string>
+    <string name="sports_sport_golf">Гольф</string>
+    <string name="sports_sport_rugby">Регби</string>
+    <string name="sports_sport_rugby_league">Регбилиг</string>
+    <string name="sports_sport_aussie_rules">Австралийский футбол</string>
+    <string name="sports_sport_volleyball">Волейбол</string>
+    <string name="sports_sport_lacrosse">Лакросс</string>
+    <string name="sports_sport_handball">Гандбол</string>
+    <string name="sports_sport_motorsport">Автоспорт</string>
+    <string name="sports_sport_darts">Дартс</string>
+    <string name="sports_sport_snooker">Снукер</string>
+    <string name="sports_sport_cycling">Велоспорт</string>
+    <string name="sports_sport_combat">Единоборства</string>
+    <string name="sports_sport_american_football">Американский футбол</string>
+    <string name="sports_sport_athletics">Лёгкая атлетика</string>
+    <string name="sports_sport_winter">Зимние виды спорта</string>
+    <string name="sports_sport_other">Спорт</string>
+    <string name="sports_tab_timeline">Хроника</string>
+    <string name="sports_tab_stats">Статистика</string>
+    <string name="sports_tab_lineups">Составы</string>
+    <string name="sports_tab_table">Таблица</string>
+    <string name="sports_following">Вы следите</string>
+    <string name="sports_follow">Следить</string>
+    <string name="sports_event_goal">Гол · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">Автогол · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Пенальти · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Жёлтая карточка · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Красная карточка · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Замена · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">пас <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Уикет · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Начало матча</string>
+    <string name="sports_event_half_time">Перерыв</string>
+    <string name="sports_event_full_time">Конец матча</string>
+    <string name="sports_stat_red_cards">Красные карточки</string>
+    <string name="sports_watch_live">Смотреть в эфире</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Смотреть в эфире · <xliff:g id="count">%1$d</xliff:g> канал</item>
+        <item quantity="few">Смотреть в эфире · <xliff:g id="count">%1$d</xliff:g> канала</item>
+        <item quantity="many">Смотреть в эфире · <xliff:g id="count">%1$d</xliff:g> каналов</item>
+        <item quantity="other">Смотреть в эфире · <xliff:g id="count">%1$d</xliff:g> каналов</item>
+    </plurals>
+    <string name="sports_language_first">Сначала <xliff:g id="language">%1$s</xliff:g> · из настроек</string>
+    <string name="sports_any_country">Любая страна</string>
+    <string name="sports_reason_guide">Программа: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Канал события · в названии обе команды</string>
+    <string name="sports_reason_pick">Ваш выбор для <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_reason_likely">Обычно показывает <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_confirmed">Подтверждено программой</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> скрыт фильтрами</item>
+        <item quantity="few">+ <xliff:g id="count">%1$d</xliff:g> скрыто фильтрами</item>
+        <item quantity="many">+ <xliff:g id="count">%1$d</xliff:g> скрыто фильтрами</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> скрыто фильтрами</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Смотреть на весь экран</string>
+    <string name="sports_preview_another">Просмотр другого канала</string>
+    <string name="sports_always_use">Всегда для <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_filter_title">Фильтр каналов</string>
+    <string name="sports_showing_of">Показано <xliff:g id="shown">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sports_filter_country">Страна</string>
+    <string name="sports_filter_match">Матч</string>
+    <string name="sports_unknown">Неизвестно</string>
+    <string name="sports_any">Любое</string>
+    <string name="sports_all_playlists">Все плейлисты</string>
+    <string name="sports_quality_hd">HD и выше</string>
+    <string name="sports_quality_fhd">FHD и выше</string>
+    <string name="sports_quality_uhd">Только 4K</string>
+    <string name="sports_only_confirmed">Только каналы, подтверждённые программой</string>
+    <string name="sports_only_confirmed_description">Скрыть «вероятные» и запомненные каналы</string>
+    <string name="sports_only_confirmed_mobile">Только подтверждённые</string>
+    <string name="sports_remember_filters">Запомнить фильтры для всех матчей</string>
+    <string name="sports_remember_filters_description">Сохраняется в Настройки → Спорт для этого профиля</string>
+    <string name="sports_remember_filters_mobile">Запомнить для всех матчей</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one">Показать <xliff:g id="count">%1$d</xliff:g> канал</item>
+        <item quantity="few">Показать <xliff:g id="count">%1$d</xliff:g> канала</item>
+        <item quantity="many">Показать <xliff:g id="count">%1$d</xliff:g> каналов</item>
+        <item quantity="other">Показать <xliff:g id="count">%1$d</xliff:g> каналов</item>
+    </plurals>
+    <string name="sports_filter_only_this">Только этот</string>
+    <string name="sports_filter_toggle">Переключить</string>
+    <string name="sports_goal_toast">Гол команды, за которой вы следите</string>
+    <string name="sports_switch">Переключить</string>
+    <string name="sports_other_channels">Другие каналы</string>
+    <string name="sports_other_channels_count">Другие каналы · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Другие каналы с этим матчем</string>
+    <string name="sports_playing_now">Сейчас играет</string>
+    <string name="sports_switch_channel">Переключить канал</string>
+    <string name="sports_tab_fixtures">Календарь</string>
+    <string name="sports_tab_results">Результаты</string>
+    <string name="sports_tab_scores">Счёт</string>
+    <string name="sports_tab_calendar">Расписание</string>
+    <string name="sports_tab_leagues">Лиги</string>
+    <string name="sports_previous_month">Предыдущий месяц</string>
+    <string name="sports_next_month">Следующий месяц</string>
+    <string name="sports_next">Далее: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">Далее</string>
+    <string name="sports_no_table_series">Таблицы нет — серии меняются каждую неделю</string>
+    <string name="sports_follow_league">Следить за лигой</string>
+    <string name="sports_unfollow_league">Не следить за лигой</string>
+    <string name="sports_no_matches_on"><xliff:g id="day">%1$s</xliff:g>: в ваших видах спорта матчей нет</string>
+    <string name="sports_nothing_on_day">В этот день ничего</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: в этот день ничего</string>
+    <string name="sports_change_leagues_hint">Добавить или убрать лиги можно в Настройки → Спорт</string>
+    <string name="sports_loading_month">Загрузка: <xliff:g id="month">%1$s</xliff:g>…</string>
+    <string name="sports_offline_saved">Показано сохранённое <xliff:g id="time">%1$s</xliff:g> — ESPN недоступен</string>
+    <string name="sports_team_page">Страница команды</string>
+    <string name="sports_next_match">Следующий матч</string>
+    <string name="sports_last_five">Последние пять</string>
+    <string name="sports_league_position">Место в таблице</string>
+    <string name="sports_in_my_teams">В «Моих командах»</string>
+    <string name="sports_open_match_page">Открыть страницу матча</string>
+    <string name="sports_open_team_page">Открыть страницу команды</string>
+    <string name="sports_my_teams_leagues">Лиги, где играют ваши команды</string>
+    <string name="sports_tab_drivers">Пилоты</string>
+    <string name="sports_tab_constructors">Конструкторы</string>
+    <string name="sports_tab_races">Гонки</string>
+    <string name="sports_tab_rankings">Рейтинг</string>
+    <string name="sports_tab_matches">Матчи</string>
+    <string name="sports_next_race_weekend">Следующий гоночный уик-энд</string>
+    <string name="sports_last_weekend">Прошлые выходные</string>
+    <string name="sports_session_practice_1">Практика 1</string>
+    <string name="sports_session_practice_2">Практика 2</string>
+    <string name="sports_session_practice_3">Практика 3</string>
+    <string name="sports_session_sprint_qualifying">Квалификация спринта</string>
+    <string name="sports_session_qualifying">Квалификация</string>
+    <string name="sports_session_sprint">Спринт</string>
+    <string name="sports_session_race">Гонка</string>
+    <string name="sports_table_team">Команда</string>
+    <string name="sports_table_played">И</string>
+    <string name="sports_table_won">В</string>
+    <string name="sports_table_drawn">Н</string>
+    <string name="sports_table_lost">П</string>
+    <string name="sports_table_difference">РМ</string>
+    <string name="sports_table_points">О</string>
+    <string name="sports_table_form">Форма</string>
+    <string name="sports_this_matchday">Этот тур</string>
+    <string name="sports_settings_what">Что показывать</string>
+    <string name="sports_show_in_menu">Показывать «Спорт» в меню</string>
+    <string name="sports_show_in_menu_description">Включено по умолчанию, с плейлистом и без</string>
+    <string name="sports_leagues">Виды спорта и лиги</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> лига</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> лиги</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> лиг</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> лиг</item>
+    </plurals>
+    <string name="sports_spoiler_free">Без спойлеров</string>
+    <string name="sports_spoiler_free_description">Скрывать счёт, пока не нажмёте на нём OK</string>
+    <string name="sports_spoiler_free_description_mobile">Нажмите на счёт, чтобы увидеть его</string>
+    <string name="sports_settings_watching">Просмотр</string>
+    <string name="sports_languages">Предпочтительные языки комментария</string>
+    <string name="sports_languages_mobile">Языки комментария</string>
+    <string name="sports_languages_description">Первыми в «Смотреть в эфире»</string>
+    <string name="sports_countries">Предпочтительные страны</string>
+    <string name="sports_countries_description">По префиксам каналов, например «DE|»</string>
+    <string name="sports_picture_description">Скрывать каналы ниже этого</string>
+    <string name="sports_settings_while_watching">Во время просмотра</string>
+    <string name="sports_score_info_bar">Счёт на инфопанели</string>
+    <string name="sports_score_info_bar_description">Виден только при открытой панели, чтобы не выдать гол</string>
+    <string name="sports_score_info_bar_description_mobile">Только при открытой панели</string>
+    <string name="sports_goal_alerts_description">Для моих команд, пока смотрю другое</string>
+    <string name="sports_match_reminders_description">До начала, с лучшим каналом</string>
+    <string name="sports_remembered_channels">Запомненные каналы</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · ещё <xliff:g id="count">%3$d</xliff:g></item>
+        <item quantity="few"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · ещё <xliff:g id="count">%3$d</xliff:g></item>
+        <item quantity="many"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · ещё <xliff:g id="count">%3$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · ещё <xliff:g id="count">%3$d</xliff:g></item>
+    </plurals>
+    <string name="sports_show_likely">Показывать «вероятные» каналы</string>
+    <string name="sports_show_likely_description">Спортивные каналы без подтверждения в программе</string>
+    <string name="sports_settings_data">Данные</string>
+    <string name="sports_live_refresh">Обновление в эфире</string>
+    <string name="sports_live_refresh_description">Только пока виден экран спорта или счёт</string>
+    <string name="sports_about">О спортивных данных</string>
+    <string name="sports_about_summary">Счёт: ESPN · каналы: ваш плейлист и программа</string>
+    <string name="sports_alerts_when_closed">Оповещения при закрытом OwnTV</string>
+    <string name="sports_alerts_when_closed_description">Один раз запросит разрешение на уведомления</string>
+    <string name="sports_alert_me_about">Оповещать о</string>
+    <string name="sports_kind_goals">Голы и уикеты</string>
+    <string name="sports_kind_kickoff_full_time">Начало и конец</string>
+    <string name="sports_alerts_for">Для</string>
+    <string name="sports_followed_leagues">Отслеживаемые лиги</string>
+    <string name="sports_followed_leagues_description">Каждый матч, а их может быть много</string>
+    <string name="sports_live_card">Карточка счёта в эфире</string>
+    <string name="sports_live_card_offer">Предлагать карточку счёта</string>
+    <string name="sports_live_card_description">Обновляется каждые 30 с до конца матча; запускается со страницы матча</string>
+    <string name="sports_alerts_footnote">Когда OwnTV закрыт, оповещения обычно приходят в течение минуты. Если телефон долго лежит неподвижно с выключенным экраном, Android может задержать их примерно до 15 минут. Карточку счёта он не задерживает.</string>
+    <string name="sports_search_teams">Поиск команд, игроков, лиг</string>
+    <string name="sports_suggested">Предложения по вашим просмотрам</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Вы смотрели <xliff:g id="count">%1$d</xliff:g> их матч</item>
+        <item quantity="few">Вы смотрели <xliff:g id="count">%1$d</xliff:g> их матча</item>
+        <item quantity="many">Вы смотрели <xliff:g id="count">%1$d</xliff:g> их матчей</item>
+        <item quantity="other">Вы смотрели <xliff:g id="count">%1$d</xliff:g> их матчей</item>
+    </plurals>
+    <string name="sports_league_label">Лига</string>
+    <string name="sports_no_playlist_title">Добавьте плейлист, чтобы смотреть матчи</string>
+    <string name="sports_no_playlist_body">Счёт, таблицы и оповещения работают и без него. С плейлистом OwnTV найдёт все каналы, которые показывают этот матч.</string>
+    <string name="sports_add_playlist">Добавить плейлист</string>
+    <string name="sports_home_row">Спорт в эфире</string>
+    <string name="sports_home_row_description">Отслеживаемые матчи, пока какой-то идёт или вот-вот начнётся</string>
+    <string name="sports_empty_nothing_followed">Виды спорта и лиги ещё не выбраны</string>
+    <string name="sports_empty_choose_in">Выберите их в разделе Настройки → Приложение → Спорт → Виды спорта и лиги.</string>
+    <string name="sports_load_time_warning">Чем больше видов спорта и лиг вы выберете, тем дольше загрузка и построение.</string>
+    <string name="sports_sport_buttons">Кнопки видов спорта</string>
+    <string name="sports_sport_buttons_mine">Мои виды спорта</string>
+    <string name="sports_sport_buttons_all">Все виды спорта</string>
+    <string name="sports_sport_buttons_description">Мои виды спорта: только выбранное. Все виды спорта: все лиги, известные OwnTV, — загрузка дольше.</string>
+    <string name="sports_auto_rebuild">Автоперестроение</string>
+    <string name="sports_auto_rebuild_description">Как часто счёт, подробности матчей и таблицы загружаются заново автоматически</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one">Каждый <xliff:g id="count">%1$d</xliff:g> час</item>
+        <item quantity="few">Каждые <xliff:g id="count">%1$d</xliff:g> часа</item>
+        <item quantity="many">Каждые <xliff:g id="count">%1$d</xliff:g> часов</item>
+        <item quantity="other">Каждые <xliff:g id="count">%1$d</xliff:g> часов</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">При каждом запуске приложения</string>
+    <string name="sports_calendar_refresh">Обновление расписания</string>
+    <string name="sports_calendar_refresh_description">Как часто сохранённые месяцы загружаются заново</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one">Каждый <xliff:g id="count">%1$d</xliff:g> день</item>
+        <item quantity="few">Каждые <xliff:g id="count">%1$d</xliff:g> дня</item>
+        <item quantity="many">Каждые <xliff:g id="count">%1$d</xliff:g> дней</item>
+        <item quantity="other">Каждые <xliff:g id="count">%1$d</xliff:g> дней</item>
+    </plurals>
+    <string name="sports_find_channels">Найти каналы</string>
+    <string name="sports_find_channels_description">Ищет этот матч в вашей телепрограмме и названиях каналов. В большом плейлисте это может занять некоторое время.</string>
+    <string name="sports_finding_channels">Поиск по вашим каналам…</string>
+    <string name="sports_strict_filter">Строгая фильтрация</string>
+    <string name="sports_strict_filter_description">Вкл.: показываются только каналы, прошедшие фильтры. Выкл.: показываются все каналы, подходящие — первыми.</string>
+    <string name="sports_rebuilding">Перестроение спорта…</string>
+    <string name="sports_rebuild_failed">Не удалось обновить спортивные данные</string>
+    <string name="sports_refresh_data_now">Обновить спортивные данные сейчас</string>
+    <string name="sports_last_updated">Последнее обновление: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Каналы можно найти с <xliff:g id="time">%1$s</xliff:g>, за 30 минут до начала матча.</string>
+    <string name="sports_find_channels_ended">Матч закончился, искать каналы не нужно.</string>
+    <string name="sports_tab_broadcasts">Трансляции</string>
+    <string name="sports_broadcasts_guide">В вашей телепрограмме</string>
+    <string name="sports_broadcasts_espn">По данным ESPN (только США)</string>
+    <string name="sports_broadcasts_find_first">Нажмите «Найти каналы», чтобы увидеть каналы из телепрограммы с этим матчем.</string>
+    <string name="sports_broadcasts_none">Нет данных</string>
+    <string name="sports_move_instructions">▲/▼ выбор · OK взять или положить · В конце «Сохранить»</string>
 </resources>

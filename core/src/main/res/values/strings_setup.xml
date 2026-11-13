@@ -11,7 +11,7 @@
     <!-- Translators: Screen title for the remote-background dialog shown on the TV when sending a background image from another device. -->
     <string name="setup_send_from_phone">Send from another device</string>
     <!-- Translators: Description in the remote-background dialog explaining how to send an image from another device. -->
-    <string name="setup_phone_background_description">On another device on the same Wi-Fi — a phone, tablet or computer — scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
+    <string name="setup_phone_background_description">On any device with a browser on the same Wi-Fi — a phone, a computer or another TV — scan the QR (or open the URL), enter this PIN and send a photo. It becomes the background instantly.</string>
     <!-- Translators: Loading status shown while the companion HTTP server is starting. -->
     <string name="setup_opening_server">Opening server\u2026</string>
     <!-- Translators: Instruction above the PIN display on the TV screen, telling the user to enter it in the browser on the remote device. -->
@@ -55,17 +55,10 @@
     <!-- Translators: Visual drag indicator shown next to the active item during reorder mode. This is a symbol, not translatable text. -->
     <string name="setup_move_indicator">\u2195</string>
 
-    <!-- Translators: Subtitle on the first-run welcome screen, below the OwnTV brand lockup. -->
-    <string name="setup_welcome_to">WELCOME TO</string>
-    <string name="setup_welcome_tagline">Your own IPTV player.</string>
     <!-- Translators: Primary action button on the first-run welcome screen. -->
     <string name="setup_get_started">Get Started</string>
     <!-- Translators: Heading on the first-run step where the user sets interface and text size before the rest of setup. -->
     <string name="setup_display_size_title">Make it comfortable to read</string>
-    <!-- Translators: Description under the heading on the first-run display-size step. "Settings" refers to the app's Settings screen. -->
-    <string name="setup_display_size_description">Set how big the interface and its text are. You can change both later in Settings.</string>
-    <!-- Translators: Sample sentence shown on the first-run display-size step; it scales live so the user can judge readability from the sofa. -->
-    <string name="setup_display_size_preview">If you can read this easily from your seat, the size is right.</string>
     <!-- Translators: Heading on the first-run disclaimer screen shown before the user can proceed. -->
     <string name="setup_before_you_start">Before you start</string>
     <!-- Translators: Body text on the first-run disclaimer screen. "OwnTV", "Xtream", "M3U" are brand/protocol names that must not be translated. -->
@@ -80,8 +73,6 @@
     <string name="setup_new_profile">New profile</string>
     <!-- Translators: Description text beneath the "New profile" choice card on the setup-choice screen. -->
     <string name="setup_create_profile_add_sources">Create a profile and add sources</string>
-    <!-- Translators: ChoiceCard title on the setup-choice screen for restoring from a backup. -->
-    <string name="setup_restore_backup">Restore backup</string>
     <!-- Translators: Description text beneath the "Restore backup" choice card. -->
     <string name="setup_import_profiles_playlists">Import profiles &amp; playlists from a file</string>
     <!-- Translators: ChoiceCard title on the setup-choice screen for copying everything from another OwnTV device on the same Wi-Fi. -->
@@ -92,10 +83,6 @@
     <string name="setup_add_playlist">Add a playlist</string>
     <!-- Translators: Description on the "add a playlist" step. -->
     <string name="setup_add_playlist_description">Add a source for this profile, or set one up later.</string>
-    <!-- Translators: ChoiceCard title for creating a new M3U/Xtream source from scratch. -->
-    <string name="setup_new">New</string>
-    <!-- Translators: Description beneath the "New" choice card. "M3U" and "Xtream" are protocol/brand names that must not be translated. -->
-    <string name="setup_add_m3u_xtream">Add an M3U, Xtream or Stalker source</string>
     <!-- Translators: ChoiceCard title for reusing playlists from another profile. Only shown when other profiles already have sources. -->
     <string name="setup_existing">Existing</string>
     <!-- Translators: Description beneath the "Existing" choice card. Only shown when other profiles have sources. -->
@@ -146,7 +133,7 @@
     <!-- Translators: Heading on the restore-chooser screen where the user picks between Remote and Local file. -->
     <string name="setup_restore_a_backup">Restore a backup</string>
     <!-- Translators: Description on the restore-chooser screen. -->
-    <string name="setup_restore_choice_description">Send the backup from another device (phone or laptop) on the same Wi-Fi, or pick a backup file already on this device.</string>
+    <string name="setup_restore_choice_description">Send the backup by Remote from any device with a browser on the same Wi-Fi, or pick a backup file already on this device.</string>
     <!-- Translators: ChoiceCard description for the "Remote" option on the restore-chooser screen. -->
     <string name="setup_upload_from_wifi_device">Upload from a device on your Wi-Fi</string>
     <!-- Translators: ChoiceCard title for the local-file option on the restore-chooser screen. Also used in player subtitle track options to label a locally loaded subtitle file. -->
@@ -170,6 +157,10 @@
     </plurals>
     <!-- Translators: Info text shown on import success when passwords were not restored (user skipped or backup was partially encrypted). -->
     <string name="setup_passwords_omitted">Re-enter any saved passwords afterwards.</string>
+    <!-- Translators: Shown after a restore. "names" is a comma-separated list of playlist names whose password was not in the backup; those playlists are not loaded until the password is entered in the playlist's edit form in Settings. -->
+    <string name="setup_need_password">No saved password, so not loaded yet: <xliff:g id="names">%1$s</xliff:g>. Open the playlist in Settings and enter its password.</string>
+    <!-- Translators: Name given to a new playlist when another playlist already has the same name, e.g. "My IPTV 2". "name" is the playlist name, "number" counts up from 2. -->
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <!-- Translators: Plural warning shown on import success when some sources were skipped due to unsupported playlist types. "count" is the number of skipped sources. -->
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> source was skipped because this version doesn\'t support its playlist type.</item>
@@ -182,31 +173,15 @@
     <!-- Translators: Button on the import-failure screen to retry the import. Capitalized as a standalone button label. -->
     <string name="setup_try_again_caps">Try Again</string>
 
-    <!-- Translators: Heading on the RemoteSetupScreen for adding a source via the remote companion. -->
-    <string name="setup_add_from_phone">Add from another device</string>
-    <!-- Translators: Description on the RemoteSetupScreen explaining how to use the remote companion. -->
-    <string name="setup_phone_add_description">On a phone, tablet or computer on the same Wi-Fi, scan the QR (or open the URL), enter this PIN, fill in your playlist and tap Send to TV. Its details then appear here, ready to import \u2014 you press Start Import with the remote.</string>
     <!-- Translators: Loading label while the companion server is starting. -->
     <string name="setup_opening">Opening\u2026</string>
-    <!-- Translators: Button label on the RemoteSetupScreen to start the companion HTTP server. -->
-    <string name="setup_open_server">Open server</string>
-    <!-- Translators: Button label on the RemoteSetupScreen to stop the companion HTTP server while it is running. -->
-    <string name="setup_stop_server">Stop server</string>
 
     <!-- Translators: Heading on the AddSourceChooserScreen where the user picks between Remote (the remote companion) and Manual (on-device form). -->
     <string name="setup_add_source">Add a source</string>
-    <!-- Translators: Description on the AddSourceChooserScreen. -->
-    <string name="setup_add_source_description">Fill the form on another device, or type the details here with the remote.</string>
-    <!-- Translators: ChoiceCard title for the manual (on-device) source-entry option. Contrasts with Remote. -->
-    <string name="setup_manual">Manual</string>
-    <!-- Translators: ChoiceCard subtitle for the "Remote" option on the add-source chooser. -->
-    <string name="setup_use_phone_same_wifi">Use a phone, tablet or computer on the same Wi-Fi</string>
-    <!-- Translators: ChoiceCard subtitle for the "Manual" option on the add-source chooser. "Xtream", "M3U", "Stalker" are protocol/brand names that must not be translated. -->
-    <string name="setup_type_source_here">Type Xtream / M3U / Stalker here</string>
     <!-- Translators: Heading on the AddSourceScreen when editing an existing source. -->
     <string name="setup_edit_source">Edit source</string>
-    <!-- Translators: Heading on the AddSourceScreen when adding a new source. -->
-    <string name="setup_add_your_source">Add your source</string>
+    <!-- Translators: Row on the TV's Edit source screen that opens a page in a browser on a phone, tablet or computer on the same Wi-Fi, to change this playlist's details there. Matches "Send from another device". -->
+    <string name="setup_edit_from_phone">Edit from another device</string>
     <!-- Translators: Description on the AddSourceScreen when editing an existing source. -->
     <string name="setup_edit_source_description">Update this source\'s details, or change its auto-refresh setting.</string>
     <!-- Translators: Description on the AddSourceScreen when adding a new source. "OwnTV", "Xtream", "M3U", "Stalker" are brand/protocol names that must not be translated. -->
@@ -274,6 +249,10 @@
     <string name="setup_user_agent_optional">User-Agent (optional)</string>
     <!-- Translators: Placeholder example in the User-Agent field. "VLC/3.0.20 LibVLC/3.0.20" is a typical User-Agent. -->
     <string name="setup_user_agent_example">e.g. VLC/3.0.20 LibVLC/3.0.20</string>
+    <!-- Translators: Text-field label for an optional HTTP Referer sent with this playlist's streams. "Referer" is the technical header name, spelled that way on purpose; keep it untranslated like User-Agent. -->
+    <string name="setup_referer_optional">Referer (optional)</string>
+    <!-- Translators: Placeholder example in the Referer field. Keep the URL as-is. -->
+    <string name="setup_referer_example">e.g. https://example.com/</string>
     <!-- Translators: Section heading for the auto-refresh setting on the source form. -->
     <string name="setup_auto_refresh">Auto refresh</string>
     <!-- Translators: Description beneath the auto-refresh setting. Explains the three states: Off, on startup, or when data is stale. -->
@@ -318,8 +297,6 @@
     <string name="setup_later">Later</string>
     <!-- Translators: Sync scope choice meaning "never fetch or show". Shown as a cycling label in the sync scope row, and as an option in companion web page dropdowns. -->
     <string name="setup_off">Off</string>
-    <!-- Translators: Scope value display showing the current sync scope with left/right arrow indicators. "value" is one of Now/Later/Off. The arrows are visual indicators, not translatable. -->
-    <string name="setup_scope_value">\u25c0 <xliff:g id="value">%1$s</xliff:g> \u25b6</string>
     <!-- Translators: Default device model preset option for Stalker sources. "MAG200" is a hardware model name. -->
     <string name="setup_default_mag">Default (MAG200)</string>
     <!-- Translators: Device model preset option for Stalker sources. "MAG250" is a hardware model name. -->
@@ -348,20 +325,6 @@
     <!-- Translators: Error text on the companion PIN entry page when the entered PIN does not match. -->
     <string name="companion_pin_mismatch">That PIN did not match \u2014 try again.</string>
     <!-- Translators: Page title in the companion browser tab for the add-source page. "OwnTV" is a brand name. -->
-    <!-- Translators: Browser tab title for the page the remote device uses to send a TMDB key to the TV. -->
-    <string name="companion_tmdb_page_title">Send TMDB key</string>
-    <!-- Translators: Heading on that page. -->
-    <string name="companion_tmdb_heading">Send your TMDB key</string>
-    <!-- Translators: Instructions on that page. -->
-    <string name="companion_tmdb_description">Sign in to TMDB below, copy your API key (v3 auth), paste it here and send it to your TV. A personal key is free and has practically no daily limit.</string>
-    <!-- Translators: Link to TMDB's API settings page. -->
-    <string name="companion_tmdb_get_key">Open TMDB API settings</string>
-    <!-- Translators: Error when the pasted text does not look like a TMDB API key. -->
-    <string name="companion_tmdb_invalid">That does not look like a TMDB API key. Copy the "API Key (v3 auth)" value.</string>
-    <!-- Translators: Confirmation shown on the remote device after the key reaches the TV. -->
-    <string name="companion_tmdb_sent_body">Your TMDB key is now on the TV. Press Save there to start using it.</string>
-    <!-- Translators: Link back to the form to send another key. -->
-    <string name="companion_tmdb_sent_link">Send a different key</string>
     <string name="companion_service_config_empty">Enter an API key, a Worker URL, or both.</string>
     <string name="companion_service_config_invalid_key">That API key does not look valid.</string>
     <string name="companion_service_config_invalid_url">Enter a valid HTTPS Worker URL.</string>
@@ -394,6 +357,18 @@
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> is now on the TV\'s Add source screen. Check the details there and press Start Import on the remote.</string>
     <!-- Translators: Button on the companion success page to send another source. -->
     <string name="companion_saved_send_another">Send another source</string>
+    <!-- Translators: Browser tab title of the companion page that edits one existing source. OwnTV is the app name. -->
+    <string name="companion_edit_page_title">OwnTV \u2014 Edit source</string>
+    <!-- Translators: Heading on the companion edit page. "name" is the name of the source being edited. -->
+    <string name="companion_edit_heading">Edit <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Translators: Description on the companion edit page. Send to TV is the button on this page; Save is the button on the TV's edit screen. -->
+    <string name="companion_edit_description">Change what you need and press Send to TV. A field left empty keeps its current value. The changes appear on the TV \u2014 press Save there with the remote.</string>
+    <!-- Translators: Placeholder inside an empty field on the companion edit page (password, MAC address, playlist address): typing nothing keeps the value the TV already has. -->
+    <string name="companion_keep_current">Leave empty to keep the current one</string>
+    <!-- Translators: Body text on the companion success page after an edit was sent. "name" is the source name. Save is the button on the TV's edit screen. -->
+    <string name="companion_saved_edit_body">The changes to <xliff:g id="name">%1$s</xliff:g> are now on the TV\'s edit screen. Check them there and press Save on the remote.</string>
+    <!-- Translators: Link on the companion success page that opens the edit page again. -->
+    <string name="companion_saved_edit_again">Change something else</string>
     <!-- Translators: Body text on the companion success page when a backup was sent. -->
     <string name="companion_saved_backup_body">Your backup is now on the TV. Pick up the remote and choose which parts to restore.</string>
     <!-- Translators: Link text on the companion success page to send a different backup file. -->
@@ -521,4 +496,55 @@
     <string name="setup_hide_new_categories">Hide new categories by default</string>
     <!-- Translators: Description of the profile-wide new-category visibility toggle. Customize is the name of the customization screen. -->
     <string name="setup_hide_new_categories_description">Profile-wide: categories that appear on future syncs start hidden. See them anytime in Customize.</string>
+    <!-- Translators: Setup step name in the step dots: the display size step. -->
+    <string name="setup_step_display">Display</string>
+    <!-- Translators: Setup step name in the step dots: adding a playlist. -->
+    <string name="setup_step_playlist">Playlist</string>
+    <!-- Translators: Setup step name in the step dots: the last step, setup is finished. -->
+    <string name="setup_step_ready">Ready</string>
+    <!-- Translators: Key hint after Back in the setup wizard. -->
+    <string name="setup_key_previous_step">Previous step</string>
+    <!-- Translators: Title of the first setup step. -->
+    <string name="setup_welcome_title">Welcome to OwnTV</string>
+    <!-- Translators: Text under Welcome to OwnTV. -->
+    <string name="setup_welcome_sub">Your own IPTV player. Choose a language to begin — you can change it later in Settings.</string>
+    <!-- Translators: First-run Welcome step, the Language row's line: how many languages the app offers. -->
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> language</item>
+        <item quantity="other">All <xliff:g id="count">%1$d</xliff:g> languages</item>
+    </plurals>
+    <!-- Translators: Text under the display size step's title. -->
+    <string name="setup_display_sub">How big the interface and its text are on this TV. The row below changes as you go.</string>
+    <!-- Translators: Phone version of setup_display_sub: first-run Display step, under the title. -->
+    <string name="setup_display_sub_mobile">How big the interface and its text are on this phone. The row below changes as you go.</string>
+    <!-- Translators: Line under UI zoom in setup. -->
+    <string name="setup_line_zoom">Everything on screen</string>
+    <!-- Translators: Line under Font size in setup. -->
+    <string name="setup_line_font">Text only</string>
+    <!-- Translators: Line under App icon in setup. -->
+    <string name="setup_line_app_icon">How OwnTV appears on the TV’s home screen</string>
+    <!-- Translators: Phone version of setup_line_app_icon: the App icon row's line on the first-run Display step. -->
+    <string name="setup_line_app_icon_mobile">How OwnTV appears on your home screen</string>
+    <!-- Translators: Line on the Restore a backup card in setup. -->
+    <string name="setup_restore_card_line">From a file, or by Remote from another device</string>
+    <!-- Translators: Line under Searching the network in setup. -->
+    <string name="setup_device_appear">Devices with Sync mode on appear here</string>
+    <!-- Translators: Placeholder of the Address field when copying from another device. -->
+    <string name="setup_device_address_hint">or type the other device’s address</string>
+    <!-- Translators: Text under Who's watching? when creating the first profile. -->
+    <string name="setup_profile_sub">A profile keeps its own favorites, history and Home. Add more later in Settings › Profile.</string>
+    <!-- Translators: Row title: the profile's picture. -->
+    <string name="setup_avatar">Avatar</string>
+    <!-- Translators: Line under Avatar: pick a picture or keep the name's first letter. -->
+    <string name="setup_avatar_line">Pick one, or keep the letter</string>
+    <!-- Translators: Button that creates the profile and continues setup. -->
+    <string name="setup_create_profile">Create profile</string>
+    <!-- Translators: Line on the From your phone card in setup. -->
+    <string name="setup_phone_card_line">Fill the form in a browser on another device — fastest</string>
+    <!-- Translators: Title while a playlist imports. %1$s is the playlist's name. -->
+    <string name="setup_importing_title">Importing <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Translators: Row on the last setup step: add a TV guide (EPG) source. -->
+    <string name="setup_add_guide">Add a TV guide</string>
+    <!-- Translators: Line under Add a TV guide. -->
+    <string name="setup_add_guide_line">A fresh install has no guide yet</string>
 </resources>

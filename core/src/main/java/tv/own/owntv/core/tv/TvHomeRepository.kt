@@ -1,5 +1,6 @@
 package tv.own.owntv.core.tv
 
+import tv.own.owntv.core.brand.AppIconSwitcher
 import tv.own.owntv.core.epg.displayLogoUrl
 import android.annotation.SuppressLint
 import android.content.ContentUris
@@ -61,6 +62,7 @@ class TvHomeRepository(
     private val settings: SettingsRepository,
     private val launcherPlanner: LauncherRecommendationPlanner,
     private val localeStore: LocaleStore,
+    private val liveLogoPosterArt: LiveLogoPosterArt,
 ) {
     private val resolver: ContentResolver get() = context.contentResolver
     private val channelHelper = PreviewChannelHelper(context)
@@ -172,12 +174,12 @@ class TvHomeRepository(
         }
     }
 
-    private suspend fun refreshRecentLiveLocked(profileId: Long, allowBrowsableRequest: Boolean) {
+    private suspend fun refreshRecentLiveLocked(profileId: Long, allowBrowsableRequest: Boolean, force: Boolean = false) {
         val customizations = customize.observe(profileId, MediaType.LIVE).first()
         val channelRow = ensureRecentLiveChannel(profileId, allowBrowsableRequest)
         val channelId = channelRow.providerProgramId ?: return
         val now = System.currentTimeMillis()
-        if (now - channelRow.lastPublishedAt < RECENT_LIVE_REFRESH_INTERVAL_MS) return
+        if (!force && now - channelRow.lastPublishedAt < RECENT_LIVE_REFRESH_INTERVAL_MS) return
 
         val liveSourceIds = sourceDao.observeForProfile(profileId).first()
             .filter { it.syncLive }
@@ -220,6 +222,15 @@ class TvHomeRepository(
 
         tvProviderProgramDao.upsert(channelRow.copy(lastPublishedAt = now, lastEngagementAt = now))
         logD("refreshRecentLive profile=$profileId updated channel bookkeeping")
+
+        // Logos not fitted yet were published with their own URL; fit them in the background and
+        // publish the row once more when they are ready. Never while the row above was being written.
+        val arts = recentChannels.mapNotNull { safeLiveArtUri(it.displayLogoUrl) }
+        liveLogoPosterArt.prepare(arts, TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_16_9) {
+            if (settings.androidTvHomeEnabled.first()) {
+                mutex.withLock { refreshRecentLiveLocked(profileId, allowBrowsableRequest = false, force = true) }
+            }
+        }
     }
 
     private suspend fun syncMovie(profileId: Long, movieId: Long, positionMs: Long, durationMs: Long, force: Boolean = false) {
@@ -537,6 +548,7 @@ class TvHomeRepository(
     ) {
         val label = customizations.itemNames[CustomizeKeys.channel(channel)] ?: channel.name
         val art = safeLiveArtUri(channel.displayLogoUrl)
+        val fittedArt = art?.let { liveLogoPosterArt.cached(it, TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_16_9) } ?: art
         val stableKey = launcherPlanner.liveStableKey(channel)
         val stableKeyString = launcherPlanner.liveStableKeyString(channel)
         val program = PreviewProgram.Builder()
@@ -547,7 +559,7 @@ class TvHomeRepository(
             .setInternalProviderId(platformInternalId(TvProviderSurface.RECENT_LIVE, profileId, MediaType.LIVE, stableKeyString))
             .setIntent(Intent(Intent.ACTION_VIEW, LauncherDeepLink.Live(channel.sourceId, channel.remoteId, channel.name).toUri()))
             .setWeight(RECENT_LIVE_MAX_ITEMS - index)
-            .apply { if (art != null) setPosterArtUri(art) }
+            .apply { if (fittedArt != null) setPosterArtUri(fittedArt) }
             .apply { if (art != null) setPosterArtAspectRatio(TvContractCompat.PreviewProgramColumns.ASPECT_RATIO_16_9) }
             .build()
         logD("persistRecentLive profile=$profileId channelId=$channelId index=$index label=$label row=${row.describe()}")
@@ -602,7 +614,8 @@ class TvHomeRepository(
             .setDescription(renderContext.getString(R.string.launcher_recent_live_description))
             .setAppLinkIntentUri(LauncherDeepLink.OpenLiveSection.toUri())
             .setInternalProviderId(platformInternalId(TvProviderSurface.RECENT_LIVE, profileId, MediaType.LIVE, RECENT_LIVE_CHANNEL_STABLE_KEY))
-            .setLogo(resourceUri(R.drawable.tv_banner))
+            // The live icon's banner, so the channel matches the app row after an icon switch.
+            .setLogo(resourceUri(AppIconSwitcher.applied(context).banner))
             .build()
     }
 
@@ -622,7 +635,7 @@ class TvHomeRepository(
     private fun safeMediaArtUri(raw: String?): Uri? = safeLiveArtUri(raw)
 
     private fun resourceUri(resId: Int): Uri =
-        Uri.parse("android.resource://${context.packageName}/$resId")
+        "android.resource://${context.packageName}/$resId".toUri()
 
     private fun isHidden(customizations: SectionCustomizations, channel: tv.own.owntv.core.database.entity.ChannelEntity): Boolean =
         CustomizeKeys.channel(channel) in customizations.hiddenItems

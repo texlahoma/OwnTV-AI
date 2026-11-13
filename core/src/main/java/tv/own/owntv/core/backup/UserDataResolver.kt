@@ -237,7 +237,7 @@ class UserDataResolver(
     /**
      * Exports only the rows attached to [sourceId], so a single-source re-sync starts promptly.
      *
-     * "order" is in the default set (B1): manual Move positions orphan on a resync exactly like
+     * "order" is in the default set: manual Move positions orphan on a resync exactly like
      * favorites do — content is clear-then-insert, so every itemId in `content_order` goes stale —
      * and leaving them out of the snapshot silently threw away the user's hand-arranged folders.
      */
@@ -322,18 +322,28 @@ class UserDataResolver(
     private fun JSONArray.hasSourceSnapshotIds(): Boolean =
         length() > 0 && (0 until length()).all { getJSONObject(it).has("oid") }
 
-    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) = db.withWriteTransaction {        for (i in 0 until snapshot.length()) {
+    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) = db.transaction {
+        val rows = ArrayList<SnapshotRow>(snapshot.length())
+        for (i in 0 until snapshot.length()) {
             val e = snapshot.getJSONObject(i)
             val type = runCatching { MediaType.valueOf(e.getString("t")) }.getOrNull() ?: continue
-            val profileId = e.getLong("p")
-            val itemId = e.getLong("oid")
-            when (e.optString("kind")) {
-                "fav" -> favoriteDao.purgeSnapshotOrphan(profileId, type, itemId)
-                "his" -> historyDao.purgeSnapshotOrphan(profileId, type, itemId)
-                "prog" -> progressDao.purgeSnapshotOrphan(profileId, type, itemId)
-                "order" -> contentOrderDao.purgeSnapshotOrphan(profileId, type, itemId)
-                "member" -> customCategoryDao.purgeSnapshotOrphan(profileId, type, itemId)
-                "sort" -> seriesSortOrderDao.purgeSnapshotOrphan(profileId, itemId)
+            rows += SnapshotRow(e.optString("kind"), e.getLong("p"), type, e.getLong("oid"))
+        }
+        // These tables have a unique (profileId, mediaType, itemId) index: one indexed delete per row.
+        for (row in rows) {
+            when (row.kind) {
+                "fav" -> favoriteDao.purgeSnapshotOrphan(row.profileId, row.type, row.itemId)
+                "his" -> historyDao.purgeSnapshotOrphan(row.profileId, row.type, row.itemId)
+                "prog" -> progressDao.purgeSnapshotOrphan(row.profileId, row.type, row.itemId)
+                "sort" -> seriesSortOrderDao.purgeSnapshotOrphan(row.profileId, row.itemId)
+            }
+        }
+        // These two are keyed by folder first, so a one-row delete scans every row of the profile:
+        // with tens of thousands of custom-category members that was hours under the writer lock.
+        for (batch in snapshotPurgeBatches(rows, setOf("order", "member"))) {
+            when (batch.kind) {
+                "order" -> contentOrderDao.purgeSnapshotOrphans(batch.profileId, batch.type, batch.itemIds)
+                "member" -> customCategoryDao.purgeSnapshotOrphans(batch.profileId, batch.type, batch.itemIds)
             }
         }
     }
@@ -380,7 +390,7 @@ class UserDataResolver(
     }
 
     /**
-     * Resolves and inserts records in chunked transactions (B3): each record used to be 2–4 lookups
+     * Resolves and inserts records in chunked transactions: each record used to be 2–4 lookups
      * plus a single-row insert in its OWN write transaction (one fsync each) — a restore of
      * thousands of favorites/history rows became thousands of fsyncs. Per-record failures are
      * still caught individually (a bad record never aborts its chunk); chunking keeps any single
@@ -587,3 +597,18 @@ class UserDataResolver(
         private const val MAX_TOMBSTONES = 20_000
     }
 }
+
+/** One row of a re-sync snapshot, as the orphan purge needs it. */
+internal data class SnapshotRow(val kind: String, val profileId: Long, val type: MediaType, val itemId: Long)
+
+/** Ids of one kind, profile and type, deleted in one statement. */
+internal data class SnapshotPurgeBatch(val kind: String, val profileId: Long, val type: MediaType, val itemIds: List<Long>)
+
+/** [rows] of [kinds], grouped by kind, profile and type, each id once, at most [chunk] ids a batch
+ *  (SQLite allows 999 bound values on older engines). */
+internal fun snapshotPurgeBatches(rows: List<SnapshotRow>, kinds: Set<String>, chunk: Int = 900): List<SnapshotPurgeBatch> =
+    rows.filter { it.kind in kinds }
+        .groupBy { Triple(it.kind, it.profileId, it.type) }
+        .flatMap { (key, group) ->
+            group.map { it.itemId }.distinct().chunked(chunk).map { SnapshotPurgeBatch(key.first, key.second, key.third, it) }
+        }

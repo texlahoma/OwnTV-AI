@@ -2,7 +2,7 @@
 """Verify pseudolocale packaging in the BUILT APK (docs/internationalization.md 0b).
 
 Enabling ``isPseudoLocalesEnabled`` alone is not proof: ``localeFilters`` can then strip the
-generated ``en-rXA`` / ``ar-rXB`` resources, leaving the Phase 3g pseudolocale sweep silently doing
+generated ``en-rXA`` / ``ar-rXB`` resources, leaving the pseudolocale check silently doing
 nothing. This script inspects the actual resource table of a built APK via ``aapt2`` and asserts the
 full stated invariant, not just pseudolocale presence:
 

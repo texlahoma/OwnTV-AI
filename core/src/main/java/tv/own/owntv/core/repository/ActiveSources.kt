@@ -64,7 +64,7 @@ fun activeProfileSources(
 
 /**
  * Tell the playback layer about a provider that allows only one stream at a time, using the value the
- * Xtream panel reported at sync (`user_info.max_connections`, F30).
+ * Xtream panel reported at sync (`user_info.max_connections`).
  *
  * Without this the app can only *learn* the limit by failing a tune and reading the 458 back, which means
  * one misbehaving zap after every app start. The learned cache is session-only by design (it is a guess);

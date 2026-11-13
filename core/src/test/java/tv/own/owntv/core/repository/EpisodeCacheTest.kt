@@ -7,7 +7,7 @@ import org.junit.Test
 import tv.own.owntv.core.database.entity.EpisodeEntity
 
 /**
- * Phase 4 / S8 — the lazy episode cache used to be write-once (`episodeCount > 0` meant "never ask
+ * The lazy episode cache used to be write-once (`episodeCount > 0` meant "never ask
  * again"), and since the syncers deliberately never fetch episodes either, a show could never gain
  * the episodes a provider added after the user first opened it. Only deleting and re-adding the
  * source worked, by cascade-dropping the rows.

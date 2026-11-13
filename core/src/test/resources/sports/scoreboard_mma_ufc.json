@@ -1,0 +1,225 @@
+{
+ "leagues": [
+  {
+   "id": "3321",
+   "slug": "ufc",
+   "name": "Ultimate Fighting Championship",
+   "abbreviation": "UFC"
+  }
+ ],
+ "events": [
+  {
+   "id": "600060773",
+   "date": "2026-10-17T21:00Z",
+   "name": "UFC Fight Night: Buckley vs. Malott",
+   "shortName": "UFC Fight Night",
+   "status": {
+    "type": {
+     "name": "STATUS_SCHEDULED",
+     "state": "pre",
+     "completed": false,
+     "description": "Scheduled",
+     "detail": "Scheduled",
+     "shortDetail": "Scheduled"
+    }
+   },
+   "competitions": [
+    {
+     "id": "401919643",
+     "date": "2026-10-17T21:00Z",
+     "startDate": "2026-10-17T21:00Z",
+     "type": {
+      "id": "970",
+      "abbreviation": "Bantamweight"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "-",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sat, October 17th at 5:00 PM EDT",
+       "shortDetail": "10/17 - 5:00 PM EDT"
+      }
+     },
+     "venue": {
+      "fullName": "Rogers Place",
+      "address": {
+       "city": "Edmonton",
+       "country": "Canada"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Paramount+"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "5044361",
+       "type": "athlete",
+       "order": 2,
+       "winner": false,
+       "athlete": {
+        "displayName": "SuYoung You",
+        "shortName": "S. You",
+        "flag": {
+         "alt": "South Korea"
+        }
+       }
+      },
+      {
+       "id": "5282412",
+       "type": "athlete",
+       "order": 1,
+       "winner": false,
+       "athlete": {
+        "displayName": "Cody Chovancek",
+        "shortName": "C. Chovancek",
+        "flag": {
+         "alt": "Canada"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "id": "401908373",
+     "date": "2026-10-17T21:00Z",
+     "startDate": "2026-10-17T21:00Z",
+     "type": {
+      "id": "1003",
+      "abbreviation": "W Bantamweight"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "-",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sat, October 17th at 5:00 PM EDT",
+       "shortDetail": "10/17 - 5:00 PM EDT"
+      }
+     },
+     "venue": {
+      "fullName": "Rogers Place",
+      "address": {
+       "city": "Edmonton",
+       "country": "Canada"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Paramount+"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "4319785",
+       "type": "athlete",
+       "order": 2,
+       "winner": false,
+       "athlete": {
+        "displayName": "Chelsea Chandler",
+        "shortName": "C. Chandler",
+        "flag": {
+         "alt": "USA"
+        }
+       }
+      },
+      {
+       "id": "4947922",
+       "type": "athlete",
+       "order": 1,
+       "winner": false,
+       "athlete": {
+        "displayName": "Melissa Croden",
+        "shortName": "M. Croden",
+        "flag": {
+         "alt": "Canada"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "id": "401897388",
+     "date": "2026-10-18T00:00Z",
+     "startDate": "2026-10-18T00:00Z",
+     "type": {
+      "id": "969",
+      "abbreviation": "Welterweight"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "-",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sat, October 17th at 8:00 PM EDT",
+       "shortDetail": "10/17 - 8:00 PM EDT"
+      }
+     },
+     "venue": {
+      "fullName": "Rogers Place",
+      "address": {
+       "city": "Edmonton",
+       "country": "Canada"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Paramount+"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "3165120",
+       "type": "athlete",
+       "order": 2,
+       "winner": false,
+       "athlete": {
+        "displayName": "Mike Malott",
+        "shortName": "M. Malott",
+        "flag": {
+         "alt": "Canada"
+        }
+       }
+      },
+      {
+       "id": "4024714",
+       "type": "athlete",
+       "order": 1,
+       "winner": false,
+       "athlete": {
+        "displayName": "Joaquin Buckley",
+        "shortName": "J. Buckley",
+        "flag": {
+         "alt": "USA"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

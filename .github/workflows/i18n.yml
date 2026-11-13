@@ -37,13 +37,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR head
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -71,8 +71,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Validate strings and locales.json, print coverage report
@@ -85,3 +85,8 @@ jobs:
         run: python3 tools/i18n/check_text_overflow.py
       - name: Python i18n tool regression tests
         run: python3 tools/i18n/test_i18n_tools.py
+      # A translation file Weblate would rewrite on save is a future merge conflict on Weblate's side.
+      - name: Translation files in Weblate's form
+        run: |
+          pip install -r tools/i18n/requirements-weblate.txt
+          python3 tools/i18n/check_weblate_format.py check

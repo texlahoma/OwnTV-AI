@@ -1,7 +1,7 @@
 package tv.own.owntv.core.parser
 
 /**
- * XMLTV timestamp parsing, extracted from `XmltvParser` so it can be tested directly (E2).
+ * XMLTV timestamp parsing, extracted from `XmltvParser` so it can be tested directly.
  *
  * The previous implementation built a fresh `SimpleDateFormat` — pattern compilation, a `Calendar`,
  * locale resolution — on **every call**, plus a `TimeZone.getTimeZone("UTC")` lookup on the common

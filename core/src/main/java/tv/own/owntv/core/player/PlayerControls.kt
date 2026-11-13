@@ -65,7 +65,7 @@ enum class PlayerControl(
      */
     BRIGHTNESS(ControlCluster.MEDIA, ControlHost.MOBILE_ONLY, R.string.player_tool_brightness),
 
-    /** Playback speed. Was television-only for no reason anybody could name; H3 adds it to the phone. */
+    /** Playback speed. Was television-only for no reason anybody could name; the phone has it too. */
     SPEED(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_speed),
     SUBTITLES(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_subtitles),
     AUDIO(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_audio),
@@ -74,11 +74,39 @@ enum class PlayerControl(
     /** Jump back into this channel's archive. Live catch-up channels only. */
     CATCH_UP(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_catchup),
 
+    /**
+     * Back to the channel watched before this one. Live only, and only once there is one. The
+     * button is what makes it reachable on a remote without a "last channel" key, and on a phone.
+     */
+    PREVIOUS_CHANNEL(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_previous_channel),
+
+    /**
+     * The other channels showing the match this channel was started from (Sports Hub) — the backup when
+     * the stream stalls. Only for a channel started from a match, with more than one channel.
+     */
+    OTHER_CHANNELS(ControlCluster.MEDIA, ControlHost.BOTH, R.string.sports_other_channels),
+
+    /** That match's page (timeline, stats, table). Same condition as [OTHER_CHANNELS], and ESPN reachable. */
+    MATCH(ControlCluster.MEDIA, ControlHost.BOTH, R.string.sports_filter_match),
+
+    /**
+     * The other versions of the channel playing — the same channel in another quality, category or
+     * playlist ([tv.own.owntv.core.live.ChannelVersions]) — to swap to when the stream breaks up. Live
+     * only. Read when pressed, so a zap costs nothing.
+     */
+    SOURCES(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_sources),
+
     // --- The tools cluster: things about how it is being played and shown ---
 
-    /** Which engine owns playback. A text pill naming it on the television; H3 matches that. */
+    /** Which engine owns playback. A text pill naming it on the television, and on the phone. */
     ENGINE(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_tool_engine),
     ASPECT(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_tool_aspect),
+
+    /**
+     * The picture quality of this stream. Only when it offers more than one — an HLS or DASH
+     * channel or film with several variants — beside Aspect, the other "how the picture is shown".
+     */
+    QUALITY(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_tool_quality),
 
     /** The channel list over the picture. Phone-only today; the television reaches it with Left. */
     CHANNEL_LIST(ControlCluster.TOOLS, ControlHost.MOBILE_ONLY, R.string.content_channel_overlay_title),
@@ -87,22 +115,28 @@ enum class PlayerControl(
     AUDIO_ONLY(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_tool_audio_only),
 
     /**
-     * Turn this channel into the first tile of the grid (Plan D, Feature B). Opt-in, live only.
+     * Turn this channel into the first tile of the grid. Opt-in, live only.
      *
      * Beside the mini-player button because that is its nearest relative: both take the one picture
      * you are watching and put it somewhere else.
      */
     MULTIVIEW(ControlCluster.TOOLS, ControlHost.BOTH, R.string.multiview_button),
 
-    /** Record the channel already playing (Plan D, D3). Only exists once the setting is on. */
+    /** Record the channel already playing. Only exists once the setting is on. */
     RECORD(ControlCluster.TOOLS, ControlHost.BOTH, R.string.recording_record),
+
+    /**
+     * Stop playing after a while. In the bar on both apps — the phone had it only on the
+     * sound-only screen and the floating window, the television not at all.
+     */
+    SLEEP_TIMER(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_sleep_timer),
 
     INFO(ControlCluster.TOOLS, ControlHost.BOTH, R.string.player_tool_info),
 
     /**
      * Report the stream. **Shown only while the Info overlay is open**, on both apps.
      *
-     * This is the H1 decision, and it is the television's existing rule rather than the phone's
+     * This is the television's existing rule rather than the phone's
      * "always". The reason is the original one: a report is about what Info is showing, there is
      * nothing to report without it, and the great majority of users never file one — so keeping it
      * out of the bar keeps the bar short. The phone changes to match.

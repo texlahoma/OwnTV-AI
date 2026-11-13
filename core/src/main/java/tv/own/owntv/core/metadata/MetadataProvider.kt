@@ -1,7 +1,7 @@
 package tv.own.owntv.core.metadata
 
 /**
- * TMDB metadata enrichment (see extras/future-plan/tmdb-metadata-plan.md).
+ * TMDB metadata enrichment.
  *
  * OwnTV enriches VOD movies / series / episodes on demand from TMDB — never in bulk (libraries run to
  * ~170k movies / ~50k series). A single [MetadataProvider] serves all three access tiers; only its base
@@ -89,8 +89,8 @@ data class TrendingFeedPage(
 }
 
 /**
- * Metadata source mode (plan §4.1). Replaces the old on/off master toggle and also selects the render-time
- * field precedence for the merge (§7.1).
+ * Metadata source mode. Replaces the old on/off master toggle and also selects the render-time
+ * field precedence for the merge.
  */
 enum class MetadataMode {
     /** Only provider data; TMDB fully off (no lookups). */
@@ -108,7 +108,7 @@ enum class MetadataMode {
 }
 
 /**
- * Resolved access configuration for the metadata provider. Precedence (highest first), per plan §4:
+ * Resolved access configuration for the metadata provider. Precedence (highest first):
  *  1. [customServerUrl] set  → Tier 3 self-host (TMDB-shaped proxy/mirror; no key sent).
  *  2. [tmdbApiKey] set       → Tier 2 advanced (calls api.themoviedb.org directly with the user's key).
  *  3. neither                → Tier 0 default caching Cloudflare Worker (key injected server-side).
@@ -181,6 +181,8 @@ data class MovieDetails(
     val trailerKey: String?,
     /** Best title/logo image path from TMDB images; null when no usable logo exists. */
     val logoPath: String?,
+    /** TMDB `original_language` (ISO 639-1, e.g. "ko"): what "Original language" audio plays. */
+    val originalLanguage: String? = null,
 )
 
 /** Per-episode TMDB details (`/tv/{id}/season/{n}/episode/{m}`). Its own still, plot, air date, rating. */

@@ -13,20 +13,17 @@
     <string name="common_ok">OK</string>
     <string name="common_on">På</string>
     <string name="common_off">Av</string>
+    <string name="common_share">Del</string>
     <string name="common_never">Aldri</string>
     <string name="common_exit">Avslutt</string>
     <string name="common_resume">Fortsett</string>
     <string name="common_start_over">Start forfra</string>
     <string name="common_name">Navn</string>
     <string name="common_own_tv_user">OwnTV-bruker</string>
-    <string name="common_switch_profile">Bytt profil</string>
     <string name="common_proxy">Proxy</string>
     <string name="common_title">Tittel</string>
     <string name="common_search_hint">Søk…</string>
     <string name="common_search">Søk</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">Søk</string>
     <string name="common_nav_home">Hjem</string>
     <string name="common_nav_live_tv">Direkte-TV</string>
@@ -34,16 +31,14 @@
     <string name="common_nav_series">Serier</string>
     <string name="common_nav_downloads">Nedlastinger</string>
     <string name="common_nav_guide">Programoversikt</string>
+    <string name="common_nav_guide_short">Program</string>
     <string name="common_nav_library">Bibliotek</string>
     <string name="common_nav_more">Mer</string>
     <string name="common_cast">Cast</string>
     <string name="common_nav_settings">Innstillinger</string>
     <string name="shell_no_source">Ingen kilde</string>
     <string name="shell_now_playing">Spilles nå</string>
-    <string name="common_something_went_wrong">Noe gikk galt</string>
-    <string name="common_move_instructions">▲/▼ for å flytte · OK for å lagre · Tilbake for å avbryte</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -57,7 +52,7 @@
     <string name="sync_error_interrupted">Serveren avbrøt nedlastingen. Prøv igjen.</string>
     <string name="sync_error_mac">Portalen avviste denne MAC-adressen. Kontroller MAC-adressen (og TV-ens dato og klokkeslett) – eller abonnementet kan ha utløpt.</string>
     <string name="sync_error_invalid_mac">Ugyldig MAC-adresse – bruk AA:BB:CC:DD:EE:FF</string>
-    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <string name="sync_counts_success">Synkronisert</string>
     <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> synkronisert</string>
     <string name="sync_import_warnings">Importert med advarsler: <xliff:g id="phases">%1$s</xliff:g></string>
@@ -87,6 +82,8 @@
     <string name="sync_status_cancelled">Synkronisering avbrutt · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download">Laster ned <xliff:g id="title">%1$s</xliff:g></string>
     <string name="sync_status_download_with_progress">Laster ned <xliff:g id="title">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">Laster ned fra en låst kategori</string>
+    <string name="sync_status_download_locked_with_progress">Laster ned fra en låst kategori · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_phase_live">Direkte-TV</string>
     <string name="sync_phase_movies">Filmer</string>
     <string name="sync_phase_series">Serier</string>
@@ -126,16 +123,16 @@
     <string name="sync_error_secure">Den sikre tilkoblingen mislyktes – serverens sertifikat kan være ugyldig.</string>
     <string name="sync_error_malformed_guide">Programoversiktsdataene fra serveren var feil formatert. Noe kan likevel ha blitt lastet inn – prøv igjen, eller kontroller EPG-URL-en.</string>
     <string name="sync_error_guide_empty">Denne guiden er tom akkurat nå. Leverandøren har kanskje ikke publisert den ennå — prøv igjen senere.</string>
-    <string name="common_items_per_skip">Elementer per hopp</string>
+    <string name="sync_error_guide_no_matching_channels">Ingen av kanalene i denne guiden samsvarer med spillelistens ennå. Åpne Programoversikt og bruk Match EPG automatisk for å koble dem etter navn.</string>
     <string name="common_minutes">Minutter</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> GB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Skjul</string>
     <string name="common_show">Vis</string>
     <string name="common_qr_code_companion_url">QR-kode for nettadressen til tilleggstjenesten</string>
     <string name="sync_status_trending_starting">Synkronisering fullført · <xliff:g id="source">%1$s</xliff:g> · Bygger Populært nå</string>
-    <string name="sync_status_trending_matching">Sammenligner elementer i Populært nå med spillelisten din</string>
     <string name="sync_status_trending_detail_waiting">Venter på svar med kandidater fra TMDB</string>
     <string name="sync_status_trending_detail_received">TMDB-kandidater · Filmer: <xliff:g id="movies">%1$d</xliff:g> · Serier: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">Leverandørens tittelindeks · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -153,10 +150,6 @@
         <item quantity="one">Mottok det nyeste <xliff:g id="count">%1$d</xliff:g> elementet i Populært nå</item>
         <item quantity="other">Mottok de nyeste <xliff:g id="count">%1$d</xliff:g> elementene i Populært nå</item>
     </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="one">Treff · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">Treff · <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-    </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="one">Bygger Populært nå · <xliff:g id="count">%1$d</xliff:g> treff</item>
         <item quantity="other">Bygger Populært nå · <xliff:g id="count">%1$d</xliff:g> treff</item>
@@ -173,4 +166,17 @@
         <item quantity="one">Populært nå er skjult · bare <xliff:g id="count">%1$d</xliff:g> treff</item>
         <item quantity="other">Populært nå er skjult · bare <xliff:g id="count">%1$d</xliff:g> treff</item>
     </plurals>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · bytt</string>
+    <string name="shell_rail_detail_last">Sist: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">Fortsett: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">Neste: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">Innstillinger, favoritter, sikkerhetskopi</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> lastes ned · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> lastes ned · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">Lyd</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">Avvis</string>
 </resources>

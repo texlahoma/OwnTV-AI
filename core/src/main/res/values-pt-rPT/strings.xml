@@ -13,37 +13,32 @@
     <string name="common_ok">OK</string>
     <string name="common_on">Ativado</string>
     <string name="common_off">Desativado</string>
+    <string name="common_share">Partilhar</string>
     <string name="common_never">Nunca</string>
     <string name="common_exit">Sair</string>
     <string name="common_resume">Retomar</string>
     <string name="common_start_over">Ver do início</string>
     <string name="common_name">Nome</string>
     <string name="common_own_tv_user">Utilizador da OwnTV</string>
-    <string name="common_switch_profile">Mudar de perfil</string>
     <string name="common_proxy">Proxy</string>
     <string name="common_title">Título</string>
     <string name="common_search_hint">Pesquisar…</string>
     <string name="common_search">Pesquisa</string>
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>°F</string>
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>°C</string>
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> · <xliff:g id="city">%2$s</xliff:g></string>
     <string name="common_nav_search">Pesquisa</string>
     <string name="common_nav_home">Início</string>
     <string name="common_nav_live_tv">TV em direto</string>
     <string name="common_nav_movies">Filmes</string>
     <string name="common_nav_series">Séries</string>
     <string name="common_nav_downloads">Transferências</string>
-    <string name="common_nav_guide">Guia</string>
+    <string name="common_nav_guide">Guia de TV</string>
+    <string name="common_nav_guide_short">Guia</string>
     <string name="common_nav_library">Biblioteca</string>
     <string name="common_nav_more">Mais</string>
     <string name="common_cast">Transmitir</string>
     <string name="common_nav_settings">Definições</string>
     <string name="shell_no_source">Sem origem</string>
     <string name="shell_now_playing">A reproduzir agora</string>
-    <string name="common_something_went_wrong">Algo correu mal</string>
-    <string name="common_move_instructions">▲/▼ para mover · OK para guardar · Voltar para cancelar</string>
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="common_timestamp_minutes"><xliff:g id="minutes">%1$d</xliff:g>:<xliff:g id="seconds">%2$02d</xliff:g></string>
     <string name="common_timestamp_hours"><xliff:g id="hours">%1$d</xliff:g>:<xliff:g id="minutes">%2$02d</xliff:g>:<xliff:g id="seconds">%3$02d</xliff:g></string>
@@ -57,7 +52,7 @@
     <string name="sync_error_interrupted">O servidor interrompeu a transferência. Tente novamente.</string>
     <string name="sync_error_mac">O portal recusou este endereço MAC. Verifique o endereço MAC (e a data e hora da TV) — ou a subscrição poderá ter expirado.</string>
     <string name="sync_error_invalid_mac">Endereço MAC inválido — utilize AA:BB:CC:DD:EE:FF</string>
-    <string name="sync_counts_separator">  ·  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <string name="sync_counts_success">Sincronizado com êxito</string>
     <string name="sync_counts_synced"><xliff:g id="counts">%1$s</xliff:g> sincronizados</string>
     <string name="sync_import_warnings">Importado com avisos: <xliff:g id="phases">%1$s</xliff:g></string>
@@ -89,6 +84,8 @@
     <string name="sync_status_cancelled">Sincronização cancelada · <xliff:g id="source">%1$s</xliff:g></string>
     <string name="sync_status_download">A transferir <xliff:g id="title">%1$s</xliff:g></string>
     <string name="sync_status_download_with_progress">A transferir <xliff:g id="title">%1$s</xliff:g> · <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <string name="sync_status_download_locked">A transferir de uma categoria bloqueada</string>
+    <string name="sync_status_download_locked_with_progress">A transferir de uma categoria bloqueada · <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_phase_live">TV em direto</string>
     <string name="sync_phase_movies">Filmes</string>
     <string name="sync_phase_series">Séries</string>
@@ -135,16 +132,16 @@
     <string name="sync_error_secure">Falha na ligação segura — o certificado do servidor poderá ser inválido.</string>
     <string name="sync_error_malformed_guide">Os dados do guia provenientes do servidor estavam malformados. Parte dos dados poderá ainda ter sido carregada — tente novamente ou verifique o URL do EPG.</string>
     <string name="sync_error_guide_empty">Este guia está vazio de momento. O fornecedor pode ainda não o ter publicado — tente novamente mais tarde.</string>
-    <string name="common_items_per_skip">Itens por salto</string>
+    <string name="sync_error_guide_no_matching_channels">Nenhum dos canais deste guia corresponde ainda aos da sua lista de reprodução. Abra o Guia de TV e use Associar EPG automaticamente para os associar pelo nome.</string>
     <string name="common_minutes">Minutos</string>
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> GB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Ocultar</string>
     <string name="common_show">Mostrar</string>
     <string name="common_qr_code_companion_url">Código QR para o URL complementar</string>
     <string name="sync_status_trending_starting">Sincronização concluída · <xliff:g id="source">%1$s</xliff:g> · A criar Tendências atuais</string>
-    <string name="sync_status_trending_matching">A associar os itens das Tendências à sua lista de reprodução</string>
     <string name="sync_status_trending_detail_waiting">A aguardar a resposta dos candidatos do TMDB</string>
     <string name="sync_status_trending_detail_received">Candidatos do TMDB · Filmes: <xliff:g id="movies">%1$d</xliff:g> · Séries: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">Índice de títulos do fornecedor · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -162,11 +159,6 @@
         <item quantity="one">Recebido o <xliff:g id="count">%1$d</xliff:g> item mais recente das Tendências</item>
         <item quantity="many">Recebidos os <xliff:g id="count">%1$d</xliff:g> itens mais recentes das Tendências</item>
         <item quantity="other">Recebidos os <xliff:g id="count">%1$d</xliff:g> itens mais recentes das Tendências</item>
-    </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="one">Associado <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="many">Associados <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">Associados <xliff:g id="total">%1$d</xliff:g> · <xliff:g id="movies">%2$s</xliff:g> · <xliff:g id="series">%3$s</xliff:g></item>
     </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="one">A criar Tendências atuais · <xliff:g id="count">%1$d</xliff:g> correspondência</item>
@@ -188,4 +180,18 @@
         <item quantity="many">Tendências atuais ocultas · apenas <xliff:g id="count">%1$d</xliff:g> correspondências</item>
         <item quantity="other">Tendências atuais ocultas · apenas <xliff:g id="count">%1$d</xliff:g> correspondências</item>
     </plurals>
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · mudar</string>
+    <string name="shell_rail_detail_last">Último: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_resume">Retomar: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_next">Seguinte: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <string name="shell_rail_detail_more">Definições, favoritos, cópia de segurança</string>
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> a transferir · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> a transferir · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> a transferir · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <string name="shell_now_playing_audio">Áudio</string>
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <string name="common_dismiss">Ignorar</string>
 </resources>

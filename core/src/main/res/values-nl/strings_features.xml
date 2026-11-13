@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">Je eigen foto</string>
     <string name="profiles_kids">Kinderprofiel</string>
     <string name="profiles_kids_description">Vereenvoudigd en veilig bladeren</string>
+    <string name="profiles_allow_downloads">Downloads toestaan</string>
+    <string name="profiles_allow_downloads_description">Uit verbergt alle downloadknoppen voor dit profiel</string>
     <string name="profiles_remove_pin">PIN-vergrendeling verwijderen</string>
     <string name="profiles_no_pin">Dit profiel wordt zonder PIN geopend</string>
     <string name="profiles_change_pin">PIN wijzigen (leeg = behouden)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">Aanmaken</string>
     <string name="profiles_save">Opslaan</string>
     <string name="profiles_gate_title">Wie kijkt er?</string>
+    <string name="profiles_gate_subtitle">Elk profiel heeft eigen favorieten en een eigen geschiedenis</string>
     <string name="profiles_wrong_pin">Onjuiste PIN — probeer het opnieuw</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — voer PIN in</string>
+    <string name="profiles_protected_edit">Het heeft een profielvergrendeling of een instellingenvergrendeling. Voer een van beide pincodes in om het te wijzigen.</string>
     <string name="profiles_kids_badge">KINDEREN</string>
     <string name="profiles_add">Profiel toevoegen</string>
     <string name="profiles_title">Profielen</string>
-    <string name="profiles_add_button">Profiel toevoegen</string>
     <string name="profiles_delete_title">Verwijder “<xliff:g id="name">%1$s</xliff:g>”?</string>
     <string name="profiles_delete_message">Verwijdert dit profiel en de bijbehorende favorieten en kijkgeschiedenis. Bronnen blijven behouden.</string>
     <string name="profiles_kids_tag">Kinderen</string>
@@ -32,38 +35,50 @@
     <string name="search_title">Zoeken</string>
     <string name="search_continue">Verder kijken</string>
     <string name="search_unwatched">Onbekeken</string>
-    <string name="search_hint">Zoek naar zenders, films en series…</string>
     <string name="search_recent">Recente zoekopdrachten</string>
-    <string name="search_recent_empty">Je recente zoekopdrachten verschijnen hier.</string>
-    <string name="search_minimum_query">Typ minstens 2 tekens om overal in te zoeken.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — geen resultaten.</string>
     <string name="search_nothing_in_list">Nog niets in <xliff:g id="list">%1$s</xliff:g>.</string>
     <string name="search_clear">Wissen</string>
     <string name="search_jump_to">Ga naar</string>
-    <string name="search_watch_live">Live kijken</string>
-    <string name="search_play">Afspelen</string>
     <string name="search_open_series">Serie openen</string>
     <string name="search_movie">Film</string>
     <string name="search_series">Series</string>
     <string name="search_channels">Zenders</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">Verder kijken</string>
-    <string name="home_play_next">Volgende afspelen</string>
-    <string name="home_tune_in">Afstemmen</string>
-    <string name="home_recent_live">Onlangs live bekeken</string>
+    <string name="search_on_tv">Tv-programma\'s</string>
+    <string name="search_go_to_channel">Naar zender</string>
+    <string name="search_go_to_movie">Naar film</string>
+    <string name="search_clear_recent">Recente zoekopdrachten wissen</string>
+    <string name="search_field_hint">Zenders, films en series</string>
+    <string name="search_voice">Spraakzoeken</string>
+    <string name="search_voice_prompt">Zeg een zender, film of serie</string>
+    <string name="search_card_title">Vind alles in je playlists</string>
+    <string name="search_card_body">Zenders, films en series uit alle playlists die je toont. Kies een resultaat om er direct heen te gaan en daar af te spelen, te downloaden of de opties te openen. Ook tv-programma’s die nu of later vandaag uitgezonden worden, vind je op hun titel.</string>
+    <string name="search_nothing_found">Niets gevonden voor ‘<xliff:g id="query">%1$s</xliff:g>’</string>
+    <string name="search_nothing_found_body">Zoeken kijkt naar de namen van zenders, films en series in de playlists die je toont. Verborgen categorieën worden niet doorzocht. Tv-programma’s worden op hun titel gezocht in de gedownloade gids.</string>
+    <string name="search_query_quoted">‘<xliff:g id="query">%1$s</xliff:g>’</string>
+    <plurals name="search_result_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> resultaat</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> resultaten</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zender</item>
+        <item quantity="other">Alle <xliff:g id="count">%1$d</xliff:g> zenders</item>
+    </plurals>
     <string name="profiles_default_name">Profiel</string>
     <string name="launcher_recent_live_title">Onlangs live bekeken</string>
     <string name="launcher_recent_live_description">Onlangs bekeken livezenders</string>
     <string name="launcher_movie_type">Film</string>
     <string name="launcher_episode_number">Aflevering <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="one">Je bibliotheek wordt geladen · tot nu toe <xliff:g id="count">%1$s</xliff:g> titel</item>
+        <item quantity="other">Je bibliotheek wordt geladen · tot nu toe <xliff:g id="count">%1$s</xliff:g> titels</item>
+    </plurals>
+    <string name="home_library_loading_trending">Nu populair verschijnt naarmate je bibliotheek zich vult.</string>
     <string name="home_no_preview">Nog geen voorbeeld beschikbaar.</string>
     <string name="home_no_rows">Alle rijen op het startscherm zijn verborgen.</string>
     <string name="home_enable_rows">Schakel rijen weer in via Instellingen → Startscherm.</string>
     <string name="home_start_watching">Begin met kijken om je activiteit hier te zien.</string>
     <string name="home_continue_empty">Items om verder te kijken verschijnen hier zodra er afspeelgeschiedenis beschikbaar is.</string>
     <string name="home_last_watched_now">Laatst bekeken: zojuist</string>
-    <string name="home_finish_by">Klaar om <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">Hervatten</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="one">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> minuut geleden</item>
         <item quantity="other">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> minuten geleden</item>
@@ -76,36 +91,22 @@
         <item quantity="one">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> dag geleden</item>
         <item quantity="other">Laatst bekeken: <xliff:g id="count">%1$d</xliff:g> dagen geleden</item>
     </plurals>
-    <string name="home_season_episode">S<xliff:g id="season">%1$02d</xliff:g> E<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">S<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">E<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">Kaarten</string>
     <string name="home_row_keep_watching">Verder kijken</string>
     <string name="home_row_continue_movies">Films verder kijken</string>
     <string name="home_row_continue_series">Series verder kijken</string>
     <string name="home_row_recent_channels">Recente zenders</string>
     <string name="home_row_favorite_channels">Favoriete zenders</string>
+    <string name="home_row_favorite_movies">Favoriete films</string>
+    <string name="home_row_favorite_series">Favoriete series</string>
     <string name="home_row_on_now">Nu te zien</string>
     <string name="home_row_hero_description">De grote voorbeeldrij bovenaan</string>
     <string name="home_row_continue_movies_description">Films met een opgeslagen afspeelpositie</string>
     <string name="home_row_continue_series_description">Afleveringen om te hervatten of als volgende af te spelen</string>
     <string name="home_row_recent_description">Livezenders waarop je onlangs hebt afgestemd</string>
     <string name="home_row_favorite_description">Je favoriete livezenders</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · NU TE ZIEN</string>
-    <string name="home_ok_to_watch">OK om te kijken</string>
-    <string name="home_ok_to_browse">OK om te bladeren</string>
-    <string name="home_no_programme_details">Geen programmadetails</string>
-    <string name="home_guide_unavailable">Gegevens van de programmagids niet beschikbaar</string>
-    <string name="home_next">Volgende</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">NU · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">HIERNA · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zender</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zenders</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">Je favoriete films</string>
+    <string name="home_row_favorite_series_description">Je favoriete series</string>
     <string name="update_title">App-update</string>
     <string name="update_checking">Controleren op updates…</string>
     <string name="update_whats_new">Wat is er nieuw</string>
@@ -140,6 +141,11 @@
     <string name="home_trending_style">Trending-indeling</string>
     <string name="home_trending_style_hero">Gedetailleerde kaart</string>
     <string name="home_trending_style_posters">Alleen posters</string>
+    <string name="home_trending_rank">#<xliff:g id="rank">%1$d</xliff:g> in Trending · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">IN JE PLAYLIST</string>
+    <string name="home_trending_style_full_bleed">Volledig beeld</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> u <xliff:g id="minutes">%2$02d</xliff:g> min</string>
+    <string name="home_time_left">nog <xliff:g id="duration">%1$s</xliff:g></string>
     <string name="settings_trending_status_off">Nu populair is uitgeschakeld.</string>
     <string name="settings_trending_status_building">Nu populair wordt voorbereid nadat de aanbieder is gesynchroniseerd.</string>
     <string name="settings_trending_status_metadata_disabled">Voor Nu populair zijn TMDB-metagegevens nodig. Kies Alleen TMDB of Aanbieder + TMDB.</string>
@@ -161,12 +167,7 @@
     </plurals>
     <string name="home_trending_movie">Film</string>
     <string name="home_trending_series">Serie</string>
-    <string name="home_trending_section_label">NU POPULAIR · MOMENTOPNAME VAN SYNCHRONISATIE</string>
     <string name="home_trending_provider_match">Overeenkomst met aanbieder</string>
-    <string name="home_trending_language_choice"><xliff:g id="language">%1$s</xliff:g> taalkeuze</string>
-    <string name="home_trending_english_fallback">Engelse terugvaloptie</string>
-    <string name="home_trending_untagged_fallback">Ongelabelde terugvaloptie</string>
-    <string name="home_trending_other_fallback"><xliff:g id="language">%1$s</xliff:g> terugvaloptie</string>
     <string name="home_trending_why_label">WAAROM DIT ITEM WORDT WEERGEGEVEN</string>
     <string name="home_trending_reason_title">TMDB-positie #<xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + overeenkomst met aanbieder</string>
     <string name="home_trending_reason_preferred">De geselecteerde <xliff:g id="language">%1$s</xliff:g> versie van de aanbieder krijgt voorrang op items in een andere taal.</string>
@@ -182,12 +183,12 @@
     <string name="home_trending_trailer">Trailer</string>
     <string name="home_trending_more_details">Meer details</string>
     <string name="home_trending_all_versions">Alle versies</string>
-    <string name="home_trending_previous">Vorige</string>
+    <string name="home_trending_why_menu">Waarom deze titel hier staat</string>
     <string name="home_trending_pause">Pauzeren</string>
-    <string name="home_trending_resume">Hervatten</string>
-    <string name="home_trending_next">Volgende</string>
     <string name="home_trending_unavailable">Deze versie is niet meer beschikbaar</string>
     <string name="recording_notification_title">Opnemen</string>
+    <string name="auto_start_notification_channel">Automatisch starten bij ontwaken</string>
+    <string name="auto_start_notification_text">OwnTV opent wanneer de tv ontwaakt</string>
     <string name="recording_failed_no_space">Gestopt: geen ruimte meer</string>
     <string name="recording_failed_no_connection">Geen vrije verbinding van je provider</string>
     <string name="recording_failed_clash">Een andere opname gebruikte de verbinding</string>
@@ -196,21 +197,29 @@
     <string name="recording_failed_channel_gone">Dat kanaal staat niet meer in je afspeellijst</string>
     <string name="recording_failed_unknown">Er is niets opgenomen</string>
     <string name="recording_title">Opnames</string>
-    <string name="recording_description">Live tv die op dit apparaat is opgeslagen.</string>
-    <string name="recording_empty">Nog niets opgenomen. Open de tv-gids, kies een programma en druk op Opnemen.</string>
+    <string name="recording_empty">Nog niets opgenomen. Druk op Opnemen bij een programma in de tv-gids, of houd een zender ingedrukt om hem op te nemen of een tijd te plannen.</string>
     <string name="recording_group_now">Wordt nu opgenomen</string>
     <string name="recording_group_scheduled">Gepland</string>
     <string name="recording_group_completed">Opgenomen</string>
     <string name="recording_group_failed">Mislukt</string>
     <string name="recording_group_missed">Gemist</string>
+    <string name="recording_group_series">Elke uitzending</string>
     <string name="recording_record">Opnemen</string>
     <string name="recording_stop">Opname stoppen</string>
+    <string name="recording_delete_message">Verwijdert de opname en het bestand ervan van dit apparaat. Dit kan niet ongedaan worden gemaakt.</string>
     <string name="recording_record_series">Elke uitzending opnemen</string>
     <string name="recording_stop_series">Niet meer elke uitzending opnemen</string>
     <string name="recording_from_archive">Opnemen uit het archief</string>
+    <string name="recording_schedule">Opname plannen…</string>
+    <string name="recording_schedule_hint">Kies de dag, het begin en het einde. Er wordt opgenomen, ook als deze zender geen tv-gids heeft.</string>
+    <string name="recording_schedule_start">Begin</string>
+    <string name="recording_schedule_end">Einde</string>
+    <string name="recording_schedule_next_day">volgende dag</string>
+    <string name="recording_schedule_past">Dat tijdstip is al voorbij</string>
     <string name="recording_scheduled_for">Neemt <xliff:g id="time">%1$s</xliff:g> op</string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> wordt opgenomen</string>
+    <string name="recording_pill_line_locked">Opnemen uit een vergrendelde categorie</string>
     <string name="recording_clash_with">Overlapt met <xliff:g id="programme">%1$s</xliff:g></string>
     <string name="recording_settings_group">Opnemen</string>
     <string name="settings_recording_reserve">Houd één stream vrij om te kijken</string>
@@ -227,8 +236,14 @@
     <string name="recording_failed_encrypted">Dit kanaal is versleuteld en kan niet worden opgenomen</string>
     <string name="recording_failed_drm">Dit kanaal is DRM-beveiligd en kan daarom wel worden bekeken, maar niet opgenomen. De beveiliging komt van je provider, niet van OwnTV.</string>
     <string name="recording_failed_metered">Niet opgenomen via mobiele data</string>
+    <string name="recording_card_empty_title">Nog niets opgenomen</string>
+    <string name="recording_card_body">Kies een programma in de tv-gids en kies Opnemen, of houd een zender ingedrukt en plan een tijd. Het komt hier terecht, ook terwijl je iets anders kijkt.</string>
+    <string name="recording_open_guide">Tv-gids openen</string>
+    <plurals name="recording_card_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> opname</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> opnamen</item>
+    </plurals>
     <string name="settings_recording_mobile_data">Opnemen via mobiele data</string>
-    <string name="settings_recording_mobile_data_description">Uit: een opname die valt terwijl je niet op wifi zit wordt overgeslagen in plaats van te wachten — een live programma komt niet terug.</string>
     <string name="settings_record_watching">Opnemen wat ik kijk</string>
     <string name="settings_record_watching_description">Zet een opnameknop in de speler die het kanaal opneemt dat je kijkt. Hij haalt het kanaal zelf op en gebruikt daarvoor een van de verbindingen van je aanbieder, en blijft opnemen als je van kanaal wisselt of de speler verlaat.</string>
     <string name="settings_record_watching_warning_title">Maar één verbinding</string>
@@ -237,4 +252,301 @@
     <string name="settings_record_watching_turn_on">Aanzetten</string>
     <string name="player_recording_conflict">Je provider staat maar één stream tegelijk toe, en de opname gebruikt hem.</string>
     <string name="player_keep_watching_stop_recording">Blijven kijken (stopt de opname)</string>
+    <string name="sports_channel_goal_alerts">Doelpuntmeldingen</string>
+    <string name="sports_channel_live_match">Live wedstrijd</string>
+    <string name="sports_channel_match_reminders">Wedstrijdherinneringen</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ Doelpunt! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">Wicket! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">Rode kaart · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">Rust · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">Einde · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">Aftrap · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">Uitgesteld · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">Afgelast · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">Uitslag gecorrigeerd · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="one">Aftrap over <xliff:g id="minutes">%1$d</xliff:g> min: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">Aftrap over <xliff:g id="minutes">%1$d</xliff:g> min: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">Op <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="one">Op <xliff:g id="channel">%1$s</xliff:g> en nog <xliff:g id="count">%2$d</xliff:g></item>
+        <item quantity="other">Op <xliff:g id="channel">%1$s</xliff:g> en nog <xliff:g id="count">%2$d</xliff:g></item>
+    </plurals>
+    <string name="sports_action_stop_updates">Updates stoppen</string>
+    <string name="sports_title">Sport</string>
+    <plurals name="sports_hub_live">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> live</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> live</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> wedstrijd</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> wedstrijden</item>
+    </plurals>
+    <string name="sports_scores_espn">Uitslagen: ESPN</string>
+    <string name="sports_my_teams">Mijn teams</string>
+    <string name="sports_live_now">Nu live</string>
+    <string name="sports_not_on_channels">Niet op je zenders</string>
+    <string name="sports_on_channels_now">Nu sport op je zenders</string>
+    <string name="sports_on_channels_now_mobile">Sport op je zenders</string>
+    <string name="sports_on_channels_now_hint">Uit je gids — ook sporten die ESPN niet dekt</string>
+    <string name="sports_starting_soon">Begint binnenkort</string>
+    <string name="sports_hint_match_page">Wedstrijdpagina</string>
+    <string name="sports_hint_follow_remind">Volgen · Herinneren</string>
+    <string name="sports_hint_day_matches">Wedstrijden van de dag</string>
+    <string name="sports_hint_day">Dag</string>
+    <string name="sports_hint_week">Week</string>
+    <string name="sports_hint_show_score">Uitslag tonen</string>
+    <string name="sports_hint_back_to_day">Terug naar de dag</string>
+    <string name="sports_hint_open_league">Competitie openen</string>
+    <string name="sports_hint_sport_chips">Sportknoppen</string>
+    <string name="sports_hint_league_chips">Competitieknoppen</string>
+    <string name="sports_hint_follow_unfollow">Volgen · Niet meer volgen</string>
+    <string name="sports_reminder_set">Herinnering</string>
+    <string name="sports_until">tot <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_set">Set <xliff:g id="set">%1$d</xliff:g></string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> ov</string>
+    <string name="sports_empty_nothing">Vandaag geen wedstrijden in wat je volgt</string>
+    <string name="sports_empty_unreachable">Uitslagen zijn nu niet bereikbaar. Je zenders werken nog.</string>
+    <string name="sports_paused">Uitslagen gepauzeerd — over een paar minuten opnieuw</string>
+    <string name="sports_sport_soccer">Voetbal</string>
+    <string name="sports_sport_basketball">Basketbal</string>
+    <string name="sports_sport_tennis">Tennis</string>
+    <string name="sports_sport_cricket">Cricket</string>
+    <string name="sports_sport_hockey">IJshockey</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">MMA</string>
+    <string name="sports_sport_baseball">Honkbal</string>
+    <string name="sports_sport_golf">Golf</string>
+    <string name="sports_sport_rugby">Rugby</string>
+    <string name="sports_sport_rugby_league">Rugby league</string>
+    <string name="sports_sport_aussie_rules">Australian football</string>
+    <string name="sports_sport_volleyball">Volleybal</string>
+    <string name="sports_sport_lacrosse">Lacrosse</string>
+    <string name="sports_sport_handball">Handbal</string>
+    <string name="sports_sport_motorsport">Autosport</string>
+    <string name="sports_sport_darts">Darts</string>
+    <string name="sports_sport_snooker">Snooker</string>
+    <string name="sports_sport_cycling">Wielrennen</string>
+    <string name="sports_sport_combat">Vechtsport</string>
+    <string name="sports_sport_american_football">American football</string>
+    <string name="sports_sport_athletics">Atletiek</string>
+    <string name="sports_sport_winter">Wintersport</string>
+    <string name="sports_sport_other">Sport</string>
+    <string name="sports_tab_timeline">Verloop</string>
+    <string name="sports_tab_stats">Statistieken</string>
+    <string name="sports_tab_lineups">Opstellingen</string>
+    <string name="sports_tab_table">Stand</string>
+    <string name="sports_following">Volgend</string>
+    <string name="sports_follow">Volgen</string>
+    <string name="sports_event_goal">Doelpunt · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">Eigen doelpunt · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">Strafschop · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">Gele kaart · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">Rode kaart · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">Wissel · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">assist <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">Wicket · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">Aftrap</string>
+    <string name="sports_event_half_time">Rust</string>
+    <string name="sports_event_full_time">Einde</string>
+    <string name="sports_stat_red_cards">Rode kaarten</string>
+    <string name="sports_watch_live">Live kijken</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="one">Live kijken · <xliff:g id="count">%1$d</xliff:g> zender</item>
+        <item quantity="other">Live kijken · <xliff:g id="count">%1$d</xliff:g> zenders</item>
+    </plurals>
+    <string name="sports_language_first">Eerst <xliff:g id="language">%1$s</xliff:g> · uit Instellingen</string>
+    <string name="sports_any_country">Elk land</string>
+    <string name="sports_reason_guide">Gids: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">Eventzender · naam noemt beide teams</string>
+    <string name="sports_reason_pick">Jouw keuze voor <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_reason_likely">Zendt meestal <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_confirmed">Bevestigd door gids</string>
+    <plurals name="sports_hidden">
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> verborgen door filters</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> verborgen door filters</item>
+    </plurals>
+    <string name="sports_watch_full_screen">Volledig scherm</string>
+    <string name="sports_preview_another">Andere zender voorvertonen</string>
+    <string name="sports_always_use">Altijd gebruiken voor <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_filter_title">Zenders filteren</string>
+    <string name="sports_showing_of"><xliff:g id="shown">%1$d</xliff:g> van <xliff:g id="total">%2$d</xliff:g> getoond</string>
+    <string name="sports_filter_country">Land</string>
+    <string name="sports_filter_match">Wedstrijd</string>
+    <string name="sports_unknown">Onbekend</string>
+    <string name="sports_any">Alle</string>
+    <string name="sports_all_playlists">Alle afspeellijsten</string>
+    <string name="sports_quality_hd">HD en beter</string>
+    <string name="sports_quality_fhd">FHD en beter</string>
+    <string name="sports_quality_uhd">Alleen 4K</string>
+    <string name="sports_only_confirmed">Alleen zenders bevestigd door de gids</string>
+    <string name="sports_only_confirmed_description">Verberg ‘waarschijnlijke’ en onthouden zenders</string>
+    <string name="sports_only_confirmed_mobile">Alleen bevestigd door gids</string>
+    <string name="sports_remember_filters">Onthoud deze filters voor elke wedstrijd</string>
+    <string name="sports_remember_filters_description">Opgeslagen in Instellingen → Sport voor dit profiel</string>
+    <string name="sports_remember_filters_mobile">Onthouden voor elke wedstrijd</string>
+    <plurals name="sports_show_channels">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> zender tonen</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> zenders tonen</item>
+    </plurals>
+    <string name="sports_filter_only_this">Alleen deze</string>
+    <string name="sports_filter_toggle">Aan/uit</string>
+    <string name="sports_goal_toast">Doelpunt voor een team dat je volgt</string>
+    <string name="sports_switch">Overschakelen</string>
+    <string name="sports_other_channels">Andere zenders</string>
+    <string name="sports_other_channels_count">Andere zenders · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">Andere zenders voor deze wedstrijd</string>
+    <string name="sports_playing_now">Speelt nu</string>
+    <string name="sports_switch_channel">Zender wisselen</string>
+    <string name="sports_tab_fixtures">Programma</string>
+    <string name="sports_tab_results">Uitslagen</string>
+    <string name="sports_tab_scores">Live</string>
+    <string name="sports_tab_calendar">Kalender</string>
+    <string name="sports_tab_leagues">Competities</string>
+    <string name="sports_previous_month">Vorige maand</string>
+    <string name="sports_next_month">Volgende maand</string>
+    <string name="sports_next">Hierna: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">Hierna</string>
+    <string name="sports_no_table_series">Geen stand — series wisselen elke week</string>
+    <string name="sports_follow_league">Competitie volgen</string>
+    <string name="sports_unfollow_league">Competitie niet meer volgen</string>
+    <string name="sports_no_matches_on">Geen wedstrijden in je sporten op <xliff:g id="day">%1$s</xliff:g></string>
+    <string name="sports_nothing_on_day">Niets op deze dag</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: niets op deze dag</string>
+    <string name="sports_change_leagues_hint">Competities voeg je toe of verwijder je in Instellingen → Sport</string>
+    <string name="sports_loading_month"><xliff:g id="month">%1$s</xliff:g> laden…</string>
+    <string name="sports_offline_saved">Je ziet wat er <xliff:g id="time">%1$s</xliff:g> is opgeslagen — ESPN is niet bereikbaar</string>
+    <string name="sports_team_page">Teampagina</string>
+    <string name="sports_next_match">Volgende wedstrijd</string>
+    <string name="sports_last_five">Laatste vijf</string>
+    <string name="sports_league_position">Plaats in de stand</string>
+    <string name="sports_in_my_teams">In Mijn teams</string>
+    <string name="sports_open_match_page">Wedstrijdpagina openen</string>
+    <string name="sports_open_team_page">Teampagina openen</string>
+    <string name="sports_my_teams_leagues">De competities waarin je teams spelen</string>
+    <string name="sports_tab_drivers">Coureurs</string>
+    <string name="sports_tab_constructors">Constructeurs</string>
+    <string name="sports_tab_races">Races</string>
+    <string name="sports_tab_rankings">Ranglijst</string>
+    <string name="sports_tab_matches">Wedstrijden</string>
+    <string name="sports_next_race_weekend">Volgend raceweekend</string>
+    <string name="sports_last_weekend">Afgelopen weekend</string>
+    <string name="sports_session_practice_1">Vrije training 1</string>
+    <string name="sports_session_practice_2">Vrije training 2</string>
+    <string name="sports_session_practice_3">Vrije training 3</string>
+    <string name="sports_session_sprint_qualifying">Sprintkwalificatie</string>
+    <string name="sports_session_qualifying">Kwalificatie</string>
+    <string name="sports_session_sprint">Sprint</string>
+    <string name="sports_session_race">Race</string>
+    <string name="sports_table_team">Team</string>
+    <string name="sports_table_played">G</string>
+    <string name="sports_table_won">W</string>
+    <string name="sports_table_drawn">G</string>
+    <string name="sports_table_lost">V</string>
+    <string name="sports_table_difference">DS</string>
+    <string name="sports_table_points">Ptn</string>
+    <string name="sports_table_form">Vorm</string>
+    <string name="sports_this_matchday">Deze speelronde</string>
+    <string name="sports_settings_what">Wat tonen</string>
+    <string name="sports_show_in_menu">Sport in het menu tonen</string>
+    <string name="sports_show_in_menu_description">Standaard aan, met of zonder afspeellijst</string>
+    <string name="sports_leagues">Sporten en competities</string>
+    <plurals name="sports_league_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> competitie</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> competities</item>
+    </plurals>
+    <string name="sports_spoiler_free">Zonder spoilers</string>
+    <string name="sports_spoiler_free_description">Uitslagen verbergen tot je er op OK drukt</string>
+    <string name="sports_spoiler_free_description_mobile">Tik op een uitslag om hem te zien</string>
+    <string name="sports_settings_watching">Kijken</string>
+    <string name="sports_languages">Voorkeurstalen commentaar</string>
+    <string name="sports_languages_mobile">Commentaartalen</string>
+    <string name="sports_languages_description">Bovenaan in ‘Live kijken’</string>
+    <string name="sports_countries">Voorkeurslanden</string>
+    <string name="sports_countries_description">Uit zendervoorvoegsels zoals ‘DE|’</string>
+    <string name="sports_picture_description">Zenders hieronder verbergen</string>
+    <string name="sports_settings_while_watching">Tijdens het kijken</string>
+    <string name="sports_score_info_bar">Uitslag in de infobalk</string>
+    <string name="sports_score_info_bar_description">Alleen zichtbaar als de balk open is, zodat hij geen doelpunt verraadt</string>
+    <string name="sports_score_info_bar_description_mobile">Alleen als de balk open is</string>
+    <string name="sports_goal_alerts_description">Voor mijn teams, terwijl ik iets anders kijk</string>
+    <string name="sports_match_reminders_description">Voor de aftrap, met de beste zender</string>
+    <string name="sports_remembered_channels">Onthouden zenders</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · nog <xliff:g id="count">%3$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> → <xliff:g id="channel">%2$s</xliff:g> · nog <xliff:g id="count">%3$d</xliff:g></item>
+    </plurals>
+    <string name="sports_show_likely">‘Waarschijnlijke’ zenders tonen</string>
+    <string name="sports_show_likely_description">Sportzenders zonder bevestiging in de gids</string>
+    <string name="sports_settings_data">Gegevens</string>
+    <string name="sports_live_refresh">Live verversen</string>
+    <string name="sports_live_refresh_description">Alleen als een sportscherm of uitslag te zien is</string>
+    <string name="sports_about">Over sportgegevens</string>
+    <string name="sports_about_summary">Uitslagen: ESPN · zenders: je afspeellijst en gids</string>
+    <string name="sports_alerts_when_closed">Meldingen als OwnTV gesloten is</string>
+    <string name="sports_alerts_when_closed_description">Vraagt één keer om toestemming voor meldingen</string>
+    <string name="sports_alert_me_about">Meld me</string>
+    <string name="sports_kind_goals">Doelpunten en wickets</string>
+    <string name="sports_kind_kickoff_full_time">Aftrap en einde</string>
+    <string name="sports_alerts_for">Voor</string>
+    <string name="sports_followed_leagues">Gevolgde competities</string>
+    <string name="sports_followed_leagues_description">Elke wedstrijd, en dat kan veel zijn</string>
+    <string name="sports_live_card">Live-scorekaart</string>
+    <string name="sports_live_card_offer">Live-scorekaart aanbieden</string>
+    <string name="sports_live_card_description">Ververst elke 30 s tot het einde; je start het vanuit een wedstrijd</string>
+    <string name="sports_alerts_footnote">Als OwnTV gesloten is, komen meldingen meestal binnen een minuut. Ligt de telefoon lang stil met het scherm uit, dan kan Android ze tot ongeveer 15 minuten tegenhouden. De live-scorekaart wordt niet tegengehouden.</string>
+    <string name="sports_search_teams">Zoek teams, spelers, competities</string>
+    <string name="sports_suggested">Voorstellen op basis van wat je kijkt</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="one">Je keek <xliff:g id="count">%1$d</xliff:g> van hun wedstrijden</item>
+        <item quantity="other">Je keek <xliff:g id="count">%1$d</xliff:g> van hun wedstrijden</item>
+    </plurals>
+    <string name="sports_league_label">Competitie</string>
+    <string name="sports_no_playlist_title">Voeg een afspeellijst toe om wedstrijden te kijken</string>
+    <string name="sports_no_playlist_body">Uitslagen, standen en meldingen werken zonder. Met een afspeellijst vindt OwnTV elke zender die deze wedstrijd uitzendt.</string>
+    <string name="sports_add_playlist">Afspeellijst toevoegen</string>
+    <string name="sports_home_row">Live sport</string>
+    <string name="sports_home_row_description">Gevolgde wedstrijden, als er één live is of bijna begint</string>
+    <string name="sports_empty_nothing_followed">Nog geen sporten of competities gekozen</string>
+    <string name="sports_empty_choose_in">Kies ze bij Instellingen → App → Sport → Sporten en competities.</string>
+    <string name="sports_load_time_warning">Hoe meer sporten en competities je kiest, hoe langer laden en opbouwen duren.</string>
+    <string name="sports_sport_buttons">Sportknoppen</string>
+    <string name="sports_sport_buttons_mine">Mijn sporten</string>
+    <string name="sports_sport_buttons_all">Alle sporten</string>
+    <string name="sports_sport_buttons_description">Mijn sporten: alleen wat je koos. Alle sporten: elke competitie die OwnTV kent, wat langer laden kost.</string>
+    <string name="sports_auto_rebuild">Automatisch opnieuw opbouwen</string>
+    <string name="sports_auto_rebuild_description">Hoe vaak uitslagen, wedstrijddetails en standen vanzelf opnieuw worden opgehaald</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="one">Elk <xliff:g id="count">%1$d</xliff:g> uur</item>
+        <item quantity="other">Elke <xliff:g id="count">%1$d</xliff:g> uur</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">Bij elke start van de app</string>
+    <string name="sports_calendar_refresh">Kalender verversen</string>
+    <string name="sports_calendar_refresh_description">Hoe vaak opgeslagen maanden opnieuw worden opgehaald</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="one">Elke <xliff:g id="count">%1$d</xliff:g> dag</item>
+        <item quantity="other">Elke <xliff:g id="count">%1$d</xliff:g> dagen</item>
+    </plurals>
+    <string name="sports_find_channels">Zenders zoeken</string>
+    <string name="sports_find_channels_description">Zoekt deze wedstrijd in je gids en zendernamen. Bij een grote afspeellijst kan dat even duren.</string>
+    <string name="sports_finding_channels">Je zenders worden doorzocht…</string>
+    <string name="sports_strict_filter">Strikt filteren</string>
+    <string name="sports_strict_filter_description">Aan: alleen zenders die door je filters komen, staan in de lijst. Uit: alle zenders staan erin, de passende eerst.</string>
+    <string name="sports_rebuilding">Sport wordt opnieuw opgebouwd…</string>
+    <string name="sports_rebuild_failed">Sportgegevens konden niet worden bijgewerkt</string>
+    <string name="sports_refresh_data_now">Sportgegevens nu vernieuwen</string>
+    <string name="sports_last_updated">Laatst bijgewerkt <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">Zenders zijn te zoeken vanaf <xliff:g id="time">%1$s</xliff:g>, 30 minuten voor de aftrap.</string>
+    <string name="sports_find_channels_ended">Deze wedstrijd is voorbij, dus er zijn geen zenders te zoeken.</string>
+    <string name="sports_tab_broadcasts">Uitzendingen</string>
+    <string name="sports_broadcasts_guide">In je gids</string>
+    <string name="sports_broadcasts_espn">Van ESPN (alleen Verenigde Staten)</string>
+    <string name="sports_broadcasts_find_first">Gebruik Zenders zoeken om de zenders in je gids te zien die deze wedstrijd uitzenden.</string>
+    <string name="sports_broadcasts_none">Geen vermeld</string>
+    <string name="sports_move_instructions">▲/▼ om te kiezen · OK om op te pakken of neer te zetten · Opslaan als je klaar bent</string>
 </resources>

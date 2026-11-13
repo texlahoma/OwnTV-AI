@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.DownloadEntity
+import tv.own.owntv.core.model.DownloadReason
 import tv.own.owntv.core.model.DownloadStatus
 
 /** Downloads (movies & series episodes only), per profile. */
@@ -44,6 +45,13 @@ interface DownloadDao {
     @Query("SELECT COUNT(*) FROM downloads WHERE profileId = :profileId")
     fun count(profileId: Long): Flow<Int>
 
-    @Query("UPDATE downloads SET status = :status, downloadedBytes = :downloaded, totalBytes = :total, updatedAt = :timestamp WHERE id = :id")
-    suspend fun updateProgress(id: Long, status: DownloadStatus, downloaded: Long, total: Long, timestamp: Long)
+    /** Every status change also sets the row's reason, so an old failure never outlives a retry. */
+    @Query(
+        "UPDATE downloads SET status = :status, downloadedBytes = :downloaded, totalBytes = :total, " +
+            "updatedAt = :timestamp, reason = :reason, httpCode = :httpCode WHERE id = :id",
+    )
+    suspend fun updateProgress(
+        id: Long, status: DownloadStatus, downloaded: Long, total: Long, timestamp: Long,
+        reason: DownloadReason?, httpCode: Int?,
+    )
 }

@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * S4 — the catalog-shrink guard. A provider having a bad hour (a truncated list, a panel answering
+ * The catalog-shrink guard. A provider having a bad hour (a truncated list, a panel answering
  * with a tiny payload) must not be able to delete most of a source's catalog, because every favorite,
  * history entry and resume position keyed to those rows goes with it.
  */

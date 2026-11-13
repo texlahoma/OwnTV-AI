@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.dao.ChannelDao
@@ -15,6 +16,7 @@ import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.epg.CatchupUrl
+import tv.own.owntv.core.epg.displayLogoUrl
 import tv.own.owntv.core.database.entity.RecordingEntity
 import tv.own.owntv.core.database.entity.RecordingRuleEntity
 import tv.own.owntv.core.live.StreamGrant
@@ -31,13 +33,16 @@ import tv.own.owntv.core.storage.MediaTarget
 import tv.own.owntv.core.parser.XtreamClient
 import java.util.TimeZone
 
+/** A standing "record every showing" instruction, as the Recordings list shows it. */
+data class SeriesRecording(val rule: RecordingRuleEntity, val channelLogoUrl: String?)
+
 /**
  * The control half of recording — what the apps call. The bytes are [RecordingEngine]'s, running
  * inside [RecordingWorker] so they survive the user leaving.
  *
  * [RecordingDao] is the single source of truth; nothing here holds a queue.
  *
- * Recordings are written to `TV/` inside the same root downloads use (D1) — one folder the user
+ * Recordings are written to `TV/` inside the same root downloads use — one folder the user
  * chose, three folders OwnTV keeps inside it.
  */
 class RecordingManager(
@@ -87,7 +92,7 @@ class RecordingManager(
 
     fun observe(profileId: Long): Flow<List<RecordingEntity>> = recordingDao.observeForProfile(profileId)
 
-    /** Everything currently being written, for the pill and the player's REC indicator (D13). */
+    /** Everything currently being written, for the pill and the player's REC indicator. */
     fun observeRunning(): Flow<List<RecordingEntity>> = recordingDao.observeRunning()
 
     /** Free/total space of the volume the recordings land on — the same volume downloads use. */
@@ -102,7 +107,7 @@ class RecordingManager(
 
     /**
      * Would one more recording on this playlist be allowed right now? The apps ask before they offer
-     * the button, so a refusal is a sentence rather than a failure (D5/D10/D11).
+     * the button, so a refusal is a sentence rather than a failure.
      */
     suspend fun canRecordOn(sourceId: Long): StreamGrant = connectionBudget(
         source = sourceDao.getById(sourceId),
@@ -113,7 +118,7 @@ class RecordingManager(
 
     /**
      * Anything already claiming this playlist over the same window — the clash the UI warns about at
-     * scheduling time, before the user has committed to anything (D10).
+     * scheduling time, before the user has committed to anything.
      */
     suspend fun clashesWith(sourceId: Long, startMs: Long, stopMs: Long, excludeId: Long = 0): List<RecordingEntity> =
         recordingDao.overlapping(sourceId, startMs, stopMs, excludeId)
@@ -157,6 +162,39 @@ class RecordingManager(
         RecordingSchedule.wakeAtFor(saved, System.currentTimeMillis())?.let { scheduler.arm(saved.id, it) }
         kick()
         saved
+    }
+
+    /**
+     * Record [channel] between two times the user picked, guide or not (#2). The recording carries the
+     * channel's name as its title, and no paddings: the user chose the minutes. Returns null — and
+     * schedules nothing — when [RecordingSchedule.manualWindow] refuses the times.
+     */
+    suspend fun scheduleManual(
+        profileId: Long,
+        channel: ChannelEntity,
+        startMs: Long,
+        stopMs: Long,
+    ): RecordingEntity? {
+        val manual = RecordingSchedule.manualWindow(startMs, stopMs, System.currentTimeMillis()) ?: return null
+        val window = RecordingSchedule.windowFor(manual.first, manual.last, 0, 0, scheduler.canBeExact())
+        return schedule(
+            RecordingEntity(
+                profileId = profileId,
+                sourceId = channel.sourceId,
+                channelId = channel.id,
+                channelName = channel.name,
+                channelIconUrl = channel.logoUrl,
+                epgChannelId = channel.epgChannelId,
+                streamUrl = channel.streamUrl,
+                httpHeaders = channel.httpHeaders,
+                title = channel.name,
+                description = null,
+                programmeStartMs = manual.first,
+                programmeStopMs = manual.last,
+                startMs = window.first,
+                stopMs = window.last,
+            ),
+        )
     }
 
     /**
@@ -210,10 +248,19 @@ class RecordingManager(
         )
     }
 
-    // --- Series recording: "record every showing of this title on this channel" (D7) -------------
+    // --- Series recording: "record every showing of this title on this channel" -------------
 
     /** This profile's standing rules, for the screens that list and cancel them. */
     fun observeRules(profileId: Long): Flow<List<RecordingRuleEntity>> = recordingDao.observeRules(profileId)
+
+    /**
+     * Every "record every showing" instruction [profileId] has, with its channel's logo, for the
+     * Recordings list — the one place a rule can be stopped without finding a showing in the guide.
+     */
+    fun observeSeriesRecordings(profileId: Long): Flow<List<SeriesRecording>> =
+        observeRules(profileId).map { rules ->
+            rules.filter { it.enabled }.map { SeriesRecording(it, channelDao.getById(it.channelId)?.displayLogoUrl) }
+        }
 
     /** The rule covering this programme on this channel, or null when there is none. */
     suspend fun ruleFor(profileId: Long, channelId: Long, title: String): RecordingRuleEntity? =
@@ -282,7 +329,7 @@ class RecordingManager(
      * the table, and `schedule` finds an existing row rather than adding a second.
      *
      * Clashes are **not** resolved here. A clash is decided when the recording is due, by the
-     * connection budget, and reported as a MISSED row with a reason (D10) — deciding it now, against
+     * connection budget, and reported as a MISSED row with a reason — deciding it now, against
      * a guide that may still change, would refuse recordings that would have been fine.
      */
     suspend fun applyRules() = withContext(Dispatchers.IO) {
@@ -379,7 +426,7 @@ class RecordingManager(
         }
     }
 
-    /** Remove the row **and** the file. The only thing in the app that deletes a recording (D2). */
+    /** Remove the row **and** the file. The only thing in the app that deletes a recording. */
     fun delete(recording: RecordingEntity) {
         scope.launch {
             scheduler.cancel(recording.id)
@@ -437,8 +484,5 @@ class RecordingManager(
  */
 private const val RULE_HORIZON_MS = 14L * 24 * 60 * 60 * 1000
 
-/** Free/total space on the volume recordings are written to, and the floor they stop at (D8). */
-data class RecordingStorageInfo(val freeBytes: Long, val totalBytes: Long, val reserveBytes: Long) {
-    /** What is actually available to a recording: everything above the reserve. */
-    val writableBytes: Long get() = (freeBytes - reserveBytes).coerceAtLeast(0L)
-}
+/** Free/total space on the volume recordings are written to, and the floor they stop at. */
+data class RecordingStorageInfo(val freeBytes: Long, val totalBytes: Long, val reserveBytes: Long)

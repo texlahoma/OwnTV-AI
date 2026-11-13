@@ -1,0 +1,46 @@
+name: Sync upstream (core)
+
+# Self-maintenance for this patch-mirror of ahXN00/OwnTV_Core: mirror upstream main into an
+# 'upstream' branch (fast-forward by construction), then rebase this mirror's hold-back /
+# caption-delay patches onto it and force-push. Same contract as the app fork's sync workflow.
+# A conflicting rebase fails loudly; resolve locally and force-push.
+on:
+  schedule:
+    - cron: "17 4 * * *"   # daily, 04:17 UTC — runs before the app fork's daily release build
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: core-sync-upstream
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this mirror
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Mirror upstream main into the 'upstream' branch
+        run: |
+          git remote add upstream https://github.com/ahXN00/OwnTV_Core.git
+          git fetch upstream main
+          git push origin "refs/remotes/upstream/main:refs/heads/upstream" --force
+
+      - name: Rebase main onto upstream
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          if git rebase upstream/main; then
+            git push --force-with-lease origin main
+          else
+            git rebase --abort
+            echo "::error::Rebase onto ahXN00/OwnTV_Core main hit conflicts. The 'upstream' branch IS updated. Resolve locally: git fetch origin upstream && git rebase origin/upstream && git push --force-with-lease origin main"
+            exit 1
+          fi

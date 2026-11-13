@@ -15,11 +15,6 @@
         <item quantity="one">Paused <xliff:g id="count">%1$d</xliff:g> item</item>
         <item quantity="other">Paused <xliff:g id="count">%1$d</xliff:g> items</item>
     </plurals>
-    <!-- Translators: Plural download failure status. "count" is the number of failed downloads. -->
-    <plurals name="content_downloads_failed">
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download failed</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads failed</item>
-    </plurals>
 
     <!-- Translators: Genre label for Action content. Used in genre filters and category lists. -->
     <string name="content_genre_action">Action</string>
@@ -67,8 +62,6 @@
     <string name="content_restore_incomplete_message">The app closed while restoring <xliff:g id="description">%1$s</xliff:g>, so some of it may be missing. Nothing was deleted \u2014 run the same restore again from Settings \u2192 Backup &amp; Restore to fill in the rest.</string>
     <!-- Translators: Global shell playlist picker dialog title. -->
     <string name="content_playlist_picker_title">Show playlist</string>
-    <!-- Translators: Description in the playlist picker dialog. -->
-    <string name="content_playlist_picker_description">Choose which playlist to browse. This applies everywhere and is remembered.</string>
     <!-- Translators: Dialog title for the avatar picker in the profile editor. -->
     <string name="content_avatar_picker_title">Choose your avatar</string>
     <!-- Translators: Screen title for the category browser on the Live TV screen. -->
@@ -103,28 +96,56 @@
     <string name="content_mark_unwatched">Mark as unwatched</string>
     <!-- Translators: Context-menu option to reorder an item in a custom list. -->
     <string name="content_move">Move</string>
+    <!-- Translators: Long-press menu entry on a category: undo the user's hides, moves and custom order inside it. -->
+    <string name="content_category_restore_playlist">Restore to playlist default</string>
+    <!-- Translators: Same entry on a user-created category, which has no playlist default. -->
+    <string name="content_category_restore_custom">Restore to default</string>
+    <!-- Translators: Question above the list of what restoring a category to its default will change. -->
+    <string name="content_category_restore_question">This will:</string>
+    <!-- Translators: Confirmation line. "count" is how many hidden items in the category will be shown again. -->
+    <plurals name="content_category_restore_hidden">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> hidden item shows again</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> hidden items show again</item>
+    </plurals>
+    <!-- Translators: Confirmation line. "count" is how many items moved out of this category return to it. -->
+    <plurals name="content_category_restore_moved">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> moved-out item returns</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> moved-out items return</item>
+    </plurals>
+    <!-- Translators: Confirmation line: the user's manual order inside the category will be cleared. -->
+    <string name="content_category_restore_order">Custom order cleared</string>
+    <!-- Translators: Confirmation text when the category has no changes to undo (the only button is Cancel). -->
+    <string name="content_category_restore_nothing">Category is already at the playlist default</string>
+    <!-- Translators: Long-press menu entry on a category: put it behind the profile's category lock PIN. -->
+    <string name="content_category_lock">Lock with PIN</string>
+    <!-- Translators: Shown instead of a locked category's channels, movies or series until the PIN is entered. -->
+    <string name="content_category_locked_placeholder">This category is locked</string>
+    <!-- Translators: PIN prompt title after too many wrong PINs. "count" is how many seconds are left before the next try. -->
+    <plurals name="content_category_pin_wait">
+        <item quantity="one">Too many wrong PINs. Try again in <xliff:g id="count">%1$d</xliff:g> second</item>
+        <item quantity="other">Too many wrong PINs. Try again in <xliff:g id="count">%1$d</xliff:g> seconds</item>
+    </plurals>
     <!-- Translators: Context-menu option that opens the picker for moving an item into a combined category. -->
     <string name="content_move_to_category">Move to category…</string>
+    <!-- Translators: Context-menu option on a channel inside a category the user created: take it out of that category only. The channel itself and its own provider category are unaffected. -->
+    <string name="content_remove_from_category">Remove from this category</string>
     <!-- Translators: Context-menu option to download a movie or episode for offline playback. -->
     <string name="content_download">Download</string>
     <!-- Translators: Context-menu option to download all episodes of a series. -->
     <string name="content_download_all_episodes">Download all episodes</string>
+    <!-- Translators: Title of the confirmation before downloading every episode of a series or season. The number is how many episodes will be downloaded. -->
+    <plurals name="content_download_episodes_confirm">
+        <item quantity="one">Download <xliff:g id="count">%1$d</xliff:g> episode?</item>
+        <item quantity="other">Download <xliff:g id="count">%1$d</xliff:g> episodes?</item>
+    </plurals>
+    <!-- Translators: Text of the confirmation before downloading many episodes at once. -->
+    <string name="content_download_episodes_confirm_message">They are saved on this device and take up storage space.</string>
     <!-- Translators: Button or context-menu option to play content. -->
     <string name="content_play">Play</string>
-    <!-- Translators: Label inside a next-episode card. -->
-    <string name="content_next_up">Next up</string>
     <!-- Translators: Status chip indicating content has been favorited. This is a state, not a command. -->
     <string name="content_favorited">Favorited</string>
     <!-- Translators: Button to add content to Favorites. Contrasts with Favorited (the state). -->
     <string name="content_favorite">Favorite</string>
-    <!-- Translators: Button or toggle to show watched content in a list. -->
-    <string name="content_show_watched">Show watched</string>
-    <!-- Translators: Button or toggle to hide watched content in a list. -->
-    <string name="content_hide_watched">Hide watched</string>
-    <!-- Translators: Button or section header for the sorting options. -->
-    <string name="content_sorting">Sorting</string>
-    <!-- Translators: Button and sheet title for the episode list's own view options (hide watched, sorting). -->
-    <string name="content_episode_options">Episode options</string>
     <!-- Translators: Sorting-dialog row label for season ordering. -->
     <string name="content_seasons">Seasons</string>
     <!-- Translators: Sorting-dialog row label for episode ordering. -->
@@ -133,42 +154,26 @@
     <string name="content_oldest_first">Oldest first</string>
     <!-- Translators: Sort option to show newest items first. -->
     <string name="content_newest_first">Newest first</string>
-    <!-- Translators: Sort option to sort by last watched date. -->
-    <string name="content_last_watched">Last watched</string>
-    <!-- Translators: Instructional text on the series screen telling the user how to view episodes. -->
-    <string name="content_press_ok_episodes">Press OK on the poster to view episodes.</string>
-    <!-- Translators: Context-menu option to play content in an external player app. -->
-    <string name="content_play_external">Play with external player</string>
     <!-- Translators: Context-menu option to delete downloaded OpenSubtitles subtitles. "OpenSub" is an abbreviation of OpenSubtitles. -->
-    <string name="content_delete_subtitles">Delete OpenSub subtitles</string>
-    <!-- Translators: Context-menu option to view TMDB details for a movie/series. "TMDB" is a brand name. -->
-    <string name="content_tmdb_details">TMDB Details</string>
+    <string name="content_delete_subtitles">Delete OpenSubtitles subtitles</string>
     <!-- Translators: Context-menu option to play the trailer for a movie or series. -->
-    <string name="content_play_trailer">Play Trailer</string>
+    <string name="content_play_trailer">Play trailer</string>
     <!-- Translators: Context-menu option to re-fetch TMDB metadata. "TMDB" is a brand name. -->
-    <string name="content_refetch_tmdb">Refetch TMDB details</string>
+    <string name="content_refetch_tmdb">Update details</string>
     <!-- Translators: Context-menu option to set a custom TMDB search title. -->
     <string name="content_set_tmdb_name">Set TMDB name</string>
     <!-- Translators: Button to close a dialog or overlay. -->
     <string name="content_close">Close</string>
-    <!-- Translators: Empty-state hint on the Movies screen when no movie is focused. -->
-    <string name="content_focus_movie">Focus a movie to see details.</string>
-    <!-- Translators: Empty-state hint on the Live TV screen when no channel is focused. -->
-    <string name="content_focus_channel">Focus a channel to see it here.</string>
-    <!-- Translators: Instructional text on the Live TV channel card. The dot is a separator. -->
-    <string name="content_press_ok_fullscreen">Press OK to watch fullscreen \u00b7 Long-press for options</string>
     <!-- Translators: Hint text in the rename dialog explaining the rename is local to this profile only. -->
     <string name="content_rename_hint">Only for this profile. Leave blank to restore the original name.</string>
-    <!-- Translators: Empty-state hint on the Series screen when no series is focused. -->
-    <string name="content_focus_series">Focus a series, press OK to view episodes.</string>
-    <!-- Translators: Empty-state hint on the series episode list when no episode is focused. -->
-    <string name="content_focus_episode">Focus an episode to see details.</string>
     <!-- Translators: Empty-state message on the Movies screen when the category has no movies. -->
     <string name="content_no_movies_here">No movies here.</string>
     <!-- Translators: Empty-state message on the Series screen when the category has no series. -->
     <string name="content_no_series_here">No series here.</string>
     <!-- Translators: Empty-state message when a season has no episodes. -->
     <string name="content_no_episodes">No episodes available.</string>
+    <!-- Translators: Shown instead of "No episodes available." when the provider refused or failed the request for a show's episode list. "reason" is technical and untranslated, e.g. HTTP 407 or SocketTimeoutException. -->
+    <string name="content_episodes_load_failed">Could not load the episodes from the provider (<xliff:g id="reason">%1$s</xliff:g>).</string>
     <!-- Translators: Empty-state message when a movie search returns no results. "query" is the user\'s search text. -->
     <string name="content_no_movies_found">No movies found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d</string>
     <!-- Translators: Plural category count label in the category browser. "category" is the category name; "count" is the number of movies. -->
@@ -176,20 +181,11 @@
         <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movie)</item>
         <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> movies)</item>
     </plurals>
-    <!-- Translators: Plural category count label. "category" is the category name; "count" is the number of series. -->
-    <plurals name="content_count_series">
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> series)</item>
-    </plurals>
     <!-- Translators: Current sort-mode label in the SortChip toggle. -->
     <string name="content_provider">Provider</string>
     <string name="content_provider_name">Provider: <xliff:g id="provider">%1$s</xliff:g></string>
     <!-- Translators: Empty-state message when a series search returns no results. "query" is the user\'s search text. -->
     <string name="content_no_series_found">No series found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d</string>
-    <!-- Translators: Search hint text in the movie category browser. "category" is the category name. The ellipsis indicates a search action. -->
-    <string name="content_search_movies"><xliff:g id="category">%1$s</xliff:g>\u2026</string>
-    <!-- Translators: Search hint text in the series category browser. -->
-    <string name="content_search_series"><xliff:g id="category">%1$s</xliff:g>\u2026</string>
     <!-- Translators: Context-menu option to reorder a movie in a custom list. -->
     <string name="content_reorder_movie">Reorder movie</string>
     <!-- Translators: Context-menu option to reorder a series in a custom list. -->
@@ -200,10 +196,6 @@
     <string name="content_refetching_tmdb">Refetching TMDB details\u2026</string>
     <!-- Translators: Loading status shown while re-searching TMDB for a title. -->
     <string name="content_researching_tmdb">Re-searching TMDB\u2026</string>
-    <!-- Translators: Instructional text on movie and series detail cards. The dot is a separator. -->
-    <string name="content_ok_play_options">OK to play \u00b7 long-press for options</string>
-    <!-- Translators: Secondary informational text showing a resume position. "position" is a formatted time string such as 12:34. -->
-    <string name="content_resume_at">Resume <xliff:g id="position">%1$s</xliff:g></string>
     <!-- Translators: Duration display for content longer than one hour. "hours" and "minutes" are integers. -->
     <string name="content_duration_hours"><xliff:g id="hours">%1$d</xliff:g>h <xliff:g id="minutes">%2$d</xliff:g>m</string>
     <!-- Translators: Duration display for content under one hour. "minutes" is an integer. -->
@@ -211,29 +203,19 @@
     <!-- Translators: Rating display with star symbol. "rating" is a decimal number such as 7.5. The star is a visual element. -->
     <string name="content_rating">\u2605 <xliff:g id="rating">%1$.1f</xliff:g></string>
     <!-- Translators: Visible bullet separator between metadata segments in media detail screens. -->
-    <string name="content_metadata_separator">  \u2022  </string>
-    <!-- Translators: Visible middle-dot separator between genre tags and search metadata. -->
-    <string name="content_genres_separator"> \u00b7 </string>
+    <string name="content_metadata_separator">"  •  "</string>
     <!-- Translators: Season/episode display format. "season" and "episode" are integers. S and E are conventional abbreviations. -->
     <string name="content_season_episode">S<xliff:g id="season">%1$d</xliff:g> \u00b7 E<xliff:g id="episode">%2$d</xliff:g></string>
     <!-- Translators: Season/episode display with title. "title" is the episode name. -->
     <string name="content_season_episode_title">S<xliff:g id="season">%1$d</xliff:g> \u00b7 E<xliff:g id="episode">%2$d</xliff:g> <xliff:g id="title">%3$s</xliff:g></string>
     <!-- Translators: Season number label. "season" is the season number. -->
     <string name="content_season">Season <xliff:g id="season">%1$d</xliff:g></string>
-    <!-- Translators: Season progress display. "season" is the number, "completed" is episodes watched, "total" is total episodes. -->
-    <string name="content_season_progress">Season <xliff:g id="season">%1$d</xliff:g> \u00b7 <xliff:g id="completed">%2$d</xliff:g>/<xliff:g id="total">%3$d</xliff:g></string>
     <!-- Translators: Status chip when no EPG data is available for a channel. "EPG" is Electronic Program Guide. -->
     <string name="content_no_epg">No EPG</string>
-    <!-- Translators: Section header or label for the EPG (Electronic Program Guide) section. -->
-    <string name="content_epg">EPG</string>
     <!-- Translators: EPG programme time range display. "day" is the day name, "start" and "stop" are times. The en-dash is a range indicator. -->
     <string name="content_live_day_time_range"><xliff:g id="day">%1$s</xliff:g> <xliff:g id="start">%2$s</xliff:g> \u2013 <xliff:g id="stop">%3$s</xliff:g></string>
-    <!-- Translators: EPG data range display. "days" is the number of days of EPG data. "d" is an abbreviation for days. -->
-    <string name="content_epg_days">EPG \u00b7 <xliff:g id="days">%1$d</xliff:g>d</string>
     <!-- Translators: Label for catch-up (time-shifted) playback feature. -->
     <string name="content_catchup">Catch-up</string>
-    <!-- Translators: Catch-up availability display. "days" is the number of days of catch-up available. "d" is an abbreviation for days. -->
-    <string name="content_catchup_days">Catch-up \u00b7 <xliff:g id="days">%1$d</xliff:g>d</string>
     <!-- Translators: Context-menu option to play content in an external player. Shorter variant. -->
     <string name="content_play_external_short">Play in external player</string>
     <!-- Translators: Context-menu option to rename a Live TV channel. -->
@@ -250,13 +232,6 @@
     <string name="content_no_channels_here">No channels here.</string>
     <!-- Translators: Empty-state message when a channel search returns no results. "query" is the user\'s search text. -->
     <string name="content_no_channels_found">No channels found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d</string>
-    <!-- Translators: Plural category count label in the channel category browser. "category" is the category name; "count" is the number of channels. -->
-    <plurals name="content_count_channels">
-        <item quantity="one"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channel)</item>
-        <item quantity="other"><xliff:g id="category">%1$s</xliff:g> (<xliff:g id="count">%2$d</xliff:g> channels)</item>
-    </plurals>
-    <!-- Translators: Search hint text in the channel category browser. -->
-    <string name="content_search_channels"><xliff:g id="category">%1$s</xliff:g>\u2026</string>
     <!-- Translators: Opens and labels the channel EPG matching flow. -->
     <string name="content_match_epg">Match EPG</string>
     <!-- Translators: Catch-up playback title showing which channel. "channel" is the channel name. -->
@@ -275,6 +250,12 @@
     <string name="content_catchup_jump_exact">Choose exact time…</string>
     <!-- Translators: TV remote instructions in the exact-time picker. "OK" is the select/enter button on the remote; keep whatever name that button is given elsewhere in this app. -->
     <string name="content_catchup_jump_hint">Press OK on the day, hour or minute, change it with up and down, then press OK again.</string>
+    <!-- Translators: First row of the catch-up time list: go back to the start of the programme on air. "title" is the programme's name from the TV guide. -->
+    <string name="content_catchup_jump_programme_start">Start of “<xliff:g id="title">%1$s</xliff:g>”</string>
+    <!-- Translators: Same row as content_catchup_jump_programme_start, when the TV guide gives the programme no name. -->
+    <string name="content_catchup_jump_programme_start_untitled">Start of the programme</string>
+    <!-- Translators: Second line of the "Start of …" row in the catch-up time list. "time" is the clock time the programme began, formatted for the active UI locale. -->
+    <string name="content_catchup_jump_programme_start_at">Began at <xliff:g id="time">%1$s</xliff:g></string>
     <!-- Translators: Prompt in the EPG match dialog. "channel" is the channel name to match. -->
     <string name="content_epg_match_prompt">Pick the guide channel for \u201c<xliff:g id="channel">%1$s</xliff:g>\u201d.</string>
     <!-- Translators: Prompt in the EPG match dialog showing the current match. "match" is the current guide channel name. -->
@@ -287,12 +268,6 @@
     <string name="content_no_guide_channels">No guide channels match \u201c<xliff:g id="query">%1$s</xliff:g>\u201d.</string>
     <!-- Translators: Button to clear the current EPG match for a channel. -->
     <string name="content_clear_match">Clear match</string>
-    <!-- Translators: Label on the EPG timeline for the current time slot. All caps is intentional for this timeline label. -->
-    <string name="content_live_now_label">NOW</string>
-    <!-- Translators: Label on the EPG timeline for the next programme. "time" is the start time. All caps is intentional. -->
-    <string name="content_live_next_label">NEXT \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
-    <!-- Translators: Label on the EPG timeline for later programmes. All caps is intentional. -->
-    <string name="content_live_later_label">LATER</string>
     <!-- Translators: Time range display on the EPG timeline. "start" and "stop" are times. The en-dash is a range indicator. -->
     <string name="content_live_time_range_plain"><xliff:g id="start">%1$s</xliff:g> \u2013 <xliff:g id="stop">%2$s</xliff:g></string>
     <!-- Translators: Predefined category name for the Favorites list. -->
@@ -300,47 +275,11 @@
     <!-- Translators: Predefined category name for the History list. -->
     <string name="content_category_history">History</string>
     <!-- Translators: Predefined category name for the "All Channels" view. -->
-    <string name="content_category_all_channels">All Channels</string>
-    <!-- Translators: Predefined category name for United Kingdom channels. -->
-    <string name="content_category_united_kingdom">United Kingdom</string>
-    <!-- Translators: Predefined category name for United States channels. -->
-    <string name="content_category_united_states">United States</string>
-    <!-- Translators: Predefined category name for German channels. -->
-    <string name="content_category_germany">Germany</string>
-    <!-- Translators: Predefined category name for Sports content. -->
-    <string name="content_category_sports">Sports</string>
+    <string name="content_category_all_channels">All channels</string>
     <!-- Translators: Predefined category name for the "All Movies" view. -->
-    <string name="content_category_all_movies">All Movies</string>
-    <!-- Translators: Default category name for Action content (movies and series). -->
-    <string name="content_category_action">Action</string>
-    <!-- Translators: Predefined category name for Drama content. -->
-    <string name="content_category_drama">Drama</string>
-    <!-- Translators: Predefined category name for Comedy content. -->
-    <string name="content_category_comedy">Comedy</string>
-    <!-- Translators: Predefined category name for Horror content. -->
-    <string name="content_category_horror">Horror</string>
+    <string name="content_category_all_movies">All movies</string>
     <!-- Translators: Predefined category name for the "All Series" view. -->
-    <string name="content_category_all_series">All Series</string>
-    <!-- Translators: Predefined category name for Animation content. -->
-    <string name="content_category_animation">Animation</string>
-    <!-- Translators: Predefined category name for Documentary content. -->
-    <string name="content_category_documentary">Documentary</string>
-    <!-- Translators: Predefined category name for the "All Downloads" view. -->
-    <string name="content_category_all_downloads">All Downloads</string>
-    <!-- Translators: Predefined category name for the Movies section in the category browser. -->
-    <string name="content_category_movies">Movies</string>
-    <!-- Translators: Predefined category name for the Series section in the category browser. -->
-    <string name="content_category_series">Series</string>
-    <!-- Translators: Zero-count label for channels. Shown when a category has no channels. -->
-    <string name="content_zero_channels">0 channels</string>
-    <!-- Translators: Zero-count label for movies. -->
-    <string name="content_zero_movies">0 movies</string>
-    <!-- Translators: Zero-count label for series. -->
-    <string name="content_zero_series">0 series</string>
-    <!-- Translators: Zero-count label for downloads. -->
-    <string name="content_zero_downloads">0 downloads</string>
-    <!-- Translators: Empty-state message when a section has no content. -->
-    <string name="content_nothing_here">Nothing here yet</string>
+    <string name="content_category_all_series">All series</string>
     <!-- Translators: Empty-state action to add a source. Shown when no sources are configured. -->
     <string name="content_add_source">Add a source</string>
     <!-- Translators: Instructional text in the channel preview panel on the Live TV screen. -->
@@ -351,48 +290,28 @@
     <string name="content_subtitle_select_file">Select local subtitle file</string>
     <!-- Translators: Error when a local subtitle file cannot be loaded. -->
     <string name="content_subtitle_load_failed">Couldn\'t load the subtitle file.</string>
-    <!-- Translators: Section header or tab label for the watch history. -->
-    <string name="content_history">History</string>
     <!-- Translators: Label for the playlist filter showing all playlists. -->
     <string name="content_all_playlists">All playlists</string>
     <!-- Translators: Search hint text in the category browser. -->
     <string name="content_search_categories">Search categories\u2026</string>
-    <!-- Translators: Empty-state message when the category search returns no results. -->
-    <string name="content_no_categories_match">No categories match</string>
     <!-- Translators: Imperative action in the clickable top-bar Continue chip. -->
     <string name="content_action_resume">Resume</string>
     <!-- Translators: Action button to play content from the beginning. -->
     <string name="content_action_play">Play</string>
-    <!-- Translators: Action label for the "Next up" item in a continue-watching row. -->
-    <string name="content_action_next_up">Next up</string>
     <!-- Translators: Action label for the "Last channel" item in the continue-watching row. -->
     <string name="content_action_last_channel">Last channel</string>
-    <!-- Translators: Continue-watching label combining an action and content name. "action" is the action label (e.g. Resume); "name" is the content name. The dot is a separator. -->
-    <string name="content_continue_label"><xliff:g id="action">%1$s</xliff:g> \u00b7 <xliff:g id="name">%2$s</xliff:g></string>
-    <!-- Translators: Empty-state message for a section that is not yet implemented. "section" is the section name. Directs the user to add a source. -->
-    <string name="content_empty_section"><xliff:g id="section">%1$s</xliff:g> arrives in a later phase. Add an M3U or Xtream source to populate this list.</string>
     <!-- Translators: Progress percentage display. The double percent (%%) is an Android XML escape for a literal %. -->
     <string name="content_progress_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
-    <!-- Translators: Section/category breadcrumb display. "section" is the section name, "category" is the category name. The slash is a visual separator. -->
-    <string name="content_section_category"><xliff:g id="section">%1$s</xliff:g> / <xliff:g id="category">%2$s</xliff:g></string>
-    <!-- Translators: Subtitle tagline on the Live TV preview channel card. -->
-    <string name="content_preview_player">Your own IPTV player.</string>
     <!-- Translators: Time range display in the EPG programme info. "start" and "end" are times. The en-dash is a range indicator. -->
     <string name="content_live_time_range"><xliff:g id="start">%1$s</xliff:g> \u2013 <xliff:g id="end">%2$s</xliff:g></string>
-    <!-- Translators: Remaining time display for a live programme. "end" is the end time; "minutes" is the minutes remaining. -->
+    <!-- Translators: Remaining time display for a live programme. "end" is the programme's time slot, e.g. "20:10 – 21:42"; "minutes" is the minutes remaining. -->
     <string name="content_live_time_remaining"><xliff:g id="end">%1$s</xliff:g> \u00b7 <xliff:g id="minutes">%2$d</xliff:g> min left</string>
-    <!-- Translators: Sidebar section heading for browsing content. -->
-    <string name="common_browse">Browse</string>
 
 
     <!-- Translators: Screen title for the Downloads screen. -->
     <string name="content_downloads_title">Downloads</string>
-    <!-- Translators: Description text on the Downloads screen. -->
-    <string name="content_downloads_description">Movies &amp; episodes saved for offline playback.</string>
     <!-- Translators: Empty-state message on the Downloads screen. Directs the user to open content and press Download. -->
     <string name="content_downloads_empty">No downloads yet. Open a movie or episode and press Download.</string>
-    <!-- Translators: Section header for the storage information on the Downloads screen. -->
-    <string name="content_downloads_storage">Storage</string>
     <!-- Translators: Title of the sheet that holds the Downloads screen's own settings: which folder downloads are written to, and whether they wait for Wi-Fi. Also the label of the button that opens it. -->
     <string name="content_downloads_options">Download options</string>
     <!-- Translators: Storage usage display. "free" is the free space, "total" is the total space. Both are formatted numbers with GB unit. -->
@@ -409,42 +328,88 @@
     <string name="content_storage_chosen_folder">Chosen folder</string>
     <!-- Translators: Shown when the folder the user had chosen for downloads can no longer be written to, because the permission was withdrawn or the storage was removed. -->
     <string name="content_storage_folder_lost">That folder is no longer available. Choose it again, or pick another.</string>
-    <!-- Translators: Download status showing completed size. "size" is the formatted file size. -->
-    <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> downloaded</string>
-    <!-- Translators: Error message on a failed download item. Directs the user to tap Retry. -->
-    <string name="content_downloads_failure_message">Download failed \u2014 couldn\'t reach the source. Tap Retry.</string>
+    <!-- Translators: Shown on the Downloads screen while the folder the user chose for downloads is missing (a USB stick removed, or its permission withdrawn). Downloads go to the app's own folder until it is back; the choice itself is kept. -->
+    <string name="content_storage_folder_fallback">Your download folder isn\'t available right now, so downloads are being saved to OwnTV\'s own folder until it\'s back.</string>
     <!-- Translators: Status text for a download that is queued and waiting to start. -->
     <string name="content_downloads_queued">Queued\u2026</string>
-    <!-- Translators: Compact download count badge. "count" is the number. -->
-    <string name="content_downloads_count"><xliff:g id="count">%1$d</xliff:g></string>
-    <!-- Translators: Tab or filter label for active downloads. -->
-    <string name="content_downloads_active">Active</string>
-    <!-- Translators: Tab or filter label for downloads waiting to start. -->
-    <string name="content_downloads_waiting">Waiting</string>
-    <!-- Translators: Tab or filter label for completed downloads. -->
-    <string name="content_downloads_completed_group">Completed</string>
     <!-- Translators: Tab or filter label for failed downloads. -->
     <string name="content_downloads_failed_group">Failed</string>
-    <!-- Translators: Download progress display. "percent" is the percentage, "downloaded" is the downloaded size, "total" is the total size. The double percent (%%) is an XML escape. -->
-    <string name="content_downloads_progress"><xliff:g id="percent">%1$d</xliff:g>%% \u00b7 <xliff:g id="downloaded">%2$s</xliff:g> / <xliff:g id="total">%3$s</xliff:g></string>
-    <!-- Translators: Download progress display when the total size is unknown. "downloaded" is the downloaded size so far. -->
-    <string name="content_downloads_progress_unknown">Downloading\u2026 <xliff:g id="downloaded">%1$s</xliff:g></string>
-    <!-- Translators: Path separator in the download file path display. The chevron is a visual breadcrumb separator. -->
-    <string name="content_downloads_folder_separator"> \u203a </string>
     <!-- Translators: Button to play a completed download. -->
     <string name="content_downloads_play">Play</string>
     <!-- Translators: Button to open a download in an external player. -->
     <string name="content_downloads_external">External</string>
     <!-- Translators: Button to pause an active download. -->
     <string name="content_downloads_pause">Pause</string>
-    <!-- Translators: Placeholder when the download file size is unknown. The em-dash is a visual placeholder. -->
-    <string name="content_downloads_unknown_size">\u2014</string>
+    <!-- Translators: Downloads screen: heading over downloads that are running, waiting or failed. Shown in capitals. -->
+    <string name="content_downloads_group_downloading">Downloading</string>
+    <!-- Translators: Downloads screen: heading over finished downloads stored on this TV. Shown in capitals. -->
+    <string name="content_downloads_group_on_tv">On this TV</string>
+    <!-- Translators: Downloads screen on a phone: heading over finished downloads stored on this phone. Shown in capitals. -->
+    <string name="content_downloads_group_on_phone">On this phone</string>
+    <!-- Translators: Downloads screen on a phone: short status beside a finished download, after a check mark. Keep it to one short word. -->
+    <string name="content_downloads_ready_short">Ready</string>
+    <!-- Translators: Downloads screen: a finished download that can be played. -->
+    <string name="content_downloads_ready">Ready to watch</string>
+    <!-- Translators: Downloads screen: a download the user paused. -->
+    <string name="content_downloads_paused">Paused</string>
+    <!-- Translators: Shown on a finished download or recording whose file is gone - the USB drive was formatted, swapped or unplugged, or the file was deleted outside the app. -->
+    <string name="content_downloads_file_missing">File missing: it is no longer on the drive</string>
+    <!-- Translators: Title of the question before a download or a recording is deleted. The placeholder is its title. -->
+    <string name="content_downloads_delete_title">Delete “<xliff:g id="name">%1$s</xliff:g>”?</string>
+    <!-- Translators: Body of the question before a film or episode download is deleted from the device. -->
+    <string name="content_downloads_delete_message">Removes the file from this device. It can be downloaded again later.</string>
+    <!-- Translators: Why a download failed: the TV provider says every connection the account allows is in use. -->
+    <string name="content_downloads_reason_account_busy">Account busy: another stream is using the connection</string>
+    <!-- Translators: Why a download failed: the server refused the link (expired, blocked or busy; it does not say which). -->
+    <string name="content_downloads_reason_refused">The server refused the link</string>
+    <!-- Translators: Why a download failed: the server no longer has the file. -->
+    <string name="content_downloads_reason_not_found">The server no longer has this file</string>
+    <!-- Translators: Why a download failed: the server reported an internal error. -->
+    <string name="content_downloads_reason_server_error">Server error</string>
+    <!-- Translators: Why a download failed: the server answered with something other than the file. -->
+    <string name="content_downloads_reason_http">The server did not send the file</string>
+    <!-- Translators: Why a download failed: the network dropped, timed out or never connected. -->
+    <string name="content_downloads_reason_connection_lost">Connection lost</string>
+    <!-- Translators: Why a download failed: the download folder is gone (card or USB removed) or its permission was withdrawn. -->
+    <string name="content_downloads_reason_folder">Download folder unavailable</string>
+    <!-- Translators: Why a download failed: the storage is full. -->
+    <string name="content_downloads_reason_no_space">Not enough space</string>
+    <!-- Translators: Why a download failed: the drive (often a USB stick formatted FAT32) cannot hold a single file over 4 GB. -->
+    <string name="content_downloads_reason_too_large">Too large for this drive: it cannot store files over 4 GB. Choose another download folder, or format the drive as exFAT</string>
+    <!-- Translators: A queued download on a playlist that allows only one stream, waiting because the user is watching from it. It starts by itself when playback stops. -->
+    <string name="content_downloads_reason_waiting_watching">Waiting: starts when you stop watching</string>
+    <!-- Translators: A download paused because the user chose to watch on a playlist that allows only one stream. The user resumes it. -->
+    <string name="content_downloads_reason_paused_watching">Paused while you watch</string>
+    <!-- Translators: A download failure reason followed by the server's HTTP status number, e.g. "Server error (HTTP 503)". Keep "HTTP" as is. -->
+    <string name="content_downloads_reason_with_code"><xliff:g id="reason">%1$s</xliff:g> (HTTP <xliff:g id="code">%2$d</xliff:g>)</string>
+    <!-- Translators: Dialog title when the user starts playing from a playlist that allows only one stream while a download from it is running. -->
+    <string name="content_download_watch_title">This playlist allows only one stream</string>
+    <!-- Translators: Dialog body under content_download_watch_title. "playlist" is the playlist's name. The download has already been paused so the picture can start. -->
+    <string name="content_download_watch_body">A download from <xliff:g id="playlist">%1$s</xliff:g> was using it, so it is paused for now. Watch, or close the player and keep downloading?</string>
+    <!-- Translators: Dialog button: keep the download paused and keep watching. The user resumes the download later in Downloads. -->
+    <string name="content_download_watch_watch">Pause download and watch</string>
+    <!-- Translators: Dialog button and settings choice: close the player and let the download continue. -->
+    <string name="content_download_watch_keep">Keep downloading</string>
+    <!-- Translators: Checkbox in the dialog: remember this answer and do not show the question again. -->
+    <string name="content_download_watch_remember">Don\'t ask again</string>
+    <!-- Translators: Setting name: what playing something does to a running download on a playlist that allows only one stream. -->
+    <string name="content_download_watch_setting">Watching while downloading</string>
+    <!-- Translators: Description under content_download_watch_setting. -->
+    <string name="content_download_watch_setting_description">For playlists that allow only one stream: what happens to a download when you start playing.</string>
+    <!-- Translators: Settings choice for content_download_watch_setting: show the question each time. -->
+    <string name="content_download_watch_ask">Ask every time</string>
+    <!-- Translators: Settings choice for content_download_watch_setting: pause the download without asking. -->
+    <string name="content_download_watch_pause">Pause download</string>
+    <!-- Translators: Downloads screen: a waiting download, and the title that downloads before it. -->
+    <string name="content_downloads_starts_after">Queued \u00b7 starts after <xliff:g id="title">%1$s</xliff:g></string>
+    <!-- Translators: Downloads screen: the current download speed in megabytes per second, e.g. "12.4 MB/s". -->
+    <string name="content_downloads_speed"><xliff:g id="size">%1$s</xliff:g> MB/s</string>
 
     <!-- Translators: Empty-state message on the EPG screen when no profile exists. Directs the user to create one. -->
     <string name="content_epg_create_profile">Create a profile to see the guide.</string>
-    <!-- Translators: Empty-state message on the EPG screen when no playlist is configured. Directs the user to add one. -->
     <!-- Translators: Shown in the TV Guide when every channel is hidden by the chosen sort/filter (e.g. Favourites) rather than because there is no guide data. -->
     <string name="content_epg_filter_hides_all">Every channel is hidden by the current filter. Change the sort to see the guide.</string>
+    <!-- Translators: Empty-state message on the EPG screen when no playlist is configured. Directs the user to add one. -->
     <string name="content_epg_add_playlist">Add a playlist to see the guide.</string>
     <!-- Translators: Empty-state message when the EPG channel search returns no results. "query" is the search text. -->
     <string name="content_epg_no_channels_query">No guide channels found for \u201c<xliff:g id="query">%1$s</xliff:g>\u201d.</string>
@@ -462,32 +427,6 @@
     <string name="content_epg_all_matched">Everything\'s already matched.</string>
     <!-- Translators: Status message when no EPG match is found for a channel. "channel" is the channel name. Directs the user to pick manually. -->
     <string name="content_epg_no_match">No EPG match found for \u201c<xliff:g id="channel">%1$s</xliff:g>\u201d \u2014 try picking manually.</string>
-    <!-- Translators: Plural EPG stats display for channel count. "channels" is the number of matched channels. -->
-    <plurals name="content_epg_stats_channels">
-        <item quantity="one">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channel.</item>
-        <item quantity="other">Guide loaded: <xliff:g id="channels">%1$d</xliff:g> channels.</item>
-    </plurals>
-    <!-- Translators: Plural EPG stats display for programme count. "programmes" is the number of programmes. -->
-    <plurals name="content_epg_stats_programmes">
-        <item quantity="one">The guide contains <xliff:g id="programmes">%1$d</xliff:g> program.</item>
-        <item quantity="other">The guide contains <xliff:g id="programmes">%1$d</xliff:g> programs.</item>
-    </plurals>
-    <!-- Translators: EPG stats composite display. Each placeholder is already a complete localized count/status phrase; reorder the phrases as needed. -->
-    <string name="content_epg_stats_loaded"><xliff:g id="channels">%1$s</xliff:g> <xliff:g id="programmes">%2$s</xliff:g> <xliff:g id="catchup">%3$s</xliff:g></string>
-    <!-- Translators: Status message when no channels support catch-up. -->
-    <string name="content_epg_no_catchup_channels">No channels support catch-up.</string>
-    <!-- Translators: Status message when no catch-up channels are available. -->
-    <string name="content_epg_stats_no_catchup">No catch-up channels are available.</string>
-    <!-- Translators: Plural catch-up availability display. "count" is the number of channels with catch-up. -->
-    <plurals name="content_epg_catchup_count">
-        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
-        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
-    </plurals>
-    <!-- Translators: Plural catch-up stats display (variant used in a different context than catchup_count). -->
-    <plurals name="content_epg_stats_catchup_available">
-        <item quantity="one">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channel.</item>
-        <item quantity="other">Catch-up is available on <xliff:g id="count">%1$d</xliff:g> channels.</item>
-    </plurals>
     <!-- Translators: Plural auto-match result for successfully matched channels. "applied" is the count. -->
     <plurals name="content_epg_auto_matched_applied">
         <item quantity="one">Auto-matched <xliff:g id="applied">%1$d</xliff:g> channel.</item>
@@ -517,12 +456,8 @@
     <string name="content_epg_no_programme">No program at this time.</string>
     <!-- Translators: Empty-state message on the EPG screen. Directs the user to add an EPG source. "EPG" and "XMLTV" are technical names. -->
     <string name="content_epg_add_description">Add an EPG (XMLTV) source to fill the guide with programs.</string>
-    <!-- Translators: Help text in the EPG channel-action dialog. -->
-    <string name="content_epg_favourite_description">Favorite this channel, or set its guide data.</string>
     <!-- Translators: Label for the guide category filter in the EPG screen. -->
     <string name="content_epg_guide_category">Guide category</string>
-    <!-- Translators: Filter option to show all guide categories. -->
-    <string name="content_epg_all_categories">All categories</string>
     <!-- Translators: Search hint text in the EPG channel browser. -->
     <string name="content_epg_search_hint">Search guide channels\u2026</string>
     <!-- Translators: Button to add an EPG source. "EPG" is Electronic Program Guide. -->
@@ -533,10 +468,8 @@
     <string name="content_epg_remove_favourite">Remove from favorites</string>
     <!-- Translators: Button in the EPG screen to jump to the current time. -->
     <string name="content_epg_jump_now">Jump to Now</string>
-    <!-- Translators: Programme runtime display. "minutes" is the duration in minutes. "m" is an abbreviation for minutes. -->
-    <string name="content_epg_runtime"><xliff:g id="minutes">%1$d</xliff:g>m</string>
-    <!-- Translators: EPG review-dialog heading. -->
-    <string name="content_epg_review_matches">Review EPG matches</string>
+    <!-- Translators: A switch in the Review EPG matches window. When on, the channels matched there also show the logo of the guide channel they were matched to. -->
+    <string name="content_epg_include_logos">Include guide logos</string>
     <!-- Translators: Description in the EPG review dialog explaining what to do with uncertain matches. -->
     <string name="content_epg_review_description">These channels were matched by name but weren\'t a confident fit. Accept the right ones; skip the rest.</string>
     <!-- Translators: Button to accept an EPG match in the review dialog. -->
@@ -549,10 +482,6 @@
     <string name="content_epg_skip_all">Skip all</string>
     <!-- Translators: Button to manually pick an EPG guide channel for a channel. -->
     <string name="content_epg_pick_manually">Pick EPG manually</string>
-    <!-- Translators: Instructional text on the EPG screen explaining navigation. -->
-    <string name="content_epg_move_hint">Move right into a row, then browse with \u25c0 \u25b6 to preview a program.</string>
-    <!-- Translators: Label for catch-up availability indicator in the EPG. The circular arrow is a visual indicator. -->
-    <string name="content_epg_catchup">\u21bb catch-up</string>
     <!-- Translators: Time range display in the EPG programme info. "start" and "end" are times. The en-dash is a range indicator. -->
     <string name="content_epg_time_range"><xliff:g id="start">%1$s</xliff:g> \u2013 <xliff:g id="end">%2$s</xliff:g></string>
     <!-- Translators: Filter option to show all categories in the EPG. -->
@@ -561,26 +490,18 @@
     <string name="content_epg_sort_alpha">A\u2013Z</string>
     <!-- Translators: Sort option to sort EPG channels by provider. -->
     <string name="content_epg_sort_provider">Provider</string>
-    <!-- Translators: Sort option to sort EPG channels by live TV availability. -->
-    <string name="content_epg_sort_live">Live TV</string>
     <!-- Translators: Sort option to sort EPG channels by catch-up availability. -->
     <string name="content_epg_sort_catchup">Catch-up</string>
     <!-- Translators: Sort option to sort EPG channels by favorites. -->
     <string name="content_epg_sort_favorites">Favorites</string>
-    <!-- Translators: Button showing the current category filter in the EPG. "label" is the category name. -->
-    <string name="content_epg_category_button">Category: <xliff:g id="label">%1$s</xliff:g></string>
     <!-- Translators: Button showing the current sort order in the EPG. "label" is the sort option name. -->
     <string name="content_epg_sort_button">Sort: <xliff:g id="label">%1$s</xliff:g></string>
     <!-- Translators: Button to trigger EPG auto-matching. -->
     <string name="content_epg_match_button">Auto-match EPG</string>
     <!-- Translators: EPG auto-match suggestion row. "name" is the suggested guide channel; "percent" is the match confidence percentage. -->
     <string name="content_epg_channel_score">\u2192 <xliff:g id="name">%1$s</xliff:g> \u00b7 <xliff:g id="percent">%2$d</xliff:g>%%</string>
-    <!-- Translators: Channel number and name display in the EPG. "number" is the channel number, "name" is the channel name. -->
-    <string name="content_epg_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
     <!-- Translators: Visible middle-dot separator between EPG metadata segments. -->
-    <string name="content_epg_bits_separator">" \u00b7 "</string>
-    <!-- Translators: Label on the EPG timeline for the current time slot with the time. "time" is the current time. All caps is intentional. -->
-    <string name="content_epg_now">NOW \u00b7 <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="content_epg_bits_separator">" · "</string>
     <!-- Translators: Context-menu option in the EPG to watch a programme from the start (catch-up). -->
     <string name="content_epg_watch_start">Watch from start</string>
     <!-- Translators: Context-menu option in the EPG to tune to a live channel. -->
@@ -606,4 +527,179 @@
     <string name="content_epg_offset_channel_only">This channel only · global is <xliff:g id="offset">%1$s</xliff:g></string>
     <string name="content_epg_offset_use_global">Use global</string>
     <string name="content_preview_single_stream">Preview off — your provider allows one stream at a time</string>
+    <!-- Translators: Subtitle of the playlist picker menu: the choice applies to every screen and is kept. -->
+    <string name="content_playlist_picker_subtitle">Applies everywhere and is remembered</string>
+    <!-- Translators: Footnote under the playlist switcher sheet. A "mark" is the short coloured badge (e.g. GOLD) naming the playlist a row comes from. -->
+    <string name="content_playlist_marks_note">With All playlists on, every row shows the mark of the playlist it comes from.</string>
+    <!-- Translators: Small label in the top-right Continue button when the next episode of a series is ready to play. -->
+    <string name="content_action_next_episode">Next episode</string>
+    <!-- Translators: Placeholder of a search field that searches inside one category. "name" is the category name, e.g. Search Sky Cinema. -->
+    <string name="content_search_in">Search <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Translators: Live TV button that shows the channels as a TV guide grid. -->
+    <string name="content_live_guide_view">Guide view</string>
+    <!-- Translators: Remote-key hint: pressing OK watches the channel. Short verb. -->
+    <string name="content_key_watch">Watch</string>
+    <!-- Translators: Remote-key hint: pressing Menu opens the options menu. Short noun. -->
+    <string name="content_key_options">Options</string>
+    <!-- Translators: Heading above the provider's channel groups in the Live TV category list. Shown in capitals by the style. -->
+    <string name="content_live_groups">Groups</string>
+    <!-- Translators: Group label in a channel's options menu, above the ways to watch it. Shown in capitals by the style. -->
+    <string name="content_menu_group_watch">Watch</string>
+    <!-- Translators: Group label in a channel's options menu, above actions on the channel itself. Shown in capitals by the style. -->
+    <string name="content_menu_group_channel">Channel</string>
+    <!-- Translators: Group label in a channel's options menu, above the TV-guide matching actions. Shown in capitals by the style. -->
+    <string name="content_menu_group_guide_data">Guide data</string>
+    <!-- Translators: Group label in an options menu, above Move and Move to category. Shown in capitals by the style. -->
+    <string name="content_menu_group_organise">Organize</string>
+    <!-- Translators: Value beside EPG time offset in a channel's menu: the channel follows the app-wide offset. One short word. -->
+    <string name="content_epg_offset_global_short">Global</string>
+    <!-- Translators: Heading above the provider's channel groups, with the country code the groups share, e.g. GROUPS · DE. Shown in capitals by the style. -->
+    <string name="content_live_groups_country">Groups · <xliff:g id="country">%1$s</xliff:g></string>
+    <!-- Translators: Channel count beside the category name in the Live TV header, e.g. 9 channels. -->
+    <plurals name="content_live_channel_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels</item>
+    </plurals>
+    <!-- Translators: Live TV category holding the channels the user watched last. -->
+    <string name="content_category_recently_watched">Recently watched</string>
+    <!-- Translators: Programme menu action: get a prompt when this programme starts. -->
+    <string name="content_remind_me">Remind me</string>
+    <!-- Translators: Value beside Remind me: how long before the start the prompt comes. "duration" is e.g. 5 min. -->
+    <string name="content_remind_before"><xliff:g id="duration">%1$s</xliff:g> before</string>
+    <!-- Translators: Remote-key cap in a key hint: hold the OK button. Keep it very short. -->
+    <string name="content_key_hold_ok">Hold OK</string>
+    <!-- Translators: TV Guide: how soon the focused programme starts. "duration" is e.g. 58 min or 1 h 12 min. -->
+    <string name="content_epg_starts_in">Starts in <xliff:g id="duration">%1$s</xliff:g></string>
+    <!-- Translators: TV Guide day picker: the current day. -->
+    <string name="content_epg_today">Today</string>
+    <!-- Translators: TV Guide day picker: the day after today. -->
+    <string name="content_epg_tomorrow">Tomorrow</string>
+    <!-- Translators: TV Guide day picker: the day before today (catch-up days). -->
+    <string name="content_epg_yesterday">Yesterday</string>
+    <!-- Translators: TV Guide button that scrolls the grid back to the current time. One short word. -->
+    <string name="content_epg_now_short">Now</string>
+    <!-- Translators: TV Guide channel order: channels with catch-up at the top. -->
+    <string name="content_epg_sort_catchup_first">Catch-up first</string>
+    <!-- Translators: TV Guide channel order: favourite channels at the top. -->
+    <string name="content_epg_sort_favorites_first">Favorites first</string>
+    <!-- Translators: Title of the TV Guide menu that picks the channel order. -->
+    <string name="content_epg_order_title">Order channels by</string>
+    <!-- Translators: Line under the channel-order menu title: the choice is remembered. -->
+    <string name="content_epg_order_hint">Opens this way next time</string>
+    <!-- Translators: Line beside the TV Guide category list title: it is the same list Live TV shows. -->
+    <string name="content_epg_category_hint">Same list as Live TV</string>
+    <!-- Translators: Group label in the programme menu above features that are new, e.g. Remind me. Shown in capitals by the style. -->
+    <string name="content_menu_group_new">New</string>
+    <!-- Translators: Group label in the programme menu above the recording actions. Shown in capitals by the style. -->
+    <string name="content_menu_group_record">Record</string>
+    <!-- Translators: Value beside a disabled menu action: it becomes available from this time on. "time" is e.g. 20:05. -->
+    <string name="content_epg_after_time">after <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Button label once a reminder is set for the programme; pressing it again removes the reminder. -->
+    <string name="content_reminder_set">Reminder set</string>
+    <!-- Translators: Live TV button that switches from the guide grid back to the channel list. -->
+    <string name="content_live_list_view">List view</string>
+    <!-- Translators: After Auto-match EPG: how many channels were matched on their own. Shown after "Auto-match EPG ·". -->
+    <plurals name="content_epg_channels_matched">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> channel matched</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> channels matched</item>
+    </plurals>
+    <!-- Translators: Title of the Auto-match EPG review: how many unsure matches wait for Accept or Skip. -->
+    <plurals name="content_epg_review_count">
+        <item quantity="one">Review <xliff:g id="count">%1$d</xliff:g> match</item>
+        <item quantity="other">Review <xliff:g id="count">%1$d</xliff:g> matches</item>
+    </plurals>
+    <!-- Translators: Remote-key hint in the TV Guide: OK steps into a channel row to go through its programmes. Short verb. -->
+    <string name="content_key_browse">Browse</string>
+    <!-- Translators: Remote-key hint in the TV Guide: the key moves between channels. Short noun. -->
+    <string name="content_key_channels">Channels</string>
+    <!-- Translators: Remote-key hint in the TV Guide: the key moves between programmes in a row. Short noun. -->
+    <string name="content_key_programmes">Programs</string>
+    <!-- Translators: Remote-key hint: the key opens the app menu (the navigation rail). Short noun. -->
+    <string name="content_key_menu">Menu</string>
+    <!-- Translators: Remote-key hint: OK or Right goes into the page on the right. Short verb. -->
+    <string name="content_key_enter">Enter</string>
+    <!-- Translators: Remote-key hint: pressing OK selects the focused item. Short verb. -->
+    <string name="content_key_select">Select</string>
+    <!-- Translators: Remote-key hint: pressing OK again switches off the focused filter button that is on. Short verb, the opposite of "Select". -->
+    <string name="content_key_unselect">Unselect</string>
+    <!-- Translators: Remote-key hint: CH+/CH− jump a page up or down the list. Short noun. -->
+    <string name="content_key_page">Page</string>
+    <!-- Translators: Line under "Recently watched" in the history list shown over the playing video. -->
+    <string name="content_history_overlay_hint">The channels you watched last, newest first</string>
+    <!-- Translators: History row: how much of a film was watched, e.g. "14 min watched". "value" is a duration. -->
+    <string name="content_watched_duration"><xliff:g id="value">%1$s</xliff:g> watched</string>
+    <!-- Translators: Group label in a menu above what the list shows, e.g. the TV Guide order menu. Shown in capitals by the style. -->
+    <string name="content_menu_group_show">Show</string>
+    <!-- Translators: TV Guide order menu: also list the channels that have no guide data (On / Off), so they can be matched. -->
+    <string name="content_epg_show_empty">Channels without guide</string>
+    <!-- Translators: TV Guide order menu: play the focused channel in the small video pane at the top of the Guide (On / Off). When off, the channel logo shows instead. -->
+    <string name="content_epg_show_preview">Video preview</string>
+    <!-- Translators: TV Guide on a phone, the View choices Grid / On now / Timeline: one channel's programmes read top to bottom. Short, a segmented button. -->
+    <string name="content_epg_view_timeline">Timeline</string>
+    <!-- Translators: Group heading in the TV Guide order sheet (shown in capitals): Grid / On now / Timeline. -->
+    <string name="content_menu_group_view">View</string>
+    <!-- Translators: Heading above the provider categories in the Movies / Series category list. Shown in capitals by the style. -->
+    <string name="content_vod_providers">Providers</string>
+    <!-- Translators: Title of the Movies sort menu. -->
+    <string name="content_sort_movies_title">Sort movies</string>
+    <!-- Translators: Title of the Series sort menu. -->
+    <string name="content_sort_series_title">Sort series</string>
+    <!-- Translators: Line under the sort menu title: the chosen order applies to all categories of Movies (or Series). -->
+    <string name="content_sort_applies_hint">Applies to every category in this section</string>
+    <!-- Translators: Sort choice: keep the order the playlist provider uses. -->
+    <string name="content_sort_provider_order">Provider order</string>
+    <!-- Translators: Explanation beside the Provider order sort choice. -->
+    <string name="content_sort_provider_order_hint">The order your playlist uses</string>
+    <!-- Translators: Explanation beside the Rating sort choice. -->
+    <string name="content_sort_rating_hint">Highest first</string>
+    <!-- Translators: Explanation beside the Date added sort choice. -->
+    <string name="content_sort_date_added_hint">Newest first</string>
+    <!-- Translators: Group label in a movie / series options menu above favourite, watched, download and history actions. Shown in capitals by the style. -->
+    <string name="content_menu_group_library">Library</string>
+    <!-- Translators: Group label in a movie / series options menu above the details actions. Shown in capitals by the style. -->
+    <string name="content_menu_group_details">Details</string>
+    <!-- Translators: Menu item and popup: shows everything the guide knows about one TV programme (full title, times, categories, description). -->
+    <string name="content_programme_details">Program details</string>
+    <!-- Translators: Group heading on the Program details page: today's programmes that have already been on. -->
+    <string name="content_programmes_earlier">Earlier</string>
+    <!-- Translators: Group heading on the Program details page: programmes still to come today, after the one on now. -->
+    <string name="content_programmes_later">Later</string>
+    <!-- Translators: Options menu item: open the details window of a movie. -->
+    <string name="content_movie_details">Movie details</string>
+    <!-- Translators: Options menu item: open the details window of a series. -->
+    <string name="content_series_details">Series details</string>
+    <!-- Translators: How many movies the open category holds, after its name: "Disney+ Kids Movies · 136 titles". -->
+    <plurals name="content_vod_title_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> title</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> titles</item>
+    </plurals>
+    <!-- Translators: How many series the open category holds, after its name: "Crunchyroll · 32 series". -->
+    <plurals name="content_vod_series_count">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> series</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> series</item>
+    </plurals>
+    <!-- Translators: The series page's main button for an episode already started: "Resume S1 · E3". The argument is the season and episode. -->
+    <string name="content_resume_episode">Resume <xliff:g id="episode">%1$s</xliff:g></string>
+    <!-- Translators: The series page's main button for an episode not started yet: "Play S1 · E4". The argument is the season and episode. -->
+    <string name="content_play_episode">Play <xliff:g id="episode">%1$s</xliff:g></string>
+    <!-- Translators: Series page button: download every episode of the season shown. -->
+    <string name="content_download_season">Download season</string>
+    <!-- Translators: Title of the series page's order menu (seasons and episodes, oldest or newest first). -->
+    <string name="content_episode_order">Episode order</string>
+    <!-- Translators: Line under "Episode order": the choice is saved for this series only. -->
+    <string name="content_episode_order_hint">Remembered for this series</string>
+    <!-- Translators: Order menu switch: leave out the episodes already watched. -->
+    <string name="content_hide_watched_episodes">Hide watched episodes</string>
+    <!-- Translators: After an episode's date and length in the episode list: it has been watched to the end. -->
+    <string name="content_episode_watched">Watched</string>
+    <!-- Translators: Episode options menu item: play the episode from the beginning, ignoring the resume point. -->
+    <string name="content_play_from_start">Play from start</string>
+    <!-- Translators: Episode options menu item: open the details window of an episode. -->
+    <string name="content_episode_details">Episode details</string>
+    <!-- Translators: Name of a series' season 0: the specials, extras and one-off episodes outside the numbered seasons. -->
+    <string name="content_season_specials">Specials</string>
+    <!-- Translators: Heading above the poster-size slider in the Movies / Series sort sheet. Shown in capitals by the style. -->
+    <string name="content_poster_size">Poster size</string>
+    <!-- Translators: Small heading on a movie's page above more posters from the same category: "More in Disney+ Kids Movies". Shown in capitals by the style. -->
+    <string name="content_vod_more_in">More in <xliff:g id="category">%1$s</xliff:g></string>
 </resources>

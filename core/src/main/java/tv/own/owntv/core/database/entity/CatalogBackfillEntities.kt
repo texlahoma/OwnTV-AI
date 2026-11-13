@@ -6,7 +6,7 @@ import androidx.room.Index
 import tv.own.owntv.core.model.MediaType
 
 /**
- * One category's outstanding VOD pages on a Stalker portal (v42, plan N1b).
+ * One category's outstanding VOD pages on a Stalker portal (v42).
  *
  * Stalker has no bulk VOD endpoint and the portals that matter cap `max_page_items` at ~14, so a
  * full catalogue is thousands of round trips — measured at 4,681 pages for 65,523 movies plus 1,567
@@ -16,8 +16,8 @@ import tv.own.owntv.core.model.MediaType
  * Setup therefore stops after the page-1 sweep it already performs: that sweep is cheap (~11 s for
  * both types, concurrent), it learns every category's `total_items`, and it already yields the first
  * page of every category — so the top of every list is browsable immediately. The pages it did *not*
- * fetch are written here, and drained afterwards in the background (N1d) or on demand when the user
- * opens that category (N1c).
+ * fetch are written here, and drained afterwards in the background or on demand when the user
+ * opens that category.
  *
  * One row per (source, media type, category) rather than one per page: the page *range* is what the
  * plan produces, ranges survive a portal that re-paginates between runs, and 139 rows is a far

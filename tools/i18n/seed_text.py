@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stdlib-only text pipeline for the Phase 4a community-translation seed.
+"""Stdlib-only text pipeline for the community-translation seed.
 
 Owns (docs/i18n-phase4a-seed-translations.md, Part 2):
   - extracting the six ``values/strings*.xml`` source files into ordered, per-file units

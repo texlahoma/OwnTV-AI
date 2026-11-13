@@ -1,5 +1,6 @@
 package tv.own.owntv.core.i18n
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -18,7 +19,7 @@ import kotlinx.coroutines.withContext
  * **Why SharedPreferences and not DataStore** (see `docs/internationalization.md` 0b): the selected
  * locale must be readable *synchronously* from `Application.attachBaseContext` and
  * `Activity.attachBaseContext`. DataStore is asynchronous and cannot be read cleanly from those
- * lifecycle hooks without blocking or redesigning startup. This one bootstrap-critical setting
+ * lifecycle hooks without blocking or restructuring startup. This one bootstrap-critical setting
  * therefore lives in SharedPreferences — alone, with no DataStore mirror, no dual write, and no
  * mirror-repair collector (all of v1's reconciliation complexity is gone because OwnTV no longer
  * participates in the Android system per-app-language screen).
@@ -80,6 +81,7 @@ class LocaleStore internal constructor(
      * [IllegalStateException] rather than swallowed: a silent locale-write failure would leave the
      * user thinking they switched language while nothing persisted.
      */
+    @SuppressLint("UseKtx") // KTX edit {} cannot return commit()'s result, which is checked here
     suspend fun set(tag: String): Boolean = writeMutex.withLock {
         val canonical = normalize(tag)
             ?: throw IllegalArgumentException("Unsupported application locale: ${tag.trim()}")

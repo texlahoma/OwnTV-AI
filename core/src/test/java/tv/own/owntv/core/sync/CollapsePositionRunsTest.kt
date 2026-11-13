@@ -5,9 +5,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Plan A3's run detection, on its own.
+ * Run detection for range position updates, on its own.
  *
- * This is the part of Phase A most likely to be subtly wrong, because a range statement
+ * This is the part of the position sync most likely to be subtly wrong, because a range statement
  * (`sortOrder = sortOrder + delta WHERE sortOrder BETWEEN lo AND hi`) hits **every** stored row in
  * the span, not only the rows the caller named. Getting it wrong does not throw — it silently
  * renumbers rows nobody asked to move, and the user sees a scrambled channel list.
@@ -105,6 +105,20 @@ class CollapsePositionRunsTest {
         assertEquals(listOf(PositionRange(10, 11, -2)), ranges)
         assertEquals(listOf(PositionMove(3L, 11)), singles)
         assertEquivalent(moves, occupied, tableOf(moves, extras = mapOf(99L to 12)))
+    }
+
+    @Test
+    fun `a row an earlier chunk moved into the span splits the run instead of cancelling it`() {
+        // An earlier chunk shifted its rows down by one, so its last row now shares position 10
+        // with this chunk's first. Only that position is unsafe; the rest is still one range.
+        val moves = movesOf(10 to 11, 11 to 12, 12 to 13, 13 to 14)
+        val occupied = occupiedOf(10, 10, 11, 12, 13)
+
+        val (ranges, singles) = SyncSupport.collapsePositionRuns(moves, occupied)
+
+        assertEquals(listOf(PositionRange(11, 13, 1)), ranges)
+        assertEquals(listOf(PositionMove(1L, 11)), singles)
+        assertEquivalent(moves, occupied, tableOf(moves, extras = mapOf(99L to 10)))
     }
 
     @Test

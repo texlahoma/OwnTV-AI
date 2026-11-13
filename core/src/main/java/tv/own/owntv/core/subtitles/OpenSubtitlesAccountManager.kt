@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Per-profile OpenSubtitles account orchestration (subtitle plan §5.4/§5.5).
+ * Per-profile OpenSubtitles account orchestration.
  *
  * Owns the sign-in/sign-out lifecycle over [OpenSubtitlesClient] + [OpenSubtitlesAuthStore] and
  * enforces the session rules:
@@ -33,9 +33,9 @@ class OpenSubtitlesAccountManager(
     }
 
     /**
-     * Signs [profileId] in. [staySignedIn] = keep the password for silent re-login (review R5);
+     * Signs [profileId] in. [staySignedIn] = keep the password for silent re-login;
      * off = token only. Throws [OpenSubtitlesClient.ApiException] (401 = bad credentials) or
-     * IOException upward for the UI's §14 dialogs.
+     * IOException upward for the UI's error dialogs.
      */
     suspend fun signIn(profileId: Long, username: String, password: String, staySignedIn: Boolean): OpenSubtitlesAuthStore.Session {
         val result = client.login(username.trim(), password)
@@ -55,22 +55,22 @@ class OpenSubtitlesAccountManager(
         return session
     }
 
-    /** Signs [profileId] out: best-effort server logout, then permanent local erasure (§5.5). */
+    /** Signs [profileId] out: best-effort server logout, then permanent local erasure. */
     suspend fun signOut(profileId: Long) {
         session(profileId)?.let { client.logout(it.token, it.apiHost) }
         eraseFor(profileId)
     }
 
-    /** Permanent local erasure without a server call — used on profile deletion (§5.5). */
+    /** Permanent local erasure without a server call — used on profile deletion. */
     fun eraseFor(profileId: Long) {
         store.erase(profileId)
         _sessions.value = _sessions.value - profileId
     }
 
     /**
-     * Refreshes the allowance/account display from /infos/user (§5.3). On token expiry performs
+     * Refreshes the allowance/account display from /infos/user. On token expiry performs
      * the one-shot silent re-login when possible. Returns the updated session, or null when the
-     * profile ended up signed out (caller shows the §14 "session expired" path).
+     * profile ended up signed out (caller shows the "session expired" path).
      */
     suspend fun refreshUserInfo(profileId: Long): OpenSubtitlesAuthStore.Session? {
         val current = session(profileId) ?: return null

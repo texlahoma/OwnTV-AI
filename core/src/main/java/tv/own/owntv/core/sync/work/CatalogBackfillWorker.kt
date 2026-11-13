@@ -9,12 +9,13 @@ import tv.own.owntv.core.live.WatchSession
 import tv.own.owntv.core.sync.ImportFinalizer
 import tv.own.owntv.core.sync.SyncActivityTracker
 import tv.own.owntv.core.sync.SyncManager
+import tv.own.owntv.core.timeshift.TimeshiftManager
 
 /**
- * Finishes a Stalker catalogue that setup deliberately left incomplete (plan N1d).
+ * Finishes a Stalker catalogue that setup deliberately left incomplete.
  *
  * The portals this exists for cap a page at ~14 items, so a first import that walked every page
- * would hold the user at a progress bar for four and a half minutes. N1b stops after the first page
+ * would hold the user at a progress bar for four and a half minutes. The setup sweep stops after the first page
  * of every category — every list is immediately browsable — and writes down what it skipped. This
  * worker drains that plan afterwards, invisibly.
  *
@@ -29,7 +30,7 @@ import tv.own.owntv.core.sync.SyncManager
  *   the moment either says this source is in use, coming back later.
  * - **It reconciles.** The finish line is the sum of the portal's own *per-category* totals, which
  *   the drain reads back from the plan rows. (Not the synthetic "*" total — that counts items in no
- *   category at all, and a drain chasing it would never finish. See the plan's §4C.)
+ *   category at all, and a drain chasing it would never finish.)
  */
 class CatalogBackfillWorker(
     context: Context,
@@ -40,6 +41,7 @@ class CatalogBackfillWorker(
     private val scheduler: CatalogSyncScheduler,
     private val importFinalizer: ImportFinalizer,
     private val watchSession: WatchSession,
+    private val timeshift: TimeshiftManager,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -52,6 +54,8 @@ class CatalogBackfillWorker(
             // Never Result.failure(): an unfinished catalogue is not an error the user can act on,
             // and the plan rows survive, so a retry is always the right answer.
             Log.w(TAG, "backfill failed sourceId=$sourceId — retrying later", it)
+            // Usually WorkManager stopping a long pass at its time limit, with plenty landed by then.
+            rematchTrending(sourceId)
             return Result.retry()
         }
 
@@ -62,10 +66,13 @@ class CatalogBackfillWorker(
                 "pending=${outcome.pendingCategories}",
         )
         if (!outcome.complete) {
+            if (outcome.inserted > 0) rematchTrending(sourceId)
             // Paused for playback, or a category hit a page the portal would not serve. Either way
             // the plan still holds the position, so come back after a pause long enough that a
-            // yielding drain is not re-woken into the same stream it just stepped away from.
-            scheduler.enqueueCatalogBackfill(sourceId, initialDelayMinutes = RETRY_DELAY_MINUTES)
+            // yielding drain is not re-woken into the same stream it just stepped away from. When the
+            // pause was for playback, [tv.own.owntv.core.sync.BackfillResume] brings this pass
+            // forward once the player closes.
+            scheduler.enqueueNextBackfillPass(sourceId, RETRY_DELAY_MINUTES)
             return Result.success()
         }
         // `pagesFetched > 0` is what distinguishes "this pass finished the catalogue" from "there
@@ -76,22 +83,30 @@ class CatalogBackfillWorker(
     }
 
     /**
+     * Re-match Now Trending against what has landed so far rather than only at completion, which on a
+     * large catalogue can be hours of interrupted passes away. After the first build this only
+     * re-matches from disk, with no TMDB calls.
+     */
+    private fun rematchTrending(sourceId: Long) {
+        runCatching { scheduler.enqueueTrendingRefresh(sourceId) }
+            .onFailure { Log.w(TAG, "mid-backfill trending enqueue failed sourceId=$sourceId", it) }
+    }
+
+    /**
      * The two things that were measured against a 3%-full catalogue and have to happen again now
-     * that it is whole (plan N1f-1 and N1f-2).
+     * that it is whole.
      *
      * Both are deliberately best-effort: the catalogue is already correct and browsable at this
      * point, so neither failing is worth a retry that would re-walk nothing.
      */
     private suspend fun onCatalogueComplete(sourceId: Long) {
-        // N1f-1. `ensureContentIndexes` runs ANALYZE, and on a lazy add it last ran when the source
+        // `ensureContentIndexes` runs ANALYZE, and on a lazy add it last ran when the source
         // held a few per cent of its final rows. Stale statistics make SQLite ignore the very
         // indexes this function creates and full-sort instead — its own comment says so.
         runCatching { importFinalizer.ensureContentIndexes() }
             .onFailure { Log.w(TAG, "post-backfill index refresh failed sourceId=$sourceId", it) }
 
-        // N1f-2. Trending is a snapshot, and a snapshot of a part-filled catalogue sits behind a
-        // multi-day timer. CatalogSyncWorker now declines to take one while a drain is outstanding,
-        // which makes this the only place it can be taken for a lazily-added source.
+        // The last of the per-pass re-matches: the row now matches against the whole catalogue.
         runCatching { scheduler.enqueueTrendingRefresh(sourceId) }
             .onFailure { Log.w(TAG, "post-backfill trending enqueue failed sourceId=$sourceId", it) }
 
@@ -102,14 +117,16 @@ class CatalogBackfillWorker(
      * True while the user (or a recording) is using this playlist's connections, or while an
      * ordinary sync of it is running — a drain must never be the reason a stream fails to open.
      *
-     * All three clauses are needed and none is redundant. [WatchSession] is fullscreen playback,
+     * All four clauses are needed and none is redundant. [WatchSession] is fullscreen playback,
      * which never claims a connection; [OpenStreamRegistry] is Multiview and recordings, which do;
+     * [TimeshiftManager] is a live channel's saved copy, whose download can outlive the player screen;
      * [SyncActivityTracker] is an ordinary sync of the same source. The watch clause exists because
-     * the registry alone silently covered none of the common case — see N1f-3.
+     * the registry alone silently covered none of the common case — see [WatchSession].
      */
     private fun shouldYield(sourceId: Long): Boolean =
         watchSession.isWatching(sourceId) ||
             openStreams.openOn(sourceId).total > 0 ||
+            timeshift.isSaving(sourceId) ||
             syncActivity.active.value.containsKey(sourceId)
 
     companion object {

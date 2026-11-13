@@ -30,7 +30,6 @@ object OwnTVPalette {
     const val DarkSurfaceContainer = 0xFF1B211FL
     const val DarkSurfaceContainerHigh = 0xFF252B29L
     const val DarkSurfaceContainerHighest = 0xFF303634L
-    const val DarkRailPanel = 0xFF111C18L
     const val DarkContentPanel = 0xFF0A1512L
     const val DarkPreviewPanel = 0xFF15201DL
     const val DarkOnSurface = 0xFFDEE4E1L
@@ -55,7 +54,6 @@ object OwnTVPalette {
     const val LightSurfaceContainer = 0xFFE9EFECL
     const val LightSurfaceContainerHigh = 0xFFE3EAE6L
     const val LightSurfaceContainerHighest = 0xFFDEE4E1L
-    const val LightRailPanel = 0xFFE6EEE9L
     const val LightContentPanel = 0xFFF2F7F4L
     const val LightPreviewPanel = 0xFFDEE9E3L
     const val LightOnSurface = 0xFF171D1BL

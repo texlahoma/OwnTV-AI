@@ -174,7 +174,7 @@ class EpgMatcherTest {
         assertNull(EpgMatcher.bestEpgMatch("Discovery Channel", candidates))
     }
 
-    // ---- Picker search, through the normalizer (guide plan Phase 2) ----
+    // ---- Picker search, through the normalizer ----
 
     @Test
     fun search_findsASpelledOutNumberFromADigit() {

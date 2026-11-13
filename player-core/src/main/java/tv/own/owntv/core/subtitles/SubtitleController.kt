@@ -17,9 +17,9 @@ import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.player.OwnTVPlayer
 
 /**
- * The bridge between "what movie/episode is playing right now" and the OpenSubtitles feature
- * (subtitle plan §6). The movie/series play paths set a [Context] here; live/other playback clears
- * it — so the player's ADD SUBTITLES entry only ever appears for movies and episodes (§3.4).
+ * The bridge between "what movie/episode is playing right now" and the OpenSubtitles feature.
+ * The movie/series play paths set a [Context] here; live/other playback clears
+ * it — so the player's ADD SUBTITLES entry only ever appears for movies and episodes.
  *
  * The search screen (in the player HUD overlay) reads [current] and calls [search] / [apply]; on
  * apply the downloaded subtitle is attached to the running mpv player and remembered for resume.
@@ -33,7 +33,7 @@ class SubtitleController(
     private val settings: SettingsRepository,
     private val player: OwnTVPlayer,
 ) {
-    /** Identity of the item currently playing, enough to pre-fill an OpenSubtitles search (§6.2). */
+    /** Identity of the item currently playing, enough to pre-fill an OpenSubtitles search. */
     data class Context(
         val profileId: Long,
         val contentKey: String,
@@ -42,9 +42,9 @@ class SubtitleController(
         val year: Int?,
         val season: Int?,
         val episode: Int?,
-        /** Movie TMDB id, or the series' parent TMDB id for an episode (review R7). Null → query search. */
+        /** Movie TMDB id, or the series' parent TMDB id for an episode. Null → query search. */
         val tmdbId: Long?,
-        /** Local media file when playing an OwnTV download (§3.3) — enables the moviehash enhancer. */
+        /** Local media file when playing an OwnTV download — enables the moviehash enhancer. */
         val localFilePath: String? = null,
     ) {
         val mediaType: String get() = if (isEpisode) "SERIES" else "MOVIE"
@@ -56,7 +56,7 @@ class SubtitleController(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    // Timing memory (§8.4): the player reports the active subtitle as "path:<file>" (external) or
+    // Timing memory: the player reports the active subtitle as "path:<file>" (external) or
     // "emb:<ordinal>:<lang>" (embedded); external paths map to their stable subtitleKey via this map,
     // filled on apply/restore. [activeSubKey] is what a user timing change is persisted under.
     private val pathToKey = HashMap<String, String>()
@@ -67,10 +67,10 @@ class SubtitleController(
     private val pathToLabel = HashMap<String, String>()
 
     init {
-        // Re-list a title's previously downloaded subtitles whenever its file finishes loading (§9).
-        // They're attached but not selected — the user re-picks (per owner decision).
+        // Re-list a title's previously downloaded subtitles whenever its file finishes loading.
+        // They're attached but not selected — the user re-picks.
         player.onVodFileLoaded = { restoreForCurrentItem() }
-        // When the active subtitle changes, apply ITS remembered offset (never another release's, §8.4);
+        // When the active subtitle changes, apply ITS remembered offset (never another release's);
         // when the user adjusts timing, persist it under the exact subtitle identity.
         player.onActiveSubtitleChanged = { identity -> applyRememberedTiming(identity) }
         player.onSubtitleDelayUserChange = { offsetMs -> persistTiming(offsetMs) }
@@ -134,8 +134,8 @@ class SubtitleController(
         return accounts.session(pid) != null
     }
 
-    /** In-player sign-in for the R1 "account needed" flow — same path as the Settings screen, so the
-     *  user lands back in the search that started it (§5.2). Throws for the sign-in-failed dialog. */
+    /** In-player sign-in for the "account needed" flow — same path as the Settings screen, so the
+     *  user lands back in the search that started it. Throws for the sign-in-failed dialog. */
     suspend fun signIn(username: String, password: String, staySignedIn: Boolean) {
         val pid = _current.value?.profileId ?: activeProfile()
         check(pid >= 0) { NoActiveProfileException() }
@@ -147,7 +147,7 @@ class SubtitleController(
         get() = _current.value?.let { TitleNormalizer.normalize(it.title).query.ifBlank { it.title } }.orEmpty()
 
     /**
-     * Language codes to restrict an OpenSubtitles search to (§6.4); empty = every language.
+     * Language codes to restrict an OpenSubtitles search to; empty = every language.
      *
      * Driven by the dedicated Settings → OpenSubtitles filter, which is OFF by default — so out of the
      * box a search shows everything OpenSubtitles has for the title and the user picks. Deliberately
@@ -163,9 +163,9 @@ class SubtitleController(
     }
 
     /**
-     * Run an OpenSubtitles search for the current item (§6.2, review R7). [languages] filters by
+     * Run an OpenSubtitles search for the current item. [languages] filters by
      * language code(s); [editedQuery] (non-null) overrides the metadata match with a free-text query
-     * ("Edit search", §6.2). Returns the raw OpenSubtitles response for the results screen to parse.
+     * ("Edit search"). Returns the raw OpenSubtitles response for the results screen to parse.
      *
      * TMDB is an OPTIONAL precision boost here, never a gate. A known tmdb_id is the strongest match
      * OpenSubtitles accepts, so it's tried first — but if it yields nothing (stale/wrong match, or the
@@ -242,9 +242,9 @@ class SubtitleController(
     private fun JSONObject.resultCount(): Int = optJSONArray("data")?.length() ?: 0
 
     /**
-     * Download the chosen result (cache-first, review R3), attach it to the running player, and
-     * remember it for this profile + item (§6.5). [onQuota] delivers the provider's post-download
-     * remaining/reset for the allowance display. Throws upward for the §14 error dialogs.
+     * Download the chosen result (cache-first), attach it to the running player, and
+     * remember it for this profile + item. [onQuota] delivers the provider's post-download
+     * remaining/reset for the allowance display. Throws upward for the error dialogs.
      */
     suspend fun apply(
         fileId: Long,
@@ -264,7 +264,7 @@ class SubtitleController(
             hearingImpaired = hearingImpaired,
             onQuota = onQuota,
         )
-        pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
+        pathToKey[resolved.path] = resolved.subtitleKey // timing identity, before the attach fires
         player.addExternalSubtitle(
             path = resolved.path,
             title = rawTrackLabel(resolved, labelsInUse()),
@@ -277,14 +277,14 @@ class SubtitleController(
     }
 
     /**
-     * Attach a user-picked local subtitle file to the running player (plan §7, Phase 3): managed
+     * Attach a user-picked local subtitle file to the running player: managed
      * UTF-8 copy via the repository, then the same remember/link flow as an OpenSubtitles download
      * so it re-lists on replay and shows in the delete surfaces. No account or network needed.
      */
     suspend fun applyLocal(file: java.io.File) {
         val ctx = _current.value ?: throw NoCurrentItemException()
         val resolved = repository.importLocalFile(file)
-        pathToKey[resolved.path] = resolved.subtitleKey // timing identity (§8.4), before the attach fires
+        pathToKey[resolved.path] = resolved.subtitleKey // timing identity, before the attach fires
         player.addExternalSubtitle(
             path = resolved.path,
             title = rawTrackLabel(resolved, labelsInUse()),
@@ -307,7 +307,7 @@ class SubtitleController(
      */
     private fun rawTrackLabel(s: SubtitleRepository.ResolvedSubtitle, taken: Set<String>): String =
         // A file keeps the label it was first given. Without this, an engine-toggle carry-over that
-        // re-attached the sub before the §9 restore ran would see its own label in [taken], get a
+        // re-attached the sub before the replay restore ran would see its own label in [taken], get a
         // numbered variant, and attach the same file a second time under a split identity.
         pathToLabel.getOrPut(s.path) {
             SubtitleTrackLabel.build(
@@ -339,7 +339,7 @@ class SubtitleController(
         scope.launch {
             val subs = runCatching { repository.restoreForContent(ctx.profileId, ctx.contentKey) }.getOrNull().orEmpty()
             if (subs.isEmpty()) return@launch
-            subs.forEach { pathToKey[it.path] = it.subtitleKey } // timing identities (§8.4)
+            subs.forEach { pathToKey[it.path] = it.subtitleKey } // timing identities
             // Labels accumulate across the batch, not just against the player: these are all attached
             // in one pass, so the player's list can't yet tell the second Korean sub about the first.
             val taken = labelsInUse()
@@ -356,7 +356,7 @@ class SubtitleController(
         }
     }
 
-    // --- delete surfaces (settings screen + per-item long-press, §11) ---
+    // --- delete surfaces (settings screen + per-item long-press) ---
 
     /** Downloaded subtitles for a media type ("MOVIE"/"SERIES"), active profile — the delete screen. */
     suspend fun downloadsForType(mediaType: String): List<tv.own.owntv.core.database.dao.LinkedSubtitle> {
@@ -376,17 +376,7 @@ class SubtitleController(
         return repository.linkedForContent(pid, episodeKey(show, ep))
     }
 
-    suspend fun hasDownloadsForMovie(movie: MovieEntity): Boolean {
-        val pid = activeProfile(); if (pid < 0) return false
-        return repository.hasDownloadsForContent(pid, movieKey(movie))
-    }
-
-    suspend fun hasDownloadsForEpisode(show: SeriesEntity, ep: EpisodeEntity): Boolean {
-        val pid = activeProfile(); if (pid < 0) return false
-        return repository.hasDownloadsForContent(pid, episodeKey(show, ep))
-    }
-
-    /** Profile-scoped (owner decision): drops the ACTIVE profile's copy; the shared file survives
+    /** Profile-scoped: drops the ACTIVE profile's copy; the shared file survives
      *  while any other profile still references it. */
     suspend fun deleteCached(cacheId: Long) {
         val pid = activeProfile(); if (pid >= 0) repository.deleteCached(pid, cacheId)

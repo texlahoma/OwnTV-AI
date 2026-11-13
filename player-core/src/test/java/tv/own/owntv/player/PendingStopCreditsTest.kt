@@ -6,7 +6,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * P8 — telling our own cleanup `END_FILE` apart from a stream that actually died. Getting this wrong
+ * Telling our own cleanup `END_FILE` apart from a stream that actually died. Getting this wrong
  * either retries healthy playback for no reason, or swallows a real failure.
  */
 class PendingStopCreditsTest {

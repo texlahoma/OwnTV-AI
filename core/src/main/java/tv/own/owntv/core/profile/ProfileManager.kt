@@ -26,6 +26,7 @@ class ProfileManager(
     private val launcherIntegration: LauncherIntegrationRepository,
     private val openSubtitlesAccounts: OpenSubtitlesAccountManager,
     private val avatars: ProfileAvatarStore,
+    private val protection: ProfileProtection,
 ) {
 
     /** Make [id] the profile the app is showing. */
@@ -34,8 +35,10 @@ class ProfileManager(
     fun verifyPin(profile: ProfileEntity, pin: String): Boolean = Pin.verify(pin, profile.pinHash)
 
     /**
-     * Add a profile. It inherits every source that already exists — one account, several viewers —
-     * so it has something to watch immediately; favorites and history stay its own.
+     * Add a profile. It inherits the sources that already exist — one account, several viewers — so it
+     * has something to watch immediately; favorites and history stay its own. A protected profile's
+     * playlists are not inherited ([ProfileProtection.inheritableSourceIds]); with none left the
+     * profile starts empty and adds its own.
      */
     suspend fun create(name: String, avatarId: Int, isKids: Boolean, pin: String?, fallbackName: String): Long {
         val id = profileDao.insert(
@@ -47,7 +50,8 @@ class ProfileManager(
                 pinHash = pin?.takeIf { it.isNotBlank() }?.let { Pin.hash(it) },
             ),
         )
-        sourceDao.allSourceIds().forEach { sourceDao.link(ProfileSourceCrossRef(profileId = id, sourceId = it)) }
+        // Read before the insert would matter: the new profile itself is open and links nothing yet.
+        protection.inheritableSourceIds().forEach { sourceDao.link(ProfileSourceCrossRef(profileId = id, sourceId = it)) }
         return id
     }
 
@@ -112,11 +116,13 @@ class ProfileManager(
         val activeProfileId = settings.activeProfileId.first()
         val remainingProfileId = profileDao.getAllOnce().firstOrNull { it.id != profile.id }?.id
         runCatching { launcherIntegration.clearProfile(profile.id) }
-        // Deleting a profile permanently erases its stored OpenSubtitles login (subtitle plan §5.5).
+        // Deleting a profile permanently erases its stored OpenSubtitles login.
         openSubtitlesAccounts.eraseFor(profile.id)
         // …and its picture, which nothing else would ever clean up.
         avatars.clear(profile.id)
         settings.setStartupChannel(profile.id, null)
+        settings.forgetProfilePositions(profile.id)
+        settings.forgetProfilePins(profile.id)
         profileDao.delete(profile)
         if (activeProfileId == profile.id) settings.setActiveProfile(remainingProfileId ?: -1L)
     }

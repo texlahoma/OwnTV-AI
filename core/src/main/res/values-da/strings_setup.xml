@@ -5,7 +5,7 @@
     <string name="setup_from_device">Lokalt</string>
     <string name="setup_from_phone">Eksternt</string>
     <string name="setup_send_from_phone">Send fra en anden enhed</string>
-    <string name="setup_phone_background_description">Scan QR-koden på en telefon, tablet eller computer på samme Wi-Fi (eller åbn URL\'en), indtast denne PIN, og send et billede. Det bliver straks baggrundsbilledet.</string>
+    <string name="setup_phone_background_description">På en vilkårlig enhed med browser på samme wi-fi – telefon, computer eller et andet tv – scan QR-koden (eller åbn URL’en), indtast denne PIN-kode, og send et foto. Det bliver straks baggrund.</string>
     <string name="setup_opening_server">Åbner server…</string>
     <string name="setup_enter_pin_browser">Indtast denne PIN i browseren</string>
     <string name="setup_open_url">Eller åbn denne URL</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">f.eks. Mit tv</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">VELKOMMEN TIL</string>
-    <string name="setup_welcome_tagline">Din egen IPTV-afspiller.</string>
     <string name="setup_get_started">Kom i gang</string>
     <string name="setup_display_size_title">Gør det behageligt at læse</string>
-    <string name="setup_display_size_description">Vælg størrelsen på brugerfladen og dens tekst. Du kan ændre begge dele senere i Indstillinger.</string>
-    <string name="setup_display_size_preview">Hvis du kan læse dette ubesværet fra din plads, er størrelsen rigtig.</string>
     <string name="setup_before_you_start">Før du går i gang</string>
     <string name="setup_disclaimer">OwnTV er udelukkende en medieafspiller. Den indeholder ingen kanaler, afspilningslister eller noget indhold. Du er selv ansvarlig for at tilføje dine egne Xtream-, M3U- eller Stalker-kilder, som du har lovlig adgang til.</string>
     <string name="setup_i_understand">Jeg forstår</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Begynd på en frisk, eller gendan dine profiler, afspilningslister og favoritter fra en sikkerhedskopi eller en anden enhed.</string>
     <string name="setup_new_profile">Ny profil</string>
     <string name="setup_create_profile_add_sources">Opret en profil, og tilføj kilder</string>
-    <string name="setup_restore_backup">Gendan sikkerhedskopi</string>
     <string name="setup_import_profiles_playlists">Importér profiler og afspilningslister fra en fil</string>
     <string name="setup_sync_device">Fra en anden enhed</string>
     <string name="setup_sync_device_description">Kopiér alt fra din anden OwnTV-enhed over Wi-Fi</string>
     <string name="setup_add_playlist">Tilføj en afspilningsliste</string>
     <string name="setup_add_playlist_description">Tilføj en kilde til denne profil, eller konfigurer en senere.</string>
-    <string name="setup_new">Ny</string>
-    <string name="setup_add_m3u_xtream">Tilføj en M3U-, Xtream- eller Stalker-kilde</string>
     <string name="setup_existing">Eksisterende</string>
     <string name="setup_use_other_profile_playlists">Brug afspilningslister fra en anden profil</string>
     <string name="setup_import">Importér</string>
@@ -73,7 +66,7 @@
     <string name="setup_invalid_mac">Ugyldig MAC-adresse — brug AA:BB:CC:DD:EE:FF</string>
     <string name="setup_pick_backup_file">Vælg en sikkerhedskopifil, der skal gendannes</string>
     <string name="setup_restore_a_backup">Gendan en sikkerhedskopi</string>
-    <string name="setup_restore_choice_description">Send sikkerhedskopien fra en anden enhed (telefon eller bærbar computer) på samme Wi-Fi, eller vælg en sikkerhedskopifil, der allerede findes på denne enhed.</string>
+    <string name="setup_restore_choice_description">Send sikkerhedskopien eksternt fra en vilkårlig enhed med browser på samme wi-fi, eller vælg en sikkerhedskopi, der allerede ligger på denne enhed.</string>
     <string name="setup_upload_from_wifi_device">Upload fra en enhed på dit Wi-Fi</string>
     <string name="setup_local_file">Lokal fil</string>
     <string name="setup_pick_backup_local">Vælg en sikkerhedskopifil på denne enhed</string>
@@ -87,6 +80,8 @@
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elementer blev gendannet. Synkroniser dine kilder igen for at indlæse indhold.</item>
     </plurals>
     <string name="setup_passwords_omitted">Indtast eventuelle gemte adgangskoder igen bagefter.</string>
+    <string name="setup_need_password">Ingen gemt adgangskode, så endnu ikke indlæst: <xliff:g id="names">%1$s</xliff:g>. Åbn afspilningslisten i Indstillinger, og indtast dens adgangskode.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> kilde blev sprunget over, fordi denne version ikke understøtter dens type afspilningsliste.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> kilder blev sprunget over, fordi denne version ikke understøtter deres typer afspilningslister.</item>
@@ -94,18 +89,10 @@
     <string name="setup_continue">Fortsæt</string>
     <string name="setup_import_failed">Importen mislykkedes</string>
     <string name="setup_try_again_caps">Prøv igen</string>
-    <string name="setup_add_from_phone">Tilføj fra en anden enhed</string>
-    <string name="setup_phone_add_description">På en telefon, tablet eller computer på samme Wi-Fi skal du scanne QR-koden (eller åbne webadressen), indtaste denne PIN, udfylde din afspilningsliste og trykke på Send til tv. Oplysningerne vises derefter her, klar til importering — du trykker på Start importering med fjernbetjeningen.</string>
     <string name="setup_opening">Åbner…</string>
-    <string name="setup_open_server">Åbn server</string>
-    <string name="setup_stop_server">Stop server</string>
     <string name="setup_add_source">Tilføj en kilde</string>
-    <string name="setup_add_source_description">Udfyld formularen på en anden enhed, eller indtast oplysningerne her med fjernbetjeningen.</string>
-    <string name="setup_manual">Manuelt</string>
-    <string name="setup_use_phone_same_wifi">Brug en telefon, tablet eller computer på samme Wi-Fi</string>
-    <string name="setup_type_source_here">Indtast Xtream / M3U / Stalker her</string>
     <string name="setup_edit_source">Rediger kilde</string>
-    <string name="setup_add_your_source">Tilføj din kilde</string>
+    <string name="setup_edit_from_phone">Rediger fra en anden enhed</string>
     <string name="setup_edit_source_description">Opdater oplysningerne om denne kilde, eller skift indstillingen for automatisk opdatering.</string>
     <string name="setup_byo_source_description">OwnTV er en afspiller — tilføj din egen Xtream-, M3U- eller Stalker-kilde.</string>
     <string name="setup_xtream">Xtream</string>
@@ -137,6 +124,8 @@
     <string name="setup_test_connection">Test forbindelse</string>
     <string name="setup_user_agent_optional">User-Agent (valgfrit)</string>
     <string name="setup_user_agent_example">f.eks. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (valgfrit)</string>
+    <string name="setup_referer_example">f.eks. https://example.com/</string>
     <string name="setup_auto_refresh">Automatisk opdatering</string>
     <string name="setup_auto_refresh_description">Fra, ved opstart eller når dataene er forældede</string>
     <string name="setup_default_playlist">Standardafspilningsliste</string>
@@ -159,7 +148,6 @@
     <string name="setup_now">Nu</string>
     <string name="setup_later">Senere</string>
     <string name="setup_off">Fra</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">Standard (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -172,13 +160,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Fortsæt</string>
     <string name="companion_pin_mismatch">Denne PIN var forkert — prøv igen.</string>
-    <string name="companion_tmdb_page_title">Send TMDB-nøgle</string>
-    <string name="companion_tmdb_heading">Send din TMDB-nøgle</string>
-    <string name="companion_tmdb_description">Log ind på TMDB nedenfor, kopiér din API-nøgle (v3 auth), indsæt den her, og send den til tv’et. En personlig nøgle er gratis og har praktisk talt ingen daglig grænse.</string>
-    <string name="companion_tmdb_get_key">Åbn TMDB’s API-indstillinger</string>
-    <string name="companion_tmdb_invalid">Det ligner ikke en TMDB API-nøgle. Kopiér værdien "API Key (v3 auth)".</string>
-    <string name="companion_tmdb_sent_body">Din TMDB-nøgle er nu på tv’et. Tryk på Gem der for at tage den i brug.</string>
-    <string name="companion_tmdb_sent_link">Send en anden nøgle</string>
     <string name="companion_service_config_empty">Indtast en API-nøgle, en Worker-URL eller begge.</string>
     <string name="companion_service_config_invalid_key">Den API-nøgle ser ikke gyldig ud.</string>
     <string name="companion_service_config_invalid_url">Indtast en gyldig HTTPS Worker-URL.</string>
@@ -198,6 +179,12 @@
     <string name="companion_saved_heading">Sendt til dit tv ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> findes nu på skærmen Tilføj kilde på tv\'et. Kontrollér oplysningerne dér, og tryk på Start importering med fjernbetjeningen.</string>
     <string name="companion_saved_send_another">Send en anden kilde</string>
+    <string name="companion_edit_page_title">OwnTV — Rediger kilde</string>
+    <string name="companion_edit_heading">Rediger <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">Ret det, du har brug for, og tryk på Send til tv. Et tomt felt beholder sin nuværende værdi. Ændringerne vises på tv’et — tryk på Gem der med fjernbetjeningen.</string>
+    <string name="companion_keep_current">Lad stå tomt for at beholde den nuværende værdi</string>
+    <string name="companion_saved_edit_body">Ændringerne til <xliff:g id="name">%1$s</xliff:g> er nu på tv’ets redigeringsskærm. Tjek dem der, og tryk på Gem med fjernbetjeningen.</string>
+    <string name="companion_saved_edit_again">Ret noget andet</string>
     <string name="companion_saved_backup_body">Din sikkerhedskopi er nu på tv\'et. Tag fjernbetjeningen, og vælg, hvilke dele der skal gendannes.</string>
     <string name="companion_saved_backup_link">Send en anden fil</string>
     <string name="companion_saved_image_body">Dit billede er nu tv\'ets baggrundsbillede.</string>
@@ -265,4 +252,31 @@
     <string name="companion_error_pair_failed">Kunne ikke parre med denne enhed.</string>
     <string name="local_sync_browser_title">OwnTV lokal synkronisering</string>
     <string name="local_sync_browser_body">Denne adresse er til OwnTV-appen på din anden enhed. Åbn Lokal synkronisering der, og vælg denne enhed på listen.</string>
+    <string name="setup_step_display">Skærm</string>
+    <string name="setup_step_playlist">Playliste</string>
+    <string name="setup_step_ready">Klar</string>
+    <string name="setup_key_previous_step">Forrige trin</string>
+    <string name="setup_welcome_title">Velkommen til OwnTV</string>
+    <string name="setup_welcome_sub">Din egen IPTV-afspiller. Vælg et sprog for at begynde – du kan ændre det senere i Indstillinger.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> sprog</item>
+        <item quantity="other">Alle <xliff:g id="count">%1$d</xliff:g> sprog</item>
+    </plurals>
+    <string name="setup_display_sub">Hvor stor brugerfladen og teksten er på dette tv. Rækken nedenfor ændrer sig undervejs.</string>
+    <string name="setup_display_sub_mobile">Hvor stor brugerfladen og teksten er på denne telefon. Rækken nedenfor ændrer sig undervejs.</string>
+    <string name="setup_line_zoom">Alt på skærmen</string>
+    <string name="setup_line_font">Kun tekst</string>
+    <string name="setup_line_app_icon">Sådan vises OwnTV på tv’ets startskærm</string>
+    <string name="setup_line_app_icon_mobile">Sådan vises OwnTV på din startskærm</string>
+    <string name="setup_restore_card_line">Fra en fil, eller eksternt fra en anden enhed</string>
+    <string name="setup_device_appear">Enheder med Sync-tilstand slået til vises her</string>
+    <string name="setup_device_address_hint">eller skriv den anden enheds adresse</string>
+    <string name="setup_profile_sub">En profil har sine egne favoritter, sin egen historik og sin egen Hjem. Tilføj flere senere under Indstillinger › Profil.</string>
+    <string name="setup_avatar">Avatar</string>
+    <string name="setup_avatar_line">Vælg en, eller behold bogstavet</string>
+    <string name="setup_create_profile">Opret profil</string>
+    <string name="setup_phone_card_line">Udfyld formularen i en browser på en anden enhed – hurtigst</string>
+    <string name="setup_importing_title">Importerer <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">Tilføj en tv-guide</string>
+    <string name="setup_add_guide_line">En ny installation har endnu ingen guide</string>
 </resources>

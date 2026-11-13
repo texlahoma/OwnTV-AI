@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 /**
  * Small rolling on-disk history of playback failures (last [MAX] entries), so a user who dismissed
  * the error screen — or whose app restarted — can still read/report what happened from
- * Settings → "Playback error log". Most TV users can't pull logcat; this is their only record.
+ * More → "Error log". Most TV users can't pull logcat; this is their only record.
  *
  * Plain JSON file in filesDir; all IO runs on a single background thread so the player's error
  * path never blocks. Timestamps are wall-clock (for display), unlike the monotonic diagnostics.
@@ -26,7 +26,7 @@ object PlaybackErrorLog {
     private const val EXPORT_NAME = "owntv-playback-report.txt"
 
     /** What an entry is. The log used to hold hard failures only, which is exactly why a "the picture
-     *  judders / the sound drifts" report produced an empty log (F18). */
+     *  judders / the sound drifts" report produced an empty log. */
     enum class Kind {
         /** Playback stopped with an error screen. */
         ERROR,
@@ -143,7 +143,7 @@ object PlaybackErrorLog {
      * Record something that happened *without* stopping playback — a decode rescue, an engine handoff,
      * the stereo safety net. [reason] is stable semantic state; [detail] is the technical line under it.
      *
-     * This is the other half of F18: a user whose picture judders or whose sound drifts has no failure to
+     * This is the other half of the error log: a user whose picture judders or whose sound drifts has no failure to
      * report, so the log stayed empty and every report became a guessing game. Callers must keep these
      * rare — one per genuine event, never per frame or per retry tick.
      */

@@ -5,7 +5,7 @@ import tv.own.owntv.core.database.entity.RecordingEntity
 import tv.own.owntv.core.model.RecordingStatus
 
 /**
- * "Record every showing of this title on this channel" (D7) — deciding *which* showings.
+ * "Record every showing of this title on this channel" — deciding *which* showings.
  *
  * Arithmetic and string work only, so every rule here is testable without a guide, a database or a
  * clock. [RecordingManager] does the scheduling.
@@ -67,7 +67,7 @@ object RecordingRuleMatcher {
      * - **Anything that has already finished.** A rule is a standing instruction about the future;
      *   the archive is what catch-up recording is for.
      * - **Anything already in [existing]** — matched on `(channelId, programmeStartMs)`, the same
-     *   identity the table's unique index uses. This is the de-duplication D7 asks for, and it is
+     *   identity the table's unique index uses. This is the de-duplication series recording needs, and it is
      *   what stops every guide refresh from re-scheduling the same week.
      * - **Anything whose title does not fold to the rule's key.** A guide row on the right channel
      *   at the right time is still the wrong programme if it is not the one asked for.

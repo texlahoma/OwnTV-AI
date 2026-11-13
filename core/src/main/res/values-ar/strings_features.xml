@@ -9,6 +9,8 @@
     <string name="profiles_avatar_own_picture">صورتك الخاصة</string>
     <string name="profiles_kids">ملف الأطفال الشخصي</string>
     <string name="profiles_kids_description">تصفح مبسّط وآمن</string>
+    <string name="profiles_allow_downloads">السماح بالتنزيلات</string>
+    <string name="profiles_allow_downloads_description">عند الإيقاف تُخفى كل أزرار التنزيل لهذا الملف الشخصي</string>
     <string name="profiles_remove_pin">إزالة قفل PIN</string>
     <string name="profiles_no_pin">يمكن فتح هذا الملف الشخصي من دون PIN</string>
     <string name="profiles_change_pin">تغيير PIN (اتركه فارغًا للاحتفاظ بالحالي)</string>
@@ -19,12 +21,13 @@
     <string name="profiles_create">إنشاء</string>
     <string name="profiles_save">حفظ</string>
     <string name="profiles_gate_title">من يشاهد الآن؟</string>
+    <string name="profiles_gate_subtitle">يحتفظ كل ملف شخصي بمفضلاته وسجله الخاص</string>
     <string name="profiles_wrong_pin">PIN غير صحيح — حاول مجددًا</string>
     <string name="profiles_enter_pin"><xliff:g id="name">%1$s</xliff:g> — أدخل PIN</string>
+    <string name="profiles_protected_edit">لهذا الملف قفل ملف شخصي أو قفل إعدادات. أدخل أيًا من الرمزين لتغييره.</string>
     <string name="profiles_kids_badge">أطفال</string>
     <string name="profiles_add">إضافة ملف شخصي</string>
     <string name="profiles_title">الملفات الشخصية</string>
-    <string name="profiles_add_button">إضافة ملف شخصي</string>
     <string name="profiles_delete_title">حذف «<xliff:g id="name">%1$s</xliff:g>»؟</string>
     <string name="profiles_delete_message">يؤدي هذا إلى حذف الملف الشخصي وعناصره المفضّلة وسجل مشاهدته. ستبقى المصادر.</string>
     <string name="profiles_kids_tag">أطفال</string>
@@ -32,38 +35,62 @@
     <string name="search_title">بحث</string>
     <string name="search_continue">متابعة المشاهدة</string>
     <string name="search_unwatched">غير مُشاهَد</string>
-    <string name="search_hint">ابحث في القنوات والأفلام والمسلسلات…</string>
     <string name="search_recent">عمليات البحث الأخيرة</string>
-    <string name="search_recent_empty">ستظهر عمليات البحث الأخيرة هنا.</string>
-    <string name="search_minimum_query">اكتب حرفين على الأقل للبحث في كل المحتوى.</string>
-    <string name="search_no_results"><xliff:g id="query">%1$s</xliff:g> — لا توجد نتائج.</string>
     <string name="search_nothing_in_list">لا شيء في <xliff:g id="list">%1$s</xliff:g> حتى الآن.</string>
     <string name="search_clear">مسح</string>
     <string name="search_jump_to">الانتقال إلى</string>
-    <string name="search_watch_live">مشاهدة مباشرة</string>
-    <string name="search_play">تشغيل</string>
     <string name="search_open_series">فتح المسلسل</string>
     <string name="search_movie">فيلم</string>
     <string name="search_series">مسلسل</string>
     <string name="search_channels">قنوات</string>
-    <string name="search_channel_number">#<xliff:g id="number">%1$s</xliff:g></string>
-    <string name="home_keep_watching">تابع المشاهدة</string>
-    <string name="home_play_next">تشغيل التالي</string>
-    <string name="home_tune_in">المشاهدة الآن</string>
-    <string name="home_recent_live">بث مباشر شوهد مؤخرًا</string>
+    <string name="search_on_tv">برامج التلفزيون</string>
+    <string name="search_go_to_channel">الانتقال إلى القناة</string>
+    <string name="search_go_to_movie">الانتقال إلى الفيلم</string>
+    <string name="search_clear_recent">مسح عمليات البحث الأخيرة</string>
+    <string name="search_field_hint">القنوات والأفلام والمسلسلات</string>
+    <string name="search_voice">البحث الصوتي</string>
+    <string name="search_voice_prompt">قل اسم قناة أو فيلم أو مسلسل</string>
+    <string name="search_card_title">اعثر على أي شيء في قوائم التشغيل</string>
+    <string name="search_card_body">القنوات والأفلام والمسلسلات من كل قوائم التشغيل المعروضة. اختر نتيجة للانتقال إليها مباشرة، ثم شغّلها أو نزّلها أو افتح خياراتها هناك. يمكن أيضًا العثور على البرامج التلفزيونية المعروضة الآن أو لاحقًا اليوم بعناوينها.</string>
+    <string name="search_nothing_found">لم يتم العثور على شيء لـ «<xliff:g id="query">%1$s</xliff:g>»</string>
+    <string name="search_nothing_found_body">يبحث البحث في أسماء القنوات والأفلام والمسلسلات في قوائم التشغيل المعروضة. لا يتم البحث في الفئات المخفية. يتم العثور على البرامج التلفزيونية بعناوينها في الدليل الذي تم تنزيله.</string>
+    <string name="search_query_quoted">«<xliff:g id="query">%1$s</xliff:g>»</string>
+    <plurals name="search_result_count">
+        <item quantity="zero">لا نتائج (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="one">نتيجة واحدة (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="two">نتيجتان (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> نتائج</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> نتيجة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> نتيجة</item>
+    </plurals>
+    <plurals name="search_all_channels">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="one">القناة الوحيدة (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="two">القناتان (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="few">كل القنوات الـ <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="many">كل القنوات الـ <xliff:g id="count">%1$d</xliff:g></item>
+        <item quantity="other">كل القنوات الـ <xliff:g id="count">%1$d</xliff:g></item>
+    </plurals>
     <string name="profiles_default_name">ملف شخصي</string>
     <string name="launcher_recent_live_title">البث المباشر الأخير</string>
     <string name="launcher_recent_live_description">قنوات البث المباشر التي شوهدت مؤخرًا</string>
     <string name="launcher_movie_type">فيلم</string>
     <string name="launcher_episode_number">الحلقة <xliff:g id="episode">%1$d</xliff:g></string>
+    <plurals name="home_library_loading">
+        <item quantity="zero">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عنوان حتى الآن</item>
+        <item quantity="one">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عنوان حتى الآن</item>
+        <item quantity="two">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عنوانان حتى الآن</item>
+        <item quantity="few">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عناوين حتى الآن</item>
+        <item quantity="many">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عنوانًا حتى الآن</item>
+        <item quantity="other">جارٍ تحميل مكتبتك · <xliff:g id="count">%1$s</xliff:g> عنوان حتى الآن</item>
+    </plurals>
+    <string name="home_library_loading_trending">سيظهر «الرائج الآن» مع امتلاء مكتبتك.</string>
     <string name="home_no_preview">لا يوجد شيء لمعاينته حتى الآن.</string>
     <string name="home_no_rows">جميع صفوف الشاشة الرئيسية مخفية.</string>
     <string name="home_enable_rows">فعّل الصفوف مجددًا من الإعدادات ← الشاشة الرئيسية.</string>
     <string name="home_start_watching">ابدأ المشاهدة لترى نشاطك هنا.</string>
     <string name="home_continue_empty">ستظهر هنا عناصر متابعة المشاهدة عند توفر سجل التشغيل.</string>
     <string name="home_last_watched_now">شوهد آخر مرة للتو</string>
-    <string name="home_finish_by">الانتهاء بحلول <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_resume">استئناف</string>
     <plurals name="home_last_watched_minutes">
         <item quantity="zero">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
         <item quantity="one">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> دقيقة</item>
@@ -88,40 +115,22 @@
         <item quantity="many">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يومًا</item>
         <item quantity="other">شوهد آخر مرة قبل <xliff:g id="count">%1$d</xliff:g> يوم</item>
     </plurals>
-    <string name="home_season_episode">م<xliff:g id="season">%1$02d</xliff:g> ح<xliff:g id="episode">%2$02d</xliff:g></string>
-    <string name="home_season">م<xliff:g id="season">%1$02d</xliff:g></string>
-    <string name="home_episode">ح<xliff:g id="episode">%1$02d</xliff:g></string>
     <string name="home_row_cards">بطاقات</string>
     <string name="home_row_keep_watching">تابع المشاهدة</string>
     <string name="home_row_continue_movies">متابعة مشاهدة الأفلام</string>
     <string name="home_row_continue_series">متابعة مشاهدة المسلسلات</string>
     <string name="home_row_recent_channels">القنوات الأخيرة</string>
     <string name="home_row_favorite_channels">القنوات المفضّلة</string>
+    <string name="home_row_favorite_movies">الأفلام المفضّلة</string>
+    <string name="home_row_favorite_series">المسلسلات المفضّلة</string>
     <string name="home_row_on_now">يُعرض الآن</string>
     <string name="home_row_hero_description">صف المعاينة الكبير في الأعلى</string>
     <string name="home_row_continue_movies_description">أفلام ذات موضع تشغيل محفوظ</string>
     <string name="home_row_continue_series_description">حلقات لاستئنافها أو تشغيل التالية</string>
     <string name="home_row_recent_description">قنوات البث المباشر التي انتقلت إليها مؤخرًا</string>
     <string name="home_row_favorite_description">قنوات البث المباشر المضافة إلى المفضّلة</string>
-    <string name="home_on_now_title"><xliff:g id="title">%1$s</xliff:g> · يُعرض الآن</string>
-    <string name="home_ok_to_watch">اضغط «موافق» للمشاهدة</string>
-    <string name="home_ok_to_browse">اضغط «موافق» للتصفح</string>
-    <string name="home_no_programme_details">لا تتوفر تفاصيل البرنامج</string>
-    <string name="home_guide_unavailable">بيانات دليل البرامج غير متاحة</string>
-    <string name="home_next">التالي</string>
-    <string name="home_channel_number"><xliff:g id="number">%1$s</xliff:g>  <xliff:g id="name">%2$s</xliff:g></string>
-    <string name="home_time_range"><xliff:g id="start">%1$s</xliff:g>-<xliff:g id="end">%2$s</xliff:g></string>
-    <string name="home_now_time">الآن · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_up_next_time">التالي · <xliff:g id="time">%1$s</xliff:g></string>
-    <string name="home_upcoming_item"><xliff:g id="time">%1$s</xliff:g> <xliff:g id="title">%2$s</xliff:g></string>
-    <plurals name="home_channel_count">
-        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> قناة</item>
-        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> قناة</item>
-        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> قناتان</item>
-        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> قنوات</item>
-        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> قناة</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> قناة</item>
-    </plurals>
+    <string name="home_row_favorite_movies_description">الأفلام المضافة إلى المفضّلة</string>
+    <string name="home_row_favorite_series_description">المسلسلات المضافة إلى المفضّلة</string>
     <string name="update_title">تحديث التطبيق</string>
     <string name="update_checking">جارٍ التحقق من وجود تحديثات…</string>
     <string name="update_whats_new">ما الجديد</string>
@@ -156,6 +165,11 @@
     <string name="home_trending_style">تخطيط الرائج</string>
     <string name="home_trending_style_hero">بطاقة مفصّلة</string>
     <string name="home_trending_style_posters">ملصقات فقط</string>
+    <string name="home_trending_rank">#<xliff:g id="rank">%1$d</xliff:g> في الرائج · <xliff:g id="section">%2$s</xliff:g></string>
+    <string name="home_trending_in_playlist">في قائمة التشغيل</string>
+    <string name="home_trending_style_full_bleed">ملء الشاشة</string>
+    <string name="home_duration_hours_minutes"><xliff:g id="hours">%1$d</xliff:g> س <xliff:g id="minutes">%2$02d</xliff:g> د</string>
+    <string name="home_time_left">متبقٍ <xliff:g id="duration">%1$s</xliff:g></string>
     <string name="settings_trending_status_off">ميزة «الرائج الآن» متوقفة.</string>
     <string name="settings_trending_status_building">يجري إعداد «الرائج الآن» بعد مزامنة المزوّد.</string>
     <string name="settings_trending_status_metadata_disabled">تتطلب ميزة «الرائج الآن» بيانات TMDB الوصفية. اختر TMDB فقط أو المزوّد + TMDB.</string>
@@ -189,12 +203,7 @@
     </plurals>
     <string name="home_trending_movie">فيلم</string>
     <string name="home_trending_series">مسلسل</string>
-    <string name="home_trending_section_label">الرائج الآن · لقطة المزامنة</string>
     <string name="home_trending_provider_match">تطابق لدى المزوّد</string>
-    <string name="home_trending_language_choice">اختيار اللغة <xliff:g id="language">%1$s</xliff:g></string>
-    <string name="home_trending_english_fallback">اختيار الإنجليزية الاحتياطي</string>
-    <string name="home_trending_untagged_fallback">اختيار غير الموسوم الاحتياطي</string>
-    <string name="home_trending_other_fallback">اختيار <xliff:g id="language">%1$s</xliff:g> الاحتياطي</string>
     <string name="home_trending_why_label">سبب ظهور هذا العنصر</string>
     <string name="home_trending_reason_title">ترتيب TMDB رقم <xliff:g id="rank">%1$d</xliff:g> <xliff:g id="media_type">%2$s</xliff:g> + تطابق لدى المزوّد</string>
     <string name="home_trending_reason_preferred">يُفضَّل إصدار المزوّد المحدّد باللغة <xliff:g id="language">%1$s</xliff:g> على الإدخالات بلغة أخرى.</string>
@@ -214,12 +223,12 @@
     <string name="home_trending_trailer">الإعلان التشويقي</string>
     <string name="home_trending_more_details">مزيد من التفاصيل</string>
     <string name="home_trending_all_versions">جميع الإصدارات</string>
-    <string name="home_trending_previous">السابق</string>
+    <string name="home_trending_why_menu">لماذا يظهر هذا العنوان هنا</string>
     <string name="home_trending_pause">إيقاف مؤقت</string>
-    <string name="home_trending_resume">متابعة</string>
-    <string name="home_trending_next">التالي</string>
     <string name="home_trending_unavailable">لم يعد هذا الإصدار متاحًا</string>
     <string name="recording_notification_title">جارٍ التسجيل</string>
+    <string name="auto_start_notification_channel">التشغيل التلقائي عند الاستيقاظ</string>
+    <string name="auto_start_notification_text">يُفتح OwnTV عندما يستيقظ التلفزيون</string>
     <string name="recording_failed_no_space">توقّف: لا توجد مساحة كافية</string>
     <string name="recording_failed_no_connection">لا يوجد اتصال متاح من مزوّدك</string>
     <string name="recording_failed_clash">كان تسجيل آخر يستخدم الاتصال</string>
@@ -228,21 +237,29 @@
     <string name="recording_failed_channel_gone">لم تعد هذه القناة في قائمة التشغيل</string>
     <string name="recording_failed_unknown">لم يتم التسجيل</string>
     <string name="recording_title">التسجيلات</string>
-    <string name="recording_description">بث مباشر محفوظ على هذا الجهاز.</string>
-    <string name="recording_empty">لا توجد تسجيلات بعد. افتح دليل البرامج واختر برنامجًا ثم اضغط تسجيل.</string>
+    <string name="recording_empty">لم يُسجَّل شيء بعد. اضغط تسجيل على برنامج في دليل التلفزيون، أو اضغط مطولًا على قناة لتسجيلها أو لجدولة وقت.</string>
     <string name="recording_group_now">يسجّل الآن</string>
     <string name="recording_group_scheduled">مجدول</string>
     <string name="recording_group_completed">مُسجَّل</string>
     <string name="recording_group_failed">فشل</string>
     <string name="recording_group_missed">فائت</string>
+    <string name="recording_group_series">كل عرض</string>
     <string name="recording_record">تسجيل</string>
     <string name="recording_stop">إيقاف التسجيل</string>
+    <string name="recording_delete_message">يزيل التسجيل وملفه من هذا الجهاز. لا يمكن التراجع عن ذلك.</string>
     <string name="recording_record_series">تسجيل كل عرض</string>
     <string name="recording_stop_series">إيقاف تسجيل كل عرض</string>
     <string name="recording_from_archive">التسجيل من الأرشيف</string>
+    <string name="recording_schedule">جدولة تسجيل…</string>
+    <string name="recording_schedule_hint">اختر اليوم ووقت البدء ووقت الانتهاء. يتم التسجيل حتى لو لم يكن لهذه القناة دليل تلفزيوني.</string>
+    <string name="recording_schedule_start">البدء</string>
+    <string name="recording_schedule_end">الانتهاء</string>
+    <string name="recording_schedule_next_day">اليوم التالي</string>
+    <string name="recording_schedule_past">لقد مضى هذا الوقت بالفعل</string>
     <string name="recording_scheduled_for">سيسجّل <xliff:g id="time">%1$s</xliff:g></string>
     <string name="recording_badge">REC</string>
     <string name="recording_pill_line">يجري تسجيل <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_pill_line_locked">يجري التسجيل من فئة مقفلة</string>
     <string name="recording_clash_with">يتعارض مع <xliff:g id="programme">%1$s</xliff:g></string>
     <string name="recording_settings_group">التسجيل</string>
     <string name="settings_recording_reserve">إبقاء اتصال واحد متاحًا للمشاهدة</string>
@@ -263,8 +280,18 @@
     <string name="recording_failed_encrypted">هذه القناة مشفّرة ولا يمكن تسجيلها</string>
     <string name="recording_failed_drm">هذه القناة محمية بنظام DRM، لذا يمكن مشاهدتها لكن لا يمكن تسجيلها. الحماية من مزوّد الخدمة لديك، وليست من OwnTV.</string>
     <string name="recording_failed_metered">لم يُسجَّل عبر بيانات الهاتف</string>
+    <string name="recording_card_empty_title">لا توجد تسجيلات بعد</string>
+    <string name="recording_card_body">اختر برنامجًا في دليل التلفزيون ثم اختر تسجيل، أو اضغط مطولًا على قناة وجدول وقتًا. يصل التسجيل إلى هنا حتى أثناء مشاهدتك لشيء آخر.</string>
+    <string name="recording_open_guide">فتح دليل التلفزيون</string>
+    <plurals name="recording_card_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> تسجيل</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> تسجيل</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> تسجيل</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> تسجيلات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> تسجيلًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> تسجيل</item>
+    </plurals>
     <string name="settings_recording_mobile_data">التسجيل عبر بيانات الهاتف</string>
-    <string name="settings_recording_mobile_data_description">عند الإيقاف، يُتخطّى أي تسجيل يحين خارج شبكة Wi-Fi بدل الانتظار — فالبرنامج المباشر لا يتكرر.</string>
     <string name="settings_record_watching">تسجيل ما أشاهده</string>
     <string name="settings_record_watching_description">يضيف إلى المشغّل زر تسجيل يحفظ القناة التي تشاهدها. يجلب القناة بنفسه، فيستهلك أحد اتصالات مزوّدك أثناء عمله، ويواصل التسجيل بعد تغيير القناة أو مغادرة المشغّل.</string>
     <string name="settings_record_watching_warning_title">اتصال واحد فقط</string>
@@ -273,4 +300,349 @@
     <string name="settings_record_watching_turn_on">تشغيله</string>
     <string name="player_recording_conflict">يسمح مزوّدك ببثّ واحد في الوقت نفسه، والتسجيل يستخدمه الآن.</string>
     <string name="player_keep_watching_stop_recording">متابعة المشاهدة (يوقف التسجيل)</string>
+    <string name="sports_channel_goal_alerts">تنبيهات الأهداف</string>
+    <string name="sports_channel_live_match">مباراة مباشرة</string>
+    <string name="sports_channel_match_reminders">تذكيرات المباريات</string>
+    <string name="sports_score_line"><xliff:g id="home">%1$s</xliff:g> <xliff:g id="home_score">%2$s</xliff:g>–<xliff:g id="away_score">%3$s</xliff:g> <xliff:g id="away">%4$s</xliff:g></string>
+    <string name="sports_pair"><xliff:g id="home">%1$s</xliff:g> – <xliff:g id="away">%2$s</xliff:g></string>
+    <string name="sports_alert_goal">⚽ هدف! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_wicket">ويكيت! <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_red_card">بطاقة حمراء · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_half_time">نهاية الشوط الأول · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_full_time">نهاية المباراة · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_kickoff">انطلاق المباراة · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_postponed">تأجلت · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_cancelled">أُلغيت · <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_alert_corrected">تصحيح النتيجة · <xliff:g id="score">%1$s</xliff:g></string>
+    <string name="sports_alert_detail"><xliff:g id="what">%1$s</xliff:g> · <xliff:g id="competition">%2$s</xliff:g></string>
+    <plurals name="sports_reminder_title">
+        <item quantity="zero">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="one">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="two">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="few">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="many">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+        <item quantity="other">الانطلاق بعد <xliff:g id="minutes">%1$d</xliff:g> د: <xliff:g id="match">%2$s</xliff:g></item>
+    </plurals>
+    <string name="sports_reminder_on">على <xliff:g id="channel">%1$s</xliff:g></string>
+    <plurals name="sports_reminder_on_more">
+        <item quantity="zero">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+        <item quantity="one">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+        <item quantity="two">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+        <item quantity="few">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+        <item quantity="many">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+        <item quantity="other">على <xliff:g id="channel">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> أخرى</item>
+    </plurals>
+    <string name="sports_action_stop_updates">إيقاف التحديثات</string>
+    <string name="sports_title">الرياضة</string>
+    <plurals name="sports_hub_live">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> مباشرة</item>
+    </plurals>
+    <plurals name="sports_hub_matches">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> مباراة</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> مباراة</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> مباراة</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> مباريات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> مباراة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> مباراة</item>
+    </plurals>
+    <string name="sports_scores_espn">النتائج: ESPN</string>
+    <string name="sports_my_teams">فرقي</string>
+    <string name="sports_live_now">مباشر الآن</string>
+    <string name="sports_not_on_channels">ليست على قنواتك</string>
+    <string name="sports_on_channels_now">رياضة على قنواتك الآن</string>
+    <string name="sports_on_channels_now_mobile">رياضة على قنواتك</string>
+    <string name="sports_on_channels_now_hint">من دليلك — يشمل رياضات لا تغطيها ESPN</string>
+    <string name="sports_starting_soon">تبدأ قريبًا</string>
+    <string name="sports_hint_match_page">صفحة المباراة</string>
+    <string name="sports_hint_follow_remind">متابعة · تذكير</string>
+    <string name="sports_hint_day_matches">مباريات اليوم</string>
+    <string name="sports_hint_day">يوم</string>
+    <string name="sports_hint_week">أسبوع</string>
+    <string name="sports_hint_show_score">إظهار النتيجة</string>
+    <string name="sports_hint_back_to_day">العودة إلى اليوم</string>
+    <string name="sports_hint_open_league">فتح الدوري</string>
+    <string name="sports_hint_sport_chips">أزرار الرياضات</string>
+    <string name="sports_hint_league_chips">أزرار الدوريات</string>
+    <string name="sports_hint_follow_unfollow">متابعة · إلغاء المتابعة</string>
+    <string name="sports_reminder_set">تذكير</string>
+    <string name="sports_until">حتى <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_set">المجموعة <xliff:g id="set">%1$d</xliff:g></string>
+    <string name="sports_overs"><xliff:g id="overs">%1$s</xliff:g> أوفر</string>
+    <string name="sports_empty_nothing">لا مباريات اليوم فيما تتابعه</string>
+    <string name="sports_empty_unreachable">تعذّر الوصول إلى النتائج الآن. قنواتك ما زالت تعمل.</string>
+    <string name="sports_paused">النتائج متوقفة مؤقتًا — ستتم المحاولة بعد دقائق</string>
+    <string name="sports_sport_soccer">كرة القدم</string>
+    <string name="sports_sport_basketball">كرة السلة</string>
+    <string name="sports_sport_tennis">التنس</string>
+    <string name="sports_sport_cricket">الكريكيت</string>
+    <string name="sports_sport_hockey">هوكي الجليد</string>
+    <string name="sports_sport_football">NFL</string>
+    <string name="sports_sport_mma">فنون القتال المختلطة</string>
+    <string name="sports_sport_baseball">البيسبول</string>
+    <string name="sports_sport_golf">الغولف</string>
+    <string name="sports_sport_rugby">الرغبي</string>
+    <string name="sports_sport_rugby_league">رغبي الدوري</string>
+    <string name="sports_sport_aussie_rules">كرة القدم الأسترالية</string>
+    <string name="sports_sport_volleyball">الكرة الطائرة</string>
+    <string name="sports_sport_lacrosse">اللاكروس</string>
+    <string name="sports_sport_handball">كرة اليد</string>
+    <string name="sports_sport_motorsport">رياضة السيارات</string>
+    <string name="sports_sport_darts">السهام</string>
+    <string name="sports_sport_snooker">السنوكر</string>
+    <string name="sports_sport_cycling">ركوب الدراجات</string>
+    <string name="sports_sport_combat">رياضات قتالية</string>
+    <string name="sports_sport_american_football">كرة القدم الأمريكية</string>
+    <string name="sports_sport_athletics">ألعاب القوى</string>
+    <string name="sports_sport_winter">الرياضات الشتوية</string>
+    <string name="sports_sport_other">رياضة</string>
+    <string name="sports_tab_timeline">المجريات</string>
+    <string name="sports_tab_stats">الإحصاءات</string>
+    <string name="sports_tab_lineups">التشكيلات</string>
+    <string name="sports_tab_table">الترتيب</string>
+    <string name="sports_following">تتابعه</string>
+    <string name="sports_follow">متابعة</string>
+    <string name="sports_event_goal">هدف · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_own_goal">هدف عكسي · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_penalty">ركلة جزاء · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_yellow">بطاقة صفراء · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_red">بطاقة حمراء · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_sub">تبديل · <xliff:g id="player_on">%1$s</xliff:g> ↔ <xliff:g id="player_off">%2$s</xliff:g></string>
+    <string name="sports_event_assist">تمريرة حاسمة <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_wicket">ويكيت · <xliff:g id="player">%1$s</xliff:g></string>
+    <string name="sports_event_kickoff">انطلاق المباراة</string>
+    <string name="sports_event_half_time">نهاية الشوط الأول</string>
+    <string name="sports_event_full_time">نهاية المباراة</string>
+    <string name="sports_stat_red_cards">البطاقات الحمراء</string>
+    <string name="sports_watch_live">شاهد مباشرة</string>
+    <plurals name="sports_watch_live_count">
+        <item quantity="zero">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="one">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="two">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="few">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قنوات</item>
+        <item quantity="many">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="other">شاهد مباشرة · <xliff:g id="count">%1$d</xliff:g> قناة</item>
+    </plurals>
+    <string name="sports_language_first"><xliff:g id="language">%1$s</xliff:g> أولًا · من الإعدادات</string>
+    <string name="sports_any_country">أي دولة</string>
+    <string name="sports_reason_guide">الدليل: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="sports_reason_event">قناة حدث · الاسم يطابق الفريقين</string>
+    <string name="sports_reason_pick">اختيارك لـ <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_reason_likely">تعرض عادةً <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_confirmed">مؤكد من الدليل</string>
+    <plurals name="sports_hidden">
+        <item quantity="zero">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+        <item quantity="one">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+        <item quantity="two">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+        <item quantity="few">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+        <item quantity="many">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+        <item quantity="other">+ <xliff:g id="count">%1$d</xliff:g> مخفية بالفلاتر</item>
+    </plurals>
+    <string name="sports_watch_full_screen">شاهد بملء الشاشة</string>
+    <string name="sports_preview_another">معاينة قناة أخرى</string>
+    <string name="sports_always_use">استخدمها دائمًا لـ <xliff:g id="competition">%1$s</xliff:g></string>
+    <string name="sports_filter_title">تصفية القنوات</string>
+    <string name="sports_showing_of">عرض <xliff:g id="shown">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g></string>
+    <string name="sports_filter_country">الدولة</string>
+    <string name="sports_filter_match">المباراة</string>
+    <string name="sports_unknown">غير معروفة</string>
+    <string name="sports_any">الكل</string>
+    <string name="sports_all_playlists">كل قوائم التشغيل</string>
+    <string name="sports_quality_hd">HD وأعلى</string>
+    <string name="sports_quality_fhd">FHD وأعلى</string>
+    <string name="sports_quality_uhd">4K فقط</string>
+    <string name="sports_only_confirmed">القنوات المؤكدة من الدليل فقط</string>
+    <string name="sports_only_confirmed_description">إخفاء القنوات «المحتملة» والمحفوظة</string>
+    <string name="sports_only_confirmed_mobile">المؤكدة من الدليل فقط</string>
+    <string name="sports_remember_filters">تذكّر هذه الفلاتر لكل مباراة</string>
+    <string name="sports_remember_filters_description">تُحفظ في الإعدادات ← الرياضة لهذا الملف الشخصي</string>
+    <string name="sports_remember_filters_mobile">تذكّرها لكل مباراة</string>
+    <plurals name="sports_show_channels">
+        <item quantity="zero">عرض <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="one">عرض <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="two">عرض <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="few">عرض <xliff:g id="count">%1$d</xliff:g> قنوات</item>
+        <item quantity="many">عرض <xliff:g id="count">%1$d</xliff:g> قناة</item>
+        <item quantity="other">عرض <xliff:g id="count">%1$d</xliff:g> قناة</item>
+    </plurals>
+    <string name="sports_filter_only_this">هذا فقط</string>
+    <string name="sports_filter_toggle">تبديل</string>
+    <string name="sports_goal_toast">هدف لفريق تتابعه</string>
+    <string name="sports_switch">انتقال</string>
+    <string name="sports_other_channels">قنوات أخرى</string>
+    <string name="sports_other_channels_count">قنوات أخرى · <xliff:g id="count">%1$d</xliff:g></string>
+    <string name="sports_other_channels_title">قنوات أخرى لهذه المباراة</string>
+    <string name="sports_playing_now">قيد التشغيل</string>
+    <string name="sports_switch_channel">تغيير القناة</string>
+    <string name="sports_tab_fixtures">المباريات القادمة</string>
+    <string name="sports_tab_results">النتائج</string>
+    <string name="sports_tab_scores">مباشر</string>
+    <string name="sports_tab_calendar">التقويم</string>
+    <string name="sports_tab_leagues">الدوريات</string>
+    <string name="sports_previous_month">الشهر السابق</string>
+    <string name="sports_next_month">الشهر التالي</string>
+    <string name="sports_next">التالي: <xliff:g id="match">%1$s</xliff:g></string>
+    <string name="sports_next_badge">التالي</string>
+    <string name="sports_no_table_series">لا يوجد ترتيب — السلاسل تتغير كل أسبوع</string>
+    <string name="sports_follow_league">متابعة الدوري</string>
+    <string name="sports_unfollow_league">إلغاء متابعة الدوري</string>
+    <string name="sports_no_matches_on">لا مباريات في رياضاتك يوم <xliff:g id="day">%1$s</xliff:g></string>
+    <string name="sports_nothing_on_day">لا شيء في هذا اليوم</string>
+    <string name="sports_nothing_in_sport"><xliff:g id="sport">%1$s</xliff:g>: لا شيء في هذا اليوم</string>
+    <string name="sports_change_leagues_hint">أضف الدوريات أو أزلها من الإعدادات ← الرياضة</string>
+    <string name="sports_loading_month">جارٍ تحميل <xliff:g id="month">%1$s</xliff:g>…</string>
+    <string name="sports_offline_saved">يُعرض ما حُفظ <xliff:g id="time">%1$s</xliff:g> — تعذّر الوصول إلى ESPN</string>
+    <string name="sports_team_page">صفحة الفريق</string>
+    <string name="sports_next_match">المباراة التالية</string>
+    <string name="sports_last_five">آخر خمس مباريات</string>
+    <string name="sports_league_position">المركز في الدوري</string>
+    <string name="sports_in_my_teams">ضمن فرقي</string>
+    <string name="sports_open_match_page">فتح صفحة المباراة</string>
+    <string name="sports_open_team_page">فتح صفحة الفريق</string>
+    <string name="sports_my_teams_leagues">الدوريات التي تلعب فيها فرقك</string>
+    <string name="sports_tab_drivers">السائقون</string>
+    <string name="sports_tab_constructors">الصانعون</string>
+    <string name="sports_tab_races">السباقات</string>
+    <string name="sports_tab_rankings">التصنيف</string>
+    <string name="sports_tab_matches">المباريات</string>
+    <string name="sports_next_race_weekend">عطلة السباق القادمة</string>
+    <string name="sports_last_weekend">عطلة نهاية الأسبوع الماضية</string>
+    <string name="sports_session_practice_1">التجارب الحرة 1</string>
+    <string name="sports_session_practice_2">التجارب الحرة 2</string>
+    <string name="sports_session_practice_3">التجارب الحرة 3</string>
+    <string name="sports_session_sprint_qualifying">تأهيل السباق القصير</string>
+    <string name="sports_session_qualifying">التأهيل</string>
+    <string name="sports_session_sprint">السباق القصير</string>
+    <string name="sports_session_race">السباق</string>
+    <string name="sports_table_team">الفريق</string>
+    <string name="sports_table_played">لعب</string>
+    <string name="sports_table_won">ف</string>
+    <string name="sports_table_drawn">ت</string>
+    <string name="sports_table_lost">خ</string>
+    <string name="sports_table_difference">±</string>
+    <string name="sports_table_points">ن</string>
+    <string name="sports_table_form">الأداء</string>
+    <string name="sports_this_matchday">هذه الجولة</string>
+    <string name="sports_settings_what">ما يُعرض</string>
+    <string name="sports_show_in_menu">إظهار الرياضة في القائمة</string>
+    <string name="sports_show_in_menu_description">مفعّل افتراضيًا، مع قائمة تشغيل أو بدونها</string>
+    <string name="sports_leagues">الرياضات والدوريات</string>
+    <plurals name="sports_league_count">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> دوري</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> دوري</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> دوري</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> دوريات</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> دوريًا</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> دوري</item>
+    </plurals>
+    <string name="sports_spoiler_free">دون حرق النتائج</string>
+    <string name="sports_spoiler_free_description">إخفاء النتائج حتى تضغط موافق عليها</string>
+    <string name="sports_spoiler_free_description_mobile">المس نتيجة لإظهارها</string>
+    <string name="sports_settings_watching">المشاهدة</string>
+    <string name="sports_languages">لغات التعليق المفضلة</string>
+    <string name="sports_languages_mobile">لغات التعليق</string>
+    <string name="sports_languages_description">تُرتَّب أولًا في «شاهد مباشرة»</string>
+    <string name="sports_countries">الدول المفضلة</string>
+    <string name="sports_countries_description">من بادئات القنوات مثل «DE|»</string>
+    <string name="sports_picture_description">إخفاء القنوات الأقل من هذا</string>
+    <string name="sports_settings_while_watching">أثناء المشاهدة</string>
+    <string name="sports_score_info_bar">النتيجة في شريط المعلومات</string>
+    <string name="sports_score_info_bar_description">تظهر فقط أثناء فتح الشريط، فلا تحرق هدفًا</string>
+    <string name="sports_score_info_bar_description_mobile">فقط أثناء فتح الشريط</string>
+    <string name="sports_goal_alerts_description">لفرقي، أثناء مشاهدة شيء آخر</string>
+    <string name="sports_match_reminders_description">قبل انطلاق المباراة، مع أفضل قناة</string>
+    <string name="sports_remembered_channels">القنوات المحفوظة</string>
+    <string name="sports_remembered_one"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g></string>
+    <plurals name="sports_remembered_summary">
+        <item quantity="zero"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+        <item quantity="one"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+        <item quantity="two"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+        <item quantity="few"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+        <item quantity="many"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+        <item quantity="other"><xliff:g id="competition">%1$s</xliff:g> ← <xliff:g id="channel">%2$s</xliff:g> · <xliff:g id="count">%3$d</xliff:g> أخرى</item>
+    </plurals>
+    <string name="sports_show_likely">إظهار القنوات «المحتملة»</string>
+    <string name="sports_show_likely_description">قنوات رياضية بلا تأكيد من الدليل</string>
+    <string name="sports_settings_data">البيانات</string>
+    <string name="sports_live_refresh">تحديث مباشر</string>
+    <string name="sports_live_refresh_description">فقط أثناء عرض شاشة رياضية أو نتيجة</string>
+    <string name="sports_about">حول بيانات الرياضة</string>
+    <string name="sports_about_summary">النتائج: ESPN · القنوات: قائمتك ودليلك</string>
+    <string name="sports_alerts_when_closed">التنبيهات عند إغلاق OwnTV</string>
+    <string name="sports_alerts_when_closed_description">يطلب إذن الإشعارات مرة واحدة</string>
+    <string name="sports_alert_me_about">نبّهني بشأن</string>
+    <string name="sports_kind_goals">الأهداف والويكيت</string>
+    <string name="sports_kind_kickoff_full_time">انطلاق المباراة ونهايتها</string>
+    <string name="sports_alerts_for">لـ</string>
+    <string name="sports_followed_leagues">الدوريات المتابَعة</string>
+    <string name="sports_followed_leagues_description">كل مباراة، وقد يكون ذلك كثيرًا</string>
+    <string name="sports_live_card">بطاقة النتيجة المباشرة</string>
+    <string name="sports_live_card_offer">عرض بطاقة النتيجة المباشرة</string>
+    <string name="sports_live_card_description">يتحدّث كل 30 ث حتى نهاية المباراة؛ تبدؤه من صفحة مباراة</string>
+    <string name="sports_alerts_footnote">عند إغلاق OwnTV تصل التنبيهات عادةً خلال دقيقة. إذا بقي الهاتف ساكنًا وشاشته مطفأة مدة طويلة، فقد يؤخرها Android حتى نحو 15 دقيقة. بطاقة النتيجة المباشرة لا تتأخر.</string>
+    <string name="sports_search_teams">ابحث عن فرق ولاعبين ودوريات</string>
+    <string name="sports_suggested">مقترحات مما تشاهده</string>
+    <plurals name="sports_watched_matches">
+        <item quantity="zero">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+        <item quantity="one">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+        <item quantity="two">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+        <item quantity="few">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+        <item quantity="many">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+        <item quantity="other">شاهدت <xliff:g id="count">%1$d</xliff:g> من مبارياته</item>
+    </plurals>
+    <string name="sports_league_label">دوري</string>
+    <string name="sports_no_playlist_title">أضف قائمة تشغيل لمشاهدة المباريات</string>
+    <string name="sports_no_playlist_body">النتائج والجداول والتنبيهات تعمل دونها. ومع قائمة تشغيل يجد OwnTV كل قناة تعرض هذه المباراة.</string>
+    <string name="sports_add_playlist">إضافة قائمة تشغيل</string>
+    <string name="sports_home_row">رياضة مباشرة</string>
+    <string name="sports_home_row_description">المباريات المتابَعة عندما تكون إحداها مباشرة أو على وشك البدء</string>
+    <string name="sports_empty_nothing_followed">لم تختر أي رياضات أو دوريات بعد</string>
+    <string name="sports_empty_choose_in">اخترها من الإعدادات ← التطبيق ← الرياضة ← الرياضات والدوريات.</string>
+    <string name="sports_load_time_warning">كلما اخترت رياضات ودوريات أكثر، طال التحميل والبناء.</string>
+    <string name="sports_sport_buttons">أزرار الرياضات</string>
+    <string name="sports_sport_buttons_mine">رياضاتي</string>
+    <string name="sports_sport_buttons_all">كل الرياضات</string>
+    <string name="sports_sport_buttons_description">رياضاتي: ما اخترته فقط. كل الرياضات: كل دوري يعرفه OwnTV، ويستغرق تحميله وقتًا أطول.</string>
+    <string name="sports_auto_rebuild">إعادة البناء التلقائية</string>
+    <string name="sports_auto_rebuild_description">عدد مرات جلب النتائج وتفاصيل المباريات والجداول من جديد تلقائيًا</string>
+    <plurals name="sports_auto_rebuild_hours">
+        <item quantity="zero">كل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="one">كل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="two">كل <xliff:g id="count">%1$d</xliff:g> ساعتين</item>
+        <item quantity="few">كل <xliff:g id="count">%1$d</xliff:g> ساعات</item>
+        <item quantity="many">كل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+        <item quantity="other">كل <xliff:g id="count">%1$d</xliff:g> ساعة</item>
+    </plurals>
+    <string name="sports_auto_rebuild_app_start">عند كل تشغيل للتطبيق</string>
+    <string name="sports_calendar_refresh">تحديث التقويم</string>
+    <string name="sports_calendar_refresh_description">عدد مرات جلب الأشهر المحفوظة من جديد</string>
+    <plurals name="sports_calendar_refresh_days">
+        <item quantity="zero">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="one">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+        <item quantity="two">كل <xliff:g id="count">%1$d</xliff:g> يومين</item>
+        <item quantity="few">كل <xliff:g id="count">%1$d</xliff:g> أيام</item>
+        <item quantity="many">كل <xliff:g id="count">%1$d</xliff:g> يومًا</item>
+        <item quantity="other">كل <xliff:g id="count">%1$d</xliff:g> يوم</item>
+    </plurals>
+    <string name="sports_find_channels">البحث عن القنوات</string>
+    <string name="sports_find_channels_description">يبحث في دليلك وأسماء قنواتك عن هذه المباراة. قد يستغرق ذلك لحظة في قائمة تشغيل كبيرة.</string>
+    <string name="sports_finding_channels">جارٍ البحث في قنواتك…</string>
+    <string name="sports_strict_filter">تصفية صارمة</string>
+    <string name="sports_strict_filter_description">تشغيل: تُعرض القنوات التي تجتاز عوامل التصفية فقط. إيقاف: تُعرض كل القنوات، والمجتازة أولًا.</string>
+    <string name="sports_rebuilding">جارٍ إعادة بناء الرياضات…</string>
+    <string name="sports_rebuild_failed">تعذّر تحديث بيانات الرياضة</string>
+    <string name="sports_refresh_data_now">تحديث بيانات الرياضة الآن</string>
+    <string name="sports_last_updated">آخر تحديث <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="sports_find_channels_from">يمكن البحث عن القنوات ابتداءً من <xliff:g id="time">%1$s</xliff:g>، قبل بداية المباراة بـ 30 دقيقة.</string>
+    <string name="sports_find_channels_ended">انتهت هذه المباراة، لذا لا توجد قنوات للبحث عنها.</string>
+    <string name="sports_tab_broadcasts">البث</string>
+    <string name="sports_broadcasts_guide">في دليلك</string>
+    <string name="sports_broadcasts_espn">من ESPN (الولايات المتحدة فقط)</string>
+    <string name="sports_broadcasts_find_first">استخدم «البحث عن القنوات» لعرض قنوات دليلك التي تبث هذه المباراة.</string>
+    <string name="sports_broadcasts_none">لا شيء مُدرج</string>
+    <string name="sports_move_instructions">▲/▼ للاختيار · OK للالتقاط أو الوضع · احفظ عند الانتهاء</string>
 </resources>

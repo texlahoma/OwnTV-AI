@@ -9,7 +9,7 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 
 /**
- * B3 — a backup export must never destroy the previous backup. The old code streamed straight over
+ * A backup export must never destroy the previous backup. The old code streamed straight over
  * the backup file, so a crash, a full disk or a pulled USB stick mid-write left the user with a
  * truncated file and no earlier copy.
  *

@@ -27,6 +27,8 @@
     <string name="common_on">On</string>
     <!-- Translators: Compact state label for "disabled" used in settings toggles and chips. This is a state, not a command. -->
     <string name="common_off">Off</string>
+    <!-- Translators: Button that opens the system share sheet (e.g. to send a backup file to another app). -->
+    <string name="common_share">Share</string>
     <!-- Translators: Compact label for an option that switches a time limit off entirely, i.e. "wait forever". Used as a choice alongside durations such as "15 seconds". -->
     <string name="common_never">Never</string>
     <!-- Translators: Generic exit action or button label. -->
@@ -39,8 +41,6 @@
     <string name="common_name">Name</string>
     <!-- Translators: Default user display name placeholder. -->
     <string name="common_own_tv_user">OwnTV User</string>
-    <!-- Translators: Button or action to switch to a different profile. -->
-    <string name="common_switch_profile">Switch Profile</string>
     <!-- Translators: Short label for proxy settings or status. -->
     <string name="common_proxy">Proxy</string>
     <!-- Translators: Text-field label for a title input. -->
@@ -49,12 +49,6 @@
     <string name="common_search_hint">Search\u2026</string>
     <!-- Translators: Generic search button or section label. -->
     <string name="common_search">Search</string>
-    <!-- Translators: Temperature display in Fahrenheit. "temperature" is the numeric value. The degree symbol and F are part of the format. -->
-    <string name="common_weather_fahrenheit"><xliff:g id="temperature">%1$d</xliff:g>\u00b0F</string>
-    <!-- Translators: Temperature display in Celsius. "temperature" is the numeric value. -->
-    <string name="common_weather_celsius"><xliff:g id="temperature">%1$d</xliff:g>\u00b0C</string>
-    <!-- Translators: Weather display with temperature and city. "temperature" is the formatted temperature, "city" is the city name. The dot is a separator. -->
-    <string name="common_weather_city"><xliff:g id="temperature">%1$s</xliff:g> \u00b7 <xliff:g id="city">%2$s</xliff:g></string>
     <!-- Translators: Navigation label for the Search screen in the sidebar. -->
     <string name="common_nav_search">Search</string>
     <!-- Translators: Navigation label for the Home screen in the sidebar. -->
@@ -68,7 +62,9 @@
     <!-- Translators: Navigation label for the Downloads screen in the sidebar. Also used in download notifications. -->
     <string name="common_nav_downloads">Downloads</string>
     <!-- Translators: Navigation label for the TV Guide screen in the sidebar. -->
-    <string name="common_nav_guide">Guide</string>
+    <string name="common_nav_guide">TV Guide</string>
+    <!-- Translators: The TV Guide place in the phone's bottom bar, a fifth of the screen wide. Keep it one short word if the full name is long (German: "Programm"). -->
+    <string name="common_nav_guide_short">TV Guide</string>
     <!-- Translators: Navigation label for the Library tab (Movies and Series together) on phones. -->
     <string name="common_nav_library">Library</string>
     <!-- Translators: Navigation label for the More tab on phones, which holds the items that do not fit the bottom bar. -->
@@ -80,15 +76,9 @@
     <!-- Translators: Status text when no content source is configured. -->
     <string name="shell_no_source">No source</string>
     <!-- Translators: Label of the sidebar item that jumps to the docked mini player or the audio session. -->
-    <string name="shell_now_playing">Now Playing</string>
-    <!-- Translators: Generic error message for unexpected failures. -->
-    <string name="common_something_went_wrong">Something went wrong</string>
-    <!-- Translators: Instructional text shown during reorder mode. The arrows are visual direction indicators. -->
-    <string name="common_move_instructions">\u25b2/\u25bc to move \u00b7 OK to save \u00b7 Back to cancel</string>
+    <string name="shell_now_playing">Now playing</string>
     <!-- Translators: Formatted number with locale-specific grouping. "count" is the number to format. Used for large counts like channel or movie totals. -->
     <string name="common_number_grouped"><xliff:g id="count">%1$,d</xliff:g></string>
-    <!-- Translators: Formatted rating display. "rating" is a decimal number such as 7.5. -->
-    <string name="common_rating"><xliff:g id="rating">%1$.1f</xliff:g></string>
     <!-- Translators: Formatted percentage display. The double percent (%%) is an XML escape for a literal %. -->
     <string name="common_percent"><xliff:g id="percent">%1$d</xliff:g>%%</string>
     <!-- Translators: Time format for durations under one hour (mm:ss). "minutes" and "seconds" are integers. -->
@@ -117,7 +107,7 @@
     <!-- Translators: Error message when the MAC address format is invalid. "AA:BB:CC:DD:EE:FF" is an example format. -->
     <string name="sync_error_invalid_mac">Invalid MAC address \u2014 use AA:BB:CC:DD:EE:FF</string>
     <!-- Translators: Separator between sync count segments. The middle dot (·) is surrounded by spaces. -->
-    <string name="sync_counts_separator">  \u00b7  </string>
+    <string name="sync_counts_separator">"  ·  "</string>
     <!-- Translators: Status text when sync completes successfully. -->
     <string name="sync_counts_success">Synced successfully</string>
     <!-- Translators: Sync count summary. "counts" is a formatted count string. -->
@@ -170,8 +160,11 @@
     <string name="sync_status_download">Downloading <xliff:g id="title">%1$s</xliff:g></string>
     <!-- Translators: The same download line once a size is known. "percent" is 0-100; the double percent (%%) is an XML escape. -->
     <string name="sync_status_download_with_progress">Downloading <xliff:g id="title">%1$s</xliff:g> \u00b7 <xliff:g id="percent">%2$d</xliff:g>%%</string>
+    <!-- Translators: Status pill line while a film or episode from a category locked with the PIN is downloading; its name stays hidden until the PIN opens the category. -->
+    <string name="sync_status_download_locked">Downloading from a locked category</string>
+    <!-- Translators: The same locked download line once a size is known. "percent" is 0-100; the double percent (%%) is an XML escape. -->
+    <string name="sync_status_download_locked_with_progress">Downloading from a locked category \u00b7 <xliff:g id="percent">%1$d</xliff:g>%%</string>
     <string name="sync_status_trending_starting">Sync complete \u00b7 <xliff:g id="source">%1$s</xliff:g> \u00b7 Building Now Trending</string>
-    <string name="sync_status_trending_matching">Matching Trending items with your playlist</string>
     <string name="sync_status_trending_detail_waiting">Waiting for TMDB candidate response</string>
     <string name="sync_status_trending_detail_received">TMDB candidates · Movies: <xliff:g id="movies">%1$d</xliff:g> · Series: <xliff:g id="series">%2$d</xliff:g></string>
     <string name="sync_status_trending_detail_preparing">Provider title index · <xliff:g id="processed">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g></string>
@@ -188,10 +181,6 @@
     <plurals name="sync_status_trending_received">
         <item quantity="one">Received latest <xliff:g id="count">%1$d</xliff:g> Trending item</item>
         <item quantity="other">Received latest <xliff:g id="count">%1$d</xliff:g> Trending items</item>
-    </plurals>
-    <plurals name="sync_status_trending_matched">
-        <item quantity="one">Matched <xliff:g id="total">%1$d</xliff:g> \u00b7 <xliff:g id="movies">%2$s</xliff:g> \u00b7 <xliff:g id="series">%3$s</xliff:g></item>
-        <item quantity="other">Matched <xliff:g id="total">%1$d</xliff:g> \u00b7 <xliff:g id="movies">%2$s</xliff:g> \u00b7 <xliff:g id="series">%3$s</xliff:g></item>
     </plurals>
     <plurals name="sync_status_trending_building">
         <item quantity="one">Building Now Trending \u00b7 <xliff:g id="count">%1$d</xliff:g> match</item>
@@ -266,13 +255,15 @@
     <string name="sync_error_malformed_guide">The guide data from the server was malformed. Some of it may still have loaded \u2014 please try again, or check the EPG URL.</string>
     <!-- Translators: shown on a guide source that fetched successfully but contained no programmes at all - usually the provider has not published this week's guide yet. -->
     <string name="sync_error_guide_empty">This guide is empty right now. The provider may not have published it yet \u2014 please try again later.</string>
+    <!-- Translators: shown on a guide source that fetched successfully and has programmes, but none of its channels is one of the playlist's channels, so nothing was kept. "TV Guide" and "Auto-match EPG" are the screen and button names used elsewhere in the app. -->
+    <string name="sync_error_guide_no_matching_channels">None of this guide\'s channels match your playlist\'s yet. Open the TV Guide and use Auto-match EPG to pair them by name.</string>
 
-    <!-- Translators: Label for the CH+ key skip count setting. "Items per skip" describes how many items one CH+ press jumps. -->
-    <string name="common_items_per_skip">Items per skip</string>
     <!-- Translators: Label above the number field in a minutes input dialog, e.g. the recording start-early and run-over times. -->
     <string name="common_minutes">Minutes</string>
     <!-- Translators: A size in megabytes, e.g. "120.5 MB". %1$s is the number, already formatted for the locale. Translate the unit if your language uses its own (French "Mo", Russian "МБ"); keep "MB" where it is the usual written form. -->
     <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
+    <!-- Translators: A file size in gigabytes, e.g. "3.1 GB". -->
+    <string name="common_size_gb"><xliff:g id="size">%1$s</xliff:g> GB</string>
     <!-- Translators: Plus symbol used as a button label in number input dialogs. This is a symbol, not a translatable word. -->
     <string name="common_plus">+</string>
     <!-- Translators: Minus symbol used as a button label in number input dialogs. This is a symbol, not a translatable word. -->
@@ -285,4 +276,27 @@
     <string name="common_qr_code_companion_url">QR code for the companion URL</string>
 
     <!-- Display-only brand fragments. They intentionally live in donottranslate.xml instead. -->
+    <!-- Translators: Under the profile name in the open navigation menu: the playlist being shown, then an invitation to switch profile. "playlist" is e.g. All playlists. -->
+    <string name="shell_rail_profile_line"><xliff:g id="playlist">%1$s</xliff:g> · switch</string>
+    <!-- Translators: Line under Live TV in the widest menu: the last channel watched. -->
+    <string name="shell_rail_detail_last">Last: <xliff:g id="title">%1$s</xliff:g></string>
+    <!-- Translators: Line under Movies or Series in the widest menu: a title to resume. -->
+    <string name="shell_rail_detail_resume">Resume: <xliff:g id="title">%1$s</xliff:g></string>
+    <!-- Translators: Line under Series in the widest menu: the next episode, e.g. "Solo Leveling S1 · E3". -->
+    <string name="shell_rail_detail_next">Next: <xliff:g id="title">%1$s</xliff:g></string>
+    <!-- Translators: The series and its episode code together in that line, e.g. "Solo Leveling" and "S1 · E3". -->
+    <string name="shell_rail_detail_episode"><xliff:g id="series">%1$s</xliff:g> <xliff:g id="episode">%2$s</xliff:g></string>
+    <!-- Translators: Line under More in the widest menu: what More holds. -->
+    <string name="shell_rail_detail_more">Settings, favorites, backup</string>
+    <!-- Translators: Line under Downloads in the widest menu: how many are downloading, then the progress, e.g. "1 downloading · 64%". -->
+    <plurals name="shell_rail_detail_downloads">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> downloading · <xliff:g id="progress">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloading · <xliff:g id="progress">%2$s</xliff:g></item>
+    </plurals>
+    <!-- Translators: Small tag after Now playing in the navigation menu while only the sound of a stream is playing (Audio mode). -->
+    <string name="shell_now_playing_audio">Audio</string>
+    <!-- Translators: Weather under the clock: the temperature as a bare number with the degree sign (the unit is the one chosen in Settings), then the city, e.g. 26° Düsseldorf. -->
+    <string name="common_weather_degrees_city"><xliff:g id="temperature">%1$d</xliff:g>° <xliff:g id="city">%2$s</xliff:g></string>
+    <!-- Translators: Button that closes a prompt without acting on it, e.g. a programme reminder. -->
+    <string name="common_dismiss">Dismiss</string>
 </resources>

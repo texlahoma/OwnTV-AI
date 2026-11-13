@@ -5,7 +5,7 @@
     <string name="setup_from_device">本機</string>
     <string name="setup_from_phone">遠端</string>
     <string name="setup_send_from_phone">從其他裝置傳送</string>
-    <string name="setup_phone_background_description">使用位於相同 Wi-Fi 網路的手機、平板或電腦掃描 QR 碼（或開啟網址），輸入此 PIN 並傳送相片。相片會立即成為背景。</string>
+    <string name="setup_phone_background_description">在同一 Wi-Fi 下任何有瀏覽器的裝置（手機、電腦或另一台電視）上掃描 QR 碼（或開啟網址），輸入此 PIN 並傳送相片，它會立即成為背景。</string>
     <string name="setup_opening_server">正在開啟伺服器…</string>
     <string name="setup_enter_pin_browser">在瀏覽器中輸入此 PIN</string>
     <string name="setup_open_url">或開啟此網址</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">例如：我的電視</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">歡迎使用</string>
-    <string name="setup_welcome_tagline">專屬於您的 IPTV 播放器。</string>
     <string name="setup_get_started">開始使用</string>
     <string name="setup_display_size_title">調整到看著舒服的大小</string>
-    <string name="setup_display_size_description">設定介面與文字的大小。兩者之後都可以在設定中變更。</string>
-    <string name="setup_display_size_preview">如果坐在座位上能輕鬆讀出這句話，大小就合適了。</string>
     <string name="setup_before_you_start">開始之前</string>
     <string name="setup_disclaimer">OwnTV 僅為媒體播放器，不包含任何頻道、播放清單或內容。您有責任自行新增可合法存取的 Xtream、M3U 或 Stalker 來源。</string>
     <string name="setup_i_understand">我瞭解了</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">從頭開始，或從備份檔案或另一部裝置還原您的使用者檔案、播放清單和我的最愛。</string>
     <string name="setup_new_profile">新增使用者檔案</string>
     <string name="setup_create_profile_add_sources">建立使用者檔案並新增來源</string>
-    <string name="setup_restore_backup">還原備份</string>
     <string name="setup_import_profiles_playlists">從檔案匯入使用者檔案和播放清單</string>
     <string name="setup_sync_device">從另一部裝置</string>
     <string name="setup_sync_device_description">透過 Wi-Fi 從你的另一部 OwnTV 裝置複製所有內容</string>
     <string name="setup_add_playlist">新增播放清單</string>
     <string name="setup_add_playlist_description">為此使用者檔案新增來源，或稍後再設定。</string>
-    <string name="setup_new">新增</string>
-    <string name="setup_add_m3u_xtream">新增 M3U、Xtream 或 Stalker 來源</string>
     <string name="setup_existing">現有項目</string>
     <string name="setup_use_other_profile_playlists">使用其他使用者檔案的播放清單</string>
     <string name="setup_import">匯入</string>
@@ -72,7 +65,7 @@
     <string name="setup_invalid_mac">MAC 位址無效，請使用 AA:BB:CC:DD:EE:FF 格式</string>
     <string name="setup_pick_backup_file">選擇要還原的備份檔案</string>
     <string name="setup_restore_a_backup">還原備份</string>
-    <string name="setup_restore_choice_description">從相同 Wi-Fi 網路上的其他裝置（手機或筆記型電腦）傳送備份，或選擇此裝置上已有的備份檔案。</string>
+    <string name="setup_restore_choice_description">從同一 Wi-Fi 下任何有瀏覽器的裝置遠端傳送備份，或選擇此裝置上已有的備份檔案。</string>
     <string name="setup_upload_from_wifi_device">從 Wi-Fi 網路上的裝置上傳</string>
     <string name="setup_local_file">本機檔案</string>
     <string name="setup_pick_backup_local">選擇此裝置上的備份檔案</string>
@@ -85,24 +78,18 @@
         <item quantity="other">已還原 <xliff:g id="items">%1$d</xliff:g> 個項目。請重新同步您的來源以載入內容。</item>
     </plurals>
     <string name="setup_passwords_omitted">請在之後重新輸入所有已儲存的密碼。</string>
+    <string name="setup_need_password">未儲存密碼，因此尚未載入：<xliff:g id="names">%1$s</xliff:g>。請在設定中開啟該播放清單並輸入其密碼。</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="other">已略過 <xliff:g id="count">%1$d</xliff:g> 個來源，因為此版本不支援其播放清單類型。</item>
     </plurals>
     <string name="setup_continue">繼續</string>
     <string name="setup_import_failed">匯入失敗</string>
     <string name="setup_try_again_caps">再試一次</string>
-    <string name="setup_add_from_phone">從其他裝置新增</string>
-    <string name="setup_phone_add_description">使用位於相同 Wi-Fi 網路的手機、平板或電腦掃描 QR 碼（或開啟網址），輸入此 PIN、填寫播放清單資訊，然後點選「傳送至電視」。其詳細資料隨即會顯示於此並可供匯入，請使用遙控器按下「開始匯入」。</string>
     <string name="setup_opening">正在開啟…</string>
-    <string name="setup_open_server">開啟伺服器</string>
-    <string name="setup_stop_server">停止伺服器</string>
     <string name="setup_add_source">新增來源</string>
-    <string name="setup_add_source_description">在其他裝置上填寫表單，或使用遙控器在此輸入詳細資料。</string>
-    <string name="setup_manual">手動</string>
-    <string name="setup_use_phone_same_wifi">使用位於相同 Wi-Fi 網路的手機、平板或電腦</string>
-    <string name="setup_type_source_here">在此輸入 Xtream / M3U / Stalker</string>
     <string name="setup_edit_source">編輯來源</string>
-    <string name="setup_add_your_source">新增您的來源</string>
+    <string name="setup_edit_from_phone">從其他裝置編輯</string>
     <string name="setup_edit_source_description">更新此來源的詳細資料，或變更其自動重新整理設定。</string>
     <string name="setup_byo_source_description">OwnTV 是一款播放器，請自行提供 Xtream、M3U 或 Stalker 來源。</string>
     <string name="setup_xtream">Xtream</string>
@@ -134,6 +121,8 @@
     <string name="setup_test_connection">測試連線</string>
     <string name="setup_user_agent_optional">User-Agent（選填）</string>
     <string name="setup_user_agent_example">例如 VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer（選填）</string>
+    <string name="setup_referer_example">例如 https://example.com/</string>
     <string name="setup_auto_refresh">自動重新整理</string>
     <string name="setup_auto_refresh_description">關閉、啟動時，或資料過舊時</string>
     <string name="setup_default_playlist">預設播放清單</string>
@@ -156,7 +145,6 @@
     <string name="setup_now">立即</string>
     <string name="setup_later">稍後</string>
     <string name="setup_off">關閉</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">預設 (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -169,13 +157,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">繼續</string>
     <string name="companion_pin_mismatch">該 PIN 不符，請再試一次。</string>
-    <string name="companion_tmdb_page_title">傳送 TMDB 金鑰</string>
-    <string name="companion_tmdb_heading">傳送你的 TMDB 金鑰</string>
-    <string name="companion_tmdb_description">在下方登入 TMDB，複製你的 API 金鑰（v3 auth），貼到這裡並傳送到電視。個人金鑰免費，而且幾乎沒有每日限制。</string>
-    <string name="companion_tmdb_get_key">開啟 TMDB API 設定</string>
-    <string name="companion_tmdb_invalid">這看起來不像 TMDB API 金鑰。請複製「API Key (v3 auth)」的值。</string>
-    <string name="companion_tmdb_sent_body">你的 TMDB 金鑰已傳送到電視。在電視上按儲存即可開始使用。</string>
-    <string name="companion_tmdb_sent_link">傳送其他金鑰</string>
     <string name="companion_service_config_empty">請輸入 API 金鑰、Worker 網址，或兩者都填。</string>
     <string name="companion_service_config_invalid_key">該 API 金鑰看起來無效。</string>
     <string name="companion_service_config_invalid_url">請輸入有效的 HTTPS Worker 網址。</string>
@@ -195,6 +176,12 @@
     <string name="companion_saved_heading">已傳送至您的電視 ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> 現已顯示在電視的「新增來源」畫面上。請在該處檢查詳細資料，然後使用遙控器按下「開始匯入」。</string>
     <string name="companion_saved_send_another">傳送其他來源</string>
+    <string name="companion_edit_page_title">OwnTV — 編輯來源</string>
+    <string name="companion_edit_heading">編輯 <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">修改需要變更的內容，然後點按「傳送至電視」。留空的欄位會保留目前的值。變更會顯示在電視上，請在電視上用遙控器按「儲存」。</string>
+    <string name="companion_keep_current">留空即保留目前的值</string>
+    <string name="companion_saved_edit_body"><xliff:g id="name">%1$s</xliff:g> 的變更已顯示在電視的編輯畫面。請在那裡確認，並用遙控器按「儲存」。</string>
+    <string name="companion_saved_edit_again">變更其他內容</string>
     <string name="companion_saved_backup_body">您的備份現已傳送至電視。請拿起遙控器並選擇要還原的部分。</string>
     <string name="companion_saved_backup_link">傳送其他檔案</string>
     <string name="companion_saved_image_body">您的圖片現已成為電視背景。</string>
@@ -262,4 +249,30 @@
     <string name="companion_error_pair_failed">無法與此裝置配對。</string>
     <string name="local_sync_browser_title">OwnTV 本機同步</string>
     <string name="local_sync_browser_body">此位址供你另一部裝置上的 OwnTV 應用程式使用。請在那裡開啟「本機同步」，並從清單中選擇本機。</string>
+    <string name="setup_step_display">顯示</string>
+    <string name="setup_step_playlist">播放清單</string>
+    <string name="setup_step_ready">完成</string>
+    <string name="setup_key_previous_step">上一步</string>
+    <string name="setup_welcome_title">歡迎使用 OwnTV</string>
+    <string name="setup_welcome_sub">你自己的 IPTV 播放器。請先選擇語言，之後可在設定中變更。</string>
+    <plurals name="setup_languages_all">
+        <item quantity="other">全部 <xliff:g id="count">%1$d</xliff:g> 種語言</item>
+    </plurals>
+    <string name="setup_display_sub">介面與文字在這台電視上的大小。下方這一列會隨之變化。</string>
+    <string name="setup_display_sub_mobile">介面與文字在這支手機上的大小。下方這一列會隨之變化。</string>
+    <string name="setup_line_zoom">畫面上的所有內容</string>
+    <string name="setup_line_font">僅文字</string>
+    <string name="setup_line_app_icon">OwnTV 在電視主畫面上的樣子</string>
+    <string name="setup_line_app_icon_mobile">OwnTV 在主畫面上的樣子</string>
+    <string name="setup_restore_card_line">從檔案還原，或從另一台裝置遠端傳送</string>
+    <string name="setup_device_appear">開啟同步模式的裝置會顯示在這裡</string>
+    <string name="setup_device_address_hint">或輸入另一台裝置的位址</string>
+    <string name="setup_profile_sub">每個設定檔都有自己的最愛、記錄和首頁。之後可在 設定 › 設定檔 中新增更多。</string>
+    <string name="setup_avatar">頭像</string>
+    <string name="setup_avatar_line">選一個，或保留首字母</string>
+    <string name="setup_create_profile">建立設定檔</string>
+    <string name="setup_phone_card_line">在另一台裝置的瀏覽器中填寫表單 — 最快</string>
+    <string name="setup_importing_title">正在匯入 <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">新增電視節目表</string>
+    <string name="setup_add_guide_line">全新安裝還沒有節目表</string>
 </resources>

@@ -7,27 +7,27 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * External-subtitle tables (subtitle plan §11 / Part B Phase 2). Three tables, added together in
- * DB v15 so Phases 3 (local files) and 4 (timing) need no further migration:
+ * External-subtitle tables. Three tables, added together in DB v15 so local files and timing
+ * need no further migration:
  *
  *  - [SubtitleCacheEntity]     — the actual downloaded/imported subtitle files, shared device-wide.
  *  - [SubtitleSelectionEntity] — per profile + movie/episode, the remembered active subtitle.
  *  - [SubtitleTimingEntity]    — per profile + content + exact subtitle, the saved timing offset
- *                                (§8.4: a WEB-DL and a Blu-ray sub for the same title keep separate
+ *                                (a WEB-DL and a Blu-ray sub for the same title keep separate
  *                                offsets, and switching subtitles never inherits another's offset).
  */
 
 /**
- * One cached external subtitle file. Device-level and profile-agnostic (plan §5.1: "Downloaded
- * subtitle file cache: shared safely at device level") — the same download is reused across
- * profiles. OpenSubtitles rows dedupe on [openSubFileId] (review R3: a cache hit skips /download and
+ * One cached external subtitle file. Device-level and profile-agnostic (a downloaded
+ * subtitle file is safely shared at device level) — the same download is reused across
+ * profiles. OpenSubtitles rows dedupe on [openSubFileId] (a cache hit skips /download and
  * spends no quota); local-file rows carry a null [openSubFileId] and are keyed by [cachedPath].
  */
 @Entity(
     tableName = "subtitle_cache",
     indices = [
         // NULLs compare distinct in SQLite, so many local rows (null file_id) coexist while every
-        // OpenSubtitles file_id stays unique — that uniqueness is what makes the R3 cache-hit safe.
+        // OpenSubtitles file_id stays unique — that uniqueness is what makes the cache hit safe.
         Index(value = ["openSubFileId"], unique = true),
         Index("lastUsedAt"),
     ],
@@ -55,7 +55,7 @@ data class SubtitleCacheEntity(
 )
 
 /**
- * The remembered active subtitle for one profile + content item (plan §9). [contentKey] is a stable
+ * The remembered active subtitle for one profile + content item. [contentKey] is a stable
  * per-item key (movie or exact episode) that survives re-sync, mirroring [SubtitleCacheEntity] usage
  * downstream. A row with a null [cacheId] and [off] = true means the user explicitly chose Off; no
  * row at all means "no external choice yet" (fall back to normal auto-select).
@@ -65,7 +65,7 @@ data class SubtitleCacheEntity(
     primaryKeys = ["profileId", "contentKey"],
     foreignKeys = [
         ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
-        // Deleting a cached file nulls the reference; the selection then falls back gracefully (§9).
+        // Deleting a cached file nulls the reference; the selection then falls back gracefully.
         ForeignKey(entity = SubtitleCacheEntity::class, parentColumns = ["id"], childColumns = ["cacheId"], onDelete = ForeignKey.SET_NULL),
     ],
     indices = [Index("profileId"), Index("cacheId")],
@@ -81,12 +81,12 @@ data class SubtitleSelectionEntity(
 )
 
 /**
- * Saved timing offset for a profile + content item + exact subtitle (plan §8.4). [subtitleKey]
+ * Saved timing offset for a profile + content item + exact subtitle. [subtitleKey]
  * identifies the exact subtitle release ("opensub:<file_id>" or "local:<cacheId>"), so two releases
  * for the same title keep independent offsets and switching between them never carries an offset over.
  */
 /**
- * Links a cached subtitle to the movie/episode it was downloaded for (subtitle plan §11), added in
+ * Links a cached subtitle to the movie/episode it was downloaded for, added in
  * DB v16. This is what lets OwnTV re-list a title's downloaded subtitles on replay and drive the
  * "Delete subtitles" surfaces (per-item long-press and the Movies/Series delete screen). Many rows
  * per content are allowed (English + Bengali for the same movie); deleting the cached file cascades
@@ -124,7 +124,7 @@ data class SubtitleTimingEntity(
     val profileId: Long,
     val contentKey: String,
     val subtitleKey: String,
-    /** Positive = subtitles shown later, negative = earlier (plan §8.2). */
+    /** Positive = subtitles shown later, negative = earlier. */
     val offsetMs: Int,
     val updatedAt: Long,
 )

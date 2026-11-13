@@ -3,7 +3,7 @@ package tv.own.owntv.core.repository
 import tv.own.owntv.core.database.entity.EpisodeEntity
 
 /**
- * Pure decision logic for the lazy episode cache (S8). Kept free of Room so both halves — when to
+ * Pure decision logic for the lazy episode cache. Kept free of Room so both halves — when to
  * re-fetch, and how to apply a fetched list without churning row ids — are unit-testable.
  */
 
@@ -13,7 +13,7 @@ const val EPISODE_CACHE_TTL_MS: Long = 6 * 60 * 60 * 1000 // 6 hours
 /**
  * Whether a show's episodes should be fetched from the provider.
  *
- * Before S8 this was simply `episodeCount == 0`, so a populated show was never refreshed and the
+ * Once this was simply `episodeCount == 0`, so a populated show was never refreshed and the
  * episodes a provider added later could only be seen by deleting and re-adding the source. Now an
  * empty cache always fetches, and a populated one fetches once its stamp goes stale — including
  * immediately after a sync, which zeroes the stamp.

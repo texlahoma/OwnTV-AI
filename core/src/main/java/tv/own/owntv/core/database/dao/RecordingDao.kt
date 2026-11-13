@@ -15,7 +15,7 @@ import tv.own.owntv.core.model.RecordingStatus
 /**
  * Live recordings and the standing rules that create them, per profile.
  *
- * Nothing here takes part in local sync or backup (D6) — see [RecordingEntity]'s KDoc for why.
+ * Nothing here takes part in local sync or backup — see [RecordingEntity]'s KDoc for why.
  */
 @Dao
 interface RecordingDao {
@@ -36,7 +36,7 @@ interface RecordingDao {
     @Query("SELECT * FROM recordings WHERE profileId = :profileId ORDER BY startMs DESC")
     fun observeForProfile(profileId: Long): Flow<List<RecordingEntity>>
 
-    /** What the pill and the REC indicator watch (D13). */
+    /** What the pill and the REC indicator watch. */
     @Query("SELECT * FROM recordings WHERE status = 'RECORDING' ORDER BY startMs ASC")
     fun observeRunning(): Flow<List<RecordingEntity>>
 
@@ -66,15 +66,8 @@ interface RecordingDao {
     suspend fun dueAt(now: Long): List<RecordingEntity>
 
     /**
-     * How many of one playlist's connections recordings are currently holding — the left-hand side
-     * of the D10 budget check.
-     */
-    @Query("SELECT COUNT(*) FROM recordings WHERE sourceId = :sourceId AND status = 'RECORDING'")
-    suspend fun runningCountForSource(sourceId: Long): Int
-
-    /**
      * Anything already claiming this playlist over the same window, for the clash warning shown at
-     * scheduling time (D10). Overlap is the usual half-open test: it starts before we end, and ends
+     * scheduling time. Overlap is the usual half-open test: it starts before we end, and ends
      * after we start. [excludeId] keeps a row from clashing with itself when it is being edited.
      */
     @Query(
@@ -106,7 +99,7 @@ interface RecordingDao {
         timestamp: Long,
     )
 
-    // --- Series rules (A11) ---
+    // --- Series rules ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertRule(rule: RecordingRuleEntity): Long

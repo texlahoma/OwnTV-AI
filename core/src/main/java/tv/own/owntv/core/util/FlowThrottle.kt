@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 /**
- * Backpressure-based throttle for hot Room query Flows (C2): emits the first value immediately,
+ * Backpressure-based throttle for hot Room query Flows: emits the first value immediately,
  * then suspends the upstream for [windowMs] after every emission.
  *
  * Why this instead of `debounce`: Room's generated Flow re-runs its query once per invalidation

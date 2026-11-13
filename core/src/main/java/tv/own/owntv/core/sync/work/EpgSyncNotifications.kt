@@ -61,7 +61,7 @@ internal object EpgSyncNotifications {
         ensureChannel(context, localized)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_notify_sync)
+            .setSmallIcon(R.drawable.owntv_notification)
             .setContentTitle(localized.getString(R.string.settings_syncing_guide))
             // The source's own name, which is the user's own words and never translated. Blank only
             // for a source that vanished between enqueue and run, and then the title stands alone.
@@ -92,7 +92,6 @@ internal object EpgSyncNotifications {
     }
 
     private fun ensureChannel(context: Context, localized: Context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
         val effectiveLocale = localized.resources.configuration.locales[0]?.toLanguageTag().orEmpty()
         val key = "$effectiveLocale:${localized.getString(R.string.common_nav_guide)}"

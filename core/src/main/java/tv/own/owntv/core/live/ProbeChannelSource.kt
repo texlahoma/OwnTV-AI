@@ -99,7 +99,7 @@ class ProbeChannelSource(
     /**
      * The playlist file, read only as far as the first few entries and then abandoned.
      *
-     * An M3U *is* the catalogue, and the owner's run to hundreds of thousands of entries, so this
+     * An M3U *is* the catalogue, and large ones run to hundreds of thousands of entries, so this
      * closes the connection the moment it has enough rather than downloading the file twice — once to
      * measure and once to sync. VOD-looking entries are skipped where possible: a live channel is the
      * closest thing to what the user will actually do with the connection.

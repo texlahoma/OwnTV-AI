@@ -5,10 +5,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * The N1b gate: which portals get "stop after page 1 and finish in the background", and which keep
+ * The lazy-setup gate: which portals get "stop after page 1 and finish in the background", and which keep
  * the proven eager walk.
  *
- * The numbers come from §4C's measurement of the reference portal — `max_page_items=14`, 4,593
+ * The numbers come from a measurement of the reference portal — `max_page_items=14`, 4,593
  * deferred movie pages, 1,503 deferred series pages.
  */
 class StalkerLazyBackfillGateTest {

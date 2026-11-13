@@ -1,5 +1,6 @@
 package tv.own.owntv.core.setup
 
+import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import tv.own.owntv.core.R
 import tv.own.owntv.core.backup.BackupManager
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SourceDao
@@ -15,7 +17,10 @@ import tv.own.owntv.core.database.entity.ProfileEntity
 import tv.own.owntv.core.database.entity.ProfileSourceCrossRef
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
+import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.ConnectivityObserver
+import tv.own.owntv.core.parser.XtreamClient
+import tv.own.owntv.core.parser.XtreamM3uLink
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.settings.PlaylistRefresh
 import tv.own.owntv.core.settings.SettingsRepository
@@ -57,16 +62,15 @@ class SourceImporter(
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
     private val catalogSyncScheduler: CatalogSyncScheduler,
     private val stalkerAuth: StalkerAuthManager,
+    private val xtreamClient: XtreamClient,
+    private val protection: tv.own.owntv.core.profile.ProfileProtection,
+    private val context: Context,
 ) {
 
     sealed interface SetupFailure {
         data object InvalidMac : SetupFailure
-        /** Reading/parsing the backup failed. [detail] carries the underlying cause (already a
-         *  user-readable sentence when we produced it, otherwise the exception's own message), so
-         *  the restore screen can say WHY instead of only that it failed. */
-        data class BackupRead(val detail: String? = null) : SetupFailure
-        /** The file read fine but applying it failed. Same [detail] contract as [BackupRead]. */
-        data class Restore(val detail: String? = null) : SetupFailure
+        data object BackupRead : SetupFailure
+        data object Restore : SetupFailure
         data class Sync(val failure: FriendlySyncFailure) : SetupFailure
     }
 
@@ -79,10 +83,10 @@ class SourceImporter(
             val remainder: SyncContentTypes = SyncContentTypes(false, false, false),
             val restoredItems: Int? = null,
             val passwordsOmitted: Boolean = false,
+            /** Restored Xtream playlists with no saved password, by name — not synced until one is entered. */
+            val needPassword: List<String> = emptyList(),
             val skippedSources: Int = 0,
             val invalidLocale: Boolean = false,
-            /** Best-effort restore blocks that could not be applied (shown under the success headline). */
-            val restoreWarnings: Set<BackupManager.RestoreWarning> = emptySet(),
             /** The source as it stands after the sync — the host uses it to offer a guide sync. */
             val source: SourceEntity? = null,
         ) : ImportState
@@ -146,6 +150,7 @@ class SourceImporter(
         series: SyncScopeChoice = SyncScopeChoice.Now,
         preferHls: Boolean = false,
         makeDefault: Boolean = false,
+        httpReferer: String = "",
     ) {
         val enabled = SyncContentTypes.fromChoices(live, movies, series)
         val priority = SyncContentTypes.priorityFromChoices(live, movies, series)
@@ -155,7 +160,7 @@ class SourceImporter(
         ) { profileId ->
             sourceRepository.addXtreamSource(
                 profileId = profileId,
-                name = name.trim(),
+                name = uniqueName(name),
                 serverUrl = server.trim(),
                 username = username.trim(),
                 password = password,
@@ -163,6 +168,7 @@ class SourceImporter(
                 epgUrl = epgUrl.trim().takeIf { it.isNotBlank() },
                 syncLive = enabled.live, syncMovies = enabled.movies, syncSeries = enabled.series,
                 preferHls = preferHls,
+                httpReferer = httpReferer.trim().takeIf { it.isNotBlank() },
             )
         }
     }
@@ -184,8 +190,14 @@ class SourceImporter(
         movies: SyncScopeChoice = SyncScopeChoice.Later,
         series: SyncScopeChoice = SyncScopeChoice.Later,
         makeDefault: Boolean = false,
+        httpReferer: String = "",
+        /** The optional portal login on top of the MAC; blank for the usual MAC-only portal. */
+        login: String = "",
+        password: String = "",
     ) {
         val canonicalMac = StalkerClient.canonicalizeMac(mac)
+        val portalLogin = login.trim().takeIf { it.isNotBlank() }
+        val portalPassword = password.takeIf { portalLogin != null }
         if (canonicalMac == null) {
             _state.value = ImportState.Failed(SetupFailure.InvalidMac)
             return
@@ -208,16 +220,20 @@ class SourceImporter(
                         deviceId2 = deviceId2.trim().takeIf { it.isNotBlank() },
                         signature = signature.trim().takeIf { it.isNotBlank() },
                     ),
+                    login = portalLogin,
+                    password = portalPassword,
                 ),
             )
             sourceRepository.addStalkerSource(
-                profileId, name.trim(), portalUrl.trim(), canonicalMac,
+                profileId, uniqueName(name), portalUrl.trim(), canonicalMac,
                 serialNumber.trim().takeIf { it.isNotBlank() },
                 deviceId.trim().takeIf { it.isNotBlank() },
                 deviceId2.trim().takeIf { it.isNotBlank() },
                 signature.trim().takeIf { it.isNotBlank() },
                 userAgent.trim().takeIf { it.isNotBlank() },
                 syncLive = enabled.live, syncMovies = enabled.movies, syncSeries = enabled.series,
+                httpReferer = httpReferer.trim().takeIf { it.isNotBlank() },
+                login = portalLogin, password = portalPassword,
             )
         }
     }
@@ -229,14 +245,43 @@ class SourceImporter(
         epgUrl: String = "",
         autoRefresh: PlaylistRefresh = PlaylistRefresh.OFF,
         makeDefault: Boolean = false,
-    ) = runImport(autoRefresh, requiresNetwork = !url.isLocalPlaylistPath(), makeDefault = makeDefault) { profileId ->
-        sourceRepository.addM3uSource(
-            profileId = profileId,
-            name = name.trim(),
-            url = url.trim(),
-            userAgent = userAgent.trim().takeIf { it.isNotBlank() },
-            epgUrl = epgUrl.trim().takeIf { it.isNotBlank() },
-        )
+        httpReferer: String = "",
+    ) {
+        // A provider's `get.php` "M3U" is an Xtream account; import it as one when the panel agrees.
+        // Its M3U export files movies and series under Live TV, and some panels refuse it.
+        XtreamM3uLink.parse(url)?.let { link ->
+            _state.value = ImportState.Running
+            val probe = SourceEntity(
+                name = name, type = SourceType.XTREAM, url = link.server,
+                username = link.username, password = link.password,
+                userAgent = userAgent.trim().takeIf { it.isNotBlank() },
+            )
+            val isXtream = try {
+                xtreamClient.isXtreamAccount(probe)
+            } catch (c: CancellationException) {
+                _state.value = ImportState.Idle
+                throw c
+            }
+            if (isXtream) {
+                Log.i(TAG, "M3U link is an Xtream account — importing it as Xtream")
+                return xtream(
+                    name = name, server = link.server, username = link.username, password = link.password,
+                    userAgent = userAgent, epgUrl = epgUrl, autoRefresh = autoRefresh,
+                    preferHls = link.preferHls, makeDefault = makeDefault, httpReferer = httpReferer,
+                )
+            }
+        }
+        val playlistUrl = XtreamM3uLink.clean(url)
+        runImport(autoRefresh, requiresNetwork = !playlistUrl.isLocalPlaylistPath(), makeDefault = makeDefault) { profileId ->
+            sourceRepository.addM3uSource(
+                profileId = profileId,
+                name = uniqueName(name),
+                url = playlistUrl,
+                userAgent = userAgent.trim().takeIf { it.isNotBlank() },
+                epgUrl = epgUrl.trim().takeIf { it.isNotBlank() },
+                httpReferer = httpReferer.trim().takeIf { it.isNotBlank() },
+            )
+        }
     }
 
     private suspend fun runImport(
@@ -313,14 +358,15 @@ class SourceImporter(
         }
     }
 
-    /** Playlists belonging to unlocked (no-PIN) profiles that aren't already on the new profile. */
+    /**
+     * Other profiles' playlists that aren't already on the new profile, leaving out every playlist a
+     * protected profile uses (see [tv.own.owntv.core.profile.inheritableSourceIds]).
+     */
     suspend fun availableExistingSources(): List<SourceEntity> {
-        val unlocked = profileDao.getAllOnce().filter { it.pinHash == null && it.id != createdProfileId }.map { it.id }.toSet()
-        if (unlocked.isEmpty()) return emptyList()
         val links = sourceDao.allLinks()
-        val fromUnlocked = links.filter { it.profileId in unlocked }.map { it.sourceId }.toSet()
+        val fromOthers = links.filter { it.profileId != createdProfileId }.map { it.sourceId }.toSet()
         val alreadyMine = links.filter { it.profileId == createdProfileId }.map { it.sourceId }.toSet()
-        val wanted = fromUnlocked - alreadyMine
+        val wanted = (fromOthers intersect protection.inheritableSourceIds().toSet()) - alreadyMine
         return sourceDao.getAllOnce().filter { it.id in wanted }
     }
 
@@ -376,6 +422,8 @@ class SourceImporter(
     suspend fun importBackup(
         file: File,
         sections: Set<BackupManager.Section> = BackupManager.Section.entries.toSet(),
+        /** Also take another device's hardware settings — see [BackupManager.import]. */
+        deviceSettings: Boolean = false,
     ): Boolean {
         _state.value = ImportState.Running
         // A sealed .own reveals nothing before it is decrypted — ask for the password first.
@@ -383,16 +431,15 @@ class SourceImporter(
             _state.value = ImportState.NeedPassword(file, sealed = true)
             return false
         }
-        val inspection = backup.sectionsIn(file).getOrElse { cause ->
-            Log.w(TAG, "Backup inspection failed for ${file.name}", cause)
-            _state.value = ImportState.Failed(SetupFailure.BackupRead(BackupManager.describeFailure(cause)))
+        val inspection = backup.sectionsIn(file).getOrElse {
+            _state.value = ImportState.Failed(SetupFailure.BackupRead)
             return false
         }
         if (inspection.encrypted) {
             _state.value = ImportState.NeedPassword(file)
             return false
         }
-        return doRestore(file, null, sections)
+        return doRestore(file, null, sections, deviceSettings)
     }
 
     /** Continue an encrypted restore once the user provides (or skips, password = null) the passphrase. */
@@ -400,37 +447,80 @@ class SourceImporter(
         file: File,
         password: String?,
         sections: Set<BackupManager.Section> = BackupManager.Section.entries.toSet(),
+        deviceSettings: Boolean = false,
     ): Boolean {
         _state.value = ImportState.Running
-        return doRestore(file, password, sections)
+        return doRestore(file, password, sections, deviceSettings)
     }
 
     private suspend fun doRestore(
         file: File,
         password: String?,
         sections: Set<BackupManager.Section>,
+        deviceSettings: Boolean,
     ): Boolean =
-        backup.import(file, sections, backupPassword = password).fold(
+        // Setup has no PIN step: a protected profile already on this device is left as it is.
+        backup.import(
+            file, sections, backupPassword = password, deviceSettings = deviceSettings,
+            holdBack = protection.heldBack(activeId = createdProfileId),
+        ).fold(
             onSuccess = { summary ->
+                val needPassword = if (BackupManager.Section.SOURCES in sections) syncRestoredSources() else emptyList()
                 _state.value = ImportState.Success(
                     restoredItems = summary.items,
                     passwordsOmitted = password.isNullOrBlank(),
+                    needPassword = needPassword,
                     skippedSources = summary.skippedSources,
                     invalidLocale = summary.invalidLocale,
-                    restoreWarnings = summary.warnings,
                 )
                 true
             },
-            onFailure = { cause ->
-                if (cause is BackupManager.WrongPasswordException) {
+            onFailure = {
+                if (it is BackupManager.WrongPasswordException) {
                     _state.value = ImportState.NeedPassword(file, retry = true, sealed = backup.isSealed(file))
                 } else {
-                    Log.w(TAG, "Backup restore failed for ${file.name}", cause)
-                    _state.value = ImportState.Failed(SetupFailure.Restore(BackupManager.describeFailure(cause)))
+                    _state.value = ImportState.Failed(SetupFailure.Restore)
                 }
                 false
             },
         )
+
+    /**
+     * A restore brings back playlists, not their catalogues, and favourites and history only show once
+     * a catalogue is there to relink to. So every playlist with nothing in it yet is fetched now, as an
+     * ordinary background sync — instead of an app that opens empty until someone thinks to re-sync.
+     * Playlists that already hold content (a restore onto a set-up device) are left alone.
+     *
+     * An Xtream playlist, or a Stalker playlist with a portal login, restored without its password (a
+     * backup made with no backup password) is not fetched: the panel would refuse it. Returns those
+     * playlists' names so the result can say which ones wait for a password; entering it in the
+     * playlist's edit form fetches it.
+     */
+    private suspend fun syncRestoredSources(): List<String> {
+        val needPassword = mutableListOf<String>()
+        sourceDao.getAllOnce().forEach { source ->
+            val counts = importFinalizer.contentCounts(source.id)
+            if (counts.channels + counts.movies + counts.series > 0) return@forEach
+            val needsLogin = source.type == SourceType.XTREAM ||
+                (source.type == SourceType.STALKER && !source.username.isNullOrBlank())
+            if (needsLogin && source.password.isNullOrBlank()) {
+                needPassword += source.name
+                return@forEach
+            }
+            catalogSyncScheduler.enqueueSync(
+                source.id,
+                reason = "restore",
+                contentTypes = tv.own.owntv.core.sync.SyncContentTypes.enabledOf(source),
+            )
+        }
+        return needPassword
+    }
+
+    /** [name] trimmed, numbered ("My IPTV 2") when another playlist already carries it. */
+    private suspend fun uniqueName(name: String): String {
+        val taken = sourceDao.getAllOnce().map { it.name }
+        return numberedName(name.trim(), taken) { base, n -> context.getString(R.string.setup_name_numbered, base, n) }
+    }
 
     private suspend fun ensureFallbackProfile(): Long {
         if (createdProfileId > 0) return createdProfileId
@@ -470,9 +560,24 @@ class SourceImporter(
         }
     }
 
-    private companion object {
-        /** Sentinel sourceId for the pre-save Stalker handshake. */
-        const val STALKER_TEST_SOURCE_ID = -1L
+    internal companion object {
         private const val TAG = "SourceImporter"
+
+        /** Sentinel sourceId for the pre-save Stalker handshake. */
+        private const val STALKER_TEST_SOURCE_ID = -1L
+
+        /**
+         * [base] when no name in [taken] matches it, ignoring case; otherwise the first free
+         * [numbered] form from 2 up. Two playlists added without a name otherwise both read "My IPTV",
+         * and nothing on screen tells them apart.
+         */
+        fun numberedName(base: String, taken: Collection<String>, numbered: (String, Int) -> String): String {
+            if (base.isEmpty()) return base
+            val lower = taken.mapTo(HashSet()) { it.trim().lowercase() }
+            if (base.lowercase() !in lower) return base
+            var n = 2
+            while (numbered(base, n).lowercase() in lower) n++
+            return numbered(base, n)
+        }
     }
 }

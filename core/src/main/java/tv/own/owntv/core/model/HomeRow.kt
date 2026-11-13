@@ -8,8 +8,13 @@ import org.json.JSONObject
 enum class HomeRow {
     TRENDING,
     HERO,
+
+    /** Sports Hub: followed matches, drawn only while one is live or kicks off within the hour. */
+    LIVE_SPORTS,
     RECENT_CHANNELS,
     FAVORITE_CHANNELS,
+    FAVORITE_MOVIES,
+    FAVORITE_SERIES,
     CONTINUE_MOVIES,
     CONTINUE_SERIES;
 

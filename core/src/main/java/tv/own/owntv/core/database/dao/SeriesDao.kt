@@ -60,9 +60,6 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1")
     suspend fun findSeriesByRemote(sourceId: Long, remoteId: String): SeriesEntity?
 
-    @Query("SELECT * FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)")
-    suspend fun findSeriesByRemoteIds(sourceId: Long, remoteIds: List<String>): List<SeriesEntity>
-
     @Query("SELECT remoteId FROM series WHERE sourceId = :sourceId AND remoteId IS NOT NULL")
     suspend fun remoteIdsForSource(sourceId: Long): List<String>
 
@@ -70,12 +67,12 @@ interface SeriesDao {
     suspend fun contentHashesForSource(sourceId: Long): List<ContentHashProjection>
 
     /**
-     * Write only the position of a row whose content did not change (plan A2).
+     * Write only the position of a row whose content did not change.
      *
      * The whole point is what it does *not* touch. Room's `@Update` writes every column and, on
      * this table's insert path, re-derives the provider-catalogue metadata from the title — all for
      * a row that is byte-identical and has merely slid down the list because the provider removed
-     * something above it. Issue #192 measured 1,397 real changes producing 255,775 of those.
+     * something above it. One measured resync had 1,397 real changes producing 255,775 of those.
      */
     @Query("UPDATE series SET sortOrder = :sortOrder WHERE id = :id")
     suspend fun setSortOrder(id: Long, sortOrder: Int)
@@ -87,7 +84,7 @@ interface SeriesDao {
     }
 
     /**
-     * Shift every row of this source whose position lies in a span (plan A3).
+     * Shift every row of this source whose position lies in a span.
      *
      * Removing two channels near the top of a 30,000-channel list moves all 30,000 below them by
      * exactly -2. That is one statement, not 30,000 writes. The caller has already proved that the
@@ -96,9 +93,15 @@ interface SeriesDao {
     @Query("UPDATE series SET sortOrder = sortOrder + :delta WHERE sourceId = :sourceId AND sortOrder BETWEEN :fromSortOrder AND :toSortOrder")
     suspend fun shiftSortOrders(sourceId: Long, fromSortOrder: Int, toSortOrder: Int, delta: Int)
 
+    /** Takes [PARKED_SORT_ORDER] off the rows [applyPositionRanges] parked. */
+    @Query("UPDATE series SET sortOrder = sortOrder - :parked WHERE sourceId = :sourceId AND sortOrder >= :parked / 2")
+    suspend fun unparkSortOrders(sourceId: Long, parked: Int = PARKED_SORT_ORDER)
+
+    /** Every range parks its rows (see [PARKED_SORT_ORDER]), so no range shifts a row twice. */
     @Transaction
     suspend fun applyPositionRanges(sourceId: Long, froms: List<Int>, tos: List<Int>, deltas: List<Int>) {
-        for (i in froms.indices) shiftSortOrders(sourceId, froms[i], tos[i], deltas[i])
+        for (i in froms.indices) shiftSortOrders(sourceId, froms[i], tos[i], deltas[i] + PARKED_SORT_ORDER)
+        unparkSortOrders(sourceId)
     }
 
 
@@ -160,22 +163,19 @@ interface SeriesDao {
     fun searchInCategoryDateAdded(query: String, categoryId: Long): PagingSource<Int, SeriesEntity>
 
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
+    /** Moved rows keep their saved position; the rest follow [alpha] (A–Z) or the playlist order
+     *  around them — the same rule as `placePinned` for categories. */
     @Query(
-        "SELECT s.* FROM series s " +
+            "WITH base AS (SELECT s.id AS id, s.sortOrder AS so, s.name AS nm, 0 AS mp, o.position AS pos " +
+            "FROM series s " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
-            "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name",
+            "WHERE s.categoryId = :categoryId), " +
+            "slots AS (SELECT id, pos - (ROW_NUMBER() OVER (ORDER BY pos, id) - 1) AS slot, 0 AS grp, pos AS tie FROM base WHERE pos IS NOT NULL " +
+            "UNION ALL SELECT id, ROW_NUMBER() OVER (ORDER BY CASE WHEN :alpha THEN nm END, mp, so, nm) - 1 AS slot, 1 AS grp, 0 AS tie FROM base WHERE pos IS NULL) " +
+            "SELECT s.* FROM series s INNER JOIN slots sl ON sl.id = s.id ORDER BY sl.slot, sl.grp, sl.tie",
     )
-    fun pagingByCategoryManual(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
+    fun pagingByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, alpha: Boolean): PagingSource<Int, SeriesEntity>
 
-    /** A–Z variant of [pagingByCategoryManual] — see `ChannelDao.pagingByCategoryManualAlpha`. */
-    @Query(
-        "SELECT s.* FROM series s " +
-            "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
-            "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name",
-    )
-    fun pagingByCategoryManualAlpha(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s " +
@@ -186,13 +186,18 @@ interface SeriesDao {
     )
     fun pagingFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
+    /** Moved rows keep their saved position; the rest follow [alpha] (A–Z) or the playlist order
+     *  around them — the same rule as `placePinned` for categories. */
     @Query(
-        "SELECT s.* FROM series s " +
+            "WITH base AS (SELECT s.id AS id, s.sortOrder AS so, s.name AS nm, 0 AS mp, o.position AS pos " +
+            "FROM series s " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
-            "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name LIMIT :limit",
+            "WHERE s.categoryId = :categoryId), " +
+            "slots AS (SELECT id, pos - (ROW_NUMBER() OVER (ORDER BY pos, id) - 1) AS slot, 0 AS grp, pos AS tie FROM base WHERE pos IS NOT NULL " +
+            "UNION ALL SELECT id, ROW_NUMBER() OVER (ORDER BY CASE WHEN :alpha THEN nm END, mp, so, nm) - 1 AS slot, 1 AS grp, 0 AS tie FROM base WHERE pos IS NULL) " +
+            "SELECT s.* FROM series s INNER JOIN slots sl ON sl.id = s.id ORDER BY sl.slot, sl.grp, sl.tie LIMIT :limit",
     )
-    suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, limit: Int): List<SeriesEntity>
+    suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, alpha: Boolean, limit: Int): List<SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s " +
@@ -205,6 +210,13 @@ interface SeriesDao {
 
     @Query("SELECT COUNT(*) FROM series WHERE categoryId = :categoryId")
     fun countByCategory(categoryId: Long): Flow<Int>
+
+    /** [countByCategory] for every category of [sourceIds] at once — the counts beside each Series category. */
+    @Query(
+        "SELECT categoryId, COUNT(*) AS itemCount FROM series " +
+            "WHERE sourceId IN (:sourceIds) AND categoryId IS NOT NULL GROUP BY categoryId",
+    )
+    fun observeCountsByCategory(sourceIds: List<Long>): Flow<List<CategoryItemCount>>
 
     @Query("SELECT COUNT(*) FROM series WHERE sourceId IN (:sourceIds)")
     fun countAll(sourceIds: List<Long>): Flow<Int>
@@ -292,6 +304,20 @@ interface SeriesDao {
     )
     fun countHistory(profileId: Long, sourceIds: List<Long>): Flow<Int>
 
+    /** [countFavorites] without the shows filed under [excluded] (locked categories). */
+    @Query(
+        "SELECT COUNT(*) FROM favorites f INNER JOIN series s ON s.id = f.itemId WHERE f.profileId = :profileId " +
+            "AND f.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds) AND (s.categoryId IS NULL OR s.categoryId NOT IN (:excluded))",
+    )
+    fun countFavoritesExcluding(profileId: Long, sourceIds: List<Long>, excluded: List<Long>): Flow<Int>
+
+    /** [countHistory] without the shows filed under [excluded] (locked categories). */
+    @Query(
+        "SELECT COUNT(*) FROM watch_history h INNER JOIN series s ON s.id = h.itemId WHERE h.profileId = :profileId " +
+            "AND h.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds) AND (s.categoryId IS NULL OR s.categoryId NOT IN (:excluded))",
+    )
+    fun countHistoryExcluding(profileId: Long, sourceIds: List<Long>, excluded: List<Long>): Flow<Int>
+
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
             "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC",
@@ -334,9 +360,6 @@ interface SeriesDao {
     @Query("SELECT * FROM episodes WHERE id = :id")
     suspend fun getEpisodeById(id: Long): EpisodeEntity?
 
-    @Query("SELECT * FROM episodes WHERE seasonId = :seasonId ORDER BY episodeNumber ASC")
-    fun episodesBySeason(seasonId: Long): Flow<List<EpisodeEntity>>
-
     @Query("SELECT * FROM episodes WHERE seriesId = :seriesId ORDER BY seasonNumber ASC, episodeNumber ASC")
     fun episodesBySeries(seriesId: Long): Flow<List<EpisodeEntity>>
 
@@ -356,7 +379,7 @@ interface SeriesDao {
     @Query("DELETE FROM episodes WHERE seriesId = :seriesId")
     suspend fun deleteEpisodes(seriesId: Long)
 
-    // --- Episode refresh (S8) ---
+    // --- Episode refresh ---
     // The refresh path must preserve episode row ids: watch history, resume positions and
     // next-episode autoplay all key on them, so a delete-then-reinsert would silently detach the
     // user's progress on every refresh. Hence read/update/insert/delete-the-gone rather than
@@ -378,7 +401,7 @@ interface SeriesDao {
     /**
      * Invalidates every episode cache belonging to a source, so the next open of any of its shows
      * re-fetches. Called after a successful sync: "just resync" is what a user does when episodes
-     * look stale, and before S8 that did nothing at all for episodes.
+     * look stale, and once that did nothing at all for episodes.
      *
      * The `!= 0` keeps this proportional to the shows actually opened rather than to the catalog:
      * a 46k-series source where the user has opened twelve shows writes twelve rows. It also makes

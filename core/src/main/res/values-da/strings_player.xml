@@ -19,37 +19,29 @@
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> bagud i forhold til live</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">Gå til live</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">Fortsæt, hvor du slap?</string>
+    <string name="player_timeshift_resume_message">Kanalen blev gemt, mens du var væk.</string>
+    <string name="player_previous_channel">Forrige kanal</string>
+    <string name="player_tool_sources">Kilder</string>
+    <string name="player_sources_none">Der blev ikke fundet nogen anden version af denne kanal.</string>
+    <string name="player_next_channel_in_list">Næste kanal</string>
+    <string name="player_previous_channel_in_list">Forrige kanal på listen</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Lydstyrke</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Lysstyrke</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Spring tilbage</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">Spring frem</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Lyd</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">Undertekster</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">Favorit</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">Catch-up</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">Hastighed</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Format</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">Kvalitet</string>
     <string name="player_tool_mini">Mini</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">Kun lyd</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">Afspiller</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">Info</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">Rapport</string>
     <string name="player_channel_not_found">Kanalen blev ikke fundet</string>
     <string name="player_channel_number_entry">Kanalnummer</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">Ingen tilgængelige spor.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · billede</string>
     <string name="player_av_sync">A/V-synkronisering</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">Husk denne forsinkelse</string>
     <string name="player_no_offset">Ingen forskydning</string>
     <string name="player_subtitles_later">Undertekster vises senere</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">Næste afsnit om <xliff:g id="seconds">%1$d</xliff:g> sek.</string>
     <string name="player_play_now">Afspil nu</string>
     <string name="player_volume">Lydstyrke</string>
-    <string name="player_control_engine">Afspillermotor</string>
     <string name="player_unmute">Slå lyd til</string>
     <string name="player_mute">Slå lyd fra</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">Skiftede til ExoPlayer</string>
     <string name="player_switch_mpv">Skiftede til MPV</string>
+    <string name="player_smoothness_hint">Denne kanal taber billeder. Skift afspilleren til MPV, så kører den måske mere jævnt.</string>
     <string name="player_error_image_subtitle_audio">Billedbaserede undertekster er ikke tilgængelige med denne videos lydformat.</string>
     <string name="player_error_both_engines_exo_first">Afspilningen mislykkedes på begge videoafspilningsmotorer (først ExoPlayer, derefter mpv). Filen kan være beskadiget eller bruge et format, som dette tv ikke kan afspille.</string>
     <string name="player_error_both_engines_mpv_first">Afspilningen mislykkedes på begge videoafspilningsmotorer (mpv og ExoPlayer). Filen kan være beskadiget eller bruge et format, som dette tv ikke kan afspille. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">Billedbaserede undertekster er ikke tilgængelige for denne fils format.</string>
     <string name="player_error_image_show">Kunne ikke vise billedbaserede undertekster for denne fil.</string>
     <string name="player_external_could_not_open">Kunne ikke åbne denne stream.</string>
-    <string name="player_external_play_with">Afspil med</string>
-    <string name="player_external_play_with_item">Afspil “<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” med…</string>
     <string name="player_external_not_found">Ingen ekstern afspiller fundet — installér VLC eller MX Player.</string>
     <string name="player_error_audio_no_video">Lyden afspilles, men videoen kunne ikke gengives på denne enhed.</string>
     <string name="player_error_file_corrupt">Denne videos fil er ugyldig eller beskadiget og kan ikke afspilles.</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">Dette tv\'s videodekoder er optaget. Prøv igen om et øjeblik.</string>
     <string name="player_error_no_internet">Ingen internetforbindelse. Kontrollér dit netværk, og prøv igen.</string>
     <string name="player_error_stream_unavailable">Kunne ikke afspille denne stream. Kilden er muligvis offline eller bruger et format, der ikke understøttes. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Denne konto afspiller allerede på en anden enhed eller app. Stop den der, og tryk derefter på Prøv igen.</string>
     <string name="player_error_mpv_open_decode">mpv kunne ikke åbne eller afkode denne fil.</string>
     <string name="player_error_mpv_stream_never_started">Streamen startede aldrig i mpv efter flere forsøg.</string>
+    <string name="player_error_fairplay">Denne stream er beskyttet med Apple FairPlay, som Android-enheder ikke kan afspille. Playlisten er lavet til Apple-enheder.</string>
     <string name="player_error_surround">Denne lydudgang understøtter ikke surroundlyd — der blev skiftet til stereo.</string>
     <string name="player_error_hardware_fallback">Denne streams format kunne ikke hardwaredekodes på dette tv, så der blev skiftet til softwaredekodning — som ikke kan håndtere <xliff:g id="resolution">%1$s</xliff:g> uden at overbelaste tv\'et. Tv\'et kan muligvis stadig afspille andet 4K-indhold uden problemer; det er formatet på netop denne stream, der er problemet.</string>
     <string name="player_error_hardware_disabled">Hardwaredekodning er slået fra — softwaredekodning kan ikke håndtere video i <xliff:g id="resolution">%1$s</xliff:g>. Aktivér den under Indstillinger → Videoafspiller.</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">Fejl i lydudgangen — enheden kunne ikke afspille dette lydformat</string>
     <string name="player_audio_track_number">Lyd <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Undertekst <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Streamoplysninger</string>
     <string name="player_stream_engine">Afspilningsmotor</string>
     <string name="player_stream_format">Format</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Linjespring</string>
+    <string name="player_stream_progressive">Intet (progressivt)</string>
+    <string name="player_stream_deinterlaced_by_player">Linjesprunget · fjernet af afspilleren</string>
+    <string name="player_stream_deinterlaced_by_device">Linjesprunget · fjernet af enheden</string>
+    <string name="player_stream_not_deinterlaced">Linjesprunget · ikke fjernet</string>
     <string name="player_stream_bitrate">Bithastighed</string>
     <string name="player_stream_decoder">Dekoder</string>
     <string name="player_stream_audio">Lyd</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s bufferet</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">Kun lyd</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">Dette har lyd, men intet billede. Der er ikke noget galt — det afspilles helt normalt.</string>
     <string name="player_audio_mono">mono</string>
     <string name="player_audio_stereo">stereo</string>
@@ -224,7 +218,6 @@
     <string name="player_subtitles_free_description_full">OpenSubtitles er en gratis, åben fællesskabstjeneste for undertekster. Log ind med din egen konto på opensubtitles.com. Det er gratis at oprette en konto. Dette gælder kun for den aktuelle profil.</string>
     <string name="player_subtitles_session_expired">Din OpenSubtitles-session er udløbet. Log ind igen under Indstillinger → Videoafspiller → Undertekster → OpenSubtitles for fortsat at kunne søge efter og downloade undertekster.</string>
     <string name="player_subtitles_account_needed">OpenSubtitles-konto påkrævet\n\nLog ind under Indstillinger → Videoafspiller → Undertekster → OpenSubtitles for at søge efter og downloade undertekster. OpenSubtitles er en gratis, åben fællesskabstjeneste — alle kan oprette en gratis konto på opensubtitles.com.</string>
-    <string name="player_subtitles_no_matches">Der blev ikke fundet nogen matchende undertekster.</string>
     <string name="player_subtitles_show_all_languages">Vis alle sprog</string>
     <string name="player_subtitles_all_languages">Alle sprog</string>
     <string name="player_subtitles_try_again">Prøv igen</string>
@@ -238,17 +231,15 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Søg</string>
     <string name="player_subtitles_connected_as">Forbundet som</string>
     <string name="player_subtitles_connected_user">Forbundet som <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Nulstilles</string>
     <string name="player_subtitles_free_account">Gratis</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Indtast dit brugernavn og din adgangskode til OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles kunne ikke logge ind med disse kontooplysninger.</string>
     <string name="player_subtitles_sign_in_network_error">Kunne ikke oprette forbindelse til OpenSubtitles. Kontrollér din internetforbindelse, og prøv igen.</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitles afviste anmodningen (fejl <xliff:g id="code">%1$d</xliff:g>). Din internetforbindelse virker – prøv igen senere, og oplys dette nummer, hvis du rapporterer problemet.</string>
     <string name="player_subtitles_refresh_network_error">Kunne ikke opdatere OpenSubtitles. Kontrollér din internetforbindelse.</string>
     <string name="player_subtitles_no_matches_all_languages">Ingen matchende undertekster blev fundet. Prøv at redigere søgetitlen.</string>
@@ -280,18 +271,22 @@
     <string name="player_subtitles_search_language_description">Kun undertekster på dette sprog vises i søgeresultaterne. Du kan stadig vælge “Alle sprog” i resultaterne for at se alt for én søgning.</string>
     <string name="player_subtitles_language_not_set">Ikke angivet</string>
     <string name="player_frame_rate_prompt_title">Denne kanal kan hakke</string>
-    <string name="player_frame_rate_prompt_description">Den afspiller med <xliff:g id="fps">%1$d</xliff:g> fps, mens dit TV kører med <xliff:g id="current_hz">%2$d</xliff:g> Hz, hvilket ikke kan vise billederne jævnt — bevægelser ser lidt hakkende ud.\n\nAuto billedhastighed skifter TV\'et til <xliff:g id="target_hz">%3$d</xliff:g> Hz, mens du ser med, og sætter det tilbage bagefter. Nogle TV\'er viser sort skærm et øjeblik, når billedhastigheden skifter; du kan slå funktionen fra igen under Indstillinger → Videoafspiller.</string>
+    <string name="player_frame_rate_prompt_description">Den afspiller med <xliff:g id="fps">%1$d</xliff:g> fps, mens dit TV kører med <xliff:g id="current_hz">%2$d</xliff:g> Hz, hvilket ikke kan vise billederne jævnt — bevægelser ser lidt hakkende ud.\n\nAuto billedhastighed skifter TV\'et til <xliff:g id="target_hz">%3$d</xliff:g> Hz, mens du ser med, og sætter det tilbage bagefter. Nogle TV\'er viser sort skærm et øjeblik, når billedhastigheden skifter; du kan slå funktionen fra igen under Indstillinger → Billede → Billedfrekvens.</string>
     <string name="player_frame_rate_turn_on">Slå til</string>
     <string name="player_reason_live_fallback">Live-afspilning skiftede til en fallback</string>
     <string name="player_reason_live_no_fallback">Live-afspilning fejlede – der er ingen fallback tilbage</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Prøver igen om <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Udbyderen er optaget.</string>
+    <string name="player_reconnecting">Streamen blev afbrudt. Opretter forbindelse igen…</string>
     <string name="player_error_data_saver">Databesparelse er slået til, så streaming over mobildata er slået fra. Opret forbindelse til Wi-Fi, eller slå databesparelse fra i indstillingerne.</string>
-    <string name="player_audio_only_video_off">Video slået fra · sparer data</string>
-    <string name="player_audio_only_show_video">Video</string>
     <string name="player_sleep_timer">Sleep-timer</string>
     <string name="player_sleep_timer_end_of_programme">Programmets slutning</string>
+    <string name="player_sleep_timer_end_of_movie">Slutningen af filmen</string>
+    <string name="player_sleep_timer_end_of_episode">Slutningen af afsnittet</string>
     <string name="player_sleep_timer_remaining">Stopper om <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_sleep_timer_screen_off">Sluk også skærmen</string>
+    <string name="player_sleep_timer_screen_off_explanation">Bruges kun til at slukke skærmen, når timeren udløber – aldrig på andre tidspunkter.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Denne enhed tillader ikke apps at slukke skærmen.</string>
     <string name="player_pip_expand">Forstør</string>
     <string name="player_error_cast_unsupported">Enheden, du caster til, kan ikke afspille dette stream. Mange live-kanaler bruger et format, den ikke understøtter – afspil det i stedet på din telefon.</string>
     <string name="player_cast_playing_on">Afspilles på <xliff:g id="device">%1$s</xliff:g></string>
@@ -308,11 +303,10 @@
         <item quantity="other">Din udbyder tillader <xliff:g id="count">%1$d</xliff:g> streams ad gangen. <xliff:g id="recording">%2$d</xliff:g> af dem optager.</item>
     </plurals>
     <string name="multiview_refused_reserved">Én forbindelse holdes fri, så du kan blive ved med at se. Lav det om i indstillingerne for at optage på alle forbindelser.</string>
-    <string name="multiview_unknown_connections">OwnTV kunne ikke finde ud af, hvor mange streams denne playliste tillader. Hvis en flade fejler, er det derfor.</string>
     <string name="multiview_decoder_exhausted">Dette tv kan ikke afkode endnu en kanal samtidig.</string>
+    <string name="multiview_decoder_exhausted_mobile">Denne enhed kan ikke afkode endnu en kanal samtidig.</string>
     <string name="multiview_tile_change_channel">Skift kanal</string>
     <string name="multiview_tile_fullscreen">Fuld skærm</string>
-    <string name="multiview_tile_record">Optag denne</string>
     <string name="multiview_tile_remove">Fjern flade</string>
     <string name="multiview_audio_tile">Lyden er på denne flade</string>
     <string name="multiview_add_to">Føj til Multivisning</string>
@@ -320,4 +314,8 @@
     <string name="multiview_tile_sound_only">Kun lyd</string>
     <string name="multiview_tile_show_picture">Vis billedet</string>
     <string name="multiview_sound_only_note">Kun lyd — bruger stadig en af udbyderens streams</string>
+    <string name="player_trailer_skip">Spring 10 s</string>
+    <string name="player_trailer_blocked_title">Denne trailer kan ikke afspilles i OwnTV</string>
+    <string name="player_trailer_blocked_body">Ejeren tillader kun afspilning på YouTube.</string>
+    <string name="player_trailer_open_youtube">Åbn i YouTube</string>
 </resources>

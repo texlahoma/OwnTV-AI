@@ -8,6 +8,7 @@ import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.customize.SectionCustomizations
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.entity.ChannelEntity
+import tv.own.owntv.core.database.entity.matchName
 
 /** A guide channel proposed for a channel the matcher was not confident enough to link on its own. */
 data class AutoMatchSuggestion(
@@ -78,13 +79,11 @@ class EpgAutoMatcher(
         val channels = channelDao.allForSources(playlistIds, maxChannels)
 
         return withContext(Dispatchers.Default) {
-            val prepared = EpgMatcher.prepare(
-                candidates.map { EpgMatcher.Candidate(it.epgChannelId, it.displayName) },
-            )
+            val prepared = prepareWithProgrammesFirst(candidates)
             // Narrow before scoring: the scan is channels × candidates, which is millions of
             // comparisons on a full lineup and minutes of spinner on TV silicon if it runs unfiltered.
             val unmatched = channels.filter { needsMatch(it, cust, idsWithProgrammes) }
-            val best = EpgMatcher.bestEpgMatchBulk(unmatched.map { it.name }, prepared)
+            val best = EpgMatcher.bestEpgMatchBulk(unmatched.map { it.matchName }, prepared)
 
             val applied = mutableListOf<Pair<String, String>>()
             val review = mutableListOf<AutoMatchSuggestion>()
@@ -130,10 +129,7 @@ class EpgAutoMatcher(
         if (candidates.isEmpty()) return null
         val hasProgrammesById = candidates.associate { it.epgChannelId to it.hasProgrammes }
         return withContext(Dispatchers.Default) {
-            val best = EpgMatcher.bestEpgMatchPrepared(
-                channel.name,
-                EpgMatcher.prepare(candidates.map { EpgMatcher.Candidate(it.epgChannelId, it.displayName) }),
-            )
+            val best = EpgMatcher.bestEpgMatchPrepared(channel.matchName, prepareWithProgrammesFirst(candidates))
             best?.toSuggestion(channel, hasProgrammesById[best.epgChannelId] == true)
         }
     }
@@ -151,6 +147,15 @@ class EpgAutoMatcher(
         val tvg = channel.epgChannelId?.trim()?.lowercase()
         return tvg.isNullOrEmpty() || tvg !in idsWithProgrammes
     }
+
+    /**
+     * Candidates that carry programmes go first. The scorer keeps the first of equal scores, and feeds
+     * often list one channel twice under the same name — once empty — so an empty entry seen first
+     * won the tie, was then withheld for having no programmes, and the channel stayed unmatched.
+     */
+    private fun prepareWithProgrammesFirst(candidates: List<GuideCandidate>) = EpgMatcher.prepare(
+        candidates.sortedByDescending { it.hasProgrammes }.map { EpgMatcher.Candidate(it.epgChannelId, it.displayName) },
+    )
 
     private fun EpgMatcher.Result.toSuggestion(channel: ChannelEntity, hasProgrammes: Boolean) =
         AutoMatchSuggestion(

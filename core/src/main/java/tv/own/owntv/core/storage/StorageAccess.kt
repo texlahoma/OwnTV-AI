@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import java.io.File
 
 /**
@@ -42,7 +43,7 @@ object StorageAccess {
      * READ_EXTERNAL_STORAGE stays declared (maxSdk 32) so "Files and media" is listed there.
      */
     fun openStoragePermissionSettings(context: Context) {
-        val pkg = Uri.parse("package:${context.packageName}")
+        val pkg = "package:${context.packageName}".toUri()
         val candidates = listOf(
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, pkg),
             Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, pkg),
@@ -60,8 +61,15 @@ object StorageAccess {
     /** The effective base folder: the configured path if usable, else the default. */
     fun resolveRoot(context: Context, configured: String?): File {
         val dir = configured?.takeIf { it.isNotBlank() }?.let { File(it) }
-        return if (dir != null && (dir.exists() || dir.mkdirs())) dir else defaultRoot(context)
+        return if (dir != null && isUsableDir(dir)) dir else defaultRoot(context)
     }
+
+    /**
+     * A folder that exists — or can be made — and can be written to. A USB stick that has been pulled
+     * leaves its path behind with nothing under it, and that must count as gone, not as a folder.
+     */
+    internal fun isUsableDir(dir: File): Boolean =
+        runCatching { (dir.isDirectory || dir.mkdirs()) && dir.canWrite() }.getOrDefault(false)
 
     /** Top-level browsable storage roots for the Compose folder picker. */
     fun storageRoots(context: Context): List<StorageRoot> {

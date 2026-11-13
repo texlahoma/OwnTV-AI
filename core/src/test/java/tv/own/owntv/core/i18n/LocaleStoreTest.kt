@@ -122,7 +122,7 @@ class LocaleStoreTest {
         assertEquals("en-US", store.readBlocking())
     }
 
-    // --- applicationContext nullable behaviour (P0/P1 review fixes) ---
+    // --- applicationContext nullable behaviour ---
 
     @Test
     fun `attachBaseContext read-only store has null applicationContext and never writes globally`() {

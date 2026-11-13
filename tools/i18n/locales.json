@@ -24,7 +24,7 @@
     "script": "Latn",
     "rtl": false,
     "tier": 0,
-    "_comment": "Reviewed regional spelling override of the en-US source. Packaged from Phase 0, but never a Tier 1 picker row: British English is not a separate translation target.",
+    "_comment": "Reviewed regional spelling override of the en-US source. Packaged, but never a Tier 1 picker row: British English is not a separate translation target.",
     "packaged": true,
     "pickerVisible": false
   },
@@ -615,5 +615,19 @@
     "tier": 2,
     "packaged": false,
     "pickerVisible": false
+  },
+  {
+    "id": "eu",
+    "languageTag": "eu",
+    "resourceQualifier": "eu",
+    "resourceDirectory": "values-eu",
+    "weblateCode": "eu",
+    "englishName": "Basque",
+    "endonym": "Euskara",
+    "script": "Latn",
+    "rtl": false,
+    "tier": 1,
+    "packaged": true,
+    "pickerVisible": true
   }
 ]

@@ -1,0 +1,189 @@
+{
+ "leagues": [
+  {
+   "id": "2030",
+   "slug": "f1",
+   "name": "Formula 1",
+   "abbreviation": "F1"
+  }
+ ],
+ "events": [
+  {
+   "id": "600057446",
+   "date": "2026-10-23T17:30Z",
+   "endDate": "2026-10-25T20:00Z",
+   "name": "MSC Cruises United States Grand Prix",
+   "shortName": "MSC Cruises United States GP",
+   "status": {
+    "clock": 0.0,
+    "displayClock": "0:00",
+    "period": 0,
+    "type": {
+     "name": "STATUS_SCHEDULED",
+     "state": "pre",
+     "completed": false,
+     "description": "Scheduled",
+     "detail": "Fri, October 23rd at 1:30 PM EDT",
+     "shortDetail": "10/23 - 1:30 PM EDT"
+    }
+   },
+   "competitions": [
+    {
+     "id": "401839118",
+     "date": "2026-10-23T17:30Z",
+     "startDate": "2026-10-23T17:30Z",
+     "type": {
+      "id": "1",
+      "abbreviation": "FP1"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0:00",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Fri, October 23rd at 1:30 PM EDT",
+       "shortDetail": "10/23 - 1:30 PM EDT"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Apple TV"
+       ]
+      }
+     ],
+     "competitors": []
+    },
+    {
+     "id": "401839119",
+     "date": "2026-10-23T21:00Z",
+     "startDate": "2026-10-23T21:00Z",
+     "type": {
+      "id": "1",
+      "abbreviation": "FP2"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0:00",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Fri, October 23rd at 5:00 PM EDT",
+       "shortDetail": "10/23 - 5:00 PM EDT"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Apple TV"
+       ]
+      }
+     ],
+     "competitors": []
+    },
+    {
+     "id": "401839120",
+     "date": "2026-10-24T17:30Z",
+     "startDate": "2026-10-24T17:30Z",
+     "type": {
+      "id": "1",
+      "abbreviation": "FP3"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0:00",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sat, October 24th at 1:30 PM EDT",
+       "shortDetail": "10/24 - 1:30 PM EDT"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Apple TV"
+       ]
+      }
+     ],
+     "competitors": []
+    },
+    {
+     "id": "401839121",
+     "date": "2026-10-24T21:00Z",
+     "startDate": "2026-10-24T21:00Z",
+     "type": {
+      "id": "2",
+      "abbreviation": "Qual"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0:00",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sat, October 24th at 5:00 PM EDT",
+       "shortDetail": "10/24 - 5:00 PM EDT"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Apple TV"
+       ]
+      }
+     ],
+     "competitors": []
+    },
+    {
+     "id": "401839122",
+     "date": "2026-10-25T20:00Z",
+     "startDate": "2026-10-25T20:00Z",
+     "type": {
+      "id": "3",
+      "abbreviation": "Race"
+     },
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0:00",
+      "period": 0,
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Sun, October 25th at 4:00 PM EDT",
+       "shortDetail": "10/25 - 4:00 PM EDT"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Apple TV"
+       ]
+      }
+     ],
+     "competitors": []
+    }
+   ]
+  }
+ ]
+}

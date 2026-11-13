@@ -5,7 +5,7 @@
     <string name="setup_from_device">ローカル</string>
     <string name="setup_from_phone">リモート</string>
     <string name="setup_send_from_phone">別の端末から送信</string>
-    <string name="setup_phone_background_description">同じWi-Fiに接続したスマートフォン、タブレット、パソコンでQRコードをスキャン（またはURLを開く）し、このPINを入力して写真を送信します。写真はすぐに背景になります。</string>
+    <string name="setup_phone_background_description">同じ Wi-Fi にあるブラウザー付きの任意の機器（スマホ、パソコン、別のテレビ）で QR を読み取る（または URL を開く）、この PIN を入力して写真を送ると、すぐに背景になります。</string>
     <string name="setup_opening_server">サーバーを起動中…</string>
     <string name="setup_enter_pin_browser">ブラウザにこのPINを入力してください</string>
     <string name="setup_open_url">または、このURLを開いてください</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">例：マイTV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">ようこそ</string>
-    <string name="setup_welcome_tagline">あなただけのIPTVプレーヤー。</string>
     <string name="setup_get_started">始める</string>
     <string name="setup_display_size_title">読みやすい大きさに調整</string>
-    <string name="setup_display_size_description">画面と文字の大きさを設定します。どちらも後から設定で変更できます。</string>
-    <string name="setup_display_size_preview">座ったままこの文が無理なく読めれば、大きさは適切です。</string>
     <string name="setup_before_you_start">始める前に</string>
     <string name="setup_disclaimer">OwnTVはメディアプレーヤーにすぎません。チャンネル、プレイリスト、コンテンツは一切含まれていません。合法的にアクセスできるご自身のXtream、M3U、またはStalkerソースを追加する責任はユーザーにあります。</string>
     <string name="setup_i_understand">理解しました</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">新しく始めるか、バックアップファイルまたは別の端末からプロフィール、プレイリスト、お気に入りを復元します。</string>
     <string name="setup_new_profile">新しいプロフィール</string>
     <string name="setup_create_profile_add_sources">プロフィールを作成してソースを追加</string>
-    <string name="setup_restore_backup">バックアップを復元</string>
     <string name="setup_import_profiles_playlists">ファイルからプロフィールとプレイリストをインポート</string>
     <string name="setup_sync_device">別の端末から</string>
     <string name="setup_sync_device_description">Wi-Fi 経由でもう一方の OwnTV 端末からすべてをコピーします</string>
     <string name="setup_add_playlist">プレイリストを追加</string>
     <string name="setup_add_playlist_description">このプロフィールにソースを追加するか、後でセットアップします。</string>
-    <string name="setup_new">新規</string>
-    <string name="setup_add_m3u_xtream">M3U、XtreamまたはStalkerソースを追加</string>
     <string name="setup_existing">既存</string>
     <string name="setup_use_other_profile_playlists">別のプロフィールのプレイリストを使用</string>
     <string name="setup_import">インポート</string>
@@ -72,7 +65,7 @@
     <string name="setup_invalid_mac">無効なMACアドレスです。AA:BB:CC:DD:EE:FFの形式を使用してください</string>
     <string name="setup_pick_backup_file">復元するバックアップファイルを選択</string>
     <string name="setup_restore_a_backup">バックアップを復元</string>
-    <string name="setup_restore_choice_description">同じWi-Fiに接続した別のデバイス（スマートフォンまたはノートパソコン）からバックアップを送信するか、このデバイスにあるバックアップファイルを選択します。</string>
+    <string name="setup_restore_choice_description">同じ Wi-Fi にあるブラウザー付きの任意の機器からリモートでバックアップを送るか、この機器にあるバックアップファイルを選びます。</string>
     <string name="setup_upload_from_wifi_device">Wi-Fi上のデバイスからアップロード</string>
     <string name="setup_local_file">ローカルファイル</string>
     <string name="setup_pick_backup_local">このデバイス上のバックアップファイルを選択</string>
@@ -85,24 +78,18 @@
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g>件を復元しました。コンテンツを読み込むにはソースを再同期してください。</item>
     </plurals>
     <string name="setup_passwords_omitted">保存済みのパスワードは後で再入力してください。</string>
+    <string name="setup_need_password">パスワードが保存されていないため、まだ読み込まれていません：<xliff:g id="names">%1$s</xliff:g>。設定でプレイリストを開き、パスワードを入力してください。</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>件のソースは、このバージョンでプレイリスト形式がサポートされていないためスキップされました。</item>
     </plurals>
     <string name="setup_continue">続行</string>
     <string name="setup_import_failed">インポートに失敗しました</string>
     <string name="setup_try_again_caps">もう一度試す</string>
-    <string name="setup_add_from_phone">別の端末から追加</string>
-    <string name="setup_phone_add_description">同じWi-Fiに接続したスマートフォン、タブレット、パソコンでQRコードをスキャン（またはURLを開く）し、このPINを入力してプレイリスト情報を入力した後、［TVに送信］をタップします。情報がここに表示され、インポートできる状態になります。リモコンで［インポートを開始］を押してください。</string>
     <string name="setup_opening">起動中…</string>
-    <string name="setup_open_server">サーバーを起動</string>
-    <string name="setup_stop_server">サーバーを停止</string>
     <string name="setup_add_source">ソースを追加</string>
-    <string name="setup_add_source_description">別の端末でフォームに入力するか、リモコンを使ってここに詳細を入力します。</string>
-    <string name="setup_manual">手動</string>
-    <string name="setup_use_phone_same_wifi">同じWi-Fi上のスマートフォン、タブレット、パソコンを使用</string>
-    <string name="setup_type_source_here">ここでXtream / M3U / Stalkerを入力</string>
     <string name="setup_edit_source">ソースを編集</string>
-    <string name="setup_add_your_source">ソースを追加</string>
+    <string name="setup_edit_from_phone">別の端末から編集</string>
     <string name="setup_edit_source_description">このソースの詳細を更新するか、自動更新設定を変更します。</string>
     <string name="setup_byo_source_description">OwnTVはプレーヤーです。ご自身のXtream、M3U、またはStalkerソースを追加してください。</string>
     <string name="setup_xtream">Xtream</string>
@@ -134,6 +121,8 @@
     <string name="setup_test_connection">接続をテスト</string>
     <string name="setup_user_agent_optional">User-Agent（任意）</string>
     <string name="setup_user_agent_example">例：VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer（任意）</string>
+    <string name="setup_referer_example">例：https://example.com/</string>
     <string name="setup_auto_refresh">自動更新</string>
     <string name="setup_auto_refresh_description">オフ、起動時、またはデータが古い場合</string>
     <string name="setup_default_playlist">デフォルトのプレイリスト</string>
@@ -156,7 +145,6 @@
     <string name="setup_now">今すぐ</string>
     <string name="setup_later">後で</string>
     <string name="setup_off">オフ</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">デフォルト（MAG200）</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -169,13 +157,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">続行</string>
     <string name="companion_pin_mismatch">PINが一致しません。もう一度試してください。</string>
-    <string name="companion_tmdb_page_title">TMDBキーを送信</string>
-    <string name="companion_tmdb_heading">TMDBキーを送信</string>
-    <string name="companion_tmdb_description">下からTMDBにログインし、APIキー（v3 auth）をコピーしてここに貼り付け、テレビへ送信してください。個人キーは無料で、1日の制限も実質ありません。</string>
-    <string name="companion_tmdb_get_key">TMDBのAPI設定を開く</string>
-    <string name="companion_tmdb_invalid">TMDB APIキーではないようです。「API Key (v3 auth)」の値をコピーしてください。</string>
-    <string name="companion_tmdb_sent_body">TMDBキーがテレビに届きました。テレビで「保存」を押すと使えます。</string>
-    <string name="companion_tmdb_sent_link">別のキーを送信</string>
     <string name="companion_service_config_empty">APIキー、Worker URL、またはその両方を入力してください。</string>
     <string name="companion_service_config_invalid_key">そのAPIキーは正しくないようです。</string>
     <string name="companion_service_config_invalid_url">有効なHTTPSのWorker URLを入力してください。</string>
@@ -195,6 +176,12 @@
     <string name="companion_saved_heading">TVに送信しました ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g>がTVの［ソースを追加］画面に表示されています。そこで詳細を確認し、リモコンで［インポートを開始］を押してください。</string>
     <string name="companion_saved_send_another">別のソースを送信</string>
+    <string name="companion_edit_page_title">OwnTV — ソースを編集</string>
+    <string name="companion_edit_heading"><xliff:g id="name">%1$s</xliff:g> を編集</string>
+    <string name="companion_edit_description">必要な箇所を変更して「TVに送信」を押してください。空欄のままの項目は現在の値が保たれます。変更は TV に表示されるので、リモコンで「保存」を押してください。</string>
+    <string name="companion_keep_current">空欄のままにすると現在の値を保持します</string>
+    <string name="companion_saved_edit_body"><xliff:g id="name">%1$s</xliff:g> の変更が TV の編集画面に届きました。そこで確認し、リモコンで「保存」を押してください。</string>
+    <string name="companion_saved_edit_again">ほかの項目を変更</string>
     <string name="companion_saved_backup_body">バックアップがTVに転送されました。リモコンを手に取り、復元する項目を選択してください。</string>
     <string name="companion_saved_backup_link">別のファイルを送信</string>
     <string name="companion_saved_image_body">画像がTVの背景になりました。</string>
@@ -262,4 +249,30 @@
     <string name="companion_error_pair_failed">この端末とペアリングできませんでした。</string>
     <string name="local_sync_browser_title">OwnTV ローカル同期</string>
     <string name="local_sync_browser_body">このアドレスは、もう一方の端末の OwnTV アプリ用です。そちらでローカル同期を開き、一覧からこの端末を選んでください。</string>
+    <string name="setup_step_display">表示</string>
+    <string name="setup_step_playlist">プレイリスト</string>
+    <string name="setup_step_ready">完了</string>
+    <string name="setup_key_previous_step">前の手順</string>
+    <string name="setup_welcome_title">OwnTV へようこそ</string>
+    <string name="setup_welcome_sub">あなた専用の IPTV プレーヤーです。まず言語を選んでください。あとで設定から変更できます。</string>
+    <plurals name="setup_languages_all">
+        <item quantity="other">全 <xliff:g id="count">%1$d</xliff:g> 言語</item>
+    </plurals>
+    <string name="setup_display_sub">このテレビでの画面と文字の大きさ。下の行が操作に合わせて変わります。</string>
+    <string name="setup_display_sub_mobile">このスマートフォンでの画面と文字の大きさ。下の行が操作に合わせて変わります。</string>
+    <string name="setup_line_zoom">画面のすべて</string>
+    <string name="setup_line_font">文字のみ</string>
+    <string name="setup_line_app_icon">テレビのホーム画面での OwnTV の見え方</string>
+    <string name="setup_line_app_icon_mobile">ホーム画面での OwnTV の見え方</string>
+    <string name="setup_restore_card_line">ファイルから、または別の機器からリモートで</string>
+    <string name="setup_device_appear">同期モードがオンの機器がここに表示されます</string>
+    <string name="setup_device_address_hint">または相手の機器のアドレスを入力</string>
+    <string name="setup_profile_sub">プロフィールごとにお気に入り、履歴、ホームが別々です。あとから 設定 › プロフィール で追加できます。</string>
+    <string name="setup_avatar">アバター</string>
+    <string name="setup_avatar_line">1 つ選ぶか、頭文字のままにします</string>
+    <string name="setup_create_profile">プロフィールを作成</string>
+    <string name="setup_phone_card_line">別の機器のブラウザーでフォームに入力 — いちばん速い方法</string>
+    <string name="setup_importing_title"><xliff:g id="name">%1$s</xliff:g> をインポート中</string>
+    <string name="setup_add_guide">番組ガイドを追加</string>
+    <string name="setup_add_guide_line">新しくインストールした直後はガイドがありません</string>
 </resources>

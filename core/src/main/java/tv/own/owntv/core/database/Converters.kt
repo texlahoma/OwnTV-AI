@@ -3,6 +3,7 @@ package tv.own.owntv.core.database
 import androidx.room.TypeConverter
 import tv.own.owntv.core.database.entity.TrendingSnapshotStatus
 import tv.own.owntv.core.database.entity.TrendingAttemptStatus
+import tv.own.owntv.core.model.DownloadReason
 import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.core.model.HlsSupport
 import tv.own.owntv.core.model.MediaType
@@ -21,6 +22,11 @@ class Converters {
 
     @TypeConverter fun downloadStatusToString(v: DownloadStatus): String = v.name
     @TypeConverter fun stringToDownloadStatus(v: String): DownloadStatus = DownloadStatus.valueOf(v)
+
+    // Nullable, and an unknown name reads back as null: a reason is an explanation, never worth a crash.
+    @TypeConverter fun downloadReasonToString(v: DownloadReason?): String? = v?.name
+    @TypeConverter fun stringToDownloadReason(v: String?): DownloadReason? =
+        v?.let { name -> DownloadReason.entries.firstOrNull { it.name == name } }
 
     @TypeConverter fun recordingStatusToString(v: RecordingStatus): String = v.name
     @TypeConverter fun stringToRecordingStatus(v: String): RecordingStatus = RecordingStatus.valueOf(v)

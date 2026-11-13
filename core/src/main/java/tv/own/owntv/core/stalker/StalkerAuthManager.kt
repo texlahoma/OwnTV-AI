@@ -7,9 +7,9 @@ import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * What a Stalker call needs to authenticate (plan §5.2). Phase B maps a `SourceEntity` to this
- * (portal URL from `url`, MAC from the new `mac` column, per-source User-Agent override) — keeping
- * this type free of DB dependencies lets Phase A compile and be tested standalone.
+ * What a Stalker call needs to authenticate, mapped from a `SourceEntity`
+ * (portal URL from `url`, MAC from the `mac` column, per-source User-Agent override) — keeping
+ * this type free of DB dependencies lets it be tested standalone.
  */
 data class StalkerDeviceIdentity(
     val serialNumber: String? = null,
@@ -29,9 +29,16 @@ data class StalkerCredentials(
     val mac: String,
     val userAgent: String? = null,
     val deviceIdentity: StalkerDeviceIdentity = StalkerDeviceIdentity(),
-)
+    /** The portal login some providers add on top of the MAC; blank = MAC only, as most portals are. */
+    val login: String? = null,
+    val password: String? = null,
+) {
+    // A data class would print the password into any log line that prints the credentials.
+    override fun toString(): String =
+        "StalkerCredentials(sourceId=$sourceId, portalUrl=$portalUrl, login=${if (login.isNullOrBlank()) "none" else "set"})"
+}
 
-/** One live portal session. Tokens live in memory only — never persisted (plan key decision #3). */
+/** One live portal session. Tokens live in memory only — never persisted. */
 data class StalkerSession(
     val apiBase: String,
     val token: String,
@@ -43,7 +50,7 @@ data class StalkerSession(
 }
 
 /**
- * Owns the in-memory Stalker sessions, one per source (plan §5.2): [sessionFor] handshakes (probing
+ * Owns the in-memory Stalker sessions, one per source: [sessionFor] handshakes (probing
  * the API-endpoint candidates on first contact) and caches the token with a conservative TTL;
  * [withAuthRetry] re-handshakes ONCE when a call reports the token died mid-session
  * ([StalkerClient.StalkerAuthException] — portals also signal this as an empty `{"js":false}` payload).
@@ -81,12 +88,20 @@ open class StalkerAuthManager(private val client: StalkerClient) {
 
     /**
      * Run [block] with a valid session; on an auth failure invalidate and retry ONCE with a fresh
-     * handshake (§5.2 `withAuthRetry`). Anything failing twice is a real error for the caller.
+     * handshake. Anything failing twice is a real error for the caller.
+     *
+     * A bare-text refusal ([StalkerClient.StalkerRefusedException]) is not retried here: it means
+     * "too fast", and an instant second request is the wrong answer. The session is dropped so the
+     * caller's retry, after its backoff, starts on a fresh handshake.
      */
     open suspend fun <T> withAuthRetry(creds: StalkerCredentials, block: suspend (StalkerSession) -> T): T {
         val session = sessionFor(creds)
         return try {
             block(session)
+        } catch (e: StalkerClient.StalkerRefusedException) {
+            Log.i(TAG, "portal refused sourceId=${creds.sourceId} — dropping the session for the next attempt")
+            invalidateIfCurrent(creds.sourceId, session)
+            throw e
         } catch (e: StalkerClient.StalkerAuthException) {
             Log.i(TAG, "auth expired sourceId=${creds.sourceId} (${e.message}) — re-handshaking once")
             invalidateIfCurrent(creds.sourceId, session)
@@ -95,7 +110,7 @@ open class StalkerAuthManager(private val client: StalkerClient) {
     }
 
     /**
-     * "Test connection" for the add-source form (and the Phase A spike): always performs a FRESH
+     * "Test connection" for the add-source form: always performs a FRESH
      * handshake + get_profile (ignoring any cache) and caches the result on success.
      */
     suspend fun testConnection(creds: StalkerCredentials): StalkerSession {
@@ -120,6 +135,13 @@ open class StalkerAuthManager(private val client: StalkerClient) {
     private suspend fun openSession(creds: StalkerCredentials): StalkerSession {
         val startedAt = SystemClock.elapsedRealtime()
         val handshake = client.resolveHandshake(creds.portalUrl, creds.mac, creds.userAgent)
+        val login = creds.login?.takeIf { it.isNotBlank() }
+        if (login != null) {
+            client.doAuth(
+                handshake.apiBase, creds.mac, handshake.token, creds.userAgent,
+                login, creds.password.orEmpty(), creds.deviceIdentity,
+            )
+        }
         val profile = client.getProfile(
             handshake.apiBase, creds.mac, handshake.token, creds.userAgent, creds.deviceIdentity,
         )

@@ -4,6 +4,7 @@ import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 
 /**
  * Which playlist the user is watching right now, so background work can step out of its way.
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * never claims, so `openOn(sourceId).total > 0` is false for the single most important case there
  * is. The background catalogue drain was gated on exactly that expression and consequently never
  * yielded once; a channel played for four minutes on the reference portal and the drain paged
- * straight through it (plan N1f-3, §4D).
+ * straight through it.
  *
  * The engines in `:player-core` cannot raise this themselves — they are handed a URL and have no
  * notion of a `sourceId`. So it is the host's playback screen, which holds the row, that opens and
@@ -59,6 +60,11 @@ class WatchSession {
     }
 
     fun isWatching(sourceId: Long): Boolean = sourceId in _watching.value
+
+    /** Suspends until nothing is playing — how an automatic refresh waits out a film. */
+    suspend fun awaitIdle() {
+        _watching.first { it.isEmpty() }
+    }
 
     private companion object {
         const val TAG = "WatchSession"

@@ -19,37 +19,29 @@
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> achter op de live-uitzending</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">Naar live</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">Verdergaan waar je was gebleven?</string>
+    <string name="player_timeshift_resume_message">Deze zender is opgeslagen terwijl je weg was.</string>
+    <string name="player_previous_channel">Vorige zender</string>
+    <string name="player_tool_sources">Bronnen</string>
+    <string name="player_sources_none">Geen andere versie van deze zender gevonden.</string>
+    <string name="player_next_channel_in_list">Volgende zender</string>
+    <string name="player_previous_channel_in_list">Vorige zender in de lijst</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Volume</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Helderheid</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Terugspoelen</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">Vooruitspoelen</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Audio</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">Ondertitels</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">Favoriet</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">Terugkijken</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">Snelheid</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Formaat</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">Kwaliteit</string>
     <string name="player_tool_mini">Mini</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">Alleen audio</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">Speler</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">Info</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">Rapport</string>
     <string name="player_channel_not_found">Zender niet gevonden</string>
     <string name="player_channel_number_entry">Kanaalnummer</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">Geen sporen beschikbaar.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · afbeelding</string>
     <string name="player_av_sync">A/V-synchronisatie</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">Deze vertraging onthouden</string>
     <string name="player_no_offset">Geen verschuiving</string>
     <string name="player_subtitles_later">Ondertiteling wordt later weergegeven</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">Volgende aflevering over <xliff:g id="seconds">%1$d</xliff:g> s</string>
     <string name="player_play_now">Nu afspelen</string>
     <string name="player_volume">Volume</string>
-    <string name="player_control_engine">Spelerengine</string>
     <string name="player_unmute">Dempen opheffen</string>
     <string name="player_mute">Dempen</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">Overgeschakeld naar ExoPlayer</string>
     <string name="player_switch_mpv">Overgeschakeld naar mpv</string>
+    <string name="player_smoothness_hint">Dit kanaal verliest beelden. Als je de speler overschakelt naar mpv, kan het vloeiender afspelen.</string>
     <string name="player_error_image_subtitle_audio">Beeldondertiteling is niet beschikbaar voor de audio-indeling van deze video.</string>
     <string name="player_error_both_engines_exo_first">Afspelen is met beide video-engines mislukt (eerst ExoPlayer, daarna mpv). Het bestand is mogelijk beschadigd of gebruikt een indeling die deze tv niet kan afspelen.</string>
     <string name="player_error_both_engines_mpv_first">Afspelen is met beide video-engines mislukt (mpv en ExoPlayer). Het bestand is mogelijk beschadigd of gebruikt een indeling die deze tv niet kan afspelen. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">Beeldondertiteling is niet beschikbaar voor de indeling van dit bestand.</string>
     <string name="player_error_image_show">Kan de beeldondertiteling voor dit bestand niet weergeven.</string>
     <string name="player_external_could_not_open">Kan deze stream niet openen.</string>
-    <string name="player_external_play_with">Afspelen met</string>
-    <string name="player_external_play_with_item">“<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>” afspelen met…</string>
     <string name="player_external_not_found">Geen externe speler gevonden — installeer VLC of MX Player.</string>
     <string name="player_error_audio_no_video">De audio wordt afgespeeld, maar de video kan niet op dit apparaat worden weergegeven.</string>
     <string name="player_error_file_corrupt">Het bestand van deze video is ongeldig of beschadigd en kan niet worden afgespeeld.</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">De videodecoder van deze tv is bezet. Probeer het zo nogmaals.</string>
     <string name="player_error_no_internet">Geen internetverbinding. Controleer je netwerk en probeer het opnieuw.</string>
     <string name="player_error_stream_unavailable">Kan deze stream niet afspelen. De bron is mogelijk offline of gebruikt een niet-ondersteunde indeling. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Dit account speelt al af op een ander apparaat of in een andere app. Stop het daar en druk dan op Opnieuw proberen.</string>
     <string name="player_error_mpv_open_decode">mpv kan dit bestand niet openen of decoderen.</string>
     <string name="player_error_mpv_stream_never_started">De stream is na meerdere pogingen niet gestart in mpv.</string>
+    <string name="player_error_fairplay">Deze stream is beveiligd met Apple FairPlay, dat Android-apparaten niet kunnen afspelen. De playlist is gemaakt voor Apple-apparaten.</string>
     <string name="player_error_surround">Deze audio-uitgang ondersteunt geen surroundgeluid — overgeschakeld naar stereo.</string>
     <string name="player_error_hardware_fallback">De indeling van deze stream kon op deze tv niet door hardware worden gedecodeerd. Daarom is teruggevallen op softwaredecodering, die <xliff:g id="resolution">%1$s</xliff:g> niet kan verwerken zonder de tv te overbelasten. Andere 4K-content kan mogelijk wel goed worden afgespeeld op de tv; de indeling van deze specifieke stream is het probleem.</string>
     <string name="player_error_hardware_disabled">Hardwaredecodering is uitgeschakeld — softwaredecodering kan geen video met een resolutie van <xliff:g id="resolution">%1$s</xliff:g> verwerken. Schakel hardwaredecodering in via Instellingen → Videospeler.</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">Fout met de audio-uitgang — het apparaat kan deze audio-indeling niet afspelen</string>
     <string name="player_audio_track_number">Audio <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Ondertiteling <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Streaminformatie</string>
     <string name="player_stream_engine">Engine</string>
     <string name="player_stream_format">Indeling</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Interlacing</string>
+    <string name="player_stream_progressive">Geen (progressief)</string>
+    <string name="player_stream_deinterlaced_by_player">Interlaced · verwijderd door de speler</string>
+    <string name="player_stream_deinterlaced_by_device">Interlaced · verwijderd door het apparaat</string>
+    <string name="player_stream_not_deinterlaced">Interlaced · niet verwijderd</string>
     <string name="player_stream_bitrate">Bitsnelheid</string>
     <string name="player_stream_decoder">Decoder</string>
     <string name="player_stream_audio">Audio</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbps</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s gebufferd</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">Alleen audio</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">Dit item heeft geluid maar geen beeld. Er is niets mis — het speelt gewoon normaal af.</string>
     <string name="player_audio_mono">mono</string>
     <string name="player_audio_stereo">stereo</string>
@@ -224,7 +218,6 @@
     <string name="player_subtitles_free_description_full">OpenSubtitles is een gratis, open ondertitelingsdienst van de community. Meld je aan met je eigen account van opensubtitles.com; je kunt gratis een account aanmaken. Dit geldt alleen voor het huidige profiel.</string>
     <string name="player_subtitles_session_expired">Je OpenSubtitles-sessie is verlopen. Meld je opnieuw aan via Instellingen → Videospeler → Ondertiteling → OpenSubtitles om ondertiteling te blijven zoeken en downloaden.</string>
     <string name="player_subtitles_account_needed">OpenSubtitles-account vereist\n\nMeld je via Instellingen → Videospeler → Ondertiteling → OpenSubtitles aan om ondertiteling te zoeken en downloaden. OpenSubtitles is een gratis, open dienst van de community — iedereen kan gratis een account aanmaken op opensubtitles.com.</string>
-    <string name="player_subtitles_no_matches">Geen overeenkomende ondertiteling gevonden.</string>
     <string name="player_subtitles_show_all_languages">Alle talen weergeven</string>
     <string name="player_subtitles_all_languages">Alle talen</string>
     <string name="player_subtitles_try_again">Opnieuw proberen</string>
@@ -238,17 +231,15 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> download</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> downloads</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Zoeken</string>
     <string name="player_subtitles_connected_as">Verbonden als</string>
     <string name="player_subtitles_connected_user">Verbonden als <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Wordt opnieuw ingesteld</string>
     <string name="player_subtitles_free_account">Gratis</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Voer je gebruikersnaam en wachtwoord voor OpenSubtitles in.</string>
     <string name="player_subtitles_invalid_credentials">Aanmelden bij OpenSubtitles met deze accountgegevens is mislukt.</string>
     <string name="player_subtitles_sign_in_network_error">Kan OpenSubtitles niet bereiken. Controleer je internetverbinding en probeer het opnieuw.</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitles heeft het verzoek geweigerd (fout <xliff:g id="code">%1$d</xliff:g>). Je internetverbinding werkt – probeer het later opnieuw en vermeld dit nummer als je het probleem meldt.</string>
     <string name="player_subtitles_refresh_network_error">Kan OpenSubtitles niet vernieuwen. Controleer je internetverbinding.</string>
     <string name="player_subtitles_no_matches_all_languages">Er zijn geen overeenkomende ondertitels gevonden. Probeer de zoektitel te bewerken.</string>
@@ -280,18 +271,22 @@
     <string name="player_subtitles_search_language_description">Alleen ondertitels in deze taal verschijnen in de zoekresultaten. Je kunt in de resultaten nog steeds op “Alle talen” drukken om alles voor één zoekopdracht te zien.</string>
     <string name="player_subtitles_language_not_set">Niet ingesteld</string>
     <string name="player_frame_rate_prompt_title">Deze zender kan haperen</string>
-    <string name="player_frame_rate_prompt_description">Het speelt af met <xliff:g id="fps">%1$d</xliff:g> fps terwijl je tv op <xliff:g id="current_hz">%2$d</xliff:g> Hz draait, waardoor die frames niet gelijkmatig kunnen worden weergegeven — beweging ziet er iets schokkerig uit.\n\nAutomatische framerate schakelt de tv tijdens het kijken naar <xliff:g id="target_hz">%3$d</xliff:g> Hz en zet hem daarna terug. Sommige tv\'s worden even zwart wanneer de frequentie verandert; je kunt dit weer uitzetten in Instellingen → Videospeler.</string>
+    <string name="player_frame_rate_prompt_description">Het speelt af met <xliff:g id="fps">%1$d</xliff:g> fps terwijl je tv op <xliff:g id="current_hz">%2$d</xliff:g> Hz draait, waardoor die frames niet gelijkmatig kunnen worden weergegeven — beweging ziet er iets schokkerig uit.\n\nAutomatische framerate schakelt de tv tijdens het kijken naar <xliff:g id="target_hz">%3$d</xliff:g> Hz en zet hem daarna terug. Sommige tv\'s worden even zwart wanneer de frequentie verandert; je kunt dit weer uitzetten in Instellingen → Beeld → Beeldfrequentie.</string>
     <string name="player_frame_rate_turn_on">Inschakelen</string>
     <string name="player_reason_live_fallback">Live-weergave overgeschakeld naar een fallback</string>
     <string name="player_reason_live_no_fallback">Live-weergave mislukt — er is geen fallback meer over</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Over <xliff:g id="seconds">%3$d</xliff:g> s opnieuw proberen.</string>
     <string name="player_provider_busy">De aanbieder is bezet.</string>
+    <string name="player_reconnecting">Stream onderbroken. Opnieuw verbinden…</string>
     <string name="player_error_data_saver">Databesparing staat aan, dus streamen via mobiele data is uit. Maak verbinding met wifi of zet databesparing uit in de instellingen.</string>
-    <string name="player_audio_only_video_off">Beeld uit · data besparen</string>
-    <string name="player_audio_only_show_video">Beeld</string>
     <string name="player_sleep_timer">Slaaptimer</string>
     <string name="player_sleep_timer_end_of_programme">Einde van het programma</string>
+    <string name="player_sleep_timer_end_of_movie">Einde van de film</string>
+    <string name="player_sleep_timer_end_of_episode">Einde van de aflevering</string>
     <string name="player_sleep_timer_remaining">Stopt over <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_sleep_timer_screen_off">Ook het scherm uitzetten</string>
+    <string name="player_sleep_timer_screen_off_explanation">Wordt alleen gebruikt om het scherm uit te zetten als de timer afloopt, nooit op een ander moment.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Dit apparaat staat niet toe dat apps het scherm uitzetten.</string>
     <string name="player_pip_expand">Vergroten</string>
     <string name="player_error_cast_unsupported">Het apparaat waarnaar je cast, kan deze stream niet afspelen. Veel livekanalen gebruiken een indeling die het niet ondersteunt — speel de stream in plaats daarvan af op je telefoon.</string>
     <string name="player_cast_playing_on">Speelt af op <xliff:g id="device">%1$s</xliff:g></string>
@@ -308,11 +303,10 @@
         <item quantity="other">Je provider staat <xliff:g id="count">%1$d</xliff:g> streams tegelijk toe. <xliff:g id="recording">%2$d</xliff:g> daarvan nemen op.</item>
     </plurals>
     <string name="multiview_refused_reserved">Eén verbinding blijft vrij zodat je kunt blijven kijken. Pas dat aan in Instellingen om op elke verbinding op te nemen.</string>
-    <string name="multiview_unknown_connections">OwnTV kon niet achterhalen hoeveel streams deze afspeellijst toestaat. Als een tegel mislukt, is dat de reden.</string>
     <string name="multiview_decoder_exhausted">Deze tv kan er niet nog een kanaal tegelijk bij decoderen.</string>
+    <string name="multiview_decoder_exhausted_mobile">Dit apparaat kan er niet nog een kanaal tegelijk bij decoderen.</string>
     <string name="multiview_tile_change_channel">Kanaal wijzigen</string>
     <string name="multiview_tile_fullscreen">Volledig scherm</string>
-    <string name="multiview_tile_record">Deze opnemen</string>
     <string name="multiview_tile_remove">Tegel verwijderen</string>
     <string name="multiview_audio_tile">Het geluid staat op deze tegel</string>
     <string name="multiview_add_to">Aan Multiview toevoegen</string>
@@ -320,4 +314,8 @@
     <string name="multiview_tile_sound_only">Alleen geluid</string>
     <string name="multiview_tile_show_picture">Beeld tonen</string>
     <string name="multiview_sound_only_note">Alleen geluid — gebruikt nog steeds een stream van je provider</string>
+    <string name="player_trailer_skip">10 s overslaan</string>
+    <string name="player_trailer_blocked_title">Deze trailer kan niet in OwnTV worden afgespeeld</string>
+    <string name="player_trailer_blocked_body">De eigenaar staat afspelen alleen op YouTube toe.</string>
+    <string name="player_trailer_open_youtube">Openen in YouTube</string>
 </resources>

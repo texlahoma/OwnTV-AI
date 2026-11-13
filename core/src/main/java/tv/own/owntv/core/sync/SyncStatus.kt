@@ -75,7 +75,7 @@ sealed interface SyncWarningKind {
 
     /**
      * The provider's bulk list stopped part-way and the per-category fallback finished the job
-     * (plan N2d).
+     *.
      *
      * Measured on a real playlist: `get_vod_streams` ran for 242 seconds and the peer sent a
      * connection reset at 139,924 of 178,720 films. The catalogue still ended up complete, because

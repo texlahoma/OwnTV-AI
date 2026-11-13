@@ -1,0 +1,286 @@
+{
+ "sports": [
+  {
+   "leagues": [
+    {
+     "id": "720",
+     "slug": "ger.1",
+     "name": "German Bundesliga",
+     "abbreviation": "Bundesliga",
+     "teams": [
+      {
+       "team": {
+        "id": "598",
+        "abbreviation": "FCU",
+        "displayName": "1. FC Union Berlin",
+        "shortDisplayName": "Union Berlin",
+        "name": "1. FC Union Berlin",
+        "location": "1. FC Union Berlin",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "131",
+        "abbreviation": "B04",
+        "displayName": "Bayer Leverkusen",
+        "shortDisplayName": "Leverkusen",
+        "name": "Bayer Leverkusen",
+        "location": "Bayer Leverkusen",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "132",
+        "abbreviation": "MUN",
+        "displayName": "Bayern Munich",
+        "shortDisplayName": "Bayern",
+        "name": "Bayern Munich",
+        "location": "Bayern Munich",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "124",
+        "abbreviation": "DOR",
+        "displayName": "Borussia Dortmund",
+        "shortDisplayName": "Dortmund",
+        "name": "Borussia Dortmund",
+        "location": "Borussia Dortmund",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "268",
+        "abbreviation": "BMG",
+        "displayName": "Borussia Mönchengladbach",
+        "shortDisplayName": "Gladbach",
+        "name": "Borussia Mönchengladbach",
+        "location": "Borussia Mönchengladbach",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "125",
+        "abbreviation": "SGE",
+        "displayName": "Eintracht Frankfurt",
+        "shortDisplayName": "Frankfurt",
+        "name": "Eintracht Frankfurt",
+        "location": "Eintracht Frankfurt",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "3841",
+        "abbreviation": "FCA",
+        "displayName": "FC Augsburg",
+        "shortDisplayName": "Augsburg",
+        "name": "FC Augsburg",
+        "location": "FC Augsburg",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "122",
+        "abbreviation": "KOE",
+        "displayName": "FC Cologne",
+        "shortDisplayName": "Cologne",
+        "name": "FC Cologne",
+        "location": "FC Cologne",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "127",
+        "abbreviation": "HSV",
+        "displayName": "Hamburg SV",
+        "shortDisplayName": "Hamburg",
+        "name": "Hamburg SV",
+        "location": "Hamburg SV",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "2950",
+        "abbreviation": "M05",
+        "displayName": "Mainz",
+        "shortDisplayName": "Mainz",
+        "name": "Mainz",
+        "location": "Mainz",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "11420",
+        "abbreviation": "RBL",
+        "displayName": "RB Leipzig",
+        "shortDisplayName": "RB Leipzig",
+        "name": "RB Leipzig",
+        "location": "RB Leipzig",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "126",
+        "abbreviation": "SCF",
+        "displayName": "SC Freiburg",
+        "shortDisplayName": "Freiburg",
+        "name": "SC Freiburg",
+        "location": "SC Freiburg",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "3307",
+        "abbreviation": "SCP",
+        "displayName": "SC Paderborn 07",
+        "shortDisplayName": "Paderborn",
+        "name": "SC Paderborn 07",
+        "location": "SC Paderborn 07",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "10388",
+        "abbreviation": "ELV",
+        "displayName": "SV Elversberg",
+        "shortDisplayName": "Elversberg",
+        "name": "SV Elversberg",
+        "location": "SV Elversberg",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/10388.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "133",
+        "abbreviation": "S04",
+        "displayName": "Schalke 04",
+        "shortDisplayName": "Schalke",
+        "name": "Schalke 04",
+        "location": "Schalke 04",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/133.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "7911",
+        "abbreviation": "TSG",
+        "displayName": "TSG Hoffenheim",
+        "shortDisplayName": "Hoffenheim",
+        "name": "TSG Hoffenheim",
+        "location": "TSG Hoffenheim",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "134",
+        "abbreviation": "VFB",
+        "displayName": "VfB Stuttgart",
+        "shortDisplayName": "Stuttgart",
+        "name": "VfB Stuttgart",
+        "location": "VfB Stuttgart",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png"
+         }
+        ]
+       }
+      },
+      {
+       "team": {
+        "id": "137",
+        "abbreviation": "SVW",
+        "displayName": "Werder Bremen",
+        "shortDisplayName": "Bremen",
+        "name": "Werder Bremen",
+        "location": "Werder Bremen",
+        "logos": [
+         {
+          "href": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -24,7 +24,7 @@ class ConnectionProbeRunTest {
 
     @Test
     fun `a provider that allows one stream kills the first when the second opens`() {
-        // The owner's Stalker portal, measured: stream 2 opens fine and stream 1 dies seconds later.
+        // A real Stalker portal, measured: stream 2 opens fine and stream 1 dies seconds later.
         val result = run(StreamOutcome.FLOWING, StreamOutcome.EARLIER_STREAM_DIED, StreamOutcome.EARLIER_STREAM_DIED)
         assertEquals(ConnectionProbeResult.Limit(1, atLeast = false), result)
     }

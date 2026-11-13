@@ -72,7 +72,7 @@ data class SourceEntity(
     /**
      * Whether a Stalker portal's **own** guide may be imported (v37). On by default: a portal that
      * publishes no XMLTV feed has no other way to fill the Guide, and without it catch-up cannot be
-     * used at all. Turning it off removes the portal's guide entry from Settings → EPG and stops it
+     * used at all. Turning it off removes the portal's guide entry from Settings → EPG Sources and stops it
      * being offered again.
      *
      * Only meaningful for [SourceType.STALKER]; a portal that advertises an XMLTV feed uses that
@@ -142,6 +142,38 @@ data class SourceEntity(
     val maxConnectionsProbedAt: Long = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val lastSyncAt: Long? = null,
+    // --- v44: four more per-playlist overrides. Each `null` = follow the global
+    // setting, which is what every existing row reads as after the upgrade.
+    /** Catch-up time zone for this provider's archive, as a `SettingsRepository.CatchupTimezone` name. */
+    val catchupTimezone: String? = null,
+    /** MANUAL [catchupTimezone]'s offset from UTC in minutes (unused for DEVICE). */
+    val catchupOffsetMin: Int? = null,
+    /** Movies & Series engine for this playlist, as an [tv.own.owntv.core.player.EnginePreference] name. */
+    val vodEnginePreference: String? = null,
+    /** "Give up after" for a live tune on this playlist, in seconds. */
+    val liveTuneTimeoutSecs: Int? = null,
+    /** An HTTP `Referer` this provider's streams require. */
+    val httpReferer: String? = null,
+    /**
+     * The time zone an Xtream panel reports for itself (v49), as a `java.util.TimeZone` ID: its
+     * `server_info.timezone`, or a `GMT±hh:mm` worked out from `time_now` vs `timestamp_now` when the
+     * name is missing or unknown. Re-read at every sync and never backed up — like [maxConnections] it
+     * is the provider's fact, not the user's. Null = not known (M3U/Stalker, or not synced since v49).
+     * Catch-up's Automatic time zone uses it.
+     */
+    val serverTimeZone: String? = null,
+    /** "Clean channel names" (v51): tidy this playlist's channel names at sync, see
+     *  [tv.own.owntv.core.customize.ChannelNameCleanup]. The user's choice, so it is backed up. */
+    @ColumnInfo(defaultValue = "0") val cleanChannelNames: Boolean = false,
+    /** The user's own words [cleanChannelNames] also removes, `;`-separated (v51). Null = none. */
+    val channelNameStrip: String? = null,
+    /**
+     * "Ignore connection limit" (v53): Multiview and recordings no longer refuse a stream because of
+     * [maxConnections], for a provider whose stated limit is lower than what it really allows. The
+     * provider's own refusal (HTTP 458) still stops a stream and says so. The user's choice, so it is
+     * backed up. Live tuning's single-session handover still follows [maxConnections].
+     */
+    @ColumnInfo(defaultValue = "0") val ignoreConnectionLimit: Boolean = false,
 )
 
 /** Many-to-many link letting a source be shared across profiles (hybrid model). */

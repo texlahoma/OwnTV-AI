@@ -1,0 +1,652 @@
+{
+ "leagues": [
+  {
+   "id": "720",
+   "slug": "ger.1",
+   "name": "German Bundesliga",
+   "abbreviation": "Bundesliga"
+  }
+ ],
+ "events": [
+  {
+   "id": "401884774",
+   "date": "2026-10-11T13:30Z",
+   "name": "Borussia Mönchengladbach at FC Cologne",
+   "shortName": "BMG @ KOE",
+   "status": {
+    "clock": 5400.0,
+    "displayClock": "90'+7'",
+    "period": 2,
+    "type": {
+     "name": "STATUS_FULL_TIME",
+     "state": "post",
+     "completed": true,
+     "description": "Full Time",
+     "detail": "FT",
+     "shortDetail": "FT"
+    }
+   },
+   "competitions": [
+    {
+     "id": "401884774",
+     "date": "2026-10-11T13:30Z",
+     "startDate": "2026-10-11T13:30Z",
+     "status": {
+      "clock": 5400.0,
+      "displayClock": "90'+7'",
+      "period": 2,
+      "type": {
+       "name": "STATUS_FULL_TIME",
+       "state": "post",
+       "completed": true,
+       "description": "Full Time",
+       "detail": "FT",
+       "shortDetail": "FT"
+      }
+     },
+     "venue": {
+      "fullName": "RheinEnergieStadion",
+      "address": {
+       "city": "Cologne",
+       "country": "Germany"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Fandango"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "122",
+       "type": "team",
+       "order": 0,
+       "homeAway": "home",
+       "winner": true,
+       "score": "2",
+       "team": {
+        "id": "122",
+        "abbreviation": "KOE",
+        "displayName": "FC Cologne",
+        "shortDisplayName": "Cologne",
+        "name": "FC Cologne",
+        "location": "FC Cologne",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+       }
+      },
+      {
+       "id": "268",
+       "type": "team",
+       "order": 1,
+       "homeAway": "away",
+       "winner": false,
+       "score": "1",
+       "team": {
+        "id": "268",
+        "abbreviation": "BMG",
+        "displayName": "Borussia Mönchengladbach",
+        "shortDisplayName": "Gladbach",
+        "name": "Borussia Mönchengladbach",
+        "location": "Borussia Mönchengladbach",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+       }
+      }
+     ],
+     "details": [
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "13'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Marius Bulter"
+        }
+       ]
+      },
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "24'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Jan Leszczynski"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal - Volley"
+       },
+       "clock": {
+        "displayValue": "26'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Ísak Jóhannesson"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal - Header"
+       },
+       "clock": {
+        "displayValue": "39'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Joe Scally"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal"
+       },
+       "clock": {
+        "displayValue": "67'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Said El Mala"
+        }
+       ]
+      },
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "81'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Zento Uno"
+        }
+       ]
+      },
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "90'+6'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Shuto Machino"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "900000001",
+   "date": "2026-10-16T13:30Z",
+   "name": "Borussia Mönchengladbach at FC Cologne",
+   "shortName": "BMG @ KOE",
+   "status": {
+    "clock": 5400.0,
+    "displayClock": "90'+7'",
+    "period": 2,
+    "type": {
+     "name": "STATUS_FULL_TIME",
+     "state": "post",
+     "completed": true,
+     "description": "Full Time",
+     "detail": "FT",
+     "shortDetail": "FT"
+    }
+   },
+   "competitions": [
+    {
+     "id": "900000001",
+     "date": "2026-10-16T13:30Z",
+     "startDate": "2026-10-11T13:30Z",
+     "status": {
+      "clock": 4020.0,
+      "displayClock": "67'",
+      "period": 2,
+      "type": {
+       "name": "STATUS_SECOND_HALF",
+       "state": "in",
+       "completed": false,
+       "description": "Second Half",
+       "detail": "67'",
+       "shortDetail": "67'"
+      }
+     },
+     "venue": {
+      "fullName": "RheinEnergieStadion",
+      "address": {
+       "city": "Cologne",
+       "country": "Germany"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Fandango"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "122",
+       "type": "team",
+       "order": 0,
+       "homeAway": "home",
+       "winner": false,
+       "score": "2",
+       "team": {
+        "id": "122",
+        "abbreviation": "KOE",
+        "displayName": "FC Cologne",
+        "shortDisplayName": "Cologne",
+        "name": "FC Cologne",
+        "location": "FC Cologne",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+       }
+      },
+      {
+       "id": "268",
+       "type": "team",
+       "order": 1,
+       "homeAway": "away",
+       "winner": false,
+       "score": "1",
+       "team": {
+        "id": "268",
+        "abbreviation": "BMG",
+        "displayName": "Borussia Mönchengladbach",
+        "shortDisplayName": "Gladbach",
+        "name": "Borussia Mönchengladbach",
+        "location": "Borussia Mönchengladbach",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+       }
+      }
+     ],
+     "details": [
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "13'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Marius Bulter"
+        }
+       ]
+      },
+      {
+       "scoringPlay": false,
+       "redCard": false,
+       "yellowCard": true,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Yellow Card"
+       },
+       "clock": {
+        "displayValue": "24'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Jan Leszczynski"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal - Volley"
+       },
+       "clock": {
+        "displayValue": "26'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Ísak Jóhannesson"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal - Header"
+       },
+       "clock": {
+        "displayValue": "39'"
+       },
+       "team": {
+        "id": "268"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Joe Scally"
+        }
+       ]
+      },
+      {
+       "scoringPlay": true,
+       "redCard": false,
+       "yellowCard": false,
+       "penaltyKick": false,
+       "ownGoal": false,
+       "shootout": false,
+       "type": {
+        "text": "Goal"
+       },
+       "clock": {
+        "displayValue": "67'"
+       },
+       "team": {
+        "id": "122"
+       },
+       "athletesInvolved": [
+        {
+         "displayName": "Said El Mala"
+        }
+       ]
+      }
+     ],
+     "someFieldWeDoNotRead": {
+      "nested": [
+       1,
+       2,
+       3
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "401884770",
+   "date": "2026-10-16T18:30Z",
+   "name": "FC Cologne at Eintracht Frankfurt",
+   "shortName": "KOE @ SGE",
+   "status": {
+    "clock": 0.0,
+    "displayClock": "0'",
+    "type": {
+     "name": "STATUS_SCHEDULED",
+     "state": "pre",
+     "completed": false,
+     "description": "Scheduled",
+     "detail": "Fri, October 16th at 2:30 PM EDT",
+     "shortDetail": "Scheduled"
+    }
+   },
+   "competitions": [
+    {
+     "id": "401884770",
+     "date": "2026-10-16T18:30Z",
+     "startDate": "2026-10-16T18:30Z",
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0'",
+      "type": {
+       "name": "STATUS_SCHEDULED",
+       "state": "pre",
+       "completed": false,
+       "description": "Scheduled",
+       "detail": "Fri, October 16th at 2:30 PM EDT",
+       "shortDetail": "Scheduled"
+      }
+     },
+     "venue": {
+      "fullName": "Deutsche Bank Park",
+      "address": {
+       "city": "Frankfurt",
+       "country": "Germany"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Peacock",
+        "Fandango",
+        "Universo"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "125",
+       "type": "team",
+       "order": 0,
+       "homeAway": "home",
+       "winner": false,
+       "score": "0",
+       "team": {
+        "id": "125",
+        "abbreviation": "SGE",
+        "displayName": "Eintracht Frankfurt",
+        "shortDisplayName": "Frankfurt",
+        "name": "Eintracht Frankfurt",
+        "location": "Eintracht Frankfurt",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
+       }
+      },
+      {
+       "id": "122",
+       "type": "team",
+       "order": 1,
+       "homeAway": "away",
+       "winner": false,
+       "score": "0",
+       "team": {
+        "id": "122",
+        "abbreviation": "KOE",
+        "displayName": "FC Cologne",
+        "shortDisplayName": "Cologne",
+        "name": "FC Cologne",
+        "location": "FC Cologne",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "900000002",
+   "date": "2026-10-16T18:30Z",
+   "name": "FC Cologne at Eintracht Frankfurt",
+   "shortName": "KOE @ SGE",
+   "status": {
+    "clock": 0.0,
+    "displayClock": "0'",
+    "type": {
+     "name": "STATUS_SCHEDULED",
+     "state": "pre",
+     "completed": false,
+     "description": "Scheduled",
+     "detail": "Fri, October 16th at 2:30 PM EDT",
+     "shortDetail": "Scheduled"
+    }
+   },
+   "competitions": [
+    {
+     "id": "900000002",
+     "date": "2026-10-16T18:30Z",
+     "startDate": "2026-10-16T18:30Z",
+     "status": {
+      "clock": 0.0,
+      "displayClock": "0'",
+      "period": 0,
+      "type": {
+       "name": "STATUS_POSTPONED",
+       "state": "post",
+       "completed": false,
+       "description": "Postponed",
+       "detail": "Postponed",
+       "shortDetail": "Postponed"
+      }
+     },
+     "venue": {
+      "fullName": "Deutsche Bank Park",
+      "address": {
+       "city": "Frankfurt",
+       "country": "Germany"
+      }
+     },
+     "broadcasts": [
+      {
+       "market": "national",
+       "names": [
+        "Peacock",
+        "Fandango",
+        "Universo"
+       ]
+      }
+     ],
+     "competitors": [
+      {
+       "id": "125",
+       "type": "team",
+       "order": 0,
+       "homeAway": "home",
+       "winner": false,
+       "score": "0",
+       "team": {
+        "id": "125",
+        "abbreviation": "SGE",
+        "displayName": "Eintracht Frankfurt",
+        "shortDisplayName": "Frankfurt",
+        "name": "Eintracht Frankfurt",
+        "location": "Eintracht Frankfurt",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
+       }
+      },
+      {
+       "id": "122",
+       "type": "team",
+       "order": 1,
+       "homeAway": "away",
+       "winner": false,
+       "score": "0",
+       "team": {
+        "id": "122",
+        "abbreviation": "KOE",
+        "displayName": "FC Cologne",
+        "shortDisplayName": "Cologne",
+        "name": "FC Cologne",
+        "location": "FC Cologne",
+        "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/122.png"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "900000003",
+   "name": "Malformed: no competitions"
+  }
+ ]
+}

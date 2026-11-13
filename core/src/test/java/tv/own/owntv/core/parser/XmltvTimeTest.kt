@@ -10,7 +10,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * Phase 4 / E2 — [parseXmltvTime] replaces two per-call `SimpleDateFormat` constructions in the
+ * [parseXmltvTime] replaces two per-call `SimpleDateFormat` constructions in the
  * hottest loop of EPG import (~200,000 of them on a 100k-programme guide).
  *
  * The risk in this change is entirely timezone semantics: the no-offset form means **UTC**, and
@@ -21,7 +21,7 @@ import org.junit.Test
  */
 class XmltvTimeTest {
 
-    /** The exact pre-E2 implementation from `XmltvParser.parseTime`, kept as the oracle. */
+    /** The exact earlier implementation from `XmltvParser.parseTime`, kept as the oracle. */
     private fun legacyParseTime(raw: String?): Long {
         val t = raw?.trim()?.replace(" ", "") ?: return 0
         if (t.length < 14) return 0

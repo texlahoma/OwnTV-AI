@@ -56,8 +56,8 @@ class GuideCandidates(private val epgDao: EpgDao) {
      * The merge runs in Kotlin rather than SQL so the display name can be chosen properly: the same
      * channel is routinely named by two feeds, and `GROUP BY` hands back an arbitrary one of them.
      * The longest non-blank name wins, which is stable and is almost always the informative one
-     * ("BBC One HD" over "BBC1"). Phase 5 of the guide plan moves this into indexed columns; until
-     * then the sets involved are a few thousand rows and this is measured, not assumed — see the
+     * ("BBC One HD" over "BBC1"). The sets involved are a few thousand rows, so this runs in memory;
+     * that is measured, not assumed — see the
      * `guide_candidates` line.
      */
     suspend fun all(limit: Int = MAX_CANDIDATES): List<GuideCandidate> = withContext(Dispatchers.IO) {

@@ -1,0 +1,312 @@
+{
+ "leagues": [
+  {
+   "id": "851",
+   "slug": "atp",
+   "name": "ATP",
+   "abbreviation": "ATP"
+  }
+ ],
+ "events": [
+  {
+   "id": "315-2026",
+   "date": "2026-10-05T04:00Z",
+   "endDate": "2026-10-19T03:59Z",
+   "name": "Rolex Shanghai Masters",
+   "shortName": "Rolex Shanghai Masters",
+   "status": {
+    "period": 3,
+    "type": {
+     "name": "STATUS_FINAL",
+     "state": "post",
+     "completed": true,
+     "description": "Final",
+     "detail": "Final",
+     "shortDetail": "Final"
+    }
+   },
+   "groupings": [
+    {
+     "grouping": {
+      "id": "1",
+      "displayName": "Men's Singles"
+     },
+     "competitions": [
+      {
+       "id": "186308",
+       "date": "2026-10-05T04:05Z",
+       "startDate": "2026-10-05T04:05Z",
+       "type": {
+        "id": "1"
+       },
+       "round": {
+        "displayName": "Qualifying 1st Round"
+       },
+       "status": {
+        "period": 3,
+        "type": {
+         "name": "STATUS_FINAL",
+         "state": "post",
+         "completed": true,
+         "description": "Final",
+         "detail": "Final",
+         "shortDetail": "Final"
+        }
+       },
+       "venue": {
+        "fullName": "Shanghai, China PR"
+       },
+       "competitors": [
+        {
+         "id": "2498",
+         "type": "athlete",
+         "order": 2,
+         "homeAway": "away",
+         "winner": true,
+         "athlete": {
+          "displayName": "Nikoloz Basilashvili",
+          "shortName": "N. Basilashvili",
+          "flag": {
+           "alt": "Georgia"
+          }
+         },
+         "linescores": [
+          {
+           "value": 6.0
+          },
+          {
+           "value": 6.0,
+           "tiebreak": 1
+          },
+          {
+           "value": 7.0
+          }
+         ]
+        },
+        {
+         "id": "13358",
+         "type": "athlete",
+         "order": 1,
+         "homeAway": "home",
+         "winner": false,
+         "athlete": {
+          "displayName": "Andre Ilagan",
+          "shortName": "A. Ilagan",
+          "flag": {
+           "alt": "USA"
+          }
+         },
+         "linescores": [
+          {
+           "value": 3.0
+          },
+          {
+           "value": 7.0,
+           "tiebreak": 7
+          },
+          {
+           "value": 5.0
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "184956",
+       "date": "2026-10-16T06:40Z",
+       "startDate": "2026-10-16T06:40Z",
+       "type": {
+        "id": "1"
+       },
+       "round": {
+        "displayName": "Quarterfinal"
+       },
+       "status": {
+        "period": 2,
+        "type": {
+         "name": "STATUS_IN_PROGRESS",
+         "state": "in",
+         "completed": false,
+         "description": "In Progress",
+         "detail": "2nd Set",
+         "shortDetail": "2nd"
+        }
+       },
+       "venue": {
+        "fullName": "Shanghai, China PR"
+       },
+       "competitors": [
+        {
+         "id": "2989",
+         "type": "athlete",
+         "order": 2,
+         "homeAway": "away",
+         "athlete": {
+          "displayName": "Casper Ruud",
+          "shortName": "C. Ruud",
+          "flag": {
+           "alt": "Norway"
+          }
+         },
+         "linescores": [
+          {
+           "value": 6.0
+          },
+          {
+           "value": 1.0
+          }
+         ]
+        },
+        {
+         "id": "12657",
+         "type": "athlete",
+         "order": 1,
+         "homeAway": "home",
+         "athlete": {
+          "displayName": "Rafael Jodar",
+          "shortName": "R. Jodar",
+          "flag": {
+           "alt": "Spain"
+          }
+         },
+         "linescores": [
+          {
+           "value": 4.0
+          },
+          {
+           "value": 2.0
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "186292",
+       "date": "2026-10-05T05:40Z",
+       "startDate": "2026-10-05T05:40Z",
+       "type": {
+        "id": "1"
+       },
+       "round": {
+        "displayName": "Qualifying 1st Round"
+       },
+       "status": {
+        "period": 2,
+        "type": {
+         "name": "STATUS_RETIRED",
+         "state": "post",
+         "completed": true,
+         "description": "Retired",
+         "detail": "Retired",
+         "shortDetail": "Retired"
+        }
+       },
+       "venue": {
+        "fullName": "Shanghai, China PR"
+       },
+       "competitors": [
+        {
+         "id": "3371",
+         "type": "athlete",
+         "order": 2,
+         "homeAway": "away",
+         "winner": true,
+         "athlete": {
+          "displayName": "Nicolas Mejia",
+          "shortName": "N. Mejia",
+          "flag": {
+           "alt": "Colombia"
+          }
+         },
+         "linescores": [
+          {
+           "value": 6.0
+          },
+          {
+           "value": 0.0
+          }
+         ]
+        },
+        {
+         "id": "3347",
+         "type": "athlete",
+         "order": 1,
+         "homeAway": "home",
+         "winner": false,
+         "athlete": {
+          "displayName": "Chun-Hsin Tseng",
+          "shortName": "C. Tseng",
+          "flag": {
+           "alt": "Chinese Taipei"
+          }
+         },
+         "linescores": [
+          {
+           "value": 4.0
+          },
+          {
+           "value": 0.0
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": "184957",
+       "date": "2026-10-16T10:00Z",
+       "startDate": "2026-10-16T10:00Z",
+       "type": {
+        "id": "1"
+       },
+       "round": {
+        "displayName": "Quarterfinal"
+       },
+       "status": {
+        "period": 1,
+        "type": {
+         "name": "STATUS_SCHEDULED",
+         "state": "pre",
+         "completed": false,
+         "description": "Scheduled",
+         "detail": "Fri, October 16th at 6:00 AM EDT",
+         "shortDetail": "10/16 - 6:00 AM EDT"
+        }
+       },
+       "venue": {
+        "fullName": "Shanghai, China PR"
+       },
+       "competitors": [
+        {
+         "id": "2964",
+         "type": "athlete",
+         "order": 2,
+         "homeAway": "away",
+         "athlete": {
+          "displayName": "Tommy Paul",
+          "shortName": "T. Paul",
+          "flag": {
+           "alt": "USA"
+          }
+         }
+        },
+        {
+         "id": "2383",
+         "type": "athlete",
+         "order": 1,
+         "homeAway": "home",
+         "athlete": {
+          "displayName": "Daniil Medvedev",
+          "shortName": "D. Medvedev",
+          "flag": {
+           "alt": "Russia"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

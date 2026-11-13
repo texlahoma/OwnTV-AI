@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * Plan N1c's queue re-ordering.
+ * The category priority's queue re-ordering.
  *
  * The drain re-reads the user's chosen category between *every* category, for minutes at a time, so
  * this runs far more often than it looks. A bug here would not throw — it would quietly starve one

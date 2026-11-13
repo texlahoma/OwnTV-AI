@@ -20,6 +20,14 @@ interface PlaybackEngine {
      *  will re-ask for the identical stream by itself. The HUD shows it as a spinner with a live countdown
      *  instead of an error screen. Null when nothing is pending. */
     val providerBackOff: StateFlow<ProviderBackOff?> get() = NO_BACKOFF
+    /**
+     * When the current stall began (`SystemClock.elapsedRealtime()`), for a stream that had been playing
+     * and is now trying to get back — null while playing, before the first frame, and once the engine
+     * has given up (then [error] says so). Once a stall has lasted a while the HUD says the stream is
+     * reconnecting, so a long reconnect reads as "working on it" rather than a frozen app. Engines that
+     * don't track it leave it null.
+     */
+    val stalledSinceMs: StateFlow<Long?> get() = NULL_LONG
     val videoRes: StateFlow<String?>
     /** Up-to-4 mini stream chips (aspect · resolution · fps · audio) for the player top bar. */
     val streamChips: StateFlow<List<String>> get() = NO_CHIPS
@@ -59,6 +67,12 @@ interface PlaybackEngine {
      * a broken player, so the player says so on screen instead of leaving the user to guess.
      */
     val audioOnlyMedia: StateFlow<Boolean> get() = FALSE_FLOW
+
+    /**
+     * True once this live channel has dropped enough frames on ExoPlayer that the other engine is worth a
+     * try; the player shows a one-time hint. Once per channel per app session, false again on every tune.
+     */
+    val smoothnessHint: StateFlow<Boolean> get() = FALSE_FLOW
     /** Stop the video decoder/output but keep audio playing at position (Audio Mode enter). No-op if
      *  already audio-only. Audio is uninterrupted — mpv drops the video track (`vid=no`), ExoPlayer
      *  releases its surface. */
@@ -85,10 +99,17 @@ interface PlaybackEngine {
     fun selectSubtitle(id: Int)
     fun disableSubtitles()
     /** Attach + select an external subtitle file (OpenSubtitles/local). VOD only (mpv sub-add, or an
-     *  ExoPlayer side-load re-prepare); a live engine ignores it (subtitle plan §3.4). */
+     *  ExoPlayer side-load re-prepare); a live engine ignores it. */
     fun addExternalSubtitle(path: String, title: String, lang: String?) {}
     fun audioTracks(): List<TrackOption>
     fun textTracks(): List<TrackOption>
+
+    /** The picture heights this item offers, highest first; empty when there is nothing to choose
+     *  between (the player's Quality button shows only then). */
+    val videoQualities: StateFlow<List<Int>> get() = NO_QUALITIES
+    /** The Quality-menu pick for this item, or null for Auto (Settings → Maximum video quality). */
+    val videoQualityPick: StateFlow<Int?> get() = NULL_INT
+    fun selectVideoQuality(height: Int?) {}
 
     /** Live technical readout (label → value) for the stream-info overlay — codec, resolution, fps, HDR,
      *  bitrate, decoder, audio, buffer, source. A snapshot; the overlay re-reads it periodically.
@@ -109,16 +130,18 @@ interface PlaybackEngine {
     /** Title of the next queued item (in-season next episode), for the HUD next-episode countdown card.
      *  Null when there is no next item — a live engine leaves it null. */
     val nextUpTitle: StateFlow<String?> get() = NULL_STRING
-    /** In-player A/V-sync nudge (ms) — mpv only; an ExoPlayer engine leaves it at 0. */
+    /** True while the sleep timer waits for this item's end — the HUD then shows no next-episode card. */
+    val stopsAtItemEnd: StateFlow<Boolean> get() = FALSE_FLOW
+    /** In-player A/V-sync nudge (ms); positive = sound later. 0 on an engine that cannot shift it. */
     val audioDelayMs: StateFlow<Int> get() = ZERO_INT
-    /** True when this engine can shift audio against video (mpv's `audio-delay`). ExoPlayer cannot, so
-     *  the HUD hides the nudge there. mpv supports it on live too — provider A/V drift is real (F19e). */
+    /** True when this engine can shift audio against video — mpv (`audio-delay`) and the ExoPlayer
+     *  engines ([AudioDelayClock]), live and VOD; the HUD hides the nudge elsewhere (e.g. cast). */
     fun audioDelayAvailable(): Boolean = false
-    /** Whether the current item has its own remembered A/V-sync offset (mpv only). */
+    /** Whether the current item has its own remembered A/V-sync offset. */
     val audioDelayRemembered: StateFlow<Boolean> get() = FALSE_FLOW
-    /** Remember the current A/V-sync offset for this item, or forget it again (mpv only). */
+    /** Remember the current A/V-sync offset for this item, or forget it again. */
     fun toggleRememberAudioDelay() {}
-    /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only (subtitle plan §8). */
+    /** Subtitle-timing offset (ms) for the ACTIVE subtitle — VOD only. */
     val subDelayMs: StateFlow<Int> get() = ZERO_INT
     /** Settings → Seek step: how far one press of rewind/forward moves. VOD only; a live engine never
      *  seeks (stepping through a live archive is Live TV's own rewind, with its own setting). */
@@ -127,7 +150,7 @@ interface PlaybackEngine {
     fun adjustAudioDelay(deltaMs: Int) {}
     fun adjustSubtitleDelay(deltaMs: Int) {}
     fun resetSubtitleDelay() {}
-    /** True when timing adjustment applies to the active subtitle on this engine (plan §8.1). */
+    /** True when timing adjustment applies to the active subtitle on this engine. */
     fun subtitleTimingAvailable(): Boolean = false
     fun previous() {}
     fun next() {}
@@ -155,6 +178,9 @@ interface PlaybackEngine {
         private val NO_CHIPS: StateFlow<List<String>> = MutableStateFlow(emptyList())
         private val NULL_STRING: StateFlow<String?> = MutableStateFlow(null)
         private val FALSE_FLOW: StateFlow<Boolean> = MutableStateFlow(false)
+        private val NO_QUALITIES: StateFlow<List<Int>> = MutableStateFlow(emptyList())
+        private val NULL_INT: StateFlow<Int?> = MutableStateFlow(null)
+        private val NULL_LONG: StateFlow<Long?> = MutableStateFlow(null)
         private val DEFAULT_SEEK_STEP: StateFlow<Long> =
             MutableStateFlow(tv.own.owntv.core.settings.SeekSteps.DEFAULT_SEEK_STEP_SEC * 1000L)
     }
@@ -185,6 +211,7 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override val speed get() = p.speed
     override val nav get() = p.nav
     override val nextUpTitle get() = p.nextUpTitle
+    override val stopsAtItemEnd get() = p.stopsAtItemEnd
     override val audioDelayMs get() = p.audioDelayMs
     override fun audioDelayAvailable() = true
     override val subDelayMs get() = p.subDelayMs
@@ -204,6 +231,9 @@ class MpvPlaybackEngine(private val p: OwnTVPlayer) : PlaybackEngine {
     override fun addExternalSubtitle(path: String, title: String, lang: String?) = p.addExternalSubtitle(path, title, lang)
     override fun audioTracks() = p.audioTracks()
     override fun textTracks() = p.textTracks()
+    override val videoQualities get() = p.videoQualities
+    override val videoQualityPick get() = p.videoQualityPick
+    override fun selectVideoQuality(height: Int?) = p.selectVideoQuality(height)
     override suspend fun streamInfo() = p.streamInfo()
     override fun setBitrateTrackingEnabled(enabled: Boolean) = p.setBitrateTrackingEnabled(enabled)
     override fun refreshStreamChips() = p.refreshStreamChips()

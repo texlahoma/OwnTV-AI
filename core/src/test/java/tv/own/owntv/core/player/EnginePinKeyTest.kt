@@ -6,7 +6,7 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
- * P6 — the per-item engine pin used to be keyed on the stream URL, which a Stalker portal mints
+ * The per-item engine pin used to be keyed on the stream URL, which a Stalker portal mints
  * fresh (and single-use) on every play, so a pin never matched on the next open. The key must depend
  * only on identity the provider keeps stable.
  */

@@ -1,7 +1,7 @@
 package tv.own.owntv.core.network
 
 /**
- * Per-channel HTTP request headers (F16).
+ * Per-channel HTTP request headers.
  *
  * M3U playlists carry per-entry HTTP options — `#EXTVLCOPT:http-user-agent`, `#EXTHTTP:{"cookie":…}`,
  * `#KODIPROP:inputstream.adaptive.stream_headers`, or the `url|User-Agent=…&Referer=…` pipe suffix.

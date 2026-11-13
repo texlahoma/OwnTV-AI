@@ -6,7 +6,7 @@ import tv.own.owntv.core.storage.MediaTarget
 import java.io.File
 
 /**
- * Phase 6 / DL2: the resume offset and the paused byte count must come from the file on disk, never
+ * The resume offset and the paused byte count must come from the file on disk, never
  * from the in-memory progress counter, so that a pause-resume cycle reassembles the file exactly.
  */
 class DownloadResumeTest {

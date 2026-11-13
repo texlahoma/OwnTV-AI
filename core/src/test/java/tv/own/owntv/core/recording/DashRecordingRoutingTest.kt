@@ -81,7 +81,7 @@ class DashRecordingRoutingTest {
 
     /**
      * The manifest the engine will actually work from: two tracks, so two temp files and a mux, and
-     * a plan that knows where to start. This is what Phase C's device check confirms on the box.
+     * a plan that knows where to start. A device check confirms the same on real hardware.
      */
     @Test
     fun `the manifest that broke is now fully recordable`() {

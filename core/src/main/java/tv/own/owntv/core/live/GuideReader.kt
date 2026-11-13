@@ -9,7 +9,6 @@ import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
-import tv.own.owntv.core.epg.EpgDedupe
 import tv.own.owntv.core.epg.EpgShift
 import tv.own.owntv.core.epg.EpgSourceStore
 
@@ -55,7 +54,7 @@ class GuideReader(
     // grouped it by channel, so the grid could be drawn from one batch. It is deleted, not fixed,
     // because the shape was the fault.
     //
-    // Measured on the owner's television (2026-09-18), it read **349,077 programme rows in a single
+    // Measured on a real television, it read **349,077 programme rows in a single
     // list** over a 166-hour window — seven days of catch-up lookback for all 3,585 guide channels —
     // to draw the eight rows on screen. That is ~100 MB against a 192 MB heap before anything else,
     // and it spent 146 seconds inside `groupBy` because the heap was thrashing rather than working.
@@ -81,19 +80,25 @@ class GuideReader(
         globalShiftMinutes: Int,
         from: Long,
         to: Long,
+        /**
+         * Whole rows — synopsis and XMLTV details — for one channel's day on the Program details page.
+         * A grid row leaves both out: thousands of rows of text are what filled the cursor window.
+         */
+        withText: Boolean = false,
     ): List<EpgProgrammeEntity> = withContext(Dispatchers.IO) {
         val startedAt = SystemClock.elapsedRealtime()
         val epgKey = epgKeyOf(channel, cust)
         val shift = EpgShift.minutesFor(cust, channel, globalShiftMinutes)
+        val read: suspend (String, Long, Long) -> List<EpgProgrammeEntity> =
+            if (withText) epgDao::programmesForChannel else epgDao::programmeSummariesForChannel
         val stored = when {
             epgKey == null -> emptyList()
-            shift == 0 -> epgDao.programmeSummariesForChannel(epgKey, from, to)
-            else -> epgDao
-                .programmeSummariesForChannel(epgKey, EpgShift.toStored(from, shift), EpgShift.toStored(to, shift))
+            shift == 0 -> read(epgKey, from, to)
+            else -> read(epgKey, EpgShift.toStored(from, shift), EpgShift.toStored(to, shift))
                 .map { EpgShift.apply(it, shift) }
         }
         if (stored.isNotEmpty()) {
-            return@withContext EpgDedupe.collapse(stored).also { collapsed ->
+            return@withContext epgSourceStore.priority().resolve(stored).also { collapsed ->
                 CorePerf.log {
                     "guide_row source=stored channelId=${channel.id} key=$epgKey shift=$shift " +
                         "rows=${stored.size} collapsed=${collapsed.size} " +
@@ -143,6 +148,7 @@ class GuideReader(
         var chunks = 0
         var rowsRead = 0
         val collected = HashMap<Long, List<EpgProgrammeEntity>>()
+        val priority = epgSourceStore.priority()
         for ((shift, group) in keyed.groupBy { it.third }) {
             val rowsByKey = group
                 .map { it.second }.distinct()
@@ -158,7 +164,7 @@ class GuideReader(
                 .groupBy { it.epgChannelId }
             for ((channelId, epgKey, _) in group) {
                 rowsByKey[epgKey]?.takeIf { it.isNotEmpty() }
-                    ?.let { collected[channelId] = EpgShift.apply(EpgDedupe.collapse(it), shift) }
+                    ?.let { collected[channelId] = EpgShift.apply(priority.resolve(it), shift) }
             }
         }
         val ordered = LinkedHashMap<Long, List<EpgProgrammeEntity>>(collected.size)
@@ -185,14 +191,24 @@ class GuideReader(
         globalShiftMinutes: Int,
         atMs: Long,
         lookAheadMs: Long,
+        /**
+         * Ask the provider's short guide for the channels the stored guide cannot answer — what [row]
+         * does for a grid row. Only for a caller passing the handful of channels on screen (the phone's
+         * On now list): it is one request per unanswered channel, cached as [row]'s are.
+         */
+        providerFallback: Boolean = false,
     ): Map<Long, GuideSlot> {
         val rows = slice(channels, cust, globalShiftMinutes, atMs, atMs + lookAheadMs)
         val result = HashMap<Long, GuideSlot>(rows.size)
         for ((channelId, list) in rows) {
-            val now = list.firstOrNull { atMs in it.startMs until it.stopMs }
-            val next = list.firstOrNull { it.startMs > (now?.startMs ?: atMs) }
-            if (now == null && next == null) continue
-            result[channelId] = GuideSlot(now = now, next = next)
+            guideSlotAt(list, atMs)?.let { result[channelId] = it }
+        }
+        if (providerFallback) {
+            for (channel in channels) {
+                if (channel.id in result) continue
+                val provider = liveEpgReader.providerProgrammes(channel, cust, globalShiftMinutes)
+                guideSlotAt(provider, atMs)?.let { result[channel.id] = it }
+            }
         }
         return result
     }
@@ -201,10 +217,18 @@ class GuideReader(
     suspend fun description(programmeId: Long): String? =
         withContext(Dispatchers.IO) { runCatching { epgDao.programmeDescription(programmeId) }.getOrNull() }
 
-    /** The guide id this channel really reads from: a manual match wins over the channel's own. */
-    private fun epgKeyOf(channel: ChannelEntity, cust: SectionCustomizations): String? =
-        (cust.epgMatchResolver.epgIdFor(channel) ?: channel.epgChannelId)
-            ?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
+}
+
+/** The guide id this channel really reads from: a manual match wins over the channel's own. */
+internal fun epgKeyOf(channel: ChannelEntity, cust: SectionCustomizations): String? =
+    (cust.epgMatchResolver.epgIdFor(channel) ?: channel.epgChannelId)
+        ?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
+
+/** What is on at [atMs] in one channel's programmes (sorted by start), and what follows; null when neither. */
+internal fun guideSlotAt(list: List<EpgProgrammeEntity>, atMs: Long): GuideSlot? {
+    val now = list.firstOrNull { atMs in it.startMs until it.stopMs }
+    val next = list.firstOrNull { it.startMs > (now?.startMs ?: atMs) }
+    return if (now == null && next == null) null else GuideSlot(now = now, next = next)
 }
 
 /** What is on a channel now, and what follows it — both already on the user's clock. */

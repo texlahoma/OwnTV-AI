@@ -12,7 +12,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 /**
- * StalkerAuthManager unit tests — the §5.2 auth contract: sessions are cached per source,
+ * StalkerAuthManager unit tests — the auth contract: sessions are cached per source,
  * `withAuthRetry` re-handshakes exactly ONCE on an auth failure, and a second failure propagates
  * to the caller instead of looping. A fake client counts handshakes so the tests can assert how
  * many round trips actually happened (no network).

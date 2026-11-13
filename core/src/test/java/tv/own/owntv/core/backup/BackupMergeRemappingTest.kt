@@ -11,7 +11,7 @@ import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 
 /**
- * T2 — a merge-restore never trusts the ids in the backup file: profiles are matched by name and
+ * A merge-restore never trusts the ids in the backup file: profiles are matched by name and
  * sources by type+url+username, so every id the file carries has to be rewritten to the device's own
  * id before anything is written. Getting that wrong is silent and destructive — a restored profile's
  * favorites, folder customizations or TMDB name overrides end up attached to a DIFFERENT source or a
@@ -45,7 +45,7 @@ class BackupMergeRemappingTest {
     }
 
     /**
-     * #114 — a Stalker source has no username and several playlists routinely share one portal URL,
+     * A Stalker source has no username and several playlists routinely share one portal URL,
      * so type+url+username made every one of them the same source. On restore they all merged onto a
      * single device row, each overwriting its MAC, and the user was left with playlists that all
      * carried the same MAC and could not log in.
@@ -212,7 +212,7 @@ class BackupMergeRemappingTest {
 
     @Test
     fun `custom category ids pass through unremapped and the object array survives`() {
-        // Issue #87: a custom category's id is "custom:<uuid>" — no source id to remap, and the
+        // A custom category's id is "custom:<uuid>" — no source id to remap, and the
         // customCats field is an array of OBJECTS, not strings. Before the fix the getString(i) on
         // an object threw and the WHOLE blob fell back to the raw (unremapped) value, so a profile
         // with a custom category silently lost every source-id remap on restore.
@@ -235,6 +235,14 @@ class BackupMergeRemappingTest {
         assertEquals("My Cat", out.getJSONArray("customCats").getJSONObject(0).getString("name"))
         // Ordinary content keys in the maps still remap — the blob did NOT fall back.
         assertEquals("News", out.getJSONObject("hiddenItems").getString("200:live:7"))
+    }
+
+    @Test
+    fun `locked category keys move with their playlist and custom ids pass through`() {
+        val raw = JSONObject().put("lockedCats", JSONArray(listOf("10:live:adult", "custom:abc"))).toString()
+        val out = JSONObject(remapCustomizationValue(raw, mapOf(10L to 200L))).getJSONArray("lockedCats")
+        assertEquals("200:live:adult", out.getString(0))
+        assertEquals("custom:abc", out.getString(1))
     }
 
     @Test
@@ -456,5 +464,17 @@ class BackupMergeRemappingTest {
 
         val wrongOrder = remapKeys(filterByProfile(file, deviceProfileIds), profileIdMap)
         assertEquals(0, wrongOrder.length())
+    }
+
+    @Test
+    fun `a profile key with no one here is dropped, not handed to whoever has that number`() {
+        // File profile 3 was not matched on this device; device profile 3 is somebody else.
+        val file = JSONObject().put("1", "mine").put("3", "their-pin").put("theme", "dark")
+        val out = remapProfileKeys(file, mapOf(1L to 3L))
+        assertEquals("mine", out.getString("3"))
+        assertEquals(false, out.has("1"))
+        assertEquals("dark", out.getString("theme"))
+        assertEquals(2, out.length())
+        assertEquals(0, remapProfileKeys(JSONObject().put("5", "x"), emptyMap()).length())
     }
 }

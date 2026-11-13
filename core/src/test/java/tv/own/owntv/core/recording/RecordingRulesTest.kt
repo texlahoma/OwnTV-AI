@@ -17,12 +17,12 @@ import tv.own.owntv.core.model.SourceType
 /**
  * The decisions a recording makes, tested without a network, a disk or a clock.
  *
- * The four things Phase A3 has to get right — the space floor, the stop-and-keep rule, the
+ * The four things recording has to get right — the space floor, the stop-and-keep rule, the
  * concurrency/reserve rule and clash → MISSED — are all here.
  */
 class RecordingRulesTest {
 
-    // --- The 500 MB floor (D2 / D8) ---
+    // --- The 500 MB floor ---
 
     @Test
     fun `there is room while free space is above the reserve`() {
@@ -77,16 +77,30 @@ class RecordingRulesTest {
     // --- How a recording is closed out ---
 
     @Test
-    fun `any bytes at all is a completed recording`() {
+    fun `any real amount of video is a completed recording`() {
         // A ts file is playable to whatever point it reached, so a programme cut short is still a
         // recording the user can watch — marking it failed would hide a file that is on disk.
         assertEquals(
             RecordingStatus.COMPLETED to RecordingFailure.NONE,
-            RecordingRules.outcomeOf(bytes = 1, failure = RecordingFailure.NONE),
+            RecordingRules.outcomeOf(bytes = RecordingRules.MIN_PLAYABLE_BYTES, failure = RecordingFailure.NONE),
         )
         assertEquals(
             RecordingStatus.COMPLETED to RecordingFailure.NONE,
             RecordingRules.outcomeOf(bytes = 900_000_000, failure = RecordingFailure.NETWORK),
+        )
+    }
+
+    @Test
+    fun `a few kilobytes is not a recording`() {
+        // 12 and 20 kB files of playlist text were shown as "Ready to watch". Less than one
+        // segment of even an audio-only channel cannot be a programme.
+        assertEquals(
+            RecordingStatus.FAILED to RecordingFailure.STREAM_UNAVAILABLE,
+            RecordingRules.outcomeOf(bytes = 20_890, failure = RecordingFailure.NONE),
+        )
+        assertEquals(
+            RecordingStatus.FAILED to RecordingFailure.NETWORK,
+            RecordingRules.outcomeOf(bytes = 12_650, failure = RecordingFailure.NETWORK),
         )
     }
 
@@ -112,7 +126,7 @@ class RecordingRulesTest {
         )
     }
 
-    // --- Clash and refusal → MISSED (D10) ---
+    // --- Clash and refusal → MISSED ---
 
     @Test
     fun `a refusal becomes a reason the user can read`() {
@@ -121,7 +135,7 @@ class RecordingRulesTest {
         assertEquals(RecordingFailure.NO_CONNECTION, RecordingRules.missedBecause(StreamRefusal.RESERVED_FOR_WATCHING))
     }
 
-    // --- The concurrency and reserve rule, as the engine asks it (D10 / D11) ---
+    // --- The concurrency and reserve rule, as the engine asks it ---
 
     private fun source(maxConnections: Int) = SourceEntity(
         id = 1,
@@ -140,7 +154,7 @@ class RecordingRulesTest {
 
     @Test
     fun `a one-connection account records, because a live programme is gone forever`() {
-        // D9: the recording wins the only stream there is. The picture can come back; the programme
+        // The recording wins the only stream there is. The picture can come back; the programme
         // cannot. The reserve is meaningless here and must not block it.
         assertEquals(StreamGrant.Allowed, grant(max = 1, watching = 0, recording = 0, reserve = true))
     }

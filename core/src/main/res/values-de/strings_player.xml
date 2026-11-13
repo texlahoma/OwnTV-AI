@@ -19,37 +19,29 @@
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> hinter Live</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">Zu Live</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">Dort weiterschauen, wo du aufgehört hast?</string>
+    <string name="player_timeshift_resume_message">Dieser Sender wurde gespeichert, während du weg warst.</string>
+    <string name="player_previous_channel">Vorheriger Sender</string>
+    <string name="player_tool_sources">Quellen</string>
+    <string name="player_sources_none">Keine andere Version dieses Senders gefunden.</string>
+    <string name="player_next_channel_in_list">Nächster Sender</string>
+    <string name="player_previous_channel_in_list">Vorheriger Sender in der Liste</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Lautstärke</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Helligkeit</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Zurückspringen</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">Vorspringen</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Ton</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">Untertitel</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">Favorit</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">Catch-up</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">Tempo</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Format</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">Qualität</string>
     <string name="player_tool_mini">Mini</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">Nur Ton</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">Player</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">Info</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">Bericht</string>
     <string name="player_channel_not_found">Sender nicht gefunden</string>
     <string name="player_channel_number_entry">Kanalnummer</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">Keine Spuren verfügbar.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · Bild</string>
     <string name="player_av_sync">A/V-Synchronisierung</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">Diese Verzögerung merken</string>
     <string name="player_no_offset">Keine Verschiebung</string>
     <string name="player_subtitles_later">Untertitel werden später angezeigt</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">Nächste Folge in <xliff:g id="seconds">%1$d</xliff:g> s</string>
     <string name="player_play_now">Jetzt abspielen</string>
     <string name="player_volume">Lautstärke</string>
-    <string name="player_control_engine">Player-Engine</string>
     <string name="player_unmute">Stummschaltung aufheben</string>
     <string name="player_mute">Stummschalten</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">Zu ExoPlayer gewechselt</string>
     <string name="player_switch_mpv">Zu MPV gewechselt</string>
+    <string name="player_smoothness_hint">Dieser Sender verliert Bilder. Mit MPV als Player läuft er möglicherweise flüssiger.</string>
     <string name="player_error_image_subtitle_audio">Bildbasierte Untertitel sind für das Audioformat dieses Videos nicht verfügbar.</string>
     <string name="player_error_both_engines_exo_first">Die Wiedergabe ist mit beiden Video-Engines fehlgeschlagen (zuerst ExoPlayer, dann mpv). Die Datei ist möglicherweise beschädigt oder verwendet ein Format, das dieser Fernseher nicht wiedergeben kann.</string>
     <string name="player_error_both_engines_mpv_first">Die Wiedergabe ist mit beiden Video-Engines fehlgeschlagen (mpv und ExoPlayer). Die Datei ist möglicherweise beschädigt oder verwendet ein Format, das dieser Fernseher nicht wiedergeben kann. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">Bildbasierte Untertitel sind für das Format dieser Datei nicht verfügbar.</string>
     <string name="player_error_image_show">Bildbasierte Untertitel konnten für diese Datei nicht angezeigt werden.</string>
     <string name="player_external_could_not_open">Dieser Stream konnte nicht geöffnet werden.</string>
-    <string name="player_external_play_with">Wiedergeben mit</string>
-    <string name="player_external_play_with_item">„<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>“ wiedergeben mit…</string>
     <string name="player_external_not_found">Kein externer Player gefunden – installiere VLC oder MX Player.</string>
     <string name="player_error_audio_no_video">Der Ton wird wiedergegeben, aber das Bild konnte auf diesem Gerät nicht dargestellt werden.</string>
     <string name="player_error_file_corrupt">Die Datei dieses Videos ist fehlerhaft oder beschädigt und kann nicht wiedergegeben werden.</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">Der Videodecoder dieses Fernsehers ist ausgelastet. Versuche es gleich noch einmal.</string>
     <string name="player_error_no_internet">Keine Internetverbindung. Prüfe dein Netzwerk und versuche es erneut.</string>
     <string name="player_error_stream_unavailable">Dieser Stream konnte nicht wiedergegeben werden. Die Quelle ist möglicherweise Offline oder verwendet ein nicht unterstütztes Format. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Dieses Konto spielt bereits auf einem anderen Gerät oder in einer anderen App ab. Beende die Wiedergabe dort und drücke dann auf Erneut versuchen.</string>
     <string name="player_error_mpv_open_decode">mpv konnte diese Datei nicht öffnen oder decodieren.</string>
     <string name="player_error_mpv_stream_never_started">Der Stream wurde in mpv auch nach mehreren Versuchen nicht gestartet.</string>
+    <string name="player_error_fairplay">Dieser Stream ist mit Apple FairPlay geschützt, das Android-Geräte nicht abspielen können. Die Playlist ist für Apple-Geräte gedacht.</string>
     <string name="player_error_surround">Diese Audioausgabe unterstützt keinen Surround-Sound – zu Stereo gewechselt.</string>
     <string name="player_error_hardware_fallback">Das Format dieses Streams konnte auf diesem Fernseher nicht per Hardware decodiert werden. Daher wurde auf Softwaredecodierung zurückgegriffen, die <xliff:g id="resolution">%1$s</xliff:g> nicht ohne Überlastung des Fernsehers bewältigen kann. Andere 4K-Inhalte werden auf dem Fernseher möglicherweise weiterhin problemlos wiedergegeben; die Ursache ist das Format dieses Streams.</string>
     <string name="player_error_hardware_disabled">Die Hardwaredecodierung ist deaktiviert – die Softwaredecodierung kann Videos mit <xliff:g id="resolution">%1$s</xliff:g> nicht bewältigen. Aktiviere sie unter Einstellungen → Video-Player.</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">Fehler bei der Audioausgabe – das Gerät konnte dieses Audioformat nicht wiedergeben</string>
     <string name="player_audio_track_number">Audio <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Untertitel <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Streaminformationen</string>
     <string name="player_stream_engine">Engine</string>
     <string name="player_stream_format">Format</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Zeilensprung</string>
+    <string name="player_stream_progressive">Keiner (progressiv)</string>
+    <string name="player_stream_deinterlaced_by_player">Zeilensprung · vom Player entfernt</string>
+    <string name="player_stream_deinterlaced_by_device">Zeilensprung · vom Gerät entfernt</string>
+    <string name="player_stream_not_deinterlaced">Zeilensprung · nicht entfernt</string>
     <string name="player_stream_bitrate">Bitrate</string>
     <string name="player_stream_decoder">Decoder</string>
     <string name="player_stream_audio">Audio</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> kHz</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> kbit/s</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> s gepuffert</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">Nur Ton</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">Dieser Titel hat Ton, aber kein Bild. Es ist nichts kaputt – die Wiedergabe läuft normal.</string>
     <string name="player_audio_mono">mono</string>
     <string name="player_audio_stereo">stereo</string>
@@ -224,7 +218,6 @@
     <string name="player_subtitles_free_description_full">OpenSubtitles ist ein kostenloser, offener Community-Dienst für Untertitel. Melde dich mit deinem eigenen Konto bei opensubtitles.com an; die Erstellung eines Kontos ist kostenlos. Dies gilt nur für das aktuelle Profil.</string>
     <string name="player_subtitles_session_expired">Deine OpenSubtitles-Sitzung ist abgelaufen. Um weiterhin Untertitel suchen und herunterladen zu können, melde dich unter Einstellungen → Video-Player → Untertitel → OpenSubtitles erneut an.</string>
     <string name="player_subtitles_account_needed">OpenSubtitles-Konto erforderlich\n\nUm Untertitel zu suchen und herunterzuladen, melde dich unter Einstellungen → Video-Player → Untertitel → OpenSubtitles an. OpenSubtitles ist ein kostenloser, offener Community-Dienst – jeder kann unter opensubtitles.com kostenlos ein Konto erstellen.</string>
-    <string name="player_subtitles_no_matches">Keine passenden Untertitel gefunden.</string>
     <string name="player_subtitles_show_all_languages">Alle Sprachen anzeigen</string>
     <string name="player_subtitles_all_languages">Alle Sprachen</string>
     <string name="player_subtitles_try_again">Erneut versuchen</string>
@@ -238,17 +231,15 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Download</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Downloads</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Suchen</string>
     <string name="player_subtitles_connected_as">Verbunden als</string>
     <string name="player_subtitles_connected_user">Verbunden als <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Zurücksetzung</string>
     <string name="player_subtitles_free_account">Kostenlos</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Gib deinen OpenSubtitles-Benutzernamen und dein Passwort ein.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles konnte dich mit diesen Kontodaten nicht anmelden.</string>
     <string name="player_subtitles_sign_in_network_error">OpenSubtitles konnte nicht erreicht werden. Prüfe deine Internetverbindung und versuche es erneut.</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitles hat die Anfrage abgelehnt (Fehler <xliff:g id="code">%1$d</xliff:g>). Deine Internetverbindung funktioniert – versuche es später erneut und gib diese Nummer an, wenn du das Problem meldest.</string>
     <string name="player_subtitles_refresh_network_error">OpenSubtitles konnte nicht aktualisiert werden. Prüfe deine Internetverbindung.</string>
     <string name="player_subtitles_no_matches_all_languages">Keine passenden Untertitel gefunden. Versuche, den Suchtitel zu bearbeiten.</string>
@@ -280,18 +271,22 @@
     <string name="player_subtitles_search_language_description">In den Suchergebnissen werden nur Untertitel in dieser Sprache angezeigt. Du kannst in den Ergebnissen weiterhin „Alle Sprachen“ drücken, um alle Ergebnisse dieser Suche zu sehen.</string>
     <string name="player_subtitles_language_not_set">Nicht festgelegt</string>
     <string name="player_frame_rate_prompt_title">Bei diesem Sender kann das Bild ruckeln</string>
-    <string name="player_frame_rate_prompt_description">Die Wiedergabe läuft mit <xliff:g id="fps">%1$d</xliff:g> fps, während dein Fernseher mit <xliff:g id="current_hz">%2$d</xliff:g> Hz läuft, wodurch dein Fernseher diese Bilder nicht gleichmäßig darstellen kann – Bewegungen wirken leicht ruckelig.\n\nDie automatische Bildrate schaltet deinen Fernseher während der Wiedergabe auf <xliff:g id="target_hz">%3$d</xliff:g> Hz und danach wieder zurück. Bei manchen Fernsehern wird der Bildschirm beim Ändern der Bildrate kurz schwarz; du kannst die Funktion unter Einstellungen → Videoplayer wieder deaktivieren.</string>
+    <string name="player_frame_rate_prompt_description">Die Wiedergabe läuft mit <xliff:g id="fps">%1$d</xliff:g> fps, während dein Fernseher mit <xliff:g id="current_hz">%2$d</xliff:g> Hz läuft, wodurch dein Fernseher diese Bilder nicht gleichmäßig darstellen kann – Bewegungen wirken leicht ruckelig.\n\nDie automatische Bildrate schaltet deinen Fernseher während der Wiedergabe auf <xliff:g id="target_hz">%3$d</xliff:g> Hz und danach wieder zurück. Bei manchen Fernsehern wird der Bildschirm beim Ändern der Bildrate kurz schwarz; du kannst die Funktion unter Einstellungen → Bild → Bildrate wieder deaktivieren.</string>
     <string name="player_frame_rate_turn_on">Einschalten</string>
     <string name="player_reason_live_fallback">Live-Wiedergabe auf einen Fallback umgeschaltet</string>
     <string name="player_reason_live_no_fallback">Live-Wiedergabe fehlgeschlagen – kein Fallback mehr übrig</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Erneuter Versuch in <xliff:g id="seconds">%3$d</xliff:g> s.</string>
     <string name="player_provider_busy">Der Anbieter ist ausgelastet.</string>
+    <string name="player_reconnecting">Stream unterbrochen. Verbindung wird wiederhergestellt…</string>
     <string name="player_error_data_saver">Der Datensparmodus ist an, deshalb ist Streaming über mobile Daten aus. Verbinde dich mit WLAN oder schalte den Datensparmodus in den Einstellungen aus.</string>
-    <string name="player_audio_only_video_off">Video aus · spart Daten</string>
-    <string name="player_audio_only_show_video">Video</string>
     <string name="player_sleep_timer">Sleep-Timer</string>
     <string name="player_sleep_timer_end_of_programme">Ende der Sendung</string>
+    <string name="player_sleep_timer_end_of_movie">Ende des Films</string>
+    <string name="player_sleep_timer_end_of_episode">Ende der Folge</string>
     <string name="player_sleep_timer_remaining">Stoppt in <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_sleep_timer_screen_off">Auch den Bildschirm ausschalten</string>
+    <string name="player_sleep_timer_screen_off_explanation">Wird nur verwendet, um den Bildschirm auszuschalten, wenn der Timer abläuft – nie zu einem anderen Zeitpunkt.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Dieses Gerät erlaubt Apps nicht, den Bildschirm auszuschalten.</string>
     <string name="player_pip_expand">Vergrößern</string>
     <string name="player_error_cast_unsupported">Das Gerät, auf das du überträgst, kann diesen Stream nicht abspielen. Viele Live-Kanäle nutzen ein Format, das es nicht unterstützt – spiele ihn stattdessen auf dem Telefon ab.</string>
     <string name="player_cast_playing_on">Wird auf <xliff:g id="device">%1$s</xliff:g> abgespielt</string>
@@ -308,11 +303,10 @@
         <item quantity="other">Dein Anbieter erlaubt <xliff:g id="count">%1$d</xliff:g> Streams gleichzeitig. <xliff:g id="recording">%2$d</xliff:g> davon nehmen auf.</item>
     </plurals>
     <string name="multiview_refused_reserved">Eine Verbindung bleibt frei, damit du weiterschauen kannst. Ändere das in den Einstellungen, um auf allen Verbindungen aufzunehmen.</string>
-    <string name="multiview_unknown_connections">OwnTV konnte nicht feststellen, wie viele Streams diese Playlist erlaubt. Wenn eine Kachel fehlschlägt, liegt es daran.</string>
     <string name="multiview_decoder_exhausted">Dieser Fernseher kann keinen weiteren Sender gleichzeitig dekodieren.</string>
+    <string name="multiview_decoder_exhausted_mobile">Dieses Gerät kann keinen weiteren Sender gleichzeitig dekodieren.</string>
     <string name="multiview_tile_change_channel">Sender wechseln</string>
     <string name="multiview_tile_fullscreen">Vollbild</string>
-    <string name="multiview_tile_record">Diesen aufnehmen</string>
     <string name="multiview_tile_remove">Kachel entfernen</string>
     <string name="multiview_audio_tile">Der Ton läuft auf dieser Kachel</string>
     <string name="multiview_add_to">Zu Multiview hinzufügen</string>
@@ -320,4 +314,8 @@
     <string name="multiview_tile_sound_only">Nur Ton</string>
     <string name="multiview_tile_show_picture">Bild anzeigen</string>
     <string name="multiview_sound_only_note">Nur Ton — belegt trotzdem einen Stream deines Anbieters</string>
+    <string name="player_trailer_skip">10 s springen</string>
+    <string name="player_trailer_blocked_title">Dieser Trailer kann nicht in OwnTV abgespielt werden</string>
+    <string name="player_trailer_blocked_body">Der Inhaber erlaubt die Wiedergabe nur auf YouTube.</string>
+    <string name="player_trailer_open_youtube">In YouTube öffnen</string>
 </resources>

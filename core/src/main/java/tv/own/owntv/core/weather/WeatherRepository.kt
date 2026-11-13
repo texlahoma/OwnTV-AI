@@ -9,7 +9,7 @@ import tv.own.owntv.core.network.ConnectivityObserver
 import java.util.concurrent.TimeUnit
 
 /**
- * Phase 7 — fetches current weather via Open-Meteo (free, no API key) after resolving the device's
+ * Fetches current weather via Open-Meteo (free, no API key) after resolving the device's
  * approximate location from a free IP geolocation service. Results are cached in-memory for 30 minutes
  * so we don't hammer the free APIs on every recomposition.
  */

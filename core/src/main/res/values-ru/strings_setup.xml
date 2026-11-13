@@ -3,9 +3,9 @@
     <string name="setup_background_image">Фоновое изображение</string>
     <string name="setup_background_image_description">Выберите фотографию, которая будет отображаться за интерфейсом, или удалите её, чтобы вернуть однотонные панели.</string>
     <string name="setup_from_device">На устройстве</string>
-    <string name="setup_from_phone">С телефона</string>
+    <string name="setup_from_phone">Удалённо</string>
     <string name="setup_send_from_phone">Отправка с другого устройства</string>
-    <string name="setup_phone_background_description">На телефоне, планшете или компьютере, подключённом к той же сети Wi-Fi, отсканируйте QR-код (или откройте URL-адрес), введите этот PIN и отправьте фотографию. Она сразу станет фоновым изображением.</string>
+    <string name="setup_phone_background_description">На любом устройстве с браузером в той же сети Wi-Fi — телефоне, компьютере или другом телевизоре — отсканируйте QR-код (или откройте адрес), введите этот PIN и отправьте фото. Оно сразу станет фоном.</string>
     <string name="setup_opening_server">Запуск сервера…</string>
     <string name="setup_enter_pin_browser">Введите этот PIN в браузере</string>
     <string name="setup_open_url">Или откройте этот URL-адрес</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">Например, Моё ТВ</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">ДОБРО ПОЖАЛОВАТЬ В</string>
-    <string name="setup_welcome_tagline">Ваш собственный IPTV-плеер.</string>
     <string name="setup_get_started">Начать</string>
     <string name="setup_display_size_title">Настройте удобный размер</string>
-    <string name="setup_display_size_description">Задайте размер интерфейса и его текста. Оба параметра можно изменить позже в Настройках.</string>
-    <string name="setup_display_size_preview">Если вы легко читаете это со своего места, размер подходит.</string>
     <string name="setup_before_you_start">Перед началом</string>
     <string name="setup_disclaimer">OwnTV — это только медиаплеер. В нём нет каналов, плейлистов или контента. Вы самостоятельно добавляете собственные легально доступные источники Xtream, M3U или Stalker и несёте за них ответственность.</string>
     <string name="setup_i_understand">Понятно</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Начните с нуля или восстановите профили, плейлисты и избранное из файла резервной копии или с другого устройства.</string>
     <string name="setup_new_profile">Новый профиль</string>
     <string name="setup_create_profile_add_sources">Создать профиль и добавить источники</string>
-    <string name="setup_restore_backup">Восстановить резервную копию</string>
     <string name="setup_import_profiles_playlists">Импортировать профили и плейлисты из файла</string>
     <string name="setup_sync_device">С другого устройства</string>
     <string name="setup_sync_device_description">Скопируйте всё с другого устройства OwnTV по Wi-Fi</string>
     <string name="setup_add_playlist">Добавить плейлист</string>
     <string name="setup_add_playlist_description">Добавьте источник для этого профиля или настройте его позже.</string>
-    <string name="setup_new">Новый</string>
-    <string name="setup_add_m3u_xtream">Добавить источник M3U, Xtream или Stalker</string>
     <string name="setup_existing">Существующие</string>
     <string name="setup_use_other_profile_playlists">Использовать плейлисты другого профиля</string>
     <string name="setup_import">Импорт</string>
@@ -58,7 +51,7 @@
         <item quantity="one">Добавить <xliff:g id="count">%1$d</xliff:g> плейлист</item>
         <item quantity="few">Добавить <xliff:g id="count">%1$d</xliff:g> плейлиста</item>
         <item quantity="many">Добавить <xliff:g id="count">%1$d</xliff:g> плейлистов</item>
-        <item quantity="other">Добавить <xliff:g id="count">%1$d</xliff:g> плейлиста</item>
+        <item quantity="other">Добавить <xliff:g id="count">%1$d</xliff:g> плейлистов</item>
     </plurals>
     <string name="setup_restoring">Восстановление…</string>
     <string name="setup_wrong_backup_password">Неверный пароль резервной копии</string>
@@ -75,7 +68,7 @@
     <string name="setup_invalid_mac">Недопустимый MAC-адрес — используйте формат AA:BB:CC:DD:EE:FF</string>
     <string name="setup_pick_backup_file">Выберите файл резервной копии для восстановления</string>
     <string name="setup_restore_a_backup">Восстановление резервной копии</string>
-    <string name="setup_restore_choice_description">Отправьте резервную копию с другого устройства (телефона или ноутбука), подключённого к той же сети Wi-Fi, либо выберите файл резервной копии на этом устройстве.</string>
+    <string name="setup_restore_choice_description">Отправьте резервную копию удалённо с любого устройства с браузером в той же сети Wi-Fi или выберите файл копии, который уже есть на этом устройстве.</string>
     <string name="setup_upload_from_wifi_device">Загрузить с устройства в вашей сети Wi-Fi</string>
     <string name="setup_local_file">Локальный файл</string>
     <string name="setup_pick_backup_local">Выбрать файл резервной копии на этом устройстве</string>
@@ -88,9 +81,11 @@
         <item quantity="one">Восстановлен <xliff:g id="items">%1$d</xliff:g> элемент. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
         <item quantity="few">Восстановлено <xliff:g id="items">%1$d</xliff:g> элемента. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
         <item quantity="many">Восстановлено <xliff:g id="items">%1$d</xliff:g> элементов. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
-        <item quantity="other">Восстановлено <xliff:g id="items">%1$d</xliff:g> элемента. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
+        <item quantity="other">Восстановлено <xliff:g id="items">%1$d</xliff:g> элементов. Повторно синхронизируйте источники, чтобы загрузить контент.</item>
     </plurals>
     <string name="setup_passwords_omitted">После этого повторно введите все сохранённые пароли.</string>
+    <string name="setup_need_password">Пароль не сохранён, поэтому ещё не загружено: <xliff:g id="names">%1$s</xliff:g>. Откройте плейлист в настройках и введите его пароль.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one">Источник <xliff:g id="count">%1$d</xliff:g> был пропущен, поскольку эта версия не поддерживает тип его плейлиста.</item>
         <item quantity="few">Источники (<xliff:g id="count">%1$d</xliff:g>) были пропущены, поскольку эта версия не поддерживает типы их плейлистов.</item>
@@ -100,18 +95,10 @@
     <string name="setup_continue">Продолжить</string>
     <string name="setup_import_failed">Не удалось выполнить импорт</string>
     <string name="setup_try_again_caps">Повторить</string>
-    <string name="setup_add_from_phone">Добавление с другого устройства</string>
-    <string name="setup_phone_add_description">На телефоне, планшете или компьютере, подключённом к той же сети Wi-Fi, отсканируйте QR-код (или откройте URL-адрес), введите этот PIN, заполните данные плейлиста и нажмите «Отправить на телевизор». После этого здесь появятся данные, готовые к импорту, — нажмите «Начать импорт» на пульте ДУ.</string>
     <string name="setup_opening">Запуск…</string>
-    <string name="setup_open_server">Запустить сервер</string>
-    <string name="setup_stop_server">Остановить сервер</string>
     <string name="setup_add_source">Добавить источник</string>
-    <string name="setup_add_source_description">Заполните форму на другом устройстве или введите данные здесь с помощью пульта ДУ.</string>
-    <string name="setup_manual">Вручную</string>
-    <string name="setup_use_phone_same_wifi">Использовать телефон, планшет или компьютер в той же сети Wi-Fi</string>
-    <string name="setup_type_source_here">Ввести здесь данные Xtream / M3U / Stalker</string>
     <string name="setup_edit_source">Изменить источник</string>
-    <string name="setup_add_your_source">Добавьте свой источник</string>
+    <string name="setup_edit_from_phone">Изменить с другого устройства</string>
     <string name="setup_edit_source_description">Обновите данные этого источника или измените настройки его автообновления.</string>
     <string name="setup_byo_source_description">OwnTV — это плеер: добавьте собственный источник Xtream, M3U или Stalker.</string>
     <string name="setup_xtream">Xtream</string>
@@ -143,6 +130,8 @@
     <string name="setup_test_connection">Проверить соединение</string>
     <string name="setup_user_agent_optional">User-Agent (необязательно)</string>
     <string name="setup_user_agent_example">Например, VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (необязательно)</string>
+    <string name="setup_referer_example">Например, https://example.com/</string>
     <string name="setup_auto_refresh">Автообновление</string>
     <string name="setup_auto_refresh_description">Выкл., при запуске или при устаревании данных</string>
     <string name="setup_default_playlist">Плейлист по умолчанию</string>
@@ -165,7 +154,6 @@
     <string name="setup_now">Сейчас</string>
     <string name="setup_later">Позже</string>
     <string name="setup_off">Выкл.</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">По умолчанию (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -178,13 +166,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">Продолжить</string>
     <string name="companion_pin_mismatch">PIN не совпадает — повторите попытку.</string>
-    <string name="companion_tmdb_page_title">Отправить ключ TMDB</string>
-    <string name="companion_tmdb_heading">Отправьте свой ключ TMDB</string>
-    <string name="companion_tmdb_description">Войдите в TMDB ниже, скопируйте свой ключ API (v3 auth), вставьте его сюда и отправьте на телевизор. Личный ключ бесплатен и практически не имеет дневного лимита.</string>
-    <string name="companion_tmdb_get_key">Открыть настройки API TMDB</string>
-    <string name="companion_tmdb_invalid">Это не похоже на ключ API TMDB. Скопируйте значение «API Key (v3 auth)».</string>
-    <string name="companion_tmdb_sent_body">Ваш ключ TMDB уже на телевизоре. Нажмите там «Сохранить», чтобы начать им пользоваться.</string>
-    <string name="companion_tmdb_sent_link">Отправить другой ключ</string>
     <string name="companion_service_config_empty">Введите ключ API, URL-адрес Worker или оба значения.</string>
     <string name="companion_service_config_invalid_key">Этот ключ API выглядит недействительным.</string>
     <string name="companion_service_config_invalid_url">Введите корректный URL-адрес Worker с HTTPS.</string>
@@ -204,6 +185,12 @@
     <string name="companion_saved_heading">Отправлено на телевизор ✓</string>
     <string name="companion_saved_source_body">Источник <xliff:g id="name">%1$s</xliff:g> теперь отображается на экране добавления источника на телевизоре. Проверьте там данные и нажмите «Начать импорт» на пульте ДУ.</string>
     <string name="companion_saved_send_another">Отправить другой источник</string>
+    <string name="companion_edit_page_title">OwnTV — Изменить источник</string>
+    <string name="companion_edit_heading">Изменить <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">Измените что нужно и нажмите «Отправить на телевизор». Пустое поле сохраняет текущее значение. Изменения появятся на телевизоре — нажмите там «Сохранить» на пульте.</string>
+    <string name="companion_keep_current">Оставьте пустым, чтобы сохранить текущее значение</string>
+    <string name="companion_saved_edit_body">Изменения для <xliff:g id="name">%1$s</xliff:g> уже на экране редактирования телевизора. Проверьте их там и нажмите «Сохранить» на пульте.</string>
+    <string name="companion_saved_edit_again">Изменить что-то ещё</string>
     <string name="companion_saved_backup_body">Резервная копия теперь находится на телевизоре. Возьмите пульт ДУ и выберите, какие данные восстановить.</string>
     <string name="companion_saved_backup_link">Отправить другой файл</string>
     <string name="companion_saved_image_body">Изображение теперь используется как фон на телевизоре.</string>
@@ -271,4 +258,33 @@
     <string name="companion_error_pair_failed">Не удалось выполнить сопряжение с этим устройством.</string>
     <string name="local_sync_browser_title">Локальная синхронизация OwnTV</string>
     <string name="local_sync_browser_body">Этот адрес предназначен для приложения OwnTV на другом устройстве. Откройте там локальную синхронизацию и выберите это устройство из списка.</string>
+    <string name="setup_step_display">Экран</string>
+    <string name="setup_step_playlist">Плейлист</string>
+    <string name="setup_step_ready">Готово</string>
+    <string name="setup_key_previous_step">Предыдущий шаг</string>
+    <string name="setup_welcome_title">Добро пожаловать в OwnTV</string>
+    <string name="setup_welcome_sub">Ваш собственный IPTV-плеер. Выберите язык, чтобы начать, — его можно изменить позже в настройках.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> язык</item>
+        <item quantity="few">Все <xliff:g id="count">%1$d</xliff:g> языка</item>
+        <item quantity="many">Все <xliff:g id="count">%1$d</xliff:g> языков</item>
+        <item quantity="other">Все <xliff:g id="count">%1$d</xliff:g> языков</item>
+    </plurals>
+    <string name="setup_display_sub">Насколько крупно интерфейс и текст отображаются на этом телевизоре. Строка ниже меняется по ходу.</string>
+    <string name="setup_display_sub_mobile">Насколько крупно интерфейс и текст отображаются на этом телефоне. Строка ниже меняется по ходу.</string>
+    <string name="setup_line_zoom">Всё на экране</string>
+    <string name="setup_line_font">Только текст</string>
+    <string name="setup_line_app_icon">Как OwnTV выглядит на главном экране телевизора</string>
+    <string name="setup_line_app_icon_mobile">Как OwnTV выглядит на главном экране</string>
+    <string name="setup_restore_card_line">Из файла или удалённо с другого устройства</string>
+    <string name="setup_device_appear">Здесь появятся устройства с включённым режимом синхронизации</string>
+    <string name="setup_device_address_hint">или введите адрес другого устройства</string>
+    <string name="setup_profile_sub">У каждого профиля свои избранное, история и главная. Добавить ещё можно позже в Настройки › Профиль.</string>
+    <string name="setup_avatar">Аватар</string>
+    <string name="setup_avatar_line">Выберите или оставьте букву</string>
+    <string name="setup_create_profile">Создать профиль</string>
+    <string name="setup_phone_card_line">Заполните форму в браузере на другом устройстве — быстрее всего</string>
+    <string name="setup_importing_title">Импорт: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">Добавить телегид</string>
+    <string name="setup_add_guide_line">У новой установки ещё нет телегида</string>
 </resources>

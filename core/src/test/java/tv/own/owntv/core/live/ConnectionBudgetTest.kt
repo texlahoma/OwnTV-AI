@@ -7,7 +7,7 @@ import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 
 /**
- * The rules of D5, D10 and D11 as arithmetic. Every case here is one the owner can hit with a real
+ * The connection rules as arithmetic. Every case here is one a user can hit with a real
  * account: a one-connection panel, a panel that never said, and a recording holding a stream while
  * tiles ask for more.
  */
@@ -30,6 +30,15 @@ class ConnectionBudgetTest {
     ) = connectionBudget(source(max), OpenStreams(watching, recording), purpose, reserve)
 
     private fun refusal(grant: StreamGrant) = (grant as StreamGrant.Refused).reason
+
+    // --- "Ignore connection limit" on the playlist -----------------------------------------------
+
+    @Test
+    fun `a playlist set to ignore its limit allows every stream to try`() {
+        val ignoring = source(1).copy(ignoreConnectionLimit = true)
+        assertEquals(StreamGrant.Allowed, connectionBudget(ignoring, OpenStreams(watching = 3), StreamPurpose.WATCHING))
+        assertEquals(StreamGrant.Allowed, connectionBudget(ignoring, OpenStreams(recording = 2), StreamPurpose.RECORDING))
+    }
 
     // --- maxConnections = 0, the playlist never said ---------------------------------------------
 
@@ -64,7 +73,7 @@ class ConnectionBudgetTest {
 
     @Test
     fun `a recording may take the only connection even while something is watching`() {
-        // D9: the recording wins and the picture stops, because a live programme does not come back.
+        // The recording wins and the picture stops, because a live programme does not come back.
         assertEquals(StreamGrant.Allowed, grant(1, watching = 1, purpose = StreamPurpose.RECORDING))
     }
 
@@ -101,7 +110,7 @@ class ConnectionBudgetTest {
         assertEquals(StreamGrant.Allowed, grant(8, watching = 4))
     }
 
-    // --- tiles and recordings share the budget (D11) ------------------------------------------------
+    // --- tiles and recordings share the budget ------------------------------------------------
 
     @Test
     fun `a recording counts against the tiles`() {
@@ -117,7 +126,7 @@ class ConnectionBudgetTest {
         assertEquals(3, refused.open.total)
     }
 
-    // --- the reserve rule (D10) ---------------------------------------------------------------------
+    // --- the reserve rule ---------------------------------------------------------------------
 
     @Test
     fun `recordings leave one connection for watching by default`() {

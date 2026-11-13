@@ -4,7 +4,7 @@ import tv.own.owntv.core.model.MediaType
 import java.io.File
 
 /**
- * The three folders OwnTV keeps inside the storage root the user chose (D1).
+ * The three folders OwnTV keeps inside the storage root the user chose.
  *
  * They existed before this class did — as the string `"Movies"` at two call sites in the television
  * and two more in the phone, and as `"Series/<show>/Season N"` built by hand in both. That is exactly

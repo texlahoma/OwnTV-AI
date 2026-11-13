@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import tv.own.owntv.core.model.DownloadReason
 import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.core.model.MediaType
 
@@ -112,7 +113,7 @@ data class ContentOrderEntity(
  * row at all until the user changes something in the player.
  *
  * [contentKey] is deliberately NOT the volatile Room `itemId` that favorites/history use. It is the
- * P6 stable identity — `sourceId:mediaType:remoteId` from
+ * stable identity — `sourceId:mediaType:remoteId` from
  * [tv.own.owntv.core.player.enginePinKey], falling back to the stream URL for rows with no provider
  * id — exactly like the engine pins ([tv.own.owntv.core.player.VodEngineStore],
  * `ForceMpvStore`) and the subtitle tables. That key survives the clear-then-insert of a re-sync on
@@ -125,7 +126,7 @@ data class ContentOrderEntity(
     foreignKeys = [
         ForeignKey(entity = ProfileEntity::class, parentColumns = ["id"], childColumns = ["profileId"], onDelete = ForeignKey.CASCADE),
     ],
-    indices = [Index("profileId")],
+    indices = [Index("profileId"), Index("sourceId")],
 )
 data class PlaybackPrefsEntity(
     val profileId: Long,
@@ -158,10 +159,51 @@ data class PlaybackPrefsEntity(
      */
     val aiSubtitleSourceLanguage: String? = null,
     val updatedAt: Long = System.currentTimeMillis(),
+    /**
+     * v44: the playlist [contentKey] belongs to, so deleting a playlist deletes its rows.
+     * `-1` = unknown — a legacy stream-URL key, or a row written before v44.
+     */
+    @androidx.room.ColumnInfo(defaultValue = "-1") val sourceId: Long = -1,
+    /** v44: the audio track language this profile last chose here; null = follow the preference. */
+    val audioLang: String? = null,
+    /** v44: the subtitle track language this profile last chose here; `""` = subtitles off. */
+    val subtitleLang: String? = null,
 )
 
 /**
- * Membership rows of the user's custom combined categories (issue #87). One row pins one content
+ * What a **stream** needs, whoever is watching (v44). [playback_prefs][PlaybackPrefsEntity]
+ * is what a *person* prefers — zoom and volume — and stays per profile; the facts here belong to the
+ * stream and the device's output, so they are shared: the engine a channel only plays on, whether it is
+ * sound only, its lip-sync correction.
+ *
+ * Keyed by [tv.own.owntv.core.player.enginePinKey] like every per-item store. Replaces the DataStore
+ * sets `ForceMpvStore` / `VodEngineStore` / `AudioOnlyStore`, which are copied in once at startup and
+ * kept readable for one release. [sourceId] lets a playlist's rows go with it.
+ */
+@Entity(
+    tableName = "playback_quirks",
+    indices = [Index("sourceId")],
+)
+data class PlaybackQuirkEntity(
+    @PrimaryKey val contentKey: String,
+    /** `-1` = unknown (a legacy stream-URL key). */
+    val sourceId: Long,
+    /**
+     * `LIVE`, `MOVIE` or `EPISODE` — the kind of item, recorded by whoever wrote the row. The key
+     * alone cannot say: an item with no provider id is keyed by its stream URL. Lets the channel
+     * pins and the film pins be counted and reset separately, as their two Settings rows do.
+     */
+    val mediaType: String,
+    /** "MPV" or "EXO"; null = no pin, follow the settings. */
+    val enginePin: String? = null,
+    val audioOnly: Boolean? = null,
+    /** A/V-sync offset in ms (-5000..5000, positive = audio delayed); null = follow the global default. */
+    val audioDelayMs: Int? = null,
+    val updatedAt: Long = System.currentTimeMillis(),
+)
+
+/**
+ * Membership rows of the user's custom combined categories. One row pins one content
  * item (channel/movie/series) to a [position] inside a custom category, identified by its stable
  * DataStore key — `CustomizeKeys` with the `"custom:"` prefix, e.g. `"custom:1b2f…"` — in
  * [contextKey]. Modeled EXACTLY on [ContentOrderEntity]: the same (profileId, mediaType, contextKey,
@@ -262,6 +304,10 @@ data class DownloadEntity(
     val totalBytes: Long = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
+    /** Why it failed, waits or was paused (v48); null when there is nothing to say. */
+    val reason: DownloadReason? = null,
+    /** The HTTP status behind a failure, shown beside the reason (v48); null when there was none. */
+    val httpCode: Int? = null,
 )
 
 /**

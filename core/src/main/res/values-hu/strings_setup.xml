@@ -5,7 +5,7 @@
     <string name="setup_from_device">Helyi</string>
     <string name="setup_from_phone">Távoli</string>
     <string name="setup_send_from_phone">Küldés másik eszközről</string>
-    <string name="setup_phone_background_description">Egy másik eszközön ugyanazon a Wi-Fi-n — telefonon, táblagépen vagy számítógépen — olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, és küldj egy fotót. Azonnal háttérkép lesz belőle.</string>
+    <string name="setup_phone_background_description">Bármelyik böngészős eszközön ugyanazon a Wi-Fin – telefonon, számítógépen vagy egy másik tévén – olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-t, és küldj egy fotót. Azonnal háttér lesz belőle.</string>
     <string name="setup_opening_server">Kiszolgáló indítása…</string>
     <string name="setup_enter_pin_browser">Írd be ezt a PIN-kódot a böngészőbe</string>
     <string name="setup_open_url">Vagy nyisd meg ezt az URL-t</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">pl. Saját TV</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">ÜDVÖZÖL AZ</string>
-    <string name="setup_welcome_tagline">A saját IPTV-lejátszód.</string>
     <string name="setup_get_started">Kezdés</string>
     <string name="setup_display_size_title">Állítsd kényelmes olvasásra</string>
-    <string name="setup_display_size_description">Add meg a felület és a szöveg méretét. Mindkettőt később is módosíthatod a Beállításokban.</string>
-    <string name="setup_display_size_preview">Ha ezt a helyedről könnyen elolvasod, a méret megfelelő.</string>
     <string name="setup_before_you_start">Mielőtt elkezdenéd</string>
     <string name="setup_disclaimer">Az OwnTV kizárólag médialejátszó. Nem tartalmaz csatornákat, lejátszási listákat vagy tartalmat. A saját, legálisan elérhető Xtream-, M3U- vagy Stalker-forrásaid hozzáadása a te felelősséged.</string>
     <string name="setup_i_understand">Megértettem</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">Kezdj tiszta lappal, vagy állítsd vissza a profiljaidat, lejátszási listáidat és kedvenceidet egy biztonsági mentésből vagy egy másik eszközről.</string>
     <string name="setup_new_profile">Új profil</string>
     <string name="setup_create_profile_add_sources">Profil létrehozása és források hozzáadása</string>
-    <string name="setup_restore_backup">Mentés visszaállítása</string>
     <string name="setup_import_profiles_playlists">Profilok és lejátszási listák importálása fájlból</string>
     <string name="setup_sync_device">Másik eszközről</string>
     <string name="setup_sync_device_description">Másolj át mindent a másik OwnTV-eszközödről Wi-Fin keresztül</string>
     <string name="setup_add_playlist">Lejátszási lista hozzáadása</string>
     <string name="setup_add_playlist_description">Adj forrást ehhez a profilhoz, vagy állíts be egyet később.</string>
-    <string name="setup_new">Új</string>
-    <string name="setup_add_m3u_xtream">M3U-, Xtream- vagy Stalker-forrás hozzáadása</string>
     <string name="setup_existing">Meglévő</string>
     <string name="setup_use_other_profile_playlists">Egy másik profil lejátszási listáinak használata</string>
     <string name="setup_import">Importálás</string>
@@ -73,7 +66,7 @@
     <string name="setup_invalid_mac">Érvénytelen MAC-cím — használd az AA:BB:CC:DD:EE:FF formátumot</string>
     <string name="setup_pick_backup_file">Válassz visszaállítandó mentésfájlt</string>
     <string name="setup_restore_a_backup">Mentés visszaállítása</string>
-    <string name="setup_restore_choice_description">Küldd el a mentést egy másik eszközről (telefonról vagy laptopról) ugyanarról a Wi-Fi-ről, vagy válassz egy mentésfájlt, ami már ezen az eszközön van.</string>
+    <string name="setup_restore_choice_description">Küldd el a mentést távolról bármelyik böngészős eszközről ugyanazon a Wi-Fin, vagy válassz egy mentésfájlt, ami már ezen az eszközön van.</string>
     <string name="setup_upload_from_wifi_device">Feltöltés a Wi-Fi-den lévő eszközről</string>
     <string name="setup_local_file">Helyi fájl</string>
     <string name="setup_pick_backup_local">Válassz mentésfájlt ezen az eszközön</string>
@@ -87,6 +80,8 @@
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> elem visszaállítva. Szinkronizáld újra a forrásaidat a tartalom betöltéséhez.</item>
     </plurals>
     <string name="setup_passwords_omitted">Utána add meg újra a mentett jelszavakat.</string>
+    <string name="setup_need_password">Nincs mentett jelszó, ezért még nincs betöltve: <xliff:g id="names">%1$s</xliff:g>. Nyisd meg a lejátszási listát a Beállításokban, és add meg a jelszavát.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert ez a verzió nem támogatja a lejátszásilista-típusát.</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> forrás kimaradt, mert ez a verzió nem támogatja a lejátszásilista-típusukat.</item>
@@ -94,18 +89,10 @@
     <string name="setup_continue">Tovább</string>
     <string name="setup_import_failed">Az importálás nem sikerült</string>
     <string name="setup_try_again_caps">Újrapróbálkozás</string>
-    <string name="setup_add_from_phone">Hozzáadás másik eszközről</string>
-    <string name="setup_phone_add_description">Egy telefonon, táblagépen vagy számítógépen ugyanazon a Wi-Fi-n olvasd be a QR-kódot (vagy nyisd meg az URL-t), add meg ezt a PIN-kódot, töltsd ki a lejátszási listád adatait, és koppints a Küldés a TV-re gombra. Az adatok itt jelennek meg, importálásra készen — az Importálás indítása gombot a távirányítóval nyomod meg.</string>
     <string name="setup_opening">Indítás…</string>
-    <string name="setup_open_server">Kiszolgáló indítása</string>
-    <string name="setup_stop_server">Kiszolgáló leállítása</string>
     <string name="setup_add_source">Forrás hozzáadása</string>
-    <string name="setup_add_source_description">Töltsd ki az űrlapot egy másik eszközön, vagy írd be az adatokat itt a távirányítóval.</string>
-    <string name="setup_manual">Kézi</string>
-    <string name="setup_use_phone_same_wifi">Használj telefont, táblagépet vagy számítógépet ugyanazon a Wi-Fi-n</string>
-    <string name="setup_type_source_here">Xtream / M3U / Stalker adatok beírása itt</string>
     <string name="setup_edit_source">Forrás szerkesztése</string>
-    <string name="setup_add_your_source">Add hozzá a forrásodat</string>
+    <string name="setup_edit_from_phone">Szerkesztés másik eszközről</string>
     <string name="setup_edit_source_description">Frissítsd ennek a forrásnak az adatait, vagy módosítsd az automatikus frissítés beállítását.</string>
     <string name="setup_byo_source_description">Az OwnTV egy lejátszó — hozd a saját Xtream-, M3U- vagy Stalker-forrásodat.</string>
     <string name="setup_xtream">Xtream</string>
@@ -142,6 +129,8 @@
     <string name="setup_test_connection">Kapcsolat tesztelése</string>
     <string name="setup_user_agent_optional">User-Agent (nem kötelező)</string>
     <string name="setup_user_agent_example">pl. VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (nem kötelező)</string>
+    <string name="setup_referer_example">pl. https://example.com/</string>
     <string name="setup_auto_refresh">Automatikus frissítés</string>
     <string name="setup_auto_refresh_description">Ki, induláskor, vagy ha az adatok elavultak</string>
     <string name="setup_default_playlist">Alapértelmezett lejátszási lista</string>
@@ -164,7 +153,6 @@
     <string name="setup_now">Most</string>
     <string name="setup_later">Később</string>
     <string name="setup_off">Ki</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">Alapértelmezett (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -177,13 +165,6 @@
     <string name="companion_pin_aria">PIN-kód</string>
     <string name="companion_continue">Tovább</string>
     <string name="companion_pin_mismatch">Ez a PIN-kód nem egyezett — próbáld újra.</string>
-    <string name="companion_tmdb_page_title">TMDB-kulcs küldése</string>
-    <string name="companion_tmdb_heading">Küldd el a TMDB-kulcsodat</string>
-    <string name="companion_tmdb_description">Jelentkezz be lent a TMDB-be, másold ki az API-kulcsodat (v3 auth), illeszd be ide, és küldd el a TV-re. A személyes kulcs ingyenes, és gyakorlatilag nincs napi korlátja.</string>
-    <string name="companion_tmdb_get_key">TMDB API-beállítások megnyitása</string>
-    <string name="companion_tmdb_invalid">Ez nem úgy néz ki, mint egy TMDB API-kulcs. Az „API Key (v3 auth)” értéket másold ki.</string>
-    <string name="companion_tmdb_sent_body">A TMDB-kulcsod most már a TV-n van. Ott nyomd meg a Mentés gombot a használatba vételhez.</string>
-    <string name="companion_tmdb_sent_link">Másik kulcs küldése</string>
     <string name="companion_service_config_empty">Adj meg egy API-kulcsot, egy Worker URL-t, vagy mindkettőt.</string>
     <string name="companion_service_config_invalid_key">Ez az API-kulcs nem tűnik érvényesnek.</string>
     <string name="companion_service_config_invalid_url">Adj meg egy érvényes HTTPS Worker URL-t.</string>
@@ -203,6 +184,12 @@
     <string name="companion_saved_heading">Elküldve a TV-dre ✓</string>
     <string name="companion_saved_source_body">A(z) <xliff:g id="name">%1$s</xliff:g> már a TV Forrás hozzáadása képernyőjén van. Ellenőrizd ott az adatokat, és nyomd meg a távirányítón az Importálás indítása gombot.</string>
     <string name="companion_saved_send_another">Másik forrás küldése</string>
+    <string name="companion_edit_page_title">OwnTV — Forrás szerkesztése</string>
+    <string name="companion_edit_heading"><xliff:g id="name">%1$s</xliff:g> szerkesztése</string>
+    <string name="companion_edit_description">Módosítsd, amit kell, és nyomd meg a Küldés a TV-re gombot. Az üresen hagyott mező megtartja a jelenlegi értékét. A módosítások megjelennek a tévén – ott nyomd meg a Mentés gombot a távirányítón.</string>
+    <string name="companion_keep_current">Hagyd üresen a jelenlegi érték megtartásához</string>
+    <string name="companion_saved_edit_body">A(z) <xliff:g id="name">%1$s</xliff:g> módosításai most a tévé szerkesztőképernyőjén vannak. Ellenőrizd őket ott, és nyomd meg a Mentés gombot a távirányítón.</string>
+    <string name="companion_saved_edit_again">Más módosítása</string>
     <string name="companion_saved_backup_body">A mentésed már a TV-n van. Vedd kézbe a távirányítót, és válaszd ki, mely részeket állítsuk vissza.</string>
     <string name="companion_saved_backup_link">Másik fájl küldése</string>
     <string name="companion_saved_image_body">A képed mostantól a TV háttérképe.</string>
@@ -265,4 +252,31 @@
     <string name="companion_error_pair_failed">Nem sikerült párosítani ezzel az eszközzel.</string>
     <string name="local_sync_browser_title">OwnTV helyi szinkronizálás</string>
     <string name="local_sync_browser_body">Ez a cím a másik eszközén futó OwnTV alkalmazásnak szól. Nyissa meg ott a Helyi szinkronizálást, és válassza ki ezt az eszközt a listából.</string>
+    <string name="setup_step_display">Megjelenítés</string>
+    <string name="setup_step_playlist">Lejátszási lista</string>
+    <string name="setup_step_ready">Kész</string>
+    <string name="setup_key_previous_step">Előző lépés</string>
+    <string name="setup_welcome_title">Üdvözöl az OwnTV</string>
+    <string name="setup_welcome_sub">A saját IPTV-lejátszód. Kezdéshez válassz nyelvet – később a Beállításokban módosíthatod.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> nyelv</item>
+        <item quantity="other">Mind a <xliff:g id="count">%1$d</xliff:g> nyelv</item>
+    </plurals>
+    <string name="setup_display_sub">Mekkora a felület és a szöveg ezen a tévén. Az alábbi sor menet közben változik.</string>
+    <string name="setup_display_sub_mobile">Mekkora a felület és a szöveg ezen a telefonon. Az alábbi sor menet közben változik.</string>
+    <string name="setup_line_zoom">Minden a képernyőn</string>
+    <string name="setup_line_font">Csak a szöveg</string>
+    <string name="setup_line_app_icon">Így jelenik meg az OwnTV a tévé kezdőképernyőjén</string>
+    <string name="setup_line_app_icon_mobile">Így jelenik meg az OwnTV a kezdőképernyődön</string>
+    <string name="setup_restore_card_line">Fájlból vagy távolról egy másik eszközről</string>
+    <string name="setup_device_appear">Az aktív szinkronizálási módú eszközök itt jelennek meg</string>
+    <string name="setup_device_address_hint">vagy írd be a másik eszköz címét</string>
+    <string name="setup_profile_sub">Minden profilnak saját kedvencei, előzményei és kezdőlapja van. Továbbiakat később a Beállítások › Profil alatt adhatsz hozzá.</string>
+    <string name="setup_avatar">Avatar</string>
+    <string name="setup_avatar_line">Válassz egyet, vagy maradjon a kezdőbetű</string>
+    <string name="setup_create_profile">Profil létrehozása</string>
+    <string name="setup_phone_card_line">Töltsd ki az űrlapot egy másik eszköz böngészőjében – a leggyorsabb</string>
+    <string name="setup_importing_title"><xliff:g id="name">%1$s</xliff:g> importálása</string>
+    <string name="setup_add_guide">TV-műsorújság hozzáadása</string>
+    <string name="setup_add_guide_line">Egy friss telepítésnek még nincs műsorújsága</string>
 </resources>

@@ -7,7 +7,7 @@ import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.sync.work.CatalogSyncScheduler
 
 /**
- * "The user is looking at *this* category — fill it first." (Plan N1c.)
+ * "The user is looking at *this* category — fill it first."
  *
  * A lazily-added Stalker catalogue arrives over about sixteen minutes, top-down in the portal's own
  * category order. That is the right default, and for almost every category it is invisible: the
@@ -17,8 +17,8 @@ import tv.own.owntv.core.sync.work.CatalogSyncScheduler
  * order. Its first page is there, but the rest is behind fifteen other categories and, if the drain
  * happens to be resting between passes, behind a fifteen-minute timer as well.
  *
- * N1c was originally scoped as a read-through paging layer — fetch the missing pages synchronously
- * while the user scrolls. That was abandoned once N1d landed, because it would have meant a
+ * This is not a read-through paging layer that fetches the missing pages synchronously while the
+ * user scrolls. The background drain already exists, and such a layer would have meant a
  * RemoteMediator-shaped hook across every query shape (All / Favourites / History / Custom / Folder
  * × rating / dateAdded / playlist / manual) when only `LiveKey.Folder` maps onto a portal category
  * at all. This is the small version of the same idea: do not fetch differently, just **re-order what
@@ -61,8 +61,8 @@ class CatalogPriority(
             "priority category sourceId=${row.sourceId} type=${row.mediaType} cat=${row.categoryRemoteId} " +
                 "pagesLeft=${row.lastPage - row.nextPage + 1}",
         )
-        // KEEP inside the scheduler, so this cannot restart a pass that is already running or
-        // already waiting for playback to stop.
+        // A running pass is left alone (it re-reads the request between categories); one resting
+        // behind its retry delay is replaced by one that starts now.
         scheduler.enqueueCatalogBackfill(row.sourceId)
     }
 

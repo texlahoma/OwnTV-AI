@@ -28,7 +28,7 @@ sealed interface CompanionServerState {
     data class Failed(val failure: CompanionFailure) : CompanionServerState
 
     /**
-     * Closed by the server itself after [CompanionHttpServer.MAX_PIN_ATTEMPTS] wrong PINs (C2).
+     * Closed by the server itself after [CompanionHttpServer.MAX_PIN_ATTEMPTS] wrong PINs.
      * Distinct from [Failed] because nothing went wrong with the app — the user just needs to start
      * the link again, which mints a fresh PIN.
      */

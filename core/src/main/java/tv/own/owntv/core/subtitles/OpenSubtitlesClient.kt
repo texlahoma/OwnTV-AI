@@ -11,13 +11,13 @@ import org.json.JSONObject
 import java.io.IOException
 
 /**
- * OpenSubtitles REST client (subtitle plan Part B Phase 1). All calls go through the OwnTV
+ * OpenSubtitles REST client. All calls go through the OwnTV
  * OpenSubtitles Worker (worker/opensub/), which injects the application consumer key — the app
  * never holds an Api-Key. The Worker forwards to api.opensubtitles.com or
  * vip-api.opensubtitles.com per request via the X-OS-Host header, so the login-returned
- * `base_url` is honoured through the proxy (plan §5.4).
+ * `base_url` is honoured through the proxy.
  *
- * Logging rule: never log usernames, passwords, tokens, or full auth responses (plan §12).
+ * Logging rule: never log usernames, passwords, tokens, or full auth responses.
  */
 class OpenSubtitlesClient(
     private val okHttpClient: OkHttpClient,
@@ -47,7 +47,7 @@ class OpenSubtitlesClient(
         val user: UserInfo,
     )
 
-    /** Account status per plan §5.3 — provider-reported values only, never assumed totals. */
+    /** Account status — provider-reported values only, never assumed totals. */
     data class UserInfo(
         val username: String?,
         val level: String?,
@@ -84,7 +84,7 @@ class OpenSubtitlesClient(
             parseUser(json.optJSONObject("data"), username)
         }
 
-    /** GET /subtitles search (unauthenticated — Api-Key only, injected by the Worker). Phase 2 UI. */
+    /** GET /subtitles search (unauthenticated — Api-Key only, injected by the Worker). */
     suspend fun search(query: Map<String, String>): JSONObject = withContext(Dispatchers.IO) {
         val qs = query.entries.joinToString("&") {
             "${it.key}=${java.net.URLEncoder.encode(it.value, "UTF-8")}"
@@ -94,8 +94,8 @@ class OpenSubtitlesClient(
 
     /**
      * POST /download — mints the single-use, time-limited download link for [fileId] and consumes one
-     * quota unit (review R2). Callers MUST check the cache by file_id first (review R3). Requests
-     * UTF-8 normalization (plan §7.2). Returns the raw response: `link`, `remaining`, `reset_time`.
+     * quota unit. Callers MUST check the cache by file_id first. Requests
+     * UTF-8 normalization. Returns the raw response: `link`, `remaining`, `reset_time`.
      */
     suspend fun requestDownload(token: String, apiHost: String, fileId: Long): JSONObject =
         withContext(Dispatchers.IO) {
@@ -184,7 +184,7 @@ class OpenSubtitlesClient(
         /** The maintainer's deployment of worker/opensub/ — holds the consumer key server-side. */
         private const val WORKER_BASE = "https://my-owntv-opensub.xiannero.workers.dev"
 
-        /** Standard upstream; login's base_url may switch a VIP account to vip-api (plan §5.4). */
+        /** Standard upstream; login's base_url may switch a VIP account to vip-api. */
         const val DEFAULT_HOST = "api.opensubtitles.com"
 
         /** OpenSubtitles requires an identifying UA; must match what the Worker sends upstream. */

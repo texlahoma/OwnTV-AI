@@ -17,10 +17,10 @@ data class RecordingProgress(
 /**
  * App-wide "something is recording" signal, shaped after
  * [tv.own.owntv.core.download.DownloadActivityTracker] and the sync trackers before it, so the pill
- * both apps already have can carry recording lines beside its sync and download ones (D13).
+ * both apps already have can carry recording lines beside its sync and download ones.
  *
  * A **map**, not a single nullable: unlike downloads, recordings run concurrently up to the
- * playlist's connection budget (D10), so there can be several at once and the pill shows a line for
+ * playlist's connection budget, so there can be several at once and the pill shows a line for
  * each. Purely observational — nothing reads this to decide anything.
  */
 class RecordingActivityTracker {

@@ -24,9 +24,6 @@ interface TrendingDao {
     @Query("SELECT * FROM trending_items WHERE sourceId IN (:sourceIds) ORDER BY sourceId, position")
     suspend fun getItemsForSources(sourceIds: List<Long>): List<TrendingItemEntity>
 
-    @Query("SELECT * FROM trending_items WHERE sourceId IN (:sourceIds) ORDER BY sourceId, position")
-    fun observeItems(sourceIds: List<Long>): Flow<List<TrendingItemEntity>>
-
     @Query("SELECT * FROM trending_items ORDER BY sourceId, position")
     fun observeAllItems(): Flow<List<TrendingItemEntity>>
 
@@ -41,9 +38,6 @@ interface TrendingDao {
 
     @Query("DELETE FROM trending_items WHERE sourceId = :sourceId")
     suspend fun deleteItems(sourceId: Long)
-
-    @Query("DELETE FROM trending_snapshots WHERE sourceId = :sourceId")
-    suspend fun deleteSnapshot(sourceId: Long)
 
     @Query(
         "UPDATE trending_snapshots SET lastAttemptAt = :attemptAt, lastAttemptStatus = 'FAILED', " +

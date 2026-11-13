@@ -2,7 +2,7 @@ package tv.own.owntv.core.weather
 
 import androidx.compose.runtime.Immutable
 
-/** Phase 7 — weather chip data. null means no data yet / offline / location unavailable. */
+/** Weather chip data. null means no data yet / offline / location unavailable. */
 @Immutable
 data class WeatherInfo(
     val temperatureC: Float,

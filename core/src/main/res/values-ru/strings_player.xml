@@ -19,37 +19,29 @@
     <string name="player_behind_live">● <xliff:g id="offset">%1$s</xliff:g> до прямого эфира</string>
     <string name="player_live_offset">−<xliff:g id="offset">%1$s</xliff:g></string>
     <string name="player_go_live">К эфиру</string>
-    <!-- Translators: The bubble above the live scrub bar while rewinding a channel: the clock time being scrubbed to, then the name of the programme on air then. Placeholders are the time and the programme title. -->
+    <string name="player_timeshift_resume_title">Продолжить с того же места?</string>
+    <string name="player_timeshift_resume_message">Пока вас не было, канал сохранялся.</string>
+    <string name="player_previous_channel">Предыдущий канал</string>
+    <string name="player_tool_sources">Источники</string>
+    <string name="player_sources_none">Другой версии этого канала не найдено.</string>
+    <string name="player_next_channel_in_list">Следующий канал</string>
+    <string name="player_previous_channel_in_list">Предыдущий канал в списке</string>
     <string name="player_live_scrub_at"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g></string>
-    <!-- Translators: Label under the volume button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_volume">Громкость</string>
-    <!-- Translators: Label under the brightness button on the phone player's control bar, and the label on the slider a vertical swipe on the left of the picture shows. Keep this very short (14 characters maximum) — it sits inside a small button. -->
     <string name="player_tool_brightness">Яркость</string>
-    <!-- Translators: Spoken label for the phone player's skip-backwards button, which jumps back by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_back">Назад</string>
-    <!-- Translators: Spoken label for the phone player's skip-forwards button, which jumps forward by the user's own seek step. Keep this very short (16 characters maximum). -->
     <string name="player_skip_forward">Вперёд</string>
-    <!-- Translators: Label under the audio-track button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio">Звук</string>
-    <!-- Translators: Label under the subtitles button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_subtitles">Субтитры</string>
-    <!-- Translators: Label under the favourite button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_favorite">Избранное</string>
-    <!-- Translators: Label under the catch-up button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_catchup">Архив</string>
-    <!-- Translators: Label under the playback-speed button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_speed">Скорость</string>
-    <!-- Translators: Label under the aspect-ratio/zoom button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_aspect">Формат</string>
-    <!-- Translators: Label under the mini-player button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
+    <string name="player_tool_quality">Качество</string>
     <string name="player_tool_mini">Мини</string>
-    <!-- Translators: Label under the audio-only button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_audio_only">Только звук</string>
-    <!-- Translators: Label under the playback-engine button on the player control bar, shown when it has focus. The engine name (MPV/EXO) is shown beside it as the value, so this is just the word for the player itself. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_engine">Плеер</string>
-    <!-- Translators: Label under the stream-info button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_info">Сведения</string>
-    <!-- Translators: Label under the report-stream button on the player control bar, shown when it has focus. Keep this very short (14 characters maximum) — it sits inside the button on the remote-driven player bar. -->
     <string name="player_tool_report">Отчёт</string>
     <string name="player_channel_not_found">Канал не найден</string>
     <string name="player_channel_number_entry">Номер канала</string>
@@ -67,7 +59,6 @@
     <string name="player_no_tracks">Нет доступных дорожек.</string>
     <string name="player_image_track"><xliff:g id="label">%1$s</xliff:g> · графические</string>
     <string name="player_av_sync">Синхронизация аудио и видео</string>
-    <!-- Translators: Player audio menu action that stores the current A/V-sync offset for this item. -->
     <string name="player_av_sync_remember">Запомнить эту задержку</string>
     <string name="player_no_offset">Без задержки</string>
     <string name="player_subtitles_later">Субтитры показываются позже</string>
@@ -81,7 +72,6 @@
     <string name="player_next_episode">Следующая серия через <xliff:g id="seconds">%1$d</xliff:g> с</string>
     <string name="player_play_now">Смотреть сейчас</string>
     <string name="player_volume">Громкость</string>
-    <string name="player_control_engine">Движок плеера</string>
     <string name="player_unmute">Включить звук</string>
     <string name="player_mute">Выключить звук</string>
     <string name="player_percent"><xliff:g id="value">%1$d</xliff:g>%%</string>
@@ -98,6 +88,7 @@
     <string name="player_time_remaining">−<xliff:g id="time">%1$s</xliff:g></string>
     <string name="player_switch_exo">Переключено на ExoPlayer</string>
     <string name="player_switch_mpv">Переключено на mpv</string>
+    <string name="player_smoothness_hint">Этот канал теряет кадры. Переключение плеера на mpv может сделать воспроизведение плавнее.</string>
     <string name="player_error_image_subtitle_audio">Графические субтитры недоступны для аудиоформата этого видео.</string>
     <string name="player_error_both_engines_exo_first">Воспроизведение не удалось в обоих видеодвижках (сначала ExoPlayer, затем mpv). Возможно, файл повреждён или использует формат, который этот телевизор не поддерживает.</string>
     <string name="player_error_both_engines_mpv_first">Воспроизведение не удалось в обоих видеодвижках (mpv и ExoPlayer). Возможно, файл повреждён или использует формат, который этот телевизор не поддерживает. (<xliff:g id="error">%1$s</xliff:g>)</string>
@@ -110,8 +101,6 @@
     <string name="player_error_image_format">Графические субтитры недоступны для формата этого файла.</string>
     <string name="player_error_image_show">Не удалось показать графические субтитры для этого файла.</string>
     <string name="player_external_could_not_open">Не удалось открыть этот поток.</string>
-    <string name="player_external_play_with">Воспроизвести с помощью</string>
-    <string name="player_external_play_with_item">Воспроизвести «<xliff:g id="channel">%1$s</xliff:g> · <xliff:g id="programme">%2$s</xliff:g>» с помощью…</string>
     <string name="player_external_not_found">Внешний плеер не найден — установите VLC или MX Player.</string>
     <string name="player_error_audio_no_video">Звук воспроизводится, но видео не удалось отобразить на этом устройстве.</string>
     <string name="player_error_file_corrupt">Файл этого видео имеет неверную структуру или повреждён и не может быть воспроизведён.</string>
@@ -119,8 +108,10 @@
     <string name="player_error_decoder_busy">Видеодекодер этого телевизора занят. Повторите попытку через некоторое время.</string>
     <string name="player_error_no_internet">Нет подключения к интернету. Проверьте сеть и повторите попытку.</string>
     <string name="player_error_stream_unavailable">Не удалось воспроизвести этот поток. Возможно, источник не в сети или использует неподдерживаемый формат. <xliff:g id="hint">%1$s</xliff:g></string>
+    <string name="player_error_account_in_use">Эта учётная запись уже воспроизводит на другом устройстве или в другом приложении. Остановите воспроизведение там и нажмите «Повторить».</string>
     <string name="player_error_mpv_open_decode">mpv не удалось открыть или декодировать этот файл.</string>
     <string name="player_error_mpv_stream_never_started">После нескольких попыток поток так и не запустился в mpv.</string>
+    <string name="player_error_fairplay">Этот поток защищён Apple FairPlay, который устройства Android не могут воспроизвести. Плейлист рассчитан на устройства Apple.</string>
     <string name="player_error_surround">Этот аудиовыход не поддерживает многоканальный звук — выполнено переключение на стерео.</string>
     <string name="player_error_hardware_fallback">Формат этого потока не удалось декодировать аппаратно на данном телевизоре, поэтому было использовано программное декодирование, которое не справляется с <xliff:g id="resolution">%1$s</xliff:g> без перегрузки телевизора. При этом телевизор может нормально воспроизводить другой контент в 4K; проблема связана с форматом именно этого потока.</string>
     <string name="player_error_hardware_disabled">Аппаратное декодирование отключено — программное декодирование не справляется с видео в разрешении <xliff:g id="resolution">%1$s</xliff:g>. Включите аппаратное декодирование в разделе «Настройки → Видеоплеер».</string>
@@ -141,7 +132,7 @@
     <string name="player_reason_audio">Ошибка аудиовыхода — устройство не смогло воспроизвести этот аудиоформат</string>
     <string name="player_audio_track_number">Звуковая дорожка <xliff:g id="number">%1$d</xliff:g></string>
     <string name="player_subtitle_track_number">Субтитры <xliff:g id="number">%1$d</xliff:g></string>
-    <string name="player_metadata_separator"> · </string>
+    <string name="player_metadata_separator">" · "</string>
     <string name="player_stream_info">Информация о потоке</string>
     <string name="player_stream_engine">Движок</string>
     <string name="player_stream_format">Формат</string>
@@ -151,6 +142,11 @@
     <string name="player_stream_hdr10_pq">HDR10 (PQ)</string>
     <string name="player_stream_hlg">HLG</string>
     <string name="player_stream_sdr">SDR</string>
+    <string name="player_stream_interlacing">Чересстрочность</string>
+    <string name="player_stream_progressive">Нет (прогрессивная)</string>
+    <string name="player_stream_deinterlaced_by_player">Чересстрочная · устранена плеером</string>
+    <string name="player_stream_deinterlaced_by_device">Чересстрочная · устранена устройством</string>
+    <string name="player_stream_not_deinterlaced">Чересстрочная · не устранена</string>
     <string name="player_stream_bitrate">Битрейт</string>
     <string name="player_stream_decoder">Декодер</string>
     <string name="player_stream_audio">Аудио</string>
@@ -164,9 +160,7 @@
     <string name="player_stream_khz"><xliff:g id="value">%1$s</xliff:g> кГц</string>
     <string name="player_stream_kbps"><xliff:g id="value">%1$s</xliff:g> кбит/с</string>
     <string name="player_stream_seconds"><xliff:g id="value">%1$s</xliff:g> с в буфере</string>
-    <!-- Translators: Heading of the plate shown over the black video area when the item being played has no video track at all (a radio channel, a music-only file). This is NOT an error - playback is working. -->
     <string name="player_audio_only_title">Только звук</string>
-    <!-- Translators: Body of the "Audio only" plate. Reassures the user that nothing is broken: the item simply contains no picture. -->
     <string name="player_audio_only_body">Здесь есть звук, но нет изображения. Это не ошибка — воспроизведение идёт нормально.</string>
     <string name="player_audio_mono">моно</string>
     <string name="player_audio_stereo">стерео</string>
@@ -174,13 +168,13 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> канал</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> канала</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> каналов</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> канала</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> каналов</item>
     </plurals>
     <plurals name="player_stream_dropped_frames">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> кадр пропущен</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> кадра пропущено</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> кадров пропущено</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> кадра пропущено</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> кадров пропущено</item>
     </plurals>
     <string name="player_decoder_hardware">аппаратный декодер</string>
     <string name="player_decoder_software">программный декодер</string>
@@ -212,31 +206,30 @@
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> загрузка из <xliff:g id="total">%2$d</xliff:g> осталась на сегодня</item>
         <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> загрузки из <xliff:g id="total">%2$d</xliff:g> осталось на сегодня</item>
         <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> загрузок из <xliff:g id="total">%2$d</xliff:g> осталось на сегодня</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузки из <xliff:g id="total">%2$d</xliff:g> осталось на сегодня</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузок из <xliff:g id="total">%2$d</xliff:g> осталось на сегодня</item>
     </plurals>
     <plurals name="player_subtitles_remaining_short">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> загрузка осталась на сегодня</item>
         <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня</item>
         <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня</item>
     </plurals>
     <plurals name="player_subtitles_remaining_reset">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> загрузка осталась на сегодня · сброс через <xliff:g id="reset">%2$s</xliff:g></item>
         <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня · сброс через <xliff:g id="reset">%2$s</xliff:g></item>
         <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня · сброс через <xliff:g id="reset">%2$s</xliff:g></item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня · сброс через <xliff:g id="reset">%2$s</xliff:g></item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня · сброс через <xliff:g id="reset">%2$s</xliff:g></item>
     </plurals>
     <plurals name="player_subtitles_remaining_count">
         <item quantity="one"><xliff:g id="remaining">%1$d</xliff:g> загрузка осталась на сегодня</item>
         <item quantity="few"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня</item>
         <item quantity="many"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня</item>
-        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузки осталось на сегодня</item>
+        <item quantity="other"><xliff:g id="remaining">%1$d</xliff:g> загрузок осталось на сегодня</item>
     </plurals>
     <string name="player_subtitles_session">Срок действия сеанса соединения ограничен. Отключите этот параметр, чтобы сохранять только временный сеанс.</string>
     <string name="player_subtitles_free_description_full">OpenSubtitles — бесплатный открытый общественный сервис субтитров. Войдите с помощью собственной учётной записи opensubtitles.com; её можно создать бесплатно. Это относится только к текущему профилю.</string>
     <string name="player_subtitles_session_expired">Срок действия вашего сеанса OpenSubtitles истёк. Чтобы продолжить поиск и загрузку субтитров, снова войдите в разделе «Настройки → Видеоплеер → Субтитры → OpenSubtitles».</string>
     <string name="player_subtitles_account_needed">Требуется учётная запись OpenSubtitles\n\nЧтобы искать и загружать субтитры, войдите в разделе «Настройки → Видеоплеер → Субтитры → OpenSubtitles». OpenSubtitles — бесплатный открытый общественный сервис: любой пользователь может бесплатно создать учётную запись на opensubtitles.com.</string>
-    <string name="player_subtitles_no_matches">Подходящие субтитры не найдены.</string>
     <string name="player_subtitles_show_all_languages">Показать все языки</string>
     <string name="player_subtitles_all_languages">Все языки</string>
     <string name="player_subtitles_try_again">Повторить</string>
@@ -250,19 +243,17 @@
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> загрузка</item>
         <item quantity="few"><xliff:g id="count">%1$d</xliff:g> загрузки</item>
         <item quantity="many"><xliff:g id="count">%1$d</xliff:g> загрузок</item>
-        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> загрузки</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> загрузок</item>
     </plurals>
-    <string name="player_subtitles_tags_separator"> · </string>
+    <string name="player_subtitles_tags_separator">" · "</string>
     <string name="player_subtitles_search">Искать</string>
     <string name="player_subtitles_connected_as">Выполнен вход как</string>
     <string name="player_subtitles_connected_user">Выполнен вход как <xliff:g id="username">%1$s</xliff:g></string>
     <string name="player_subtitles_resets">Сброс</string>
     <string name="player_subtitles_free_account">Бесплатная</string>
-    <string name="player_subtitles_in"><xliff:g id="value">%1$s</xliff:g></string>
     <string name="player_subtitles_enter_credentials">Введите имя пользователя и пароль OpenSubtitles.</string>
     <string name="player_subtitles_invalid_credentials">OpenSubtitles не удалось выполнить вход с указанными данными учётной записи.</string>
     <string name="player_subtitles_sign_in_network_error">Не удалось подключиться к OpenSubtitles. Проверьте подключение к интернету и повторите попытку.</string>
-    <!-- Translators: Error when OpenSubtitles answers the sign-in with an HTTP error code (e.g. 403, 429, 500). The placeholder is that code. -->
     <string name="player_subtitles_sign_in_server_error">OpenSubtitles отклонил запрос (ошибка <xliff:g id="code">%1$d</xliff:g>). Подключение к интернету работает — повторите попытку позже и укажите этот номер, если сообщите о проблеме.</string>
     <string name="player_subtitles_refresh_network_error">Не удалось обновить OpenSubtitles. Проверьте подключение к интернету.</string>
     <string name="player_subtitles_no_matches_all_languages">Подходящих субтитров не найдено. Попробуйте изменить название для поиска.</string>
@@ -294,18 +285,22 @@
     <string name="player_subtitles_search_language_description">В результатах поиска будут только субтитры на этом языке. Вы по-прежнему можете нажать «Все языки» в результатах, чтобы увидеть всё для одного поиска.</string>
     <string name="player_subtitles_language_not_set">Не выбран</string>
     <string name="player_frame_rate_prompt_title">На этом канале возможны рывки изображения</string>
-    <string name="player_frame_rate_prompt_description">Канал воспроизводится со скоростью <xliff:g id="fps">%1$d</xliff:g> fps, а ваш телевизор работает с частотой <xliff:g id="current_hz">%2$d</xliff:g> Гц, поэтому не может показывать эти кадры равномерно — движение выглядит слегка прерывистым.\n\nАвтопереключение частоты кадров переводит телевизор на <xliff:g id="target_hz">%3$d</xliff:g> Гц, пока вы смотрите, а затем возвращает обратно. Некоторые телевизоры на мгновение гаснут при смене частоты; вы можете снова отключить эту функцию в разделе «Настройки» → «Видеоплеер».</string>
+    <string name="player_frame_rate_prompt_description">Канал воспроизводится со скоростью <xliff:g id="fps">%1$d</xliff:g> fps, а ваш телевизор работает с частотой <xliff:g id="current_hz">%2$d</xliff:g> Гц, поэтому не может показывать эти кадры равномерно — движение выглядит слегка прерывистым.\n\nАвтопереключение частоты кадров переводит телевизор на <xliff:g id="target_hz">%3$d</xliff:g> Гц, пока вы смотрите, а затем возвращает обратно. Некоторые телевизоры на мгновение гаснут при смене частоты; вы можете снова отключить эту функцию в разделе «Настройки» → «Изображение» → «Частота кадров».</string>
     <string name="player_frame_rate_turn_on">Включить</string>
     <string name="player_reason_live_fallback">Воспроизведение прямого эфира переключено на резервный вариант</string>
     <string name="player_reason_live_no_fallback">Воспроизведение прямого эфира не удалось — резервных вариантов не осталось</string>
     <string name="player_provider_retry_after">HTTP <xliff:g id="code">%1$d</xliff:g>: <xliff:g id="reason">%2$s</xliff:g> Повторная попытка через <xliff:g id="seconds">%3$d</xliff:g> с.</string>
     <string name="player_provider_busy">Провайдер занят.</string>
+    <string name="player_reconnecting">Трансляция прервана. Переподключение…</string>
     <string name="player_error_data_saver">Экономия трафика включена, поэтому воспроизведение через мобильный интернет отключено. Подключитесь к Wi-Fi или выключите экономию трафика в настройках.</string>
-    <string name="player_audio_only_video_off">Видео выключено · экономия трафика</string>
-    <string name="player_audio_only_show_video">Видео</string>
     <string name="player_sleep_timer">Таймер сна</string>
     <string name="player_sleep_timer_end_of_programme">Конец передачи</string>
+    <string name="player_sleep_timer_end_of_movie">Конец фильма</string>
+    <string name="player_sleep_timer_end_of_episode">Конец серии</string>
     <string name="player_sleep_timer_remaining">Остановится через <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="player_sleep_timer_screen_off">Также выключать экран</string>
+    <string name="player_sleep_timer_screen_off_explanation">Используется только для выключения экрана по окончании таймера и больше ни для чего.</string>
+    <string name="player_sleep_timer_screen_off_unavailable">Это устройство не позволяет приложениям выключать экран.</string>
     <string name="player_pip_expand">Развернуть</string>
     <string name="player_error_cast_unsupported">Устройство, на которое вы транслируете, не может воспроизвести этот поток. Многие каналы используют формат, который оно не поддерживает, — включите его на телефоне.</string>
     <string name="player_cast_playing_on">Воспроизводится на <xliff:g id="device">%1$s</xliff:g></string>
@@ -317,20 +312,19 @@
         <item quantity="one">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> поток одновременно, и он занят.</item>
         <item quantity="few">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потока одновременно, и все они заняты.</item>
         <item quantity="many">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потоков одновременно, и все они заняты.</item>
-        <item quantity="other">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потока одновременно, и все они заняты.</item>
+        <item quantity="other">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потоков одновременно, и все они заняты.</item>
     </plurals>
     <plurals name="multiview_refused_all_in_use_recording">
         <item quantity="one">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> поток одновременно. Из них записывают <xliff:g id="recording">%2$d</xliff:g>.</item>
         <item quantity="few">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потока одновременно. Из них записывают <xliff:g id="recording">%2$d</xliff:g>.</item>
         <item quantity="many">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потоков одновременно. Из них записывают <xliff:g id="recording">%2$d</xliff:g>.</item>
-        <item quantity="other">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потока одновременно. Из них записывают <xliff:g id="recording">%2$d</xliff:g>.</item>
+        <item quantity="other">Провайдер разрешает <xliff:g id="count">%1$d</xliff:g> потоков одновременно. Из них записывают <xliff:g id="recording">%2$d</xliff:g>.</item>
     </plurals>
     <string name="multiview_refused_reserved">Одно подключение остаётся свободным, чтобы вы могли продолжать смотреть. Измените это в настройках, чтобы записывать на всех подключениях.</string>
-    <string name="multiview_unknown_connections">OwnTV не смог узнать, сколько потоков разрешает этот плейлист. Если плитка не запустится, причина в этом.</string>
     <string name="multiview_decoder_exhausted">Этот телевизор не может декодировать ещё один канал одновременно.</string>
+    <string name="multiview_decoder_exhausted_mobile">Это устройство не может декодировать ещё один канал одновременно.</string>
     <string name="multiview_tile_change_channel">Сменить канал</string>
     <string name="multiview_tile_fullscreen">На весь экран</string>
-    <string name="multiview_tile_record">Записать этот</string>
     <string name="multiview_tile_remove">Убрать плитку</string>
     <string name="multiview_audio_tile">Звук идёт с этой плитки</string>
     <string name="multiview_add_to">Добавить в мультиэкран</string>
@@ -338,4 +332,8 @@
     <string name="multiview_tile_sound_only">Только звук</string>
     <string name="multiview_tile_show_picture">Показать изображение</string>
     <string name="multiview_sound_only_note">Только звук — всё равно занимает один поток провайдера</string>
+    <string name="player_trailer_skip">Перемотка 10 с</string>
+    <string name="player_trailer_blocked_title">Этот трейлер нельзя воспроизвести в OwnTV</string>
+    <string name="player_trailer_blocked_body">Владелец разрешает воспроизведение только на YouTube.</string>
+    <string name="player_trailer_open_youtube">Открыть в YouTube</string>
 </resources>

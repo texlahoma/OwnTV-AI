@@ -7,7 +7,7 @@ import java.nio.ByteOrder
 import java.util.Locale
 
 /**
- * The OpenSubtitles "moviehash" (plan §3.3): file size + the first and last 64 KiB summed as
+ * The OpenSubtitles "moviehash": file size + the first and last 64 KiB summed as
  * little-endian unsigned 64-bit words. Only computable when the COMPLETE media file is local —
  * OwnTV uses it solely for downloaded movies/episodes, as an optional search-quality enhancer.
  * Reads 128 KiB total, so it's fast; callers still guard it with a timeout and never let a

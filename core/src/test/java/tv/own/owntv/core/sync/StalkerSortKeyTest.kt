@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * The page arithmetic shared by the setup sweep and the background drain (N1b/N1d).
+ * The page arithmetic shared by the setup sweep and the background drain.
  *
  * It has to be exact in both places: a row stored at setup and the same row stored minutes later by
  * the drain must land on the same slot, and `sortOrder` is deliberately not part of the content

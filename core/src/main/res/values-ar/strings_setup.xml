@@ -5,7 +5,7 @@
     <string name="setup_from_device">محلي</string>
     <string name="setup_from_phone">عن بُعد</string>
     <string name="setup_send_from_phone">الإرسال من جهاز آخر</string>
-    <string name="setup_phone_background_description">على هاتف أو جهاز لوحي أو حاسوب متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل PIN هذا ثم أرسل صورة. ستصبح الصورة الخلفية فورًا.</string>
+    <string name="setup_phone_background_description">على أي جهاز فيه متصفح على شبكة Wi-Fi نفسها — هاتف أو حاسوب أو تلفاز آخر — امسح رمز QR (أو افتح العنوان)، وأدخل رمز PIN هذا وأرسل صورة. ستصبح الخلفية فورًا.</string>
     <string name="setup_opening_server">جارٍ فتح الخادم…</string>
     <string name="setup_enter_pin_browser">أدخل PIN هذا في المتصفح</string>
     <string name="setup_open_url">أو افتح عنوان URL هذا</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">مثلاً: تلفازي</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">مرحبًا بك في</string>
-    <string name="setup_welcome_tagline">مشغّل IPTV الخاص بك.</string>
     <string name="setup_get_started">البدء</string>
     <string name="setup_display_size_title">اجعل القراءة مريحة</string>
-    <string name="setup_display_size_description">حدّد حجم الواجهة ونصّها. يمكنك تغيير كليهما لاحقًا من الإعدادات.</string>
-    <string name="setup_display_size_preview">إذا كنت تقرأ هذا بسهولة من مكان جلوسك، فالحجم مناسب.</string>
     <string name="setup_before_you_start">قبل البدء</string>
     <string name="setup_disclaimer">OwnTV هو مشغّل وسائط فقط. ولا يتضمن أي قنوات أو قوائم تشغيل أو محتوى. أنت مسؤول عن إضافة مصادر Xtream أو M3U أو Stalker الخاصة بك التي يحق لك الوصول إليها قانونيًا.</string>
     <string name="setup_i_understand">فهمت</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">ابدأ من جديد، أو استعد ملفاتك الشخصية وقوائم التشغيل والمفضّلة من ملف نسخة احتياطية أو من جهاز آخر.</string>
     <string name="setup_new_profile">ملف شخصي جديد</string>
     <string name="setup_create_profile_add_sources">أنشئ ملفًا شخصيًا وأضف مصادر</string>
-    <string name="setup_restore_backup">استعادة نسخة احتياطية</string>
     <string name="setup_import_profiles_playlists">استيراد الملفات الشخصية وقوائم التشغيل من ملف</string>
     <string name="setup_sync_device">من جهاز آخر</string>
     <string name="setup_sync_device_description">انسخ كل شيء من جهاز OwnTV الآخر عبر الواي فاي</string>
     <string name="setup_add_playlist">إضافة قائمة تشغيل</string>
     <string name="setup_add_playlist_description">أضف مصدرًا لهذا الملف الشخصي، أو أعدّه لاحقًا.</string>
-    <string name="setup_new">جديد</string>
-    <string name="setup_add_m3u_xtream">إضافة مصدر M3U أو Xtream أو Stalker</string>
     <string name="setup_existing">موجود</string>
     <string name="setup_use_other_profile_playlists">استخدام قوائم تشغيل ملف شخصي آخر</string>
     <string name="setup_import">استيراد</string>
@@ -77,7 +70,7 @@
     <string name="setup_invalid_mac">عنوان MAC غير صالح — استخدم التنسيق AA:BB:CC:DD:EE:FF</string>
     <string name="setup_pick_backup_file">اختيار ملف نسخة احتياطية لاستعادته</string>
     <string name="setup_restore_a_backup">استعادة نسخة احتياطية</string>
-    <string name="setup_restore_choice_description">أرسل النسخة الاحتياطية من جهاز آخر (هاتف أو حاسوب محمول) متصل بشبكة Wi-Fi نفسها، أو اختر ملف نسخة احتياطية موجودًا على هذا الجهاز.</string>
+    <string name="setup_restore_choice_description">أرسل النسخة الاحتياطية عن بُعد من أي جهاز فيه متصفح على شبكة Wi-Fi نفسها، أو اختر ملف نسخة احتياطية موجودًا على هذا الجهاز.</string>
     <string name="setup_upload_from_wifi_device">التحميل من جهاز متصل بشبكة Wi-Fi لديك</string>
     <string name="setup_local_file">ملف محلي</string>
     <string name="setup_pick_backup_local">اختر ملف نسخة احتياطية على هذا الجهاز</string>
@@ -95,6 +88,8 @@
         <item quantity="other">تمت استعادة <xliff:g id="items">%1$d</xliff:g> من العناصر. أعِد مزامنة مصادرك لتحميل المحتوى.</item>
     </plurals>
     <string name="setup_passwords_omitted">أعد إدخال أي كلمات مرور محفوظة بعد ذلك.</string>
+    <string name="setup_need_password">لا توجد كلمة مرور محفوظة، لذا لم يتم التحميل بعد: <xliff:g id="names">%1$s</xliff:g>. افتح قائمة التشغيل في الإعدادات وأدخل كلمة المرور الخاصة بها.</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="zero">تم تخطي <xliff:g id="count">%1$d</xliff:g> من المصادر لأن هذا الإصدار لا يدعم أنواع قوائم التشغيل الخاصة بها.</item>
         <item quantity="one">تم تخطي <xliff:g id="count">%1$d</xliff:g> مصدر لأن هذا الإصدار لا يدعم نوع قائمة التشغيل الخاص به.</item>
@@ -106,18 +101,10 @@
     <string name="setup_continue">متابعة</string>
     <string name="setup_import_failed">فشل الاستيراد</string>
     <string name="setup_try_again_caps">إعادة المحاولة</string>
-    <string name="setup_add_from_phone">الإضافة من جهاز آخر</string>
-    <string name="setup_phone_add_description">على هاتف أو جهاز لوحي أو حاسوب متصل بشبكة Wi-Fi نفسها، امسح رمز QR ضوئيًا (أو افتح عنوان URL)، وأدخل PIN هذا، ثم أدخل بيانات قائمة التشغيل واضغط على «إرسال إلى التلفاز». ستظهر تفاصيلها هنا جاهزة للاستيراد — ثم اضغط على «بدء الاستيراد» باستخدام جهاز التحكم عن بُعد.</string>
     <string name="setup_opening">جارٍ الفتح…</string>
-    <string name="setup_open_server">فتح الخادم</string>
-    <string name="setup_stop_server">إيقاف الخادم</string>
     <string name="setup_add_source">إضافة مصدر</string>
-    <string name="setup_add_source_description">املأ النموذج على جهاز آخر، أو اكتب التفاصيل هنا باستخدام جهاز التحكم عن بُعد.</string>
-    <string name="setup_manual">يدوي</string>
-    <string name="setup_use_phone_same_wifi">استخدام هاتف أو جهاز لوحي أو حاسوب على شبكة Wi-Fi نفسها</string>
-    <string name="setup_type_source_here">إدخال Xtream / M3U / Stalker هنا</string>
     <string name="setup_edit_source">تعديل المصدر</string>
-    <string name="setup_add_your_source">إضافة مصدرك</string>
+    <string name="setup_edit_from_phone">التعديل من جهاز آخر</string>
     <string name="setup_edit_source_description">حدّث تفاصيل هذا المصدر، أو غيّر إعداد التحديث التلقائي الخاص به.</string>
     <string name="setup_byo_source_description">OwnTV هو مشغّل — أضف مصدر Xtream أو M3U أو Stalker الخاص بك.</string>
     <string name="setup_xtream">Xtream</string>
@@ -149,6 +136,8 @@
     <string name="setup_test_connection">اختبار الاتصال</string>
     <string name="setup_user_agent_optional">User-Agent (اختياري)</string>
     <string name="setup_user_agent_example">مثلاً: VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (اختياري)</string>
+    <string name="setup_referer_example">مثلاً: https://example.com/</string>
     <string name="setup_auto_refresh">التحديث التلقائي</string>
     <string name="setup_auto_refresh_description">إيقاف، أو عند بدء التشغيل، أو عندما تصبح البيانات قديمة</string>
     <string name="setup_default_playlist">قائمة التشغيل الافتراضية</string>
@@ -171,7 +160,6 @@
     <string name="setup_now">الآن</string>
     <string name="setup_later">لاحقًا</string>
     <string name="setup_off">إيقاف</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">الافتراضي (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -184,13 +172,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">متابعة</string>
     <string name="companion_pin_mismatch">PIN هذا غير مطابق — حاول مجددًا.</string>
-    <string name="companion_tmdb_page_title">إرسال مفتاح TMDB</string>
-    <string name="companion_tmdb_heading">أرسل مفتاح TMDB الخاص بك</string>
-    <string name="companion_tmdb_description">سجّل الدخول إلى TMDB أدناه، وانسخ مفتاح API‏ (v3 auth)، والصقه هنا وأرسله إلى التلفزيون. المفتاح الشخصي مجاني ولا حد يومي له عمليًا.</string>
-    <string name="companion_tmdb_get_key">فتح إعدادات API في TMDB</string>
-    <string name="companion_tmdb_invalid">لا يبدو هذا مفتاح API لـ TMDB. انسخ قيمة "API Key (v3 auth)".</string>
-    <string name="companion_tmdb_sent_body">وصل مفتاح TMDB إلى التلفزيون. اضغط حفظ هناك لبدء استخدامه.</string>
-    <string name="companion_tmdb_sent_link">إرسال مفتاح آخر</string>
     <string name="companion_service_config_empty">أدخل مفتاح API أو عنوان Worker أو كليهما.</string>
     <string name="companion_service_config_invalid_key">لا يبدو مفتاح API هذا صحيحًا.</string>
     <string name="companion_service_config_invalid_url">أدخل عنوان Worker صحيحًا يبدأ بـ HTTPS.</string>
@@ -210,6 +191,12 @@
     <string name="companion_saved_heading">تم الإرسال إلى تلفازك ✓</string>
     <string name="companion_saved_source_body">أصبح <xliff:g id="name">%1$s</xliff:g> الآن على شاشة إضافة مصدر في التلفاز. تحقّق من التفاصيل هناك واضغط على «بدء الاستيراد» باستخدام جهاز التحكم عن بُعد.</string>
     <string name="companion_saved_send_another">إرسال مصدر آخر</string>
+    <string name="companion_edit_page_title">OwnTV — تعديل المصدر</string>
+    <string name="companion_edit_heading">تعديل <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="companion_edit_description">غيّر ما تحتاج إليه واضغط إرسال إلى التلفاز. الحقل المتروك فارغًا يحتفظ بقيمته الحالية. تظهر التغييرات على التلفاز — اضغط حفظ هناك بجهاز التحكم.</string>
+    <string name="companion_keep_current">اتركه فارغًا للاحتفاظ بالقيمة الحالية</string>
+    <string name="companion_saved_edit_body">أصبحت تغييرات <xliff:g id="name">%1$s</xliff:g> الآن على شاشة التعديل في التلفاز. راجعها هناك واضغط حفظ بجهاز التحكم.</string>
+    <string name="companion_saved_edit_again">تغيير شيء آخر</string>
     <string name="companion_saved_backup_body">أصبحت نسختك الاحتياطية الآن على التلفاز. أمسك جهاز التحكم عن بُعد واختر الأجزاء التي تريد استعادتها.</string>
     <string name="companion_saved_backup_link">إرسال ملف مختلف</string>
     <string name="companion_saved_image_body">أصبحت صورتك الآن خلفية التلفاز.</string>
@@ -277,4 +264,35 @@
     <string name="companion_error_pair_failed">تعذّر الاقتران بهذا الجهاز.</string>
     <string name="local_sync_browser_title">المزامنة المحلية في OwnTV</string>
     <string name="local_sync_browser_body">هذا العنوان مخصص لتطبيق OwnTV على جهازك الآخر. افتح المزامنة المحلية هناك واختر هذا الجهاز من القائمة.</string>
+    <string name="setup_step_display">العرض</string>
+    <string name="setup_step_playlist">قائمة التشغيل</string>
+    <string name="setup_step_ready">جاهز</string>
+    <string name="setup_key_previous_step">الخطوة السابقة</string>
+    <string name="setup_welcome_title">مرحبًا بك في OwnTV</string>
+    <string name="setup_welcome_sub">مشغّل IPTV الخاص بك. اختر لغة للبدء، ويمكنك تغييرها لاحقًا من الإعدادات.</string>
+    <plurals name="setup_languages_all">
+        <item quantity="zero">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="one">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="two">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="few">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="many">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+        <item quantity="other">جميع اللغات (<xliff:g id="count">%1$d</xliff:g>)</item>
+    </plurals>
+    <string name="setup_display_sub">حجم الواجهة ونصها على هذا التلفاز. يتغيّر الصف أدناه أثناء الضبط.</string>
+    <string name="setup_display_sub_mobile">حجم الواجهة ونصها على هذا الهاتف. يتغيّر الصف أدناه أثناء الضبط.</string>
+    <string name="setup_line_zoom">كل ما على الشاشة</string>
+    <string name="setup_line_font">النص فقط</string>
+    <string name="setup_line_app_icon">طريقة ظهور OwnTV على الشاشة الرئيسية للتلفاز</string>
+    <string name="setup_line_app_icon_mobile">طريقة ظهور OwnTV على شاشتك الرئيسية</string>
+    <string name="setup_restore_card_line">من ملف، أو عن بُعد من جهاز آخر</string>
+    <string name="setup_device_appear">تظهر هنا الأجهزة التي فُعّل فيها وضع المزامنة</string>
+    <string name="setup_device_address_hint">أو اكتب عنوان الجهاز الآخر</string>
+    <string name="setup_profile_sub">لكل ملف شخصي مفضلاته وسجله وصفحته الرئيسية. أضف المزيد لاحقًا من الإعدادات › الملف الشخصي.</string>
+    <string name="setup_avatar">الصورة الرمزية</string>
+    <string name="setup_avatar_line">اختر واحدة أو أبقِ الحرف</string>
+    <string name="setup_create_profile">إنشاء الملف الشخصي</string>
+    <string name="setup_phone_card_line">املأ النموذج في متصفح جهاز آخر — الأسرع</string>
+    <string name="setup_importing_title">جارٍ استيراد <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="setup_add_guide">إضافة دليل البرامج</string>
+    <string name="setup_add_guide_line">التثبيت الجديد ليس فيه دليل بعد</string>
 </resources>

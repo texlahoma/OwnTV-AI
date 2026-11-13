@@ -2,7 +2,7 @@ package tv.own.owntv.core.repository
 
 /**
  * Naming and eligibility rules for the tee'd XMLTV cache files, extracted so they can be tested
- * directly (Phase 4 / E1).
+ * directly.
  *
  * The download is tee'd to `epg_<storeId>.xmltv.tmp` and renamed to `epg_<storeId>.xmltv` only after
  * the parse finishes cleanly. That rename is the *only* thing that makes a file eligible here — so a

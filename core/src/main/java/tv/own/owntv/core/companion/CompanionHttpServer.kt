@@ -42,7 +42,7 @@ class CompanionHttpServer(
 ) {
 
     /**
-     * The server's **own** slice of the IO pool (C3). Every accepted socket used to be handled on the
+     * The server's **own** slice of the IO pool. Every accepted socket used to be handled on the
      * shared `Dispatchers.IO`, where each one holds a thread for up to its `soTimeout` (10 s, or 30 s
      * for uploads) — so a connection flood, or just a browser pre-connecting aggressively, could park
      * the whole pool and stall the app's own syncs, downloads and image loading. A limited view caps
@@ -55,11 +55,11 @@ class CompanionHttpServer(
     private val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
     private val running = AtomicBoolean(false)
 
-    /** In-flight connections (C3). Beyond the cap a socket is closed at once rather than queued. */
+    /** In-flight connections. Beyond the cap a socket is closed at once rather than queued. */
     private val inFlight = java.util.concurrent.Semaphore(MAX_IN_FLIGHT)
 
     /**
-     * Consecutive wrong PINs this session (C2). A 6-digit PIN is a million possibilities, which a
+     * Consecutive wrong PINs this session. A 6-digit PIN is a million possibilities, which a
      * script on a LAN exhausts in minutes; the constant-time compare stops timing leakage but says
      * nothing about volume. Reset by any correct PIN.
      */
@@ -77,11 +77,13 @@ class CompanionHttpServer(
     /** Which page/endpoint set is live for the current session (add-source vs. backup upload). */
     @Volatile private var mode: CompanionMode = CompanionMode.ADD_SOURCE
 
+    /** What the [CompanionMode.EDIT_SOURCE] page shows; its type is the only one accepted. */
+    @Volatile private var editPrefill: CompanionPayload? = null
+
     /** Session callbacks — set on [start], only the one matching [mode] ever fires. */
     @Volatile private var onPayload: (CompanionPayload) -> Unit = {}
     @Volatile private var onBackup: (String) -> Unit = {}
     @Volatile private var onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> }
-    @Volatile private var onTmdbKey: (String) -> Unit = {}
     @Volatile private var onServiceConfig: (CompanionServiceConfig) -> Unit = {}
 
     /** The backup file served at `/backup.json` in [CompanionMode.BACKUP_DOWNLOAD] mode. */
@@ -89,13 +91,18 @@ class CompanionHttpServer(
 
     /**
      * Local sync only (see [CompanionMode.LOCAL_SYNC]). [syncInfo] answers `/sync/hello`, [onPair]
-     * mints and stores a secret for a device that just typed the right PIN, and [pairedSecrets] are
-     * the secrets already issued — any one of them is accepted in place of the PIN, which is what
-     * makes the second sync one tap instead of a fresh six digits.
+     * mints and stores a secret for a device that just typed the right PIN, and [pairedSecrets] maps
+     * the secrets already issued to the device each one belongs to — any of them is accepted in
+     * place of the PIN, which is what makes the second sync one tap instead of a fresh six digits,
+     * and the mapping is what lets a request be attributed to a device rather than to "someone".
+     *
+     * [onAutoSyncAsk] is a paired device asking to set up automatic sync, with its terms: it suspends
+     * until the person here accepts or declines, and its answer is the answer that device receives.
      */
     @Volatile private var syncInfo: () -> String = { "{}" }
     @Volatile private var onPair: (name: String, address: String, deviceId: String) -> String? = { _, _, _ -> null }
-    @Volatile private var pairedSecrets: () -> Set<String> = { emptySet() }
+    @Volatile private var pairedSecrets: () -> Map<String, String> = { emptyMap() }
+    @Volatile private var onAutoSyncAsk: suspend (deviceId: String, request: org.json.JSONObject) -> org.json.JSONObject = NO_AUTO_SYNC
 
     /**
      * Bind [port] and start accepting. [pin] gates the pages and POST endpoints. [fontBytes], when
@@ -109,15 +116,16 @@ class CompanionHttpServer(
         pin: String,
         fontBytes: ByteArray?,
         mode: CompanionMode = CompanionMode.ADD_SOURCE,
+        editPrefill: CompanionPayload? = null,
         onPayload: (CompanionPayload) -> Unit = {},
         onBackup: (String) -> Unit = {},
         onImage: (bytes: ByteArray, extension: String) -> Unit = { _, _ -> },
-        onTmdbKey: (String) -> Unit = {},
         onServiceConfig: (CompanionServiceConfig) -> Unit = {},
         downloadFile: File? = null,
         syncInfo: () -> String = { "{}" },
         onPair: (name: String, address: String, deviceId: String) -> String? = { _, _, _ -> null },
-        pairedSecrets: () -> Set<String> = { emptySet() },
+        pairedSecrets: () -> Map<String, String> = { emptyMap() },
+        onAutoSyncAsk: suspend (deviceId: String, request: org.json.JSONObject) -> org.json.JSONObject = NO_AUTO_SYNC,
         onLocked: () -> Unit = {},
     ): List<String> {
         stop()
@@ -126,15 +134,16 @@ class CompanionHttpServer(
         failedPins.set(0)
         this.fontBytes = fontBytes
         this.mode = mode
+        this.editPrefill = editPrefill
         this.onPayload = onPayload
         this.onBackup = onBackup
         this.onImage = onImage
-        this.onTmdbKey = onTmdbKey
         this.onServiceConfig = onServiceConfig
         this.downloadFile = downloadFile
         this.syncInfo = syncInfo
         this.onPair = onPair
         this.pairedSecrets = pairedSecrets
+        this.onAutoSyncAsk = onAutoSyncAsk
         val socket = ServerSocket()
         socket.reuseAddress = true
         socket.bind(InetSocketAddress(port))
@@ -147,6 +156,7 @@ class CompanionHttpServer(
     fun stop() {
         running.set(false)
         pin = ""
+        editPrefill = null
         onPayload = {}
         onBackup = {}
         onImage = { _, _ -> }
@@ -154,7 +164,8 @@ class CompanionHttpServer(
         downloadFile = null
         syncInfo = { "{}" }
         onPair = { _, _, _ -> null }
-        pairedSecrets = { emptySet() }
+        pairedSecrets = { emptyMap() }
+        onAutoSyncAsk = NO_AUTO_SYNC
         runCatching { serverSocket?.close() }
         serverSocket = null
     }
@@ -174,7 +185,7 @@ class CompanionHttpServer(
                     if (running.get()) Log.w(TAG, "Companion accept failed", e)
                     break
                 }
-                // C3: shed rather than queue. A queued connection still holds a socket and would be
+                // Shed rather than queue. A queued connection still holds a socket and would be
                 // served long after the client gave up; closing it immediately keeps the cap honest.
                 if (!inFlight.tryAcquire()) {
                     Log.w(TAG, "Companion connection refused — $MAX_IN_FLIGHT already in flight")
@@ -184,6 +195,10 @@ class CompanionHttpServer(
                 scope.launch {
                     try {
                         handleClient(client)
+                    } catch (e: IOException) {
+                        // A cut-off upload or a read timeout. The socket closes unanswered, so the phone
+                        // page reports it could not reach the TV and offers to send again.
+                        Log.w(TAG, "Companion request dropped: ${e.javaClass.simpleName}")
                     } finally {
                         inFlight.release()
                     }
@@ -264,7 +279,7 @@ class CompanionHttpServer(
             // so a phone can show "Living Room TV" before anyone commits to anything.
             if (method == "GET" && path == "/sync/hello") {
                 if (mode != CompanionMode.LOCAL_SYNC) return sendText(socket, 404, localized(R.string.companion_error_not_found))
-                if (!requireSyncAuth(queryPin.ifBlank { headers["x-companion-pin"].orEmpty() })) {
+                if (syncCaller(queryPin.ifBlank { headers["x-companion-pin"].orEmpty() }) == null) {
                     return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 }
                 return sendJson(socket, 200, syncInfo())
@@ -293,12 +308,32 @@ class CompanionHttpServer(
                 return sendJson(socket, 200, org.json.JSONObject().put("secret", secret).toString())
             }
 
+            // A paired device asking to sync automatically from now on. The question goes to the
+            // person here and this call waits for their answer; nothing is enabled on either side
+            // until they accept. The PIN alone is not an identity, so it cannot ask: automatic sync
+            // is an agreement between two devices that already know each other.
+            if (method == "POST" && path == "/sync/auto-sync") {
+                if (mode != CompanionMode.LOCAL_SYNC) return sendText(socket, 404, localized(R.string.companion_error_not_found))
+                val caller = syncCaller(queryPin.ifBlank { headers["x-companion-pin"].orEmpty() })
+                    ?: return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                // The PIN authenticates but names nobody, and a consent is per device. Refusing
+                // here is not "revoked": this caller never had a consent to begin with.
+                if (caller.isBlank()) {
+                    return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                }
+                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
+                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
+                val request = runCatching { org.json.JSONObject(body) }.getOrElse { org.json.JSONObject() }
+                return sendJson(socket, 200, onAutoSyncAsk(caller, request).toString())
+            }
+
             // Backup download (BACKUP_DOWNLOAD mode) — PIN required, streams the exported container.
             // `/backup.json` stays routed here: the old path costs nothing to keep and a remote browser that
             // bookmarked it still works. What it serves is whatever export produced — a `.own` file.
             if (method == "GET" && (path == "/backup.own" || path == "/backup.json")) {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requireSyncAuth(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                val caller = syncCaller(queryPin.ifBlank { headerPin })
+                    ?: return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val file = downloadFile
                 val bytes = file?.takeIf { it.exists() }?.let { runCatching { it.readBytes() }.getOrNull() }
                     ?: return sendText(socket, 404, localized(R.string.companion_error_no_backup))
@@ -308,7 +343,8 @@ class CompanionHttpServer(
             // Backup upload (BACKUP_RESTORE mode) — PIN required, JSON body is the backup file.
             if (method == "POST" && path == "/backup") {
                 val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requireSyncAuth(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
+                val caller = syncCaller(queryPin.ifBlank { headerPin })
+                    ?: return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
                 val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
                     ?: return sendText(socket, 413, localized(R.string.companion_error_backup_too_large))
                 if (body.isBlank()) return sendText(socket, 400, localized(R.string.companion_error_empty_backup))
@@ -327,23 +363,6 @@ class CompanionHttpServer(
                 val decoded = decodeImageDataUrl(body) ?: return sendText(socket, 400, localized(R.string.companion_error_invalid_image))
                 onImage(decoded.first, decoded.second)
                 return sendHtml(socket, 200, CompanionHtml.imageSentPage(pageContext, pin))
-            }
-
-            // TMDB key handover (TMDB_KEY mode) — PIN required. Body is the bare key as text.
-            if (method == "POST" && path == "/tmdbkey") {
-                val headerPin = headers["x-companion-pin"].orEmpty()
-                if (!requirePin(queryPin.ifBlank { headerPin })) return sendText(socket, 401, localized(R.string.companion_error_unauthorized))
-                val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
-                    ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
-                val key = body.trim()
-                // Shape check only — the app cannot verify a key without spending a request, and the
-                // Metadata screen already has a "Test lookup" button for that. This just stops obvious
-                // junk (an empty box, a pasted URL) from silently replacing a working key.
-                if (!Regex("^[A-Za-z0-9._-]{16,128}$").matches(key)) {
-                    return sendText(socket, 400, localized(R.string.companion_tmdb_invalid))
-                }
-                onTmdbKey(key)
-                return sendHtml(socket, 200, CompanionHtml.tmdbKeySentPage(pageContext, pin))
             }
 
             if (method == "POST" && path == "/serviceconfig") {
@@ -390,10 +409,14 @@ class CompanionHttpServer(
                 }
                 val body = CompanionHttpProtocol.readBody(input, headers, CompanionHttpProtocol.maxBodyBytes(path))
                     ?: return sendText(socket, 413, localized(R.string.companion_error_body_too_large))
-                val payload = CompanionHttpProtocol.parsePayload(headers["content-type"], body, fallback)
+                // Editing: any field may be empty (it keeps the current value), and only the edited
+                // playlist's own type is accepted — a playlist cannot change its type.
+                val edit = editPrefill.takeIf { mode == CompanionMode.EDIT_SOURCE }
+                val payload = CompanionHttpProtocol.parsePayload(headers["content-type"], body, fallback, requireFields = edit == null)
+                    ?.takeIf { edit == null || it.type == edit.type }
                     ?: return sendText(socket, 400, localized(R.string.companion_error_missing_fields))
                 onPayload(payload)
-                return sendHtml(socket, 200, CompanionHtml.savedPage(pageContext, payload, pin))
+                return sendHtml(socket, 200, if (edit != null) CompanionHtml.editSavedPage(pageContext, edit, pin) else CompanionHtml.savedPage(pageContext, payload, pin))
             }
 
             sendText(socket, 404, localized(R.string.companion_error_not_found))
@@ -403,7 +426,7 @@ class CompanionHttpServer(
     private fun pinOk(candidate: String): Boolean = pin.isNotBlank() && CompanionHttpProtocol.pinEquals(candidate, pin)
 
     /**
-     * PIN check for the direct POST endpoints, with the C2 attempt counting applied. Returns true
+     * PIN check for the direct POST endpoints, with the wrong-PIN counting applied. Returns true
      * when the caller may proceed.
      */
     private suspend fun requirePin(candidate: String): Boolean {
@@ -419,18 +442,23 @@ class CompanionHttpServer(
      * [requirePin], widened for local sync: a paired device's stored secret is accepted in place of
      * the six digits, so only the FIRST sync between two devices asks the user for anything.
      *
+     * Returns *who* presented it — the device id the secret was issued to — or null when the caller
+     * may not proceed. [PIN_CALLER] (empty) means the PIN itself was used: the request is
+     * authenticated, but no device is named, so there is no consent that could be checked against it.
+     *
      * The secret is 256 random bits against the PIN's million, and it is only ever issued to a caller
      * that already typed the PIN — so this widens who may connect, never how easily. Outside
      * [CompanionMode.LOCAL_SYNC] it is exactly [requirePin], because no other mode issues secrets.
      */
-    private suspend fun requireSyncAuth(candidate: String): Boolean {
-        if (mode == CompanionMode.LOCAL_SYNC && candidate.isNotBlank() &&
-            pairedSecrets().any { CompanionHttpProtocol.pinEquals(candidate, it) }
-        ) {
-            pinAccepted()
-            return true
+    private suspend fun syncCaller(candidate: String): String? {
+        if (mode == CompanionMode.LOCAL_SYNC && candidate.isNotBlank()) {
+            pairedSecrets().entries.firstOrNull { CompanionHttpProtocol.pinEquals(candidate, it.key) }
+                ?.let { (_, deviceId) ->
+                    pinAccepted()
+                    return deviceId
+                }
         }
-        return requirePin(candidate)
+        return if (requirePin(candidate)) PIN_CALLER else null
     }
 
     /** A correct PIN clears the strike count — the limit is on *consecutive* failures. */
@@ -459,10 +487,10 @@ class CompanionHttpServer(
     /** The page served after a valid PIN, for the current [mode]. */
     private fun authedPage(context: Context): String = when (mode) {
         CompanionMode.ADD_SOURCE -> CompanionHtml.formPage(context, pin)
+        CompanionMode.EDIT_SOURCE -> editPrefill?.let { CompanionHtml.editPage(context, pin, it) } ?: CompanionHtml.pinPage(context, null)
         CompanionMode.BACKUP_RESTORE -> CompanionHtml.backupUploadPage(context, pin)
         CompanionMode.BACKUP_DOWNLOAD -> CompanionHtml.backupDownloadPage(context, pin)
         CompanionMode.IMAGE_UPLOAD -> CompanionHtml.imageUploadPage(context, pin)
-        CompanionMode.TMDB_KEY -> CompanionHtml.tmdbKeyPage(context, pin)
         CompanionMode.TMDB_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = false)
         CompanionMode.OPEN_SUBTITLES_CONFIG -> CompanionHtml.serviceConfigPage(context, pin, openSubtitles = true)
         // Local sync has no browser side. Someone who opens the address in a browser and types the
@@ -519,8 +547,8 @@ class CompanionHttpServer(
 
     private fun sendBytes(socket: Socket, code: Int, contentType: String, bytes: ByteArray) {
         val status = when (code) {
-            200 -> "OK"; 400 -> "Bad Request"; 401 -> "Unauthorized"; 404 -> "Not Found"
-            413 -> "Payload Too Large"; else -> "OK"
+            200 -> "OK"; 400 -> "Bad Request"; 401 -> "Unauthorized"; 403 -> "Forbidden"
+            404 -> "Not Found"; 413 -> "Payload Too Large"; 500 -> "Internal Server Error"; else -> "OK"
         }
         runCatching {
             socket.getOutputStream().use { out ->
@@ -573,17 +601,23 @@ class CompanionHttpServer(
         internal const val UPLOAD_BODY_LIMIT = CompanionHttpProtocol.UPLOAD_BODY_LIMIT
         internal const val FORM_BODY_LIMIT = CompanionHttpProtocol.FORM_BODY_LIMIT
 
-        /** Consecutive wrong PINs before the link closes itself (C2). */
+        /** Consecutive wrong PINs before the link closes itself. */
         internal const val MAX_PIN_ATTEMPTS = 10
 
-        /** Fixed pause before answering a wrong PIN (C2) — fixed so it carries no timing signal. */
+        /** [syncCaller]'s answer when the PIN, not a pairing secret, authenticated the request. */
+        private const val PIN_CALLER = ""
+
+        /** No automatic-sync setup in this mode: every ask is answered no. */
+        private val NO_AUTO_SYNC: suspend (String, org.json.JSONObject) -> org.json.JSONObject = { _, _ -> org.json.JSONObject().put("accepted", false) }
+
+        /** Fixed pause before answering a wrong PIN — fixed so it carries no timing signal. */
         internal const val FAILED_PIN_DELAY_MS = 500L
 
 
-        /** Threads the companion server may take from the shared IO pool (C3). */
+        /** Threads the companion server may take from the shared IO pool. */
         private const val MAX_PARALLELISM = 6
 
-        /** Connections served at once (C3); further ones are closed immediately rather than queued. */
+        /** Connections served at once; further ones are closed immediately rather than queued. */
         private const val MAX_IN_FLIGHT = 16
 
         /** Pure protocol delegates retained for callers that used the old static API. */

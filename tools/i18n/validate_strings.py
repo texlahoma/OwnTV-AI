@@ -310,6 +310,7 @@ _PLURAL_RULES = {
     "ro": ["one", "few", "other"], "sr": ["one", "few", "other"],
     "sk": ["one", "few", "many", "other"], "sl": ["one", "two", "few", "other"],
     "th": ["other"], "uk": ["one", "few", "many", "other"], "vi": ["other"],
+    "eu": ["one", "other"],
 }
 
 
@@ -333,7 +334,7 @@ _EXPECTED_TIER1_TAGS = {
 
 _EXPECTED_CATALOGUE_ONLY_TAGS = {
     "bg", "hr", "et", "fa", "fi", "el", "he", "hu", "id", "lv", "lt", "ms", "ro", "sr",
-    "sk", "sl", "th", "uk", "vi",
+    "sk", "sl", "th", "uk", "vi", "eu",
 }
 
 # Valid Android resource qualifier forms for locales:
@@ -363,7 +364,7 @@ _CANONICAL_WEBLATE = {
     "nb": "nb_NO",
     "bg": "bg", "hr": "hr", "et": "et", "fa": "fa", "fi": "fi", "el": "el",
     "iw": "he", "hu": "hu", "in": "id", "lv": "lv", "lt": "lt", "ms": "ms",
-    "ro": "ro", "sr": "sr", "sk": "sk", "sl": "sl", "th": "th", "uk": "uk", "vi": "vi",
+    "ro": "ro", "sr": "sr", "sk": "sk", "sl": "sl", "th": "th", "uk": "uk", "vi": "vi", "eu": "eu",
     "cs": "cs", "da": "da", "nl": "nl", "fr": "fr", "de": "de", "it": "it",
     "ja": "ja", "ko": "ko", "pl": "pl", "ru": "ru", "sv": "sv", "tr": "tr", "ml": "ml",
     "hi": "hi", "bn": "bn",
@@ -755,7 +756,7 @@ def main(report: str = "text") -> int:
         if len(fails) > 200:
             print(f"  ... and {len(fails) - 200} more", file=diagnostics)
     elif not src:
-        print("i18n validate: no translatable source keys yet (Phase 0 empty split files); catalogue OK.",
+        print("i18n validate: no translatable source keys yet (empty split files); catalogue OK.",
               file=diagnostics)
     else:
         print("i18n validation OK", file=diagnostics)

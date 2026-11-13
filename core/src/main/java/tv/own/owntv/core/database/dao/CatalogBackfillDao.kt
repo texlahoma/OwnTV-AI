@@ -4,10 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import tv.own.owntv.core.database.entity.CatalogBackfillEntity
 import tv.own.owntv.core.model.MediaType
 
-/** The outstanding-page plan written by setup (N1b) and drained by N1c/N1d. */
+/** The outstanding-page plan written by setup and drained in the background or on demand. */
 @Dao
 interface CatalogBackfillDao {
 
@@ -26,7 +27,7 @@ interface CatalogBackfillDao {
     )
     suspend fun pending(sourceId: Long, mediaType: MediaType): List<CatalogBackfillEntity>
 
-    /** One category's plan — N1c's read-through path, when the user opens a category directly. */
+    /** One category's plan — the read-through path, when the user opens a category directly. */
     @Query(
         "SELECT * FROM catalog_backfill WHERE sourceId = :sourceId AND mediaType = :mediaType " +
             "AND categoryRemoteId = :categoryRemoteId",
@@ -34,7 +35,7 @@ interface CatalogBackfillDao {
     suspend fun forCategory(sourceId: Long, mediaType: MediaType, categoryRemoteId: String): CatalogBackfillEntity?
 
     /**
-     * One category's plan, found by the *local* row id (plan N1c).
+     * One category's plan, found by the *local* row id.
      *
      * [forCategory] keys on the portal's own id, which is what the drain works in. A browse screen
      * only ever has the local `categories.id`, and making every caller translate first would mean a
@@ -67,10 +68,10 @@ interface CatalogBackfillDao {
     suspend fun all(sourceId: Long, mediaType: MediaType): List<CatalogBackfillEntity>
 
     /**
-     * Put a finished category back in the queue from page 2 (N1d's reconciliation).
+     * Put a finished category back in the queue from page 2 (the drain's reconciliation).
      *
-     * A drain can believe it walked every page and still be short: §4A measured the *eager* walk
-     * losing 4,987 of 65,523 movies to pages the portal answered but did not fill. Re-walking the
+     * A drain can believe it walked every page and still be short: a measured *eager* walk
+     * lost 4,987 of 65,523 movies to pages the portal answered but did not fill. Re-walking the
      * short categories is what turns "I fetched every page" into "the rows are actually here", and
      * re-inserting the ones that already landed costs nothing — `sourceId + remoteId` is unique.
      */
@@ -87,17 +88,20 @@ interface CatalogBackfillDao {
     suspend fun pendingCount(sourceId: Long, mediaType: MediaType): Int
 
     /**
-     * How many categories this *source* still owes pages, across every media type — the one-read
-     * "is the catalogue whole?" answer (plan N1f-4).
-     *
-     * Zero is the complete state, and it is also the answer for a source that has no plan at all:
-     * an Xtream or M3U playlist, or a Stalker source imported before the lazy add existed. Both are
-     * genuinely complete, so callers need no special case for them.
+     * Which of [sourceIds] still owe pages. Observes only this small table, so it re-runs on each
+     * cursor advance for the price of an indexed lookup — never a scan of the content tables.
      */
-    @Query("SELECT COUNT(*) FROM catalog_backfill WHERE sourceId = :sourceId AND done = 0")
-    suspend fun pendingCountForSource(sourceId: Long): Int
+    @Query("SELECT DISTINCT sourceId FROM catalog_backfill WHERE done = 0 AND sourceId IN (:sourceIds) ORDER BY sourceId")
+    fun observeFilling(sourceIds: List<Long>): Flow<List<Long>>
 
-    /** The phase's reconciliation target: the sum of the portal's own per-category totals (see §4C). */
+    /** Films and series stored so far for [sourceIds] — two counts on the `sourceId` index. */
+    @Query(
+        "SELECT (SELECT COUNT(*) FROM movies WHERE sourceId IN (:sourceIds)) + " +
+            "(SELECT COUNT(*) FROM series WHERE sourceId IN (:sourceIds))",
+    )
+    suspend fun titlesStored(sourceIds: List<Long>): Int
+
+    /** The phase's reconciliation target: the sum of the portal's own per-category totals. */
     @Query("SELECT COALESCE(SUM(totalItems), 0) FROM catalog_backfill WHERE sourceId = :sourceId AND mediaType = :mediaType")
     suspend fun advertisedTotal(sourceId: Long, mediaType: MediaType): Int
 

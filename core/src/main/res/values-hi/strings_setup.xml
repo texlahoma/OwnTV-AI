@@ -3,9 +3,9 @@
     <string name="setup_background_image">पृष्ठभूमि चित्र</string>
     <string name="setup_background_image_description">इंटरफ़ेस के पीछे दिखाने के लिए कोई फ़ोटो चुनें, या ठोस पैनल वापस लाने के लिए इसे हटाएँ।</string>
     <string name="setup_from_device">स्थानीय</string>
-    <string name="setup_from_phone">फ़ोन से</string>
+    <string name="setup_from_phone">दूर से</string>
     <string name="setup_send_from_phone">दूसरे डिवाइस से भेजें</string>
-    <string name="setup_phone_background_description">उसी Wi-Fi से जुड़े फ़ोन, टैबलेट या कंप्यूटर पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें और कोई फ़ोटो भेजें। वह तुरंत पृष्ठभूमि बन जाएगा।</string>
+    <string name="setup_phone_background_description">उसी वाई-फ़ाई पर ब्राउज़र वाले किसी भी डिवाइस — फ़ोन, कंप्यूटर या दूसरा टीवी — पर QR स्कैन करें (या URL खोलें), यह PIN डालें और एक फ़ोटो भेजें। वह तुरंत बैकग्राउंड बन जाएगी।</string>
     <string name="setup_opening_server">सर्वर खोला जा रहा है…</string>
     <string name="setup_enter_pin_browser">ब्राउज़र में यह PIN दर्ज करें</string>
     <string name="setup_open_url">या यह URL खोलें</string>
@@ -26,12 +26,8 @@
     <string name="setup_folder_example">जैसे, मेरा टीवी</string>
     <string name="setup_from_current_folder">..</string>
     <string name="setup_move_indicator">↕</string>
-    <string name="setup_welcome_to">स्वागत है</string>
-    <string name="setup_welcome_tagline">आपका अपना IPTV प्लेयर।</string>
     <string name="setup_get_started">शुरू करें</string>
     <string name="setup_display_size_title">पढ़ने में आरामदायक बनाएं</string>
-    <string name="setup_display_size_description">इंटरफ़ेस और उसके टेक्स्ट का आकार तय करें। दोनों को बाद में सेटिंग्स में बदल सकते हैं।</string>
-    <string name="setup_display_size_preview">अगर आप इसे अपनी जगह से आसानी से पढ़ पा रहे हैं, तो आकार सही है।</string>
     <string name="setup_before_you_start">शुरू करने से पहले</string>
     <string name="setup_disclaimer">OwnTV केवल एक मीडिया प्लेयर है। इसमें कोई चैनल, प्लेलिस्ट या सामग्री शामिल नहीं है। अपने ऐसे Xtream, M3U या Stalker स्रोत जोड़ने की ज़िम्मेदारी आपकी है जिन तक आपकी कानूनी पहुँच है।</string>
     <string name="setup_i_understand">मैं समझ गया</string>
@@ -39,14 +35,11 @@
     <string name="setup_setup_choice_description">नई शुरुआत करें या किसी बैकअप फ़ाइल या दूसरे डिवाइस से अपनी प्रोफ़ाइलें, प्लेलिस्ट और पसंदीदा वापस लाएँ।</string>
     <string name="setup_new_profile">नई प्रोफ़ाइल</string>
     <string name="setup_create_profile_add_sources">प्रोफ़ाइल बनाएँ और स्रोत जोड़ें</string>
-    <string name="setup_restore_backup">बैकअप रीस्टोर करें</string>
     <string name="setup_import_profiles_playlists">फ़ाइल से प्रोफ़ाइलें और प्लेलिस्ट इंपोर्ट करें</string>
     <string name="setup_sync_device">दूसरे डिवाइस से</string>
     <string name="setup_sync_device_description">वाई-फ़ाई से अपने दूसरे OwnTV डिवाइस से सब कुछ कॉपी करें</string>
     <string name="setup_add_playlist">प्लेलिस्ट जोड़ें</string>
     <string name="setup_add_playlist_description">इस प्रोफ़ाइल के लिए कोई स्रोत जोड़ें या बाद में सेट अप करें।</string>
-    <string name="setup_new">नया</string>
-    <string name="setup_add_m3u_xtream">M3U, Xtream या Stalker स्रोत जोड़ें</string>
     <string name="setup_existing">मौजूदा</string>
     <string name="setup_use_other_profile_playlists">किसी दूसरी प्रोफ़ाइल की प्लेलिस्ट का उपयोग करें</string>
     <string name="setup_import">इंपोर्ट करें</string>
@@ -73,7 +66,7 @@
     <string name="setup_invalid_mac">अमान्य MAC पता — AA:BB:CC:DD:EE:FF प्रारूप का उपयोग करें</string>
     <string name="setup_pick_backup_file">रीस्टोर करने के लिए बैकअप फ़ाइल चुनें</string>
     <string name="setup_restore_a_backup">बैकअप रीस्टोर करें</string>
-    <string name="setup_restore_choice_description">बैकअप को उसी Wi-Fi से जुड़े किसी दूसरे डिवाइस (फ़ोन या लैपटॉप) से भेजें या इस डिवाइस पर पहले से मौजूद बैकअप फ़ाइल चुनें।</string>
+    <string name="setup_restore_choice_description">उसी वाई-फ़ाई पर ब्राउज़र वाले किसी भी डिवाइस से बैकअप दूर से भेजें, या इस डिवाइस पर पहले से मौजूद बैकअप फ़ाइल चुनें।</string>
     <string name="setup_upload_from_wifi_device">अपने Wi-Fi से जुड़े डिवाइस से अपलोड करें</string>
     <string name="setup_local_file">स्थानीय फ़ाइल</string>
     <string name="setup_pick_backup_local">इस डिवाइस पर बैकअप फ़ाइल चुनें</string>
@@ -87,6 +80,8 @@
         <item quantity="other"><xliff:g id="items">%1$d</xliff:g> आइटम रीस्टोर किए गए। सामग्री लोड करने के लिए अपने स्रोतों को रीसिंक करें।</item>
     </plurals>
     <string name="setup_passwords_omitted">इसके बाद सहेजे गए पासवर्ड दोबारा दर्ज करें।</string>
+    <string name="setup_need_password">कोई पासवर्ड सहेजा नहीं गया, इसलिए अभी लोड नहीं हुआ: <xliff:g id="names">%1$s</xliff:g>। सेटिंग में प्लेलिस्ट खोलें और उसका पासवर्ड दर्ज करें।</string>
+    <string name="setup_name_numbered"><xliff:g id="name">%1$s</xliff:g> <xliff:g id="number">%2$d</xliff:g></string>
     <plurals name="setup_skipped_sources">
         <item quantity="one"><xliff:g id="count">%1$d</xliff:g> स्रोत छोड़ दिया गया क्योंकि यह संस्करण उसके प्लेलिस्ट प्रकार का समर्थन नहीं करता।</item>
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> स्रोत छोड़ दिए गए क्योंकि यह संस्करण उनके प्लेलिस्ट प्रकारों का समर्थन नहीं करता।</item>
@@ -94,18 +89,10 @@
     <string name="setup_continue">जारी रखें</string>
     <string name="setup_import_failed">इंपोर्ट नहीं हो सका</string>
     <string name="setup_try_again_caps">फिर से कोशिश करें</string>
-    <string name="setup_add_from_phone">दूसरे डिवाइस से जोड़ें</string>
-    <string name="setup_phone_add_description">उसी Wi-Fi से जुड़े फ़ोन, टैबलेट या कंप्यूटर पर QR स्कैन करें (या URL खोलें), यह PIN दर्ज करें, अपनी प्लेलिस्ट की जानकारी भरें और टीवी पर भेजें पर टैप करें। फिर उसका विवरण यहाँ दिखाई देगा और इंपोर्ट के लिए तैयार होगा — आप रिमोट कंट्रोल से इंपोर्ट शुरू करें दबाएँ।</string>
     <string name="setup_opening">खोला जा रहा है…</string>
-    <string name="setup_open_server">सर्वर खोलें</string>
-    <string name="setup_stop_server">सर्वर रोकें</string>
     <string name="setup_add_source">स्रोत जोड़ें</string>
-    <string name="setup_add_source_description">किसी दूसरे डिवाइस पर फ़ॉर्म भरें या यहाँ रिमोट कंट्रोल से विवरण लिखें।</string>
-    <string name="setup_manual">मैन्युअल</string>
-    <string name="setup_use_phone_same_wifi">उसी Wi-Fi से जुड़े फ़ोन, टैबलेट या कंप्यूटर का उपयोग करें</string>
-    <string name="setup_type_source_here">यहाँ Xtream / M3U / Stalker लिखें</string>
     <string name="setup_edit_source">स्रोत में बदलाव करें</string>
-    <string name="setup_add_your_source">अपना स्रोत जोड़ें</string>
+    <string name="setup_edit_from_phone">दूसरे डिवाइस से बदलें</string>
     <string name="setup_edit_source_description">इस स्रोत का विवरण अपडेट करें या इसकी ऑटो रीफ़्रेश सेटिंग बदलें।</string>
     <string name="setup_byo_source_description">OwnTV एक प्लेयर है — अपना Xtream, M3U या Stalker स्रोत जोड़ें।</string>
     <string name="setup_xtream">Xtream</string>
@@ -137,6 +124,8 @@
     <string name="setup_test_connection">कनेक्शन की जाँच करें</string>
     <string name="setup_user_agent_optional">User-Agent (वैकल्पिक)</string>
     <string name="setup_user_agent_example">जैसे VLC/3.0.20 LibVLC/3.0.20</string>
+    <string name="setup_referer_optional">Referer (वैकल्पिक)</string>
+    <string name="setup_referer_example">जैसे https://example.com/</string>
     <string name="setup_auto_refresh">ऑटो रीफ़्रेश</string>
     <string name="setup_auto_refresh_description">बंद, ऐप शुरू होने पर या डेटा पुराना होने पर</string>
     <string name="setup_default_playlist">डिफ़ॉल्ट प्लेलिस्ट</string>
@@ -159,7 +148,6 @@
     <string name="setup_now">अभी</string>
     <string name="setup_later">बाद में</string>
     <string name="setup_off">बंद</string>
-    <string name="setup_scope_value">◀ <xliff:g id="value">%1$s</xliff:g> ▶</string>
     <string name="setup_default_mag">डिफ़ॉल्ट (MAG200)</string>
     <string name="setup_mag250">MAG250</string>
     <string name="setup_mag254">MAG254</string>
@@ -172,13 +160,6 @@
     <string name="companion_pin_aria">PIN</string>
     <string name="companion_continue">जारी रखें</string>
     <string name="companion_pin_mismatch">वह PIN मेल नहीं खाता — फिर से कोशिश करें।</string>
-    <string name="companion_tmdb_page_title">TMDB कुंजी भेजें</string>
-    <string name="companion_tmdb_heading">अपनी TMDB कुंजी भेजें</string>
-    <string name="companion_tmdb_description">नीचे TMDB में साइन इन करें, अपनी API कुंजी (v3 auth) कॉपी करें, यहाँ पेस्ट करें और टीवी पर भेजें। निजी कुंजी मुफ़्त है और उस पर व्यावहारिक रूप से कोई दैनिक सीमा नहीं है।</string>
-    <string name="companion_tmdb_get_key">TMDB API सेटिंग्स खोलें</string>
-    <string name="companion_tmdb_invalid">यह TMDB API कुंजी जैसी नहीं लगती। "API Key (v3 auth)" मान कॉपी करें।</string>
-    <string name="companion_tmdb_sent_body">आपकी TMDB कुंजी अब टीवी पर है। उपयोग शुरू करने के लिए वहाँ सहेजें दबाएँ।</string>
-    <string name="companion_tmdb_sent_link">दूसरी कुंजी भेजें</string>
     <string name="companion_service_config_empty">API कुंजी, Worker URL, या दोनों दर्ज करें।</string>
     <string name="companion_service_config_invalid_key">यह API कुंजी मान्य नहीं लगती।</string>
     <string name="companion_service_config_invalid_url">मान्य HTTPS Worker URL दर्ज करें।</string>
@@ -198,6 +179,12 @@
     <string name="companion_saved_heading">आपके टीवी पर भेज दिया गया ✓</string>
     <string name="companion_saved_source_body"><xliff:g id="name">%1$s</xliff:g> अब टीवी की स्रोत जोड़ें स्क्रीन पर है। वहाँ विवरण जाँचें और रिमोट कंट्रोल पर इंपोर्ट शुरू करें दबाएँ।</string>
     <string name="companion_saved_send_another">कोई दूसरा स्रोत भेजें</string>
+    <string name="companion_edit_page_title">OwnTV — स्रोत में बदलाव करें</string>
+    <string name="companion_edit_heading"><xliff:g id="name">%1$s</xliff:g> में बदलाव करें</string>
+    <string name="companion_edit_description">जो बदलना है बदलें और टीवी पर भेजें दबाएं। खाली छोड़ा गया फ़ील्ड अपना मौजूदा मान रखता है। बदलाव टीवी पर दिखेंगे — वहां रिमोट से सहेजें दबाएं।</string>
+    <string name="companion_keep_current">मौजूदा मान रखने के लिए खाली छोड़ें</string>
+    <string name="companion_saved_edit_body"><xliff:g id="name">%1$s</xliff:g> के बदलाव अब टीवी की बदलाव स्क्रीन पर हैं। वहां उन्हें जांचें और रिमोट से सहेजें दबाएं।</string>
+    <string name="companion_saved_edit_again">कुछ और बदलें</string>
     <string name="companion_saved_backup_body">आपका बैकअप अब टीवी पर है। रिमोट कंट्रोल उठाएँ और चुनें कि कौन-से हिस्से रीस्टोर करने हैं।</string>
     <string name="companion_saved_backup_link">कोई दूसरी फ़ाइल भेजें</string>
     <string name="companion_saved_image_body">आपका चित्र अब टीवी की पृष्ठभूमि है।</string>
@@ -265,4 +252,31 @@
     <string name="companion_error_pair_failed">इस डिवाइस के साथ पेयर नहीं हो सका।</string>
     <string name="local_sync_browser_title">OwnTV लोकल सिंक</string>
     <string name="local_sync_browser_body">यह पता आपके दूसरे डिवाइस के OwnTV ऐप के लिए है। वहाँ लोकल सिंक खोलें और सूची में से यह डिवाइस चुनें।</string>
+    <string name="setup_step_display">डिस्प्ले</string>
+    <string name="setup_step_playlist">प्लेलिस्ट</string>
+    <string name="setup_step_ready">तैयार</string>
+    <string name="setup_key_previous_step">पिछला चरण</string>
+    <string name="setup_welcome_title">OwnTV में आपका स्वागत है</string>
+    <string name="setup_welcome_sub">आपका अपना IPTV प्लेयर। शुरू करने के लिए भाषा चुनें — बाद में सेटिंग्स में बदल सकते हैं।</string>
+    <plurals name="setup_languages_all">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> भाषा</item>
+        <item quantity="other">सभी <xliff:g id="count">%1$d</xliff:g> भाषाएँ</item>
+    </plurals>
+    <string name="setup_display_sub">इस टीवी पर इंटरफ़ेस और उसका टेक्स्ट कितना बड़ा है। नीचे की पंक्ति साथ-साथ बदलती है।</string>
+    <string name="setup_display_sub_mobile">इस फ़ोन पर इंटरफ़ेस और उसका टेक्स्ट कितना बड़ा है। नीचे की पंक्ति साथ-साथ बदलती है।</string>
+    <string name="setup_line_zoom">स्क्रीन पर सब कुछ</string>
+    <string name="setup_line_font">सिर्फ़ टेक्स्ट</string>
+    <string name="setup_line_app_icon">टीवी की होम स्क्रीन पर OwnTV कैसा दिखता है</string>
+    <string name="setup_line_app_icon_mobile">आपकी होम स्क्रीन पर OwnTV कैसा दिखता है</string>
+    <string name="setup_restore_card_line">किसी फ़ाइल से, या दूसरे डिवाइस से दूर से</string>
+    <string name="setup_device_appear">सिंक मोड चालू वाले डिवाइस यहाँ दिखते हैं</string>
+    <string name="setup_device_address_hint">या दूसरे डिवाइस का पता लिखें</string>
+    <string name="setup_profile_sub">हर प्रोफ़ाइल के अपने पसंदीदा, इतिहास और होम होते हैं। और प्रोफ़ाइल बाद में सेटिंग्स › प्रोफ़ाइल में जोड़ें।</string>
+    <string name="setup_avatar">अवतार</string>
+    <string name="setup_avatar_line">कोई एक चुनें, या पहला अक्षर रहने दें</string>
+    <string name="setup_create_profile">प्रोफ़ाइल बनाएँ</string>
+    <string name="setup_phone_card_line">किसी दूसरे डिवाइस के ब्राउज़र में फ़ॉर्म भरें — सबसे तेज़</string>
+    <string name="setup_importing_title"><xliff:g id="name">%1$s</xliff:g> इम्पोर्ट हो रही है</string>
+    <string name="setup_add_guide">टीवी गाइड जोड़ें</string>
+    <string name="setup_add_guide_line">नए इंस्टॉल में अभी कोई गाइड नहीं है</string>
 </resources>

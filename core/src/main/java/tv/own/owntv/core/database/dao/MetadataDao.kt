@@ -7,7 +7,7 @@ import androidx.room.Query
 import tv.own.owntv.core.database.entity.MetadataCacheEntity
 import tv.own.owntv.core.database.entity.MetadataMatchEntity
 
-/** DAO for the TMDB enrichment cache (plan §7). Both tables are pure caches. */
+/** DAO for the TMDB enrichment cache. Both tables are pure caches. */
 @Dao
 interface MetadataDao {
 
@@ -57,9 +57,6 @@ interface MetadataDao {
     @Query("DELETE FROM metadata_cache")
     suspend fun clearCache()
 
-    @Query("DELETE FROM metadata_match")
-    suspend fun clearMatches()
-
     /**
      * Drop only the "searched, found nothing" rows, keeping the expensive title→tmdbId results. Used
      * whenever the conditions that produced a miss may have changed (metadata language switch, a fix to
@@ -68,7 +65,7 @@ interface MetadataDao {
     @Query("DELETE FROM metadata_match WHERE tmdbId IS NULL")
     suspend fun clearNegativeMatches()
 
-    // --- bounded eviction (C4): both tables grow unbounded as the user browses a ~220k-item
+    // --- bounded eviction: both tables grow unbounded as the user browses a ~220k-item
     //     catalog. TTL delete rides the existing Index("updatedAt"); rows re-fetch on next focus.
     //     Run off the cold-start path (after a sync completes — ImportFinalizer.finalize). ---
 
