@@ -248,7 +248,10 @@ internal fun ProgrammeDetailDialog(
         value = programme.description ?: loadDescription(programme.id)
     }
     val fr = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fr.requestFocus() }
+    }
     // "Always ask" → a second, small popup asking which player takes the archive.
     var showPlayerChooser by remember { mutableStateOf(false) }
     if (showPlayerChooser) {
@@ -395,7 +398,10 @@ private fun CatchupPlayerChooser(
 ) {
     val colors = OwnTVTheme.colors
     val fr = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fr.requestFocus() }
+    }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
         BackHandler { onDismiss() }
         PopupFontTheme(fontScale = 0.7f) {

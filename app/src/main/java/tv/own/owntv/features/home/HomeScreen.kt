@@ -1921,14 +1921,26 @@ private fun HeroFallbackPane(
     onChildFocused: () -> Unit,
 ) {
     val colors = OwnTVTheme.colors
+    val shape = RoundedCornerShape(20.dp)
+    // The pane is a real focus target (the D-pad lands here when the hero slot is empty), so it has
+    // to show the cursor like every other stop. Without this the highlight could be moved onto the
+    // pane and nothing on screen would say so.
+    var focused by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
             .aspectRatio(16f / 9f)
             .focusRequester(focusRequester)
             .focusable()
-            .onFocusChanged { if (it.hasFocus) onChildFocused() }
-            .clip(RoundedCornerShape(20.dp))
+            .onFocusChanged { focused = it.isFocused; if (it.hasFocus) onChildFocused() }
+            .clip(shape)
             .background(colors.panel)
+            .then(
+                if (focused) Modifier.border(
+                    tv.own.owntv.ui.theme.LocalFocusBorderWidth.current,
+                    colors.focusBorder,
+                    shape,
+                ) else Modifier,
+            )
             .padding(24.dp),
         contentAlignment = Alignment.Center,
     ) {

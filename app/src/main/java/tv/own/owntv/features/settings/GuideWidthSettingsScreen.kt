@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +44,7 @@ import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.dialogPanel
 import tv.own.owntv.ui.components.modalScrim
+import tv.own.owntv.ui.components.restoreAfterDialogClose
 import tv.own.owntv.ui.components.roundedPanel
 import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.theme.OwnTVTheme
@@ -55,11 +57,24 @@ fun GuideWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
     val shares by vm.guideWidthShares.collectAsStateWithLifecycle()
     val current = shares ?: GuideWidthLimits.defaults
     val rowFocus = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
+    // Where to hand focus back when the dialog closes, and where the list was when it opened — the
+    // dialog window still owns focus for a frame or two after the flag flips, so a single early
+    // request is silently dropped. The per-frame retry in [restoreAfterDialogClose] lands focus back
+    // on the opener row and holds the scroll offset still the whole way (same pattern as the sibling
+    // PanelWidthSettingsScreen).
+    var dialogReturn by remember { mutableStateOf<FocusRequester?>(null) }
     var showDialog by remember { mutableStateOf(false) }
+    var savedScroll by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) { runCatching { rowFocus.requestFocus() } }
     LaunchedEffect(showDialog) {
-        if (!showDialog) runCatching { rowFocus.requestFocus() }
+        if (showDialog) {
+            savedScroll = scrollState.value
+            return@LaunchedEffect
+        }
+        restoreAfterDialogClose(dialogReturn, scrollState, savedScroll)
+        dialogReturn = null
     }
     BackHandler { onBack() }
 
@@ -67,7 +82,7 @@ fun GuideWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
         modifier = modifier
             .fillMaxSize()
             .roundedPanel()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(horizontal = 40.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
@@ -93,7 +108,7 @@ fun GuideWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
             primaryChip = enabled,
             chevron = true,
             modifier = Modifier.focusRequester(rowFocus),
-            onClick = { showDialog = true },
+            onClick = { dialogReturn = rowFocus; showDialog = true },
         )
         Spacer(Modifier.height(12.dp))
         GroupLabel(stringResource(R.string.settings_how_it_works))
@@ -128,7 +143,10 @@ private fun GuideWidthDialog(
     var showError by remember { mutableStateOf(false) }
     val firstFocus = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {

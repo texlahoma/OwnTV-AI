@@ -55,7 +55,10 @@ fun AvatarPickerDialog(
 ) {
     val colors = OwnTVTheme.colors
     val selectedFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { selectedFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { selectedFocus.requestFocus() }
+    }
 
     Box(
         modifier = Modifier

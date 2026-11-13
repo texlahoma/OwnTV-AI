@@ -43,7 +43,7 @@ class BackupViewModel(
                     companion.startForBackupDownload(tv.own.owntv.core.companion.CompanionLink.DEFAULT_PORT, File(path))
                     _state.value = State.Idle
                 },
-                onFailure = { _state.value = State.Error(BackupError.EXPORT) },
+                onFailure = { _state.value = State.Error(BackupError.EXPORT, BackupManager.describeFailure(it)) },
             )
         }
     }
@@ -89,8 +89,12 @@ class BackupViewModel(
             val passwordsOmitted: Boolean = false,
             val skippedSources: Int = 0,
             val invalidLocale: Boolean = false,
+            /** Best-effort restore blocks that could not be applied (shown under the restored summary). */
+            val warnings: Set<BackupManager.RestoreWarning> = emptySet(),
         ) : State
-        data class Error(val kind: BackupError) : State
+        /** [detail] is the concrete failure reason (exception message), shown under the generic
+         *  error line so a failed read/restore says why rather than only that it failed. */
+        data class Error(val kind: BackupError, val detail: String? = null) : State
 
         /**
          * Encrypted restore needs the backup password — [retry] is true after a wrong attempt.
@@ -123,7 +127,7 @@ class BackupViewModel(
                 onSuccess = {
                     _state.value = State.Done(DoneKind.EXPORTED, path = it, passwordsOmitted = backupPassword.isNullOrBlank())
                 },
-                onFailure = { _state.value = State.Error(BackupError.EXPORT) },
+                onFailure = { _state.value = State.Error(BackupError.EXPORT, BackupManager.describeFailure(it)) },
             )
         }
     }
@@ -143,7 +147,7 @@ class BackupViewModel(
             }
             backup.sectionsIn(file).fold(
                 onSuccess = { _state.value = State.ChooseRestore(file, it.sections, it.encrypted) },
-                onFailure = { _state.value = State.Error(BackupError.READ) }
+                onFailure = { _state.value = State.Error(BackupError.READ, BackupManager.describeFailure(it)) }
             )
         }
     }
@@ -158,7 +162,7 @@ class BackupViewModel(
                     _state.value = if (it is BackupManager.WrongPasswordException) {
                         State.NeedPassword(file, sections = null, retry = true)
                     } else {
-                        State.Error(BackupError.READ)
+                        State.Error(BackupError.READ, BackupManager.describeFailure(it))
                     }
                 },
             )
@@ -177,13 +181,14 @@ class BackupViewModel(
                         passwordsOmitted = backupPassword.isNullOrBlank(),
                         skippedSources = summary.skippedSources,
                         invalidLocale = summary.invalidLocale,
+                        warnings = summary.warnings,
                     )
                 },
                 onFailure = {
                     if (it is BackupManager.WrongPasswordException) {
                         _state.value = State.NeedPassword(file, sections, retry = true)
                     } else {
-                        _state.value = State.Error(BackupError.IMPORT)
+                        _state.value = State.Error(BackupError.IMPORT, BackupManager.describeFailure(it))
                     }
                 },
             )

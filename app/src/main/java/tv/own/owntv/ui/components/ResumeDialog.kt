@@ -43,7 +43,10 @@ fun ResumeDialog(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     // Lighter scrim + translucent card: the paused video stays visible behind the prompt.
     Box(

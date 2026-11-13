@@ -305,7 +305,7 @@ internal fun CenterControls(
 @Composable
 internal fun BottomBar(
     player: PlaybackEngine, isLive: Boolean, position: Long, duration: Long,
-    volume: Int, audioCount: Int, subCount: Int, zoomMode: ZoomMode, speedLabel: String,
+    volume: Int, audioCount: Int, zoomMode: ZoomMode, speedLabel: String,
     onScrubLive: ((Int) -> Unit)?, timeshiftOffsetSec: Int?, onGoToLive: (() -> Unit)?, onOpenJumpBack: (() -> Unit)?,
     liveProgrammes: List<LiveProgramme> = emptyList(),
     compatMode: Boolean?, onToggleCompatMode: (() -> Unit)?,
@@ -383,8 +383,10 @@ internal fun BottomBar(
                             CtrlButton(volumeIcon(volume), label = stringResource(R.string.player_tool_volume)) { onOpenDialog(HudDialog.VOLUME) }
                         PlayerControl.SPEED ->
                             SpeedButton(label = speedLabel, active = speedLabel != stringResource(R.string.player_speed_normal_short), toolLabel = stringResource(R.string.player_tool_speed)) { onOpenDialog(HudDialog.SPEED) }
+                        // Subtitles are AI-generated only now: this opens the AI-subtitle panel (the
+                        // non-AI track list / "Off" switch / OpenSubtitles / local-file entries are gone).
                         PlayerControl.SUBTITLES ->
-                            CtrlButton(OwnTVIcon.SUBTITLE, badge = subCount.takeIf { it > 0 }, label = stringResource(R.string.player_tool_subtitles)) { onOpenDialog(HudDialog.SUBS) }
+                            CtrlButton(OwnTVIcon.SUBTITLE, label = stringResource(R.string.player_tool_subtitles)) { onOpenDialog(HudDialog.AI_SUBS) }
                         PlayerControl.AUDIO ->
                             CtrlButton(OwnTVIcon.AUDIO, badge = audioCount.takeIf { it > 1 }, label = stringResource(R.string.player_tool_audio)) { onOpenDialog(HudDialog.AUDIO) }
                         // Favorite the current channel/movie/series without leaving the stream (coral

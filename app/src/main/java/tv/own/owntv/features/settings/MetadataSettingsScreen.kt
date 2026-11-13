@@ -578,6 +578,7 @@ internal fun CompanionKeyDialog(
     val closeFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         onStart(tv.own.owntv.core.companion.CompanionLink.DEFAULT_PORT)
+        kotlinx.coroutines.delay(80)
         runCatching { closeFocus.requestFocus() }
     }
     androidx.compose.runtime.DisposableEffect(Unit) { onDispose { onStop() } }

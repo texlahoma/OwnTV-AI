@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -188,7 +189,31 @@ fun FocusableSurface(
     val glowScale = focusBorderWidth.value / Dimens.FocusBorderWidth.value
     // Focus border honors the user's chosen highlight colour and width in both standard and glass
     // modes, framing the focused card on top of the frosted glass material plate.
-    val borderColor = if (focused) colors.focusBorder else colors.focusBorder.copy(alpha = 0.28f)
+    //
+    // Brand anchors are the exception. An accent-filled control (OwnTVButton PRIMARY, and anything
+    // else that deliberately keeps its fill on focus) draws the ring in the user's highlight colour —
+    // which *defaults to the accent itself*. That is an accent ring on an accent plate: no fill
+    // change, no glow (compact rows skip it) and a ring that vanishes into the fill, so focus could
+    // be moved onto the button with nothing on screen to show it. When the ring would not read
+    // against the focused fill, fall back to a contrasting hairline instead. A highlight the user
+    // chose that *does* contrast is untouched.
+    val focusedTargetFill = when {
+        lit -> focusLight.copy(alpha = 0.22f)
+        useSolidTonalLadder -> solidFocusedContainer
+        else -> focusedContainerColor
+    }
+    val ringReadsOnFill = focusedTargetFill.alpha < 0.9f ||
+        contrastRatio(
+            colors.focusBorder.copy(alpha = 1f).luminance(),
+            focusedTargetFill.copy(alpha = 1f).luminance(),
+        ) >= MIN_FOCUS_RING_CONTRAST
+    val borderColor = if (ringReadsOnFill) colors.focusBorder else {
+        if (focusedTargetFill.luminance() > LIGHT_FILL_LUMINANCE) {
+            Color.Black.copy(alpha = 0.6f)
+        } else {
+            Color.White.copy(alpha = 0.9f)
+        }
+    }
     val glassMaterialContainer = if (glassy && visuallySelected && !focused) {
         colors.surfaceContainerHigh
     } else {
@@ -328,3 +353,19 @@ fun FocusableSurface(
 }
 
 private const val FOCUS_FROST_SETTLE_MS = 96L
+
+/**
+ * How much luminance separation a focus ring needs from the fill it is drawn on before it reads as a
+ * ring at all. WCAG-style ratio; below this the ring is effectively the same colour as the plate.
+ */
+private const val MIN_FOCUS_RING_CONTRAST = 1.6f
+
+/** Fill luminance above which the fallback ring flips from white to black ink. */
+private const val LIGHT_FILL_LUMINANCE = 0.45f
+
+/** WCAG relative-luminance contrast ratio between two colours (1.0 = identical). */
+private fun contrastRatio(a: Float, b: Float): Float {
+    val hi = maxOf(a, b)
+    val lo = minOf(a, b)
+    return (hi + 0.05f) / (lo + 0.05f)
+}

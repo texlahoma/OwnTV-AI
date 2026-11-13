@@ -22,21 +22,34 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import tv.own.owntv.R
+import tv.own.owntv.features.aisubtitles.AiSubtitleConfigStore
+import tv.own.owntv.features.aisubtitles.AiSubtitleDefaults
 import tv.own.owntv.ui.components.FocusableSurface
 import tv.own.owntv.ui.components.OwnTVButton
 import tv.own.owntv.ui.components.OwnTVIcon
@@ -80,6 +93,9 @@ internal fun TrackDialog(
     // Non-null on the Subtitles dialog when timing adjustment applies to the active track (plan §8) →
     // an "ADJUST" section with a "Subtitle timing" row.
     onSubtitleTiming: (() -> Unit)? = null,
+    // Non-null on the Subtitles dialog → an "AI 字幕" row that opens the AI-subtitle panel. Absent
+    // for the Audio dialog and when the feature is off at the global level.
+    onOpenAiSubtitles: (() -> Unit)? = null,
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
@@ -103,7 +119,7 @@ internal fun TrackDialog(
         repeat(10) {
             androidx.compose.runtime.withFrameNanos { }
             if (selectedIndex >= 0) runCatching { listState.scrollToItem(target) }
-            if (runCatching { focus.requestFocus() }.isSuccess) return@LaunchedEffect
+            if (focus.requestFocus()) return@LaunchedEffect
             delay(50)
         }
     }
@@ -113,14 +129,14 @@ internal fun TrackDialog(
         }
         if (onOff != null) {
             item {
-                if (focusOff) LaunchedEffect(Unit) { androidx.compose.runtime.withFrameNanos {}; runCatching { focus.requestFocus() } }
+                if (focusOff) LaunchedEffect(Unit) { requestFocusRetrying(focus) }
                 OptionRow(label = stringResource(R.string.common_off), selected = selectedIndex < 0, modifier = if (focusOff) Modifier.focusRequester(focus) else Modifier, onClick = onOff)
             }
         }
         items(tracks.size) { index ->
             val track = tracks[index]
             val focusThis = index == selectedIndex || (selectedIndex < 0 && onOff == null && index == 0)
-            if (focusThis) LaunchedEffect(Unit) { androidx.compose.runtime.withFrameNanos {}; runCatching { focus.requestFocus() } }
+            if (focusThis) LaunchedEffect(Unit) { requestFocusRetrying(focus) }
             OptionRow(
                 // Image-based subs (PGS/VOBSUB/DVB) play via the ExoPlayer handoff on VOD — mark them so
                 // it's clear they're a different kind of track, but they're fully selectable.
@@ -158,6 +174,19 @@ internal fun TrackDialog(
                 )
             }
             item { OptionRow(label = stringResource(R.string.player_subtitle_timing), selected = false, onClick = onSubtitleTiming) }
+        }
+        // AI subtitles (subtitles dialog): opens the AI-subtitle panel — switch + recognition language,
+        // remembered per channel while watching. Hidden unless the feature is usable this session.
+        if (onOpenAiSubtitles != null) {
+            item {
+                Text(
+                    stringResource(R.string.ai_subtitles_enable),
+                    style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 16.dp, top = 10.dp, bottom = 2.dp),
+                )
+            }
+            item { OptionRow(label = stringResource(R.string.player_ai_subtitles), selected = false, onClick = onOpenAiSubtitles) }
         }
         // A/V-sync nudge (audio dialog, VOD only) — fixes a badly-muxed file where audio leads/lags the video.
         if (onAdjustAudioDelay != null) {
@@ -204,7 +233,7 @@ internal fun TrackDialog(
 private suspend fun requestFocusRetrying(focus: FocusRequester) {
     repeat(10) {
         androidx.compose.runtime.withFrameNanos {}
-        if (runCatching { focus.requestFocus() }.isSuccess) return
+        if (focus.requestFocus()) return
         delay(50)
     }
 }
@@ -351,6 +380,8 @@ private fun DialogScaffold(
     title: String,
     onDismiss: () -> Unit,
     state: androidx.compose.foundation.lazy.LazyListState = androidx.compose.foundation.lazy.rememberLazyListState(),
+    panelWidth: Dp = 260.dp,
+    footer: (@Composable () -> Unit)? = null,
     content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit,
 ) {
     val colors = OwnTVTheme.colors
@@ -367,20 +398,56 @@ private fun DialogScaffold(
             ) {
                 // Glass effect panel (same translucent chrome as the volume/timing dialogs) — the
                 // inner LazyColumn manages its own scroll, so scroll = false.
-                Column(modifier = Modifier.dialogPanel(width = 260.dp, corner = 16.dp, padding = 14.dp, scroll = false)) {
+                Column(modifier = Modifier.dialogPanel(width = panelWidth, corner = 16.dp, padding = 14.dp, scroll = false)) {
                     Text(title, style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
                     Spacer(Modifier.height(8.dp))
                     // Cap to the screen (minus dialog chrome) so all rows stay reachable on small screens.
                     val listMax = (androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp - 160.dp).coerceIn(140.dp, 240.dp)
                     LazyColumn(state = state, modifier = Modifier.heightIn(max = listMax), verticalArrangement = Arrangement.spacedBy(4.dp), content = content)
+                    // Pinned footer, outside the scroll area: callers put a long status/debug line here
+                    // so the height-capped list above can never scroll it out of view.
+                    footer?.invoke()
                 }
             }
         }
     }
 }
 
+/**
+ * A settings row that is its own stepper: focus it and left/right step the value, with the current
+ * value shown right-aligned. Left/right are consumed in the preview phase so the D-pad changes the
+ * value instead of walking focus out of the row; OK also steps up, so a plain "press OK" visibly does
+ * something rather than looking like a dead row.
+ */
 @Composable
-private fun OptionRow(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun StepperRow(
+    label: String,
+    value: Int,
+    min: Int,
+    max: Int,
+    step: Int,
+    modifier: Modifier = Modifier,
+    valueText: String? = null,
+    onSet: (Int) -> Unit,
+) {
+    OptionRow(
+        label = label,
+        selected = false,
+        value = valueText ?: stringResource(R.string.common_percent, value),
+        modifier = modifier.onPreviewKeyEvent { event ->
+            if (event.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+            when (event.key) {
+                Key.DirectionLeft -> { onSet((value - step).coerceAtLeast(min)); true }
+                Key.DirectionRight -> { onSet((value + step).coerceAtMost(max)); true }
+                else -> false
+            }
+        },
+        onClick = { onSet((value + step).coerceAtMost(max)) },
+    )
+}
+
+@Composable
+private fun OptionRow(label: String, selected: Boolean, modifier: Modifier = Modifier, value: String? = null, onClick: () -> Unit) {
     val colors = OwnTVTheme.colors
     FocusableSurface(
         onClick = onClick, modifier = modifier.fillMaxWidth(), selected = selected, shape = RoundedCornerShape(12.dp),
@@ -389,10 +456,239 @@ private fun OptionRow(label: String, selected: Boolean, modifier: Modifier = Mod
     ) { focused ->
         Row(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(label, style = MaterialTheme.typography.bodyMedium, color = if (selected) colors.onPrimaryContainer else if (focused) colors.primary else colors.onSurface)
+            // Optional right-aligned current value, so a settings row can show its state in place.
+            if (value != null) {
+                Spacer(Modifier.weight(1f))
+                Text(value, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            }
             if (selected) {
                 Spacer(Modifier.weight(1f))
                 OwnTVIcon(OwnTVIcon.STAR, tint = colors.onPrimaryContainer, filled = true, modifier = Modifier.size(14.dp))
             }
+        }
+    }
+}
+
+/**
+ * The AI-subtitle panel in the player's Subtitles dialog: switch + recognition language for the
+ * current item, remembered per channel "while watching" (channel memory takes priority over the
+ * global Settings). Driven by the effective config, so it always shows what this channel is actually
+ * using.
+ */
+@Composable
+internal fun AiSubtitleHudDialog(
+    manager: tv.own.owntv.features.aisubtitles.AiSubtitleManager,
+    onDismiss: () -> Unit,
+) {
+    val colors = OwnTVTheme.colors
+    val cfg by manager.effective.collectAsStateWithLifecycle()
+    val status by manager.status.collectAsStateWithLifecycle()
+    val displayLocale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+    val languages = remember(displayLocale) { tv.own.owntv.features.aisubtitles.AiSubtitleLanguages.localized(displayLocale) }
+    val sourceName = tv.own.owntv.features.aisubtitles.AiSubtitleLanguages.nameOf(cfg.sourceLanguage, displayLocale)
+        ?: cfg.sourceLanguage.ifBlank { stringResource(R.string.ai_subtitles_auto) }
+
+    var showLanguagePicker by remember { mutableStateOf(false) }
+    val focus = remember { FocusRequester() }
+    val scope = rememberCoroutineScope()
+    val configStore = koinInject<AiSubtitleConfigStore>()
+    // Both look settings are the same persisted values the Settings page edits, exposed here too
+    // because the natural moment to size a caption is while watching it — leaving to Settings means
+    // losing the picture you are sizing against.
+    val fontSizePercent = (cfg.scale * 100).roundToInt()
+    val lineHeightPercent = (cfg.lineHeight * 100).roundToInt()
+    // Nudge the subtitle block by a dp delta in x/y, writing through the config store so the change
+    // survives the session and the overlay updates live.
+    fun nudge(dx: Float, dy: Float) {
+        val current = cfg.positionOffset
+        scope.launch { configStore.setPositionOffset(Offset(current.x + dx, current.y + dy)) }
+    }
+    // Any nested picker must close before the panel itself does.
+    fun dismissLayer(): Boolean = when {
+        showLanguagePicker -> { showLanguagePicker = false; true }
+        else -> false
+    }
+    LaunchedEffect(Unit) { requestFocusRetrying(focus) }
+    BackHandler { if (!dismissLayer()) onDismiss() }
+
+    DialogScaffold(
+        title = stringResource(R.string.player_ai_subtitles),
+        onDismiss = { if (!dismissLayer()) onDismiss() },
+        // Wider than the standard popup and the long status line pinned below the list: the combined
+        // status/debug line is one unbroken string, so a narrow box wrapped it past the list cap and
+        // the tail never showed.
+        panelWidth = 520.dp,
+        footer = {
+            Text(
+                stringResource(R.string.ai_subtitles_status, status),
+                style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+            )
+        },
+    ) {
+        item {
+            OptionRow(
+                label = stringResource(R.string.ai_subtitles_enable),
+                selected = cfg.enabled,
+                modifier = Modifier.focusRequester(focus),
+                onClick = { manager.toggleAiSubtitles() },
+            )
+        }
+        item {
+            OptionRow(
+                label = stringResource(R.string.ai_subtitles_source_language),
+                selected = false,
+                onClick = { showLanguagePicker = true },
+            )
+        }
+        item {
+            // Both look settings are adjusted in place: focus the row, press left/right (OK also steps
+            // up). Deliberately NOT the Settings page's StepperDialog — that one draws its scrim in the
+            // current composition, so called from inside this panel it lands in the HUD layer *behind*
+            // the panel's popup window and is completely covered by the panel's own scrim: the row
+            // looked selectable but pressing it changed nothing.
+            StepperRow(
+                label = stringResource(R.string.ai_subtitles_font_size),
+                value = fontSizePercent,
+                min = AiSubtitleDefaults.SCALE_MIN_PERCENT,
+                max = AiSubtitleDefaults.SCALE_MAX_PERCENT,
+                step = AiSubtitleDefaults.LOOK_STEP_PERCENT,
+                onSet = { scope.launch { configStore.setScale(it / 100f) } },
+            )
+        }
+        item {
+            StepperRow(
+                label = stringResource(R.string.ai_subtitles_line_height),
+                value = lineHeightPercent,
+                min = AiSubtitleDefaults.LINE_HEIGHT_MIN_PERCENT,
+                max = AiSubtitleDefaults.LINE_HEIGHT_MAX_PERCENT,
+                step = AiSubtitleDefaults.LOOK_STEP_PERCENT,
+                onSet = { scope.launch { configStore.setLineHeight(it / 100f) } },
+            )
+        }
+        item {
+            // Sync trim: the residual after every measurable stage is the OUTPUT chain's own delay
+            // (HDMI/ARC, a soundbar, the TV's audio DSP), which no Android API reports. Negative
+            // shows the lines earlier — the common case when a soundbar sits between TV and ears.
+            val syncMs = cfg.syncOffsetMs
+            StepperRow(
+                label = stringResource(R.string.ai_subtitles_sync_offset),
+                value = syncMs,
+                min = AiSubtitleDefaults.SYNC_OFFSET_MIN,
+                max = AiSubtitleDefaults.SYNC_OFFSET_MAX,
+                step = AiSubtitleDefaults.SYNC_OFFSET_STEP,
+                valueText = stringResource(R.string.ai_subtitles_sync_value, syncMs),
+                onSet = { scope.launch { configStore.setSyncOffsetMs(it) } },
+            )
+        }
+        item {
+            Text(
+                stringResource(R.string.player_ai_subtitles_adjust_position),
+                style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // Compact cross: up alone, then left / down / right — the classic remote-D-pad shape.
+                // Two tight rows of 36 dp instead of three rows of 40 dp, so the nudger no longer
+                // dominates the panel.
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    OwnTVButton(
+                        icon = OwnTVIcon.ARROW_UP, onClick = { nudge(0f, -AiSubtitleDefaults.POSITION_NUDGE_DP) },
+                        style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
+                        modifier = Modifier.size(36.dp), compact = true,
+                    )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    OwnTVButton(
+                        icon = OwnTVIcon.ARROW_LEFT, onClick = { nudge(-AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
+                        style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
+                        modifier = Modifier.size(36.dp), compact = true,
+                    )
+                    OwnTVButton(
+                        icon = OwnTVIcon.ARROW_DOWN, onClick = { nudge(0f, AiSubtitleDefaults.POSITION_NUDGE_DP) },
+                        style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
+                        modifier = Modifier.size(36.dp), compact = true,
+                    )
+                    OwnTVButton(
+                        icon = OwnTVIcon.ARROW_RIGHT, onClick = { nudge(AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
+                        style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
+                        modifier = Modifier.size(36.dp), compact = true,
+                    )
+                }
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                OwnTVButton(
+                    label = stringResource(R.string.common_reset),
+                    onClick = {
+                        // Resets the whole on-screen look this panel owns (nudge + font size + line
+                        // spacing), not just the nudge: the rows above are one adjustment surface, so
+                        // "reset" restoring only one of them would surprise.
+                        scope.launch {
+                            configStore.setPositionOffset(Offset.Zero)
+                            configStore.setScale(AiSubtitleDefaults.SCALE_DEFAULT)
+                            configStore.setLineHeight(AiSubtitleDefaults.LINE_HEIGHT_DEFAULT)
+                        }
+                    },
+                    style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
+                )
+            }
+        }
+        item {
+            Text(
+                stringResource(R.string.ai_subtitles_remembered_hint),
+                style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+    }
+
+    if (showLanguagePicker) {
+        AiSubtitleLanguagePickerDialog(
+            current = sourceName,
+            languages = languages,
+            selected = cfg.sourceLanguage,
+            onSelect = { code ->
+                manager.setSourceLanguage(code)
+                showLanguagePicker = false
+            },
+            onDismiss = { showLanguagePicker = false },
+        )
+    }
+}
+
+/** Source-language picker for the HUD AI-subtitle panel: the shared list plus "follow global/auto". */
+@Composable
+private fun AiSubtitleLanguagePickerDialog(
+    current: String,
+    languages: List<Pair<String, String>>,
+    selected: String,
+    onSelect: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val options = listOf("" to stringResource(R.string.ai_subtitles_auto)) + languages
+    val focus = remember { FocusRequester() }
+    val selectedIndex = options.indexOfFirst { it.first == selected }.coerceAtLeast(0)
+    LaunchedEffect(Unit) { requestFocusRetrying(focus) }
+    BackHandler { onDismiss() }
+    DialogScaffold(title = current, onDismiss = onDismiss) {
+        items(options.size) { index ->
+            val (code, name) = options[index]
+            OptionRow(
+                label = name,
+                selected = code == selected,
+                modifier = if (index == selectedIndex) Modifier.focusRequester(focus) else Modifier,
+                onClick = { onSelect(code) },
+            )
         }
     }
 }

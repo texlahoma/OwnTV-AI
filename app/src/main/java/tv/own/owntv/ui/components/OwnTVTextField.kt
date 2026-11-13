@@ -3,6 +3,9 @@ package tv.own.owntv.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -24,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -115,7 +119,17 @@ fun OwnTVTextField(
             // Tell the shared popup before showing the IME. If this TV publishes no inset/frame
             // change, the calibrated estimate still constrains the modal immediately.
             tvImeWatcher?.onImeRequested()
-            runCatching { innerFocus.requestFocus() }
+            // The field only becomes focusable this frame; inside a popup window its window focus
+            // may not have arrived yet, so a one-shot request can be silently dropped. Retry until
+            // the requester is attached and the request lands (same pattern as the player dialogs).
+            // requestFocus() returns Boolean: a dropped request is NOT an exception, so the retry must
+            // test the return value — runCatching{}.isSuccess would always be true and the loop would
+            // bail on the first frame, leaving the keyboard up with no focused field (typing goes nowhere).
+            for (attempt in 0 until 10) {
+                withFrameNanos { }
+                if (innerFocus.requestFocus()) break
+                kotlinx.coroutines.delay(50)
+            }
             keyboard?.show()
             kotlinx.coroutines.delay(120)
             runCatching { bringIntoView.bringIntoView() }
@@ -159,7 +173,34 @@ fun OwnTVTextField(
                     .weight(1f)
                     .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
                     .focusRequester(pillFocus)
-                    .clickable(interactionSource = interaction, indication = null) { editing = true },
+                    // clickable is the two-stage flow's battle-tested trigger: D-pad OK and touch tap
+                    // both fire its onClick, it restores focusability, and the shared interaction
+                    // source keeps fieldFocused fed so the accent focus rim shows on the pill. The
+                    // pointerInput and onPreviewKeyEvent below stay for their own strengths: the
+                    // former arms edit on finger-DOWN (a tap the inner field swallows on UP while
+                    // canFocus=false), the latter consumes the remote OK in the preview phase.
+                    .clickable(interactionSource = interaction, indication = null) { editing = true }
+                    // Enter edit mode on finger-down instead of on up: the text field's own tap handler
+                    // won field's tap on the up-frame while canFocus was still false, so a short tap got
+                    // swallowed with no focus/IME. Yielding on down flips canFocus=true first and lets the
+                    // field keep its native tap (focus, cursor, IME). Throwaway gestures (scroll/drag) that
+                    // originate here briefly arm edit; harmless for a single-line field.
+                    .pointerInput(Unit) {
+                        awaitEachGesture {
+                            awaitFirstDown(requireUnconsumed = false)
+                            if (!editing) editing = true
+                        }
+                    }
+                    // Remote "OK": the D-pad center/Enter key arms edit the same way a touch does. Only
+                    // when not already editing -- once editing, Enter must reach the field's IME onDone.
+                    .onPreviewKeyEvent {
+                        if (it.type == KeyEventType.KeyDown && !editing &&
+                            (it.key == Key.DirectionCenter || it.key == Key.Enter)
+                        ) {
+                            editing = true
+                            true
+                        } else false
+                    },
             ) {
                 BasicTextField(
                     value = value,

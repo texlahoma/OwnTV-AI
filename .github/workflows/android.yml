@@ -191,6 +191,12 @@ jobs:
           if [ "$IS_TAG" = "true" ]; then
             NAME="${GITHUB_REF_NAME#v}"                 # tag v1.2.0 -> 1.2.0
             IFS='.' read -r MA MI PA <<< "$NAME"
+            # versionCode encodes MA.MI.PA as MA*10000 + MI*100 + PA, so a patch >= 100 would
+            # collide with the next minor (v1.2.100 == v1.3.0) and block updates on the device.
+            if [ -n "$PA" ] && [ "$PA" -ge 100 ]; then
+              echo "::error::patch version must be < 100 (got '$PA') — versionCode would collide."
+              exit 1
+            fi
             CODE=$(( ${MA:-0} * 10000 + ${MI:-0} * 100 + ${PA:-0} ))   # 1.2.0 -> 10200
             [ "$CODE" -gt 0 ] || CODE=1
           else
@@ -216,6 +222,11 @@ jobs:
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
             echo "KEYSTORE_FILE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
             echo "Release signing configured."
+          elif [ "$IS_TAG" = "true" ]; then
+            # A release without the signing secrets would silently ship a debug-signed APK that
+            # cannot install over the previous release. Fail loudly instead of publishing it.
+            echo "::error::Release build requires KEYSTORE_BASE64 — refusing to publish a debug-signed APK."
+            exit 1
           else
             echo "No KEYSTORE_BASE64 secret set — building a debug-signed APK."
           fi
@@ -260,7 +271,7 @@ jobs:
             echo "Building signed release APKs (both ABI flavors)"
             ./gradlew assembleRelease --stacktrace
             # Product flavors split the output by flavor subfolder:
-            #   standard/release  -> arm (arm64-v8a + armeabi-v7a) — the main download
+            #   standard/release  -> arm (arm64-v8a only) — the main download
             #   x86_64/release    -> x86_64 — emulator / rare x86 box
             ARM_SRC=$(ls app/build/outputs/apk/standard/release/*.apk | head -n1)
             X86_SRC=$(ls app/build/outputs/apk/x86_64/release/*.apk | head -n1)
@@ -288,7 +299,7 @@ jobs:
           fi
           cp "$ARM_SRC" "dist/$OUT"
           echo "APK_OUT=$OUT" >> "$GITHUB_ENV"
-          echo "Packaged dist/$OUT (arm: arm64-v8a + armeabi-v7a)"
+          echo "Packaged dist/$OUT (arm: arm64-v8a only)"
           # Tag builds also ship a stable-named copy so a fixed URL always serves the latest signed
           # release: https://github.com/<repo>/releases/latest/download/OwnTV.apk
           # (used by the Fire TV Downloader code and any "always-latest" sideload link).

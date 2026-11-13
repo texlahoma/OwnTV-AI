@@ -42,7 +42,15 @@ MODULE_MAIN_DIRS = [root.parent.relative_to(ROOT).as_posix() for root in SRC_ROO
 def _kotlin_files():
     """Every scannable Kotlin file across all source roots, in a stable order."""
     return sorted(
-        (f for root in SRC_ROOTS if root.is_dir() for f in root.rglob("*.kt")),
+        (
+            f
+            for root in SRC_ROOTS
+            if root.is_dir()
+            for f in root.rglob("*.kt")
+            # Vendored third-party JNI bindings (sherpa-onnx): their string literals are
+            # on-device model/class names, not user-facing text, so they are not scanned.
+            if "com/k2fsa" not in f.relative_to(ROOT).as_posix()
+        ),
         key=lambda f: f.relative_to(ROOT).as_posix(),
     )
 BASELINE = ROOT / "tools" / "i18n" / "hardcoded_baseline.txt"

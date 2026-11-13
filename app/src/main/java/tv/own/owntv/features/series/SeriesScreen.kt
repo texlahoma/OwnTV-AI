@@ -212,7 +212,10 @@ private fun SeriesContextMenu(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim()
@@ -387,10 +390,10 @@ private fun SeriesGrid(
                 kotlinx.coroutines.delay(60)
                 // One retry: on a cold paged list 60 ms is occasionally short of composition, and a
                 // silent miss is exactly the failure being fixed here.
-                if (runCatching { gridSelFocus.requestFocus() }.isFailure) {
+                if (!gridSelFocus.requestFocus()) {
                     withFrameNanos { }
-                    if (runCatching { gridSelFocus.requestFocus() }.isFailure) {
-                        runCatching { firstItemFocus.requestFocus() }
+                    if (!gridSelFocus.requestFocus()) {
+                        firstItemFocus.requestFocus()
                     }
                 }
             } else {
@@ -603,9 +606,7 @@ private fun SeriesGrid(
                 // from outside (internal moves don't re-trigger it).
                 .focusProperties {
                     onEnter = {
-                        if (runCatching { gridSelFocus.requestFocus() }.isFailure) {
-                            runCatching { firstItemFocus.requestFocus() }
-                        }
+                        if (!gridSelFocus.requestFocus()) firstItemFocus.requestFocus()
                     }
                 }
                 // Held Up/Down can outrun the lazy grid's composition and escape this pane
@@ -1160,7 +1161,10 @@ private fun EpisodeContextMenu(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup().longPressMenuGuard(),
@@ -2002,7 +2006,10 @@ private fun SeriesSortingDialog(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { androidx.compose.ui.focus.FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier

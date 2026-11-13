@@ -559,9 +559,7 @@ fun LiveScreen(
                 // only for directional entry from outside (internal moves don't re-trigger it).
                 .focusProperties {
                     onEnter = {
-                        if (runCatching { selFocus.requestFocus() }.isFailure) {
-                            runCatching { firstItemFocus.requestFocus() }
-                        }
+                        if (!selFocus.requestFocus()) firstItemFocus.requestFocus()
                     }
                 }
                 // Held Up/Down can outrun the lazy list's composition and escape this pane
@@ -957,7 +955,10 @@ private fun ChannelContextMenu(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { androidx.compose.ui.focus.FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     androidx.activity.compose.BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     Box(
@@ -1588,7 +1589,10 @@ internal fun EpgOffsetDialog(
     val colors = OwnTVTheme.colors
     var minutes by remember { mutableStateOf(currentMinutes ?: globalMinutes) }
     val doneFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { doneFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { doneFocus.requestFocus() }
+    }
     androidx.activity.compose.BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     tv.own.owntv.ui.theme.PopupFontTheme(fontScale = 0.75f) {

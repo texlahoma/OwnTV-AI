@@ -4,6 +4,251 @@
 # Phase 1 deletes occurrences until this file is empty; the CI guard then becomes absolute.
 # Format: <count>\t<relative path>\t<content with \t/\n escaped>
 
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	,
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	en
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleDiagnostics.kt	'
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleDiagnostics.kt	's
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleDiagnostics.kt	’
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleDiagnostics.kt	’s
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	\0
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	$base · chunk ${fedChunks}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	${it.name.lowercase()}/$appliedHotwordCount
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	${liveDelayMs / 1000}s
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	%.2f
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	($appliedHotwordCount hotwords)
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	?
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	audio discontinuity: renderer flushed; frame queue jumped to new timeline
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	capture: chunk#${audioDiag} n=${pcm.size} rms=$lastRms peak=$peak
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	error: ${e.message}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	off
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	recognizer init failed
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	scene: bias -> ${detectedSport?.name ?: "none"}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	scoped to ${detectedTeams.joinToString("+") { it.name.lowercase() }}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	· drop ${frameQueue.droppedOnOverflow.get()}/${frameQueue.droppedOnFlush.get()}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	· jmp ${frameQueue.overflowJumpCount}/${frameQueue.flushJumpCount} · blank ${blankChunks}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	· qmax ${frameQueue.highWaterFrames}/$PCM_CHANNEL_CAPACITY
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	· rtf ${"%.2f".format(Locale.ROOT, rtf)} · drn $drn
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleManager.kt	· scene ${appliedScene?.let { "${it.name.lowercase()}/$appliedHotwordCount" } ?: "none"}
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	$fullName → $given·$chinese
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	$it → $chinese
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	%.1f
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	(?![\\p{L}\\p{N}])
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	(?:
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	(?<![\\p{L}'-])[A-Z][a-z]{4,}(?![\\p{L}])
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	(?<![\\p{L}\\p{N}])
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Alex
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Alvaro Arbeloa
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Amex Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Anderlecht
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Andoni Iraola
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Andy Madley
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Anfield
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Atalanta
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Bayer Leverkusen
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Besiktas
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Black Cats
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Blackburn Rovers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Blackpool
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Bobby
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Bolton Wanderers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Borussia Monchengladbach
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Brentford Community Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Bristol City
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Bruno
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Callum
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Celtic
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Champions League
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Charlie
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Charlton Athletic
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Cherries
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Chris Kavanagh
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Citizens
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	City Ground
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Club Brugge
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Cole
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Copenhagen
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Cottagers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Coventry Building Society Arena
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Craig Pawson
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Craven Cottage
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Daniel
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Daniel Farke
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Darren England
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	David Moyes
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Dean
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Dean Court
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Derby County
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Diego
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Eintracht Frankfurt
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Elland Road
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Elliot
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Emiliano
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Emirates Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Enzo
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Enzo Maresca
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Etihad Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Europa League
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	FA Cup
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Fabian Hurzeler
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Falmer Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Fenerbahce
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Feyenoord
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Fiorentina
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Frank Lampard
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Galatasaray
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Gary O'Neil
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Goodison Park
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Gtech Community Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Harry
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Hill Dickinson Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Huddersfield Town
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Jarred Gillett
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Joachim
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Joao
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Joe
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	John Brooks
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Jordan
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Julian
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Keith Andrews
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Lazio
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Lewis Smith
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Lille
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Lisandro
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Lyon
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	MKM Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Magpies
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Man City
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Man United
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Man Utd
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Marco Rose
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Marseille
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Matthias Jaissle
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Michael Carrick
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Michael Oliver
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Michael Salisbury
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Mikel Arteta
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Millwall
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Monaco
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Old Trafford
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Oliver Glasner
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Olympiacos
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Oxford United
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	PSV Eindhoven
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Paul Tierney
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Peterborough United
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Pierre Sage
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Portman Road
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Portsmouth
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Premier League
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Preston North End
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Queens Park Rangers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	RB Leipzig
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Rangers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Real Sociedad
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Rebecca Welch
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Red Devils
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Red Star Belgrade
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Reece
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Regis Le Bris
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Rob Jones
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Roberto De Zerbi
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Ronald
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Rotherham United
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Salzburg
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sam Barrott
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Seagulls
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Selhurst Park
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sergej Jakirovic
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sevilla
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Shakhtar Donetsk
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sheffield Wednesday
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Simon Hooper
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sky Blues
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sorba
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Sparta Prague
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	St James Park
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Stadium of Light
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Stamford Bridge
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Stoke City
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Tim Robinson
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Toffees
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Tom Kirk
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Tottenham Hotspur Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Tractor Boys
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Unai Emery
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	VAR
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Valencia
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Villa Park
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Villans
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Villarreal
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Vitality Stadium
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Wigan Athletic
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Will
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Wolfsburg
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Wycombe Wanderers
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Xabi Alonso
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	Young Boys
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	[\\s'’-]*
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	[\\s'’-]*)?
+2	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	\\s+
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	clean sheet
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	common-english-words.txt
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	counter attack
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	derby
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	equaliser
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	extra time
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	free kick
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	handball
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	hat trick
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	offside
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	offside trap
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	own goal
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	penalty
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	penalty shootout
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	red card
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	set piece
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	spot kick
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	substitution
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	yellow card
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	丹尼尔
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	乔
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	乔丹
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	亚历克斯
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	利桑德罗
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	博比
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	卡勒姆
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	哈里
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	埃利奥特
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	埃米利亚诺
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	威尔
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	布鲁诺
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	恩佐
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	朱利安
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	查理
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	科尔
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	索尔巴
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	约阿希姆
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	罗纳德
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	若昂
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	迪恩
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	迭戈
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/SubtitleGlossary.kt	里斯
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/streaming/KrokoStreamingRecognizer.kt	$modelInAssets/$name
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/streaming/KrokoStreamingRecognizer.kt	assets:$modelInAssets
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/streaming/KrokoStreamingRecognizer.kt	kroko bias switch failed; keeping the current vocabulary
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/streaming/StreamingModelCatalog.kt	ai/streaming-en
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	Earlier lines already shown (for continuity of names and terminology — do NOT translate
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	The programme is $scene coverage, so expect its vocabulary, its scorelines and its
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	Use natural spoken wording rather than a literal word-for-word rendering.
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	Use the standard Chinese broadcast rendering for names, teams, competitions and technical
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	data:
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	players' names.
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	quotes, no labels, no notes, no romanisation. $namingAndRepair
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	them again): $recent
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/translate/CloudTranslator.kt	zh
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/whisper/WhisperRecognizer.kt	$modelInAssets/tiny-decoder.int8.onnx
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/whisper/WhisperRecognizer.kt	$modelInAssets/tiny-encoder.int8.onnx
+1	app/src/main/java/tv/own/owntv/features/aisubtitles/whisper/WhisperRecognizer.kt	$modelInAssets/tiny-tokens.txt
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	\0
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	ADD
 1	app/src/main/java/tv/own/owntv/features/customize/BulkRenameDialogs.kt	PREFIX
@@ -28,6 +273,10 @@
 1	app/src/main/java/tv/own/owntv/features/epg/EpgScreen.kt	ALL
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	mpv handoff for '${channel.name}' abandoned — the channel changed while ExoPlayer released
 1	app/src/main/java/tv/own/owntv/features/live/LiveViewModel.kt	starting mpv for '${channel.name}' — reason=$reason
+1	app/src/main/java/tv/own/owntv/features/settings/AiSubtitleSettingsScreen.kt	400
+1	app/src/main/java/tv/own/owntv/features/settings/AiSubtitleSettingsScreen.kt	401
+1	app/src/main/java/tv/own/owntv/features/settings/AiSubtitleSettingsScreen.kt	403
+1	app/src/main/java/tv/own/owntv/features/settings/AiSubtitleSettingsScreen.kt	404
 8	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	\0
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	${cfg.host}$p
 1	app/src/main/java/tv/own/owntv/features/settings/DnsSettingsScreen.kt	:${cfg.port}

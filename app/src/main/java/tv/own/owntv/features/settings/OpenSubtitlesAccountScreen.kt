@@ -640,7 +640,10 @@ private fun OpenSubtitlesSignInDialog(
 ) {
     val colors = OwnTVTheme.colors
     val fieldFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fieldFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fieldFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss, fontScale = .50f) {
         Box(
@@ -720,7 +723,10 @@ private fun OpenSubtitlesSignInDialog(
 private fun ErrorDialog(message: String, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
         Box(

@@ -1,7 +1,6 @@
 package tv.own.owntv.features.recovery
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,7 +57,7 @@ fun DatabaseRecoveryScreen(
             if (!message.isNullOrBlank()) {
                 Text(message, fontSize = 14.sp, color = Color(0xFF8A8A94))
             }
-            Button(onClick = onRetry, modifier = Modifier.focusRequester(focus).focusable()) {
+            Button(onClick = onRetry, modifier = Modifier.focusRequester(focus)) {
                 Text(stringResource(R.string.recovery_retry))
             }
             Text(

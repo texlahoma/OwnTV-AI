@@ -66,7 +66,10 @@ fun MoveToCategoryDialog(
     var selectedTarget by remember { mutableStateOf<String?>(null) }
     var keepInOrigin by remember { mutableStateOf(false) }
     val newCatFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { newCatFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { newCatFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
         Box(

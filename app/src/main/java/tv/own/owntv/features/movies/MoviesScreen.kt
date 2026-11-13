@@ -529,9 +529,7 @@ fun MoviesScreen(
                 // from outside (internal moves don't re-trigger it).
                 .focusProperties {
                     onEnter = {
-                        if (runCatching { selFocus.requestFocus() }.isFailure) {
-                            runCatching { firstItemFocus.requestFocus() }
-                        }
+                        if (!selFocus.requestFocus()) firstItemFocus.requestFocus()
                     }
                 }
                 // Held Up/Down can outrun the lazy grid's composition and escape this pane
@@ -981,7 +979,10 @@ private fun MovieContextMenu(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { androidx.compose.ui.focus.FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     androidx.activity.compose.BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim()

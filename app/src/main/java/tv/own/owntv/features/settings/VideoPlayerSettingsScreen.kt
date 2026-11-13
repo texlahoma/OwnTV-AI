@@ -511,8 +511,8 @@ fun VideoPlayerSettingsScreen(
     LaunchedEffect(menuReturnKey) {
         if (menuReturnKey == null) return@LaunchedEffect
         kotlinx.coroutines.delay(60)
-        if (runCatching { rowReturnFocus.requestFocus() }.isFailure) {
-            runCatching { selectedSectionFocus.requestFocus() }
+        if (!rowReturnFocus.requestFocus()) {
+            selectedSectionFocus.requestFocus()
         }
     }
     // A Quick shortcut names the row it was pinned from — land the cursor on it, not on the sections.
@@ -523,7 +523,7 @@ fun VideoPlayerSettingsScreen(
         dialogForQuickKey(focusRowKey)?.let { dialog = it }
         repeat(10) {
             kotlinx.coroutines.delay(50)
-            if (runCatching { rowReturnFocus.requestFocus() }.isSuccess) return@LaunchedEffect
+            if (rowReturnFocus.requestFocus()) return@LaunchedEffect
         }
     }
     // Kick focus into the group; the group's onEnter (below) decides the actual target.
@@ -736,7 +736,8 @@ fun VideoPlayerSettingsScreen(
                         if (e.type == androidx.compose.ui.input.key.KeyEventType.KeyDown &&
                             e.key == androidx.compose.ui.input.key.Key.DirectionLeft
                         ) {
-                            runCatching { selectedSectionFocus.requestFocus() }.isSuccess
+                            selectedSectionFocus.requestFocus()
+                            true
                         } else {
                             false
                         }
@@ -1526,7 +1527,10 @@ fun VideoPlayerSettingsScreen(
 private fun LiveLatencyWarningDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onCancel() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onCancel) {
     Box(
@@ -1558,7 +1562,10 @@ private fun LiveLatencyWarningDialog(onConfirm: () -> Unit, onCancel: () -> Unit
 private fun ConfirmResetDialog(title: String, description: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onCancel() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onCancel) {
     Box(
@@ -1976,7 +1983,10 @@ private fun ExternalPlayerDialog(
 ) {
     val colors = OwnTVTheme.colors
     val fr = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fr.requestFocus() }
+    }
     BackHandler { onDismiss() }
     val rows = listOf(
         Triple(tv.own.owntv.core.settings.SettingsRepository.ExternalPlayerSection.LIVE_TV, stringResource(R.string.common_nav_live_tv), live),
@@ -2100,7 +2110,7 @@ private fun subColorLabel(hex: String): String = if (SubtitleStyle.hasColor(hex)
 }
 
 @Composable
-private fun subtitlePositionName(position: SubtitleStyle.Position): String = stringResource(
+internal fun subtitlePositionName(position: SubtitleStyle.Position): String = stringResource(
     when (position) {
         SubtitleStyle.Position.DEFAULT -> R.string.settings_subtitle_default
         SubtitleStyle.Position.TOP_LEFT -> R.string.player_mini_top_left
@@ -2327,7 +2337,10 @@ private fun SubtitleColorDialog(color: String, onColor: (String) -> Unit, onDism
     var value by remember { mutableStateOf(hsv[2]) }
     var hexInput by remember { mutableStateOf(color.removePrefix("#")) }
     var hexError by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     fun applyPicked(hex: String) {
@@ -2424,14 +2437,17 @@ private fun SubtitleColorDialog(color: String, onColor: (String) -> Unit, onDism
  * is made by looking rather than by reading a label.
  */
 @Composable
-private fun SubtitlePositionDialog(
+internal fun SubtitlePositionDialog(
     position: SubtitleStyle.Position,
     onSelect: (SubtitleStyle.Position) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val colors = OwnTVTheme.colors
     val selectedFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { selectedFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { selectedFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
         Box(
@@ -2547,7 +2563,10 @@ private fun SubtitleSizeDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstRow = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstRow.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstRow.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
         Box(

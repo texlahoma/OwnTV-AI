@@ -39,8 +39,14 @@ android {
     // the repo. Gradle only reads gradle.properties from GRADLE_USER_HOME or the project dir, so this
     // one is loaded by hand. Declared here because defaultConfig below already needs it.
     val localSigningProps = Properties().apply {
-        val f = File("E:/MEGA/CODE/OwnTV_Gradle/owntv-signing.properties")
-        if (f.isFile) f.inputStream().use { load(it) }
+        // Looked up in the conventional per-user location first (works on any OS), then the legacy
+        // Windows path so a machine that already has a file there keeps working. CI/Linux never have
+        // either — the file is skipped and signing comes from the injected secrets instead.
+        val candidates = listOf(
+            File(System.getProperty("user.home"), "owntv-signing.properties"),
+            File("E:/MEGA/CODE/OwnTV_Gradle/owntv-signing.properties"),
+        )
+        candidates.firstOrNull { it.isFile }?.inputStream()?.use { load(it) }
     }
 
     defaultConfig {
@@ -93,12 +99,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // ABI split via product flavors: real Android TV / Fire TV hardware is arm (arm64-v8a covers
-    // everything modern; armeabi-v7a keeps the original 32-bit Nvidia Shield TV 2015/2017, which runs
-    // Android 9+ but is 32-bit). x86_64 is emulator-only — no real TV box uses it. Shipping them as
-    // separate flavors halves the download users get via the Downloader code (~49MB vs the old 104MB
-    // universal APK that bundled all 4 ABIs), which fixes the "parse error on install" reports caused
-    // by truncated downloads. x86 (32-bit Intel) is dropped entirely — even emulators use x86_64.
+    // ABI split via product flavors: real Android TV / Fire TV hardware is arm. arm64-v8a covers all
+    // modern devices; the old 32-bit Nvidia Shield TV (2015/2017) is out of support, so armeabi-v7a is
+    // no longer shipped — dropping it cuts the APK roughly in half. x86_64 is emulator-only — no real
+    // TV box uses it. Shipping them as separate flavors keeps each download small (which fixes the
+    // "parse error on install" reports caused by truncated downloads). x86 (32-bit Intel) is dropped
+    // entirely — even emulators use x86_64.
     //
     // Local dev: pick a flavor in Android Studio's "Build Variants" panel before Run (standard for
     // real devices / arm emulators, x86_64 for an x86_64 emulator). `assembleRelease` builds BOTH.
@@ -106,7 +112,7 @@ android {
     productFlavors {
         create("standard") {
             dimension = "abi"
-            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+            ndk { abiFilters += listOf("arm64-v8a") }
         }
         create("x86_64") {
             dimension = "abi"
@@ -327,7 +333,14 @@ val verifyI18nLiterals = tasks.register<VerifyI18nLiterals>("verifyI18nLiterals"
     description = "Fails the build on user-visible text left hardcoded in Kotlin."
     // Only :app lives in this repo now. Core's own Kotlin is gated by the identical task in the
     // core repo, so a literal cannot escape by moving between the two.
-    kotlinSources.from(fileTree("src/main/java") { include("**/*.kt") })
+    kotlinSources.from(
+        fileTree("src/main/java") {
+            include("**/*.kt")
+            // vendored sherpa-onnx JNI bindings: their string literals are model/on-device names,
+            // not user-visible text, so they are excluded from the hardcoded-string check.
+            exclude("com/k2fsa/**")
+        },
+    )
     toolInputs.from(
         rootProject.file("tools/i18n/check_hardcoded_strings.py"),
         rootProject.file("tools/i18n/hardcoded_baseline.txt"),
@@ -405,6 +418,10 @@ dependencies {
     implementation(libs.zxing.core) // QR generation for the Remote (companion) add-source flow
     implementation(libs.juniversalchardet) // local subtitle charset detection (subtitle plan §7.2)
 
+    // On-device streaming ASR for the AI-subtitle feature (local ASR, cloud translation).
+    // sherpa-onnx is integrated directly: the JNI bindings ship as source under
+    // src/main/java/com/k2fsa/sherpa/onnx and the native libs as src/main/jniLibs.
+
     // Media playback — libmpv (FFmpeg) engine
     implementation(libs.libmpv)
     // Media3 / ExoPlayer — used ONLY for the VOD + image-subtitle (PGS/VOBSUB/DVB) handoff, where it
@@ -425,6 +442,9 @@ dependencies {
     // Image loading
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // .tar.bz2 extraction for the on-demand streaming ASR models (StreamingModelStore).
+    implementation(libs.commons.compress)
 
     // Dependency injection
     implementation(platform(libs.koin.bom))

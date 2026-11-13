@@ -84,7 +84,10 @@ fun MediaDetailsScreen(details: MediaDetailsUi, onExit: () -> Unit, modifier: Mo
     val scroll = rememberScrollState()
     val focus = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onExit() }
 
     // A scroll-only window has no inner focus targets, so D-pad Up/Down would otherwise do nothing. The

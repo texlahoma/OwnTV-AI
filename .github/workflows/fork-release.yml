@@ -1,0 +1,125 @@
+name: Fork release
+
+# Builds the AI-subtitle APK from THIS fork and refreshes a rolling 'latest' GitHub Release,
+# which the TV app's updater polls (public repo — the updater needs no token).
+#
+# Core resolution: ahXN00/OwnTV_Core is public, so it is checked out next to the app and fed
+# to Gradle via the official -Powntv.corePath substitution — no GitHub Packages token needed.
+#
+# versionCode: epoch minutes. Always above the dev fallback (99999), strictly monotonic, and
+# the same formula local sandbox builds pass, so release and local builds form one ordered
+# update chain (a newer local build installs over an older release and vice versa).
+#
+# Triggers: direct pushes to main, manual dispatch, and — because GITHUB_TOKEN pushes do not
+# trigger workflows — the successful completion of "Sync upstream" (which rebases main onto
+# new upstream commits; those pushes alone would otherwise never produce a release).
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  workflow_run:
+    workflows: [ "Sync upstream" ]
+    types: [ completed ]
+  # The core mirror (texlahoma/OwnTV_Core) rebases itself on its own schedule; a cross-repo
+  # push cannot trigger workflows here, so the daily run below is what turns a core-side sync
+  # into a fresh release. The sha guard skips the build when nothing changed.
+  schedule:
+    - cron: "23 5 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fork-release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    # workflow_run fires even when the sync failed; only release off a successful sync of
+    # main. Push/dispatch events pass straight through.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this fork
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Checkout core mirror (source substitution, no packages token)
+        uses: actions/checkout@v4
+        with:
+          repository: texlahoma/OwnTV_Core
+          ref: main
+          path: OwnTV_Core
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Skip when HEAD is already released
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CUR_SHA="$(git rev-parse --short=12 HEAD)"
+          LAST_SHA="$(gh release view latest --json body -q .body 2>/dev/null | grep -oE 'sha=[0-9a-f]+' | head -1 | cut -d= -f2 || true)"
+          echo "cur=$CUR_SHA last=$LAST_SHA"
+          if [ -n "$LAST_SHA" ] && [ "$LAST_SHA" = "$CUR_SHA" ]; then
+            echo "SKIP=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Stamp the build version
+        if: env.SKIP != 'true'
+        run: |
+          echo "VERSION_CODE=$(( $(date +%s) / 60 ))" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=ai-$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_ENV"
+
+      - name: Build standard debug APK
+        if: env.SKIP != 'true'
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleStandardDebug \
+            -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
+            --stacktrace --no-daemon
+
+      - name: Sign with the update key
+        if: env.SKIP != 'true'
+        env:
+          KS_B64: ${{ secrets.OWNDBG_KS_B64 }}
+          KS_PASS: ${{ secrets.OWNDBG_KS_PASS }}
+        run: |
+          if [ -z "$KS_B64" ]; then
+            echo "::error::Secret OWNDBG_KS_B64 is missing — see FORK_SETUP.md. CI builds must carry the same signature as installed devices, or the auto-update install is refused."
+            exit 1
+          fi
+          echo "$KS_B64" | base64 -d > update.keystore
+          BT="$(ls -d "$ANDROID_HOME"/build-tools/* | tail -1)"
+          "$BT/apksigner" sign \
+            --ks update.keystore --ks-pass "pass:$KS_PASS" --key-pass "pass:$KS_PASS" \
+            --ks-key-alias owntv-debug \
+            --out "OwnTV-AI-${VERSION_CODE}.apk" \
+            app/build/outputs/apk/standard/debug/app-standard-debug.apk
+          "$BT/apksigner" verify --print-certs "OwnTV-AI-${VERSION_CODE}.apk" | sed -n 2p
+
+      - name: Refresh the rolling 'latest' release
+        if: env.SKIP != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete latest --cleanup-tag -y 2>/dev/null || true
+          gh release create latest "OwnTV-AI-${VERSION_CODE}.apk" \
+            --title "OwnTV-AI ${VERSION_NAME}" \
+            --notes "versionCode=${VERSION_CODE} sha=$(git rev-parse --short=12 HEAD)" \
+            --latest

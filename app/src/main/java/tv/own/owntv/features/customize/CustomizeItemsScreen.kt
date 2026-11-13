@@ -417,7 +417,10 @@ fun CustomizeItemsScreen(
 private fun ItemsRangeHideDialog(count: Int, onHide: () -> Unit, onShow: () -> Unit, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val hideFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { hideFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { hideFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     Box(

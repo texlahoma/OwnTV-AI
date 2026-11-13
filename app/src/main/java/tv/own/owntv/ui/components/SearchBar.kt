@@ -3,6 +3,9 @@ package tv.own.owntv.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -26,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -101,7 +105,17 @@ fun SearchBar(
     LaunchedEffect(editing) {
         if (editing) {
             tvImeWatcher?.onImeRequested()
-            runCatching { fieldFocus.requestFocus() }
+            // The field's node only becomes focusable this frame; inside a popup window its window
+            // focus may not have arrived yet, so a one-shot request can be silently dropped. Retry
+            // until the requester is attached and the request lands (same pattern as the player dialogs).
+            // requestFocus() returns Boolean: a dropped request is NOT an exception, so the retry must
+            // test the return value — runCatching{}.isSuccess would always be true and the loop would
+            // bail on the first frame, leaving the keyboard up with no focused field (typing goes nowhere).
+            for (attempt in 0 until 10) {
+                withFrameNanos { }
+                if (fieldFocus.requestFocus()) break
+                kotlinx.coroutines.delay(50)
+            }
             keyboard?.show()
             kotlinx.coroutines.delay(120)
             runCatching { bringIntoView.bringIntoView() }
@@ -132,7 +146,31 @@ fun SearchBar(
                 shape = shape,
             )
             .focusRequester(pillFocus)
-            .clickable(interactionSource = interaction, indication = null) { editing = true },
+            // clickable is the two-stage flow's battle-tested trigger (D-pad OK + touch tap both
+            // fire its onClick); it also restores focusability and the semantics OnClick. The
+            // pointerInput and onPreviewKeyEvent below stay for their own strengths: the former arms
+            // edit on finger-DOWN (a tap the inner field swallows on UP while canFocus=false), the
+            // latter consumes the remote OK during the preview phase before clickable's main phase.
+            .clickable(interactionSource = interaction, indication = null) { editing = true }
+            // Enter edit mode on finger-down (see OwnTVTextField): the field's own tap consumes the up
+            // while canFocus is still false, swallowing short taps with no focus/IME. Down-arming flips
+            // canFocus first; the field keeps its native tap. Harmless for this single-line field.
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    awaitFirstDown(requireUnconsumed = false)
+                    if (!editing) editing = true
+                }
+            }
+            // Remote "OK": D-pad center/Enter arms edit; only while not editing so Enter still reaches
+            // the IME onSearch once editing.
+            .onPreviewKeyEvent {
+                if (it.type == KeyEventType.KeyDown && !editing &&
+                    (it.key == Key.DirectionCenter || it.key == Key.Enter)
+                ) {
+                    editing = true
+                    true
+                } else false
+            },
         contentAlignment = Alignment.CenterStart,
     ) {
         Row(

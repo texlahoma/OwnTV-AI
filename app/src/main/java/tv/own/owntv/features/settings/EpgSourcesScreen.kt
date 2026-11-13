@@ -455,7 +455,7 @@ internal fun EpgSourceForm(
     ) {
         Text(stringResource(if (initial == null) R.string.settings_epg_sources_add else R.string.settings_epg_sources_edit), style = MaterialTheme.typography.headlineLarge, color = colors.onSurface)
         Spacer(Modifier.height(20.dp))
-        OwnTVTextField(name, { name = it }, label = stringResource(R.string.settings_epg_sources_name), placeholder = stringResource(R.string.settings_epg_sources_name_hint), modifier = Modifier.fillMaxWidth().widthIn(max = 680.dp).focusRequester(firstFocus))
+        OwnTVTextField(name, { name = it }, label = stringResource(R.string.settings_epg_sources_name), placeholder = stringResource(R.string.settings_epg_sources_name_hint), modifier = Modifier.fillMaxWidth().widthIn(max = 680.dp), focusRequester = firstFocus)
         Spacer(Modifier.height(14.dp))
         val fillButtonFocus = remember { FocusRequester() }
         OwnTVTextField(url, { url = it }, label = stringResource(R.string.settings_epg_sources_url), placeholder = stringResource(R.string.settings_epg_sources_url_hint), modifier = Modifier.fillMaxWidth().widthIn(max = 680.dp).focusProperties { down = fillButtonFocus })

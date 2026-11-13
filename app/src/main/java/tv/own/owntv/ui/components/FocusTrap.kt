@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
+import kotlinx.coroutines.delay
 
 /**
  * Keeps D-pad focus INSIDE this focus group for vertical moves: when a held Up/Down outruns a lazy
@@ -78,7 +79,7 @@ suspend fun restoreAfterDialogClose(
             // scrollTo takes the scroll mutex, so it also cancels a bringIntoView animation in flight.
             runCatching { scrollState.scrollTo(scrollOffset) }
         }
-        if (!landed) landed = opener != null && runCatching { opener.requestFocus() }.isSuccess
+        if (!landed) landed = opener != null && opener.requestFocus()
         if (landed && ++settled > RESTORE_SETTLE_FRAMES) return
     }
 }
@@ -104,7 +105,7 @@ suspend fun restoreAfterDialogClose(
         if (listState.firstVisibleItemIndex != index || listState.firstVisibleItemScrollOffset != offset) {
             runCatching { listState.scrollToItem(index, offset) }
         }
-        if (!landed) landed = opener != null && runCatching { opener.requestFocus() }.isSuccess
+        if (!landed) landed = opener != null && opener.requestFocus()
         if (landed && ++settled > RESTORE_SETTLE_FRAMES) return
     }
 }
@@ -175,8 +176,15 @@ class StepperFocus(val minus: FocusRequester, val plus: FocusRequester)
 fun rememberStepperFocus(plusEnabled: Boolean, minusEnabled: Boolean): StepperFocus {
     val focus = remember { StepperFocus(FocusRequester(), FocusRequester()) }
     // "+" is the natural landing spot, but it can't take focus while disabled.
-    LaunchedEffect(Unit) { runCatching { (if (plusEnabled) focus.plus else focus.minus).requestFocus() } }
-    LaunchedEffect(plusEnabled) { if (!plusEnabled && minusEnabled) runCatching { focus.minus.requestFocus() } }
-    LaunchedEffect(minusEnabled) { if (!minusEnabled && plusEnabled) runCatching { focus.plus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        delay(80)
+        restoreAfterDialogClose(if (plusEnabled) focus.plus else focus.minus)
+    }
+    LaunchedEffect(plusEnabled) {
+        if (!plusEnabled && minusEnabled) restoreAfterDialogClose(focus.minus)
+    }
+    LaunchedEffect(minusEnabled) {
+        if (!minusEnabled && plusEnabled) restoreAfterDialogClose(focus.plus)
+    }
     return focus
 }

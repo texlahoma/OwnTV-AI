@@ -92,7 +92,11 @@ private fun PinDialogBody(title: String, onSubmit: (String) -> Unit, onDismiss: 
     val colors = OwnTVTheme.colors
     var pin by remember { mutableStateOf("") }
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    // Wait until the popup window is attached before requesting focus (same as TextInputDialog).
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     ProfileScrim(onDismiss, width = if (compact) 290.dp else 480.dp, padding = if (compact) 16.dp else 28.dp) {
         Text(title, style = if (compact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge, color = colors.onSurface)
         Spacer(Modifier.height(if (compact) 10.dp else 16.dp))
@@ -103,7 +107,10 @@ private fun PinDialogBody(title: String, onSubmit: (String) -> Unit, onDismiss: 
             placeholder = stringResource(R.string.profiles_pin_placeholder),
             keyboardType = KeyboardType.NumberPassword,
             isPassword = true,
-            modifier = Modifier.fillMaxWidth().focusRequester(focus),
+            modifier = Modifier.fillMaxWidth(),
+            // Hang the requester on the focusable pill via the dedicated parameter, not the outer
+            // Column (the modifier target is not focusable, so requestFocus would be silently dropped).
+            focusRequester = focus,
         )
         Spacer(Modifier.height(20.dp))
         // Explicit start/end links: spatial D-pad search from Cancel would otherwise wander into
@@ -146,13 +153,17 @@ internal fun ProfileEditorDialog(
     var pin by remember { mutableStateOf("") }
     var removePin by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    // Wait until the popup window is attached before requesting focus (same as TextInputDialog).
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     val nameTaken = name.trim().isNotEmpty() && name.trim().lowercase() in takenNames
 
     ProfileScrim(onDismiss) {
         Text(stringResource(if (initial == null) R.string.profiles_new else R.string.profiles_edit), style = MaterialTheme.typography.titleLarge, color = colors.onSurface)
         Spacer(Modifier.height(16.dp))
-        OwnTVTextField(name, { name = it }, label = stringResource(R.string.profiles_name), placeholder = stringResource(R.string.profiles_name_hint), modifier = Modifier.fillMaxWidth().focusRequester(focus))
+        OwnTVTextField(name, { name = it }, label = stringResource(R.string.profiles_name), placeholder = stringResource(R.string.profiles_name_hint), modifier = Modifier.fillMaxWidth(), focusRequester = focus)
         if (nameTaken) {
             Spacer(Modifier.height(6.dp))
             Text(
@@ -200,13 +211,19 @@ internal fun ProfileEditorDialog(
         }
 
         Spacer(Modifier.height(22.dp))
+        // Explicit start/end links: spatial D-pad search from Cancel would otherwise wander into the
+        // gate's profile tiles BEHIND the dialog before reaching Create (same as PinDialogBody).
+        val cancelFocus = remember { FocusRequester() }
+        val okFocus = remember { FocusRequester() }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
+            OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY,
+                modifier = Modifier.focusRequester(cancelFocus).focusProperties { end = okFocus })
             Spacer(Modifier.weight(1f))
             OwnTVButton(
                 label = stringResource(if (initial == null) R.string.profiles_create else R.string.profiles_save),
                 onClick = { onConfirm(name, avatarId, isKids, if (removePin) "" else pin.takeIf { it.isNotBlank() }) },
                 enabled = name.isNotBlank() && !nameTaken && (removePin || pin.isEmpty() || pin.length >= 4),
+                modifier = Modifier.focusRequester(okFocus).focusProperties { start = cancelFocus },
             )
         }
     }

@@ -38,6 +38,8 @@ enum class OwnTVIcon {
     // archive box stood for a paired phone, for "let this one be found", and for "send to it" — three
     // meanings on one screen, and all three already meant "backup" everywhere else in the app.
     PHONE, SEND,
+    // Screen-direction nudges for the AI-subtitle position adjustment in the player HUD.
+    ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT,
 }
 
 @Composable
@@ -267,6 +269,26 @@ fun OwnTVIcon(
             OwnTVIcon.CHEVRON_DOWN -> {
                 drawLineStroke(p(5f, 9f), p(12f, 16f), tint, stroke)
                 drawLineStroke(p(12f, 16f), p(19f, 9f), tint, stroke)
+            }
+            OwnTVIcon.ARROW_UP -> {
+                drawLineStroke(p(12f, 20f), p(12f, 5f), tint, stroke)
+                drawLineStroke(p(6f, 11f), p(12f, 5f), tint, stroke)
+                drawLineStroke(p(18f, 11f), p(12f, 5f), tint, stroke)
+            }
+            OwnTVIcon.ARROW_DOWN -> {
+                drawLineStroke(p(12f, 4f), p(12f, 19f), tint, stroke)
+                drawLineStroke(p(6f, 13f), p(12f, 19f), tint, stroke)
+                drawLineStroke(p(18f, 13f), p(12f, 19f), tint, stroke)
+            }
+            OwnTVIcon.ARROW_LEFT -> {
+                drawLineStroke(p(20f, 12f), p(5f, 12f), tint, stroke)
+                drawLineStroke(p(11f, 6f), p(5f, 12f), tint, stroke)
+                drawLineStroke(p(11f, 18f), p(5f, 12f), tint, stroke)
+            }
+            OwnTVIcon.ARROW_RIGHT -> {
+                drawLineStroke(p(4f, 12f), p(19f, 12f), tint, stroke)
+                drawLineStroke(p(13f, 6f), p(19f, 12f), tint, stroke)
+                drawLineStroke(p(13f, 18f), p(19f, 12f), tint, stroke)
             }
             OwnTVIcon.REMOTE_CHANNEL_UP -> {
                 drawLineStroke(p(5f, 10f), p(12f, 4f), tint, stroke)

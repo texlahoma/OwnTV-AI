@@ -27,7 +27,7 @@ enum class OwnTVButtonStyle { PRIMARY, SECONDARY }
  */
 @Composable
 fun OwnTVButton(
-    label: String,
+    label: String = "",
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: OwnTVButtonStyle = OwnTVButtonStyle.PRIMARY,
@@ -85,19 +85,23 @@ fun OwnTVButton(
             if (icon != null) {
                 OwnTVIcon(icon = icon, tint = contentColor, filled = true, modifier = Modifier.size(if (compact) 14.dp else 20.dp))
             }
-            // Long labels (German / Finnish / Russian) must ellipsize, not hard-clip. The previous
-            // `softWrap = false` with no `overflow` sliced the text mid-glyph on almost every translated
-            // button. `weight(1f, fill = false)` lets a short label stay content-sized while a long one
-            // is constrained to the remaining row width and ellipsizes. (See docs/internationalization.md
-            // Phase 0a.)
-            Text(
-                text = label,
-                style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
-                color = contentColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false),
-            )
+            // Icon-only buttons pass an empty label: skip the text so the inter-item spacing and the
+            // weight(1f) text node don't shove an otherwise centered icon off-axis.
+            if (label.isNotEmpty()) {
+                // Long labels (German / Finnish / Russian) must ellipsize, not hard-clip. The previous
+                // `softWrap = false` with no `overflow` sliced the text mid-glyph on almost every translated
+                // button. `weight(1f, fill = false)` lets a short label stay content-sized while a long one
+                // is constrained to the remaining row width and ellipsizes. (See docs/internationalization.md
+                // Phase 0a.)
+                Text(
+                    text = label,
+                    style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+            }
         }
     }
 }

@@ -56,7 +56,10 @@ fun BackgroundImageChooserDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     Box(
@@ -105,7 +108,10 @@ fun RemoteBackgroundDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     // Open a fresh image-upload session on entry; stop it when the dialog leaves.

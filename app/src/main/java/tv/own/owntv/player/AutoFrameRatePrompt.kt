@@ -90,7 +90,10 @@ fun AutoFrameRatePrompt(
     val (currentHz, targetHz) = offer ?: return
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     val colors = OwnTVTheme.colors
     Box(

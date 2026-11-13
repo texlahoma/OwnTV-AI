@@ -285,7 +285,7 @@ private fun RemoteButtonCapturePopup(
     OwnTVPopup(onDismissRequest = onDismiss, fontScale = .60f) {
         PopupFontTheme {
             LaunchedEffect(focus) {
-                withFrameNanos { }
+                kotlinx.coroutines.delay(80)
                 focus.requestFocus()
             }
             val captureKeyEvent: (androidx.compose.ui.input.key.KeyEvent) -> Boolean = { event ->

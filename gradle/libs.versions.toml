@@ -69,6 +69,12 @@ zxing = "3.5.4"
 # Mozilla universalchardet port; local .srt files are frequently Windows-125x, not UTF-8.
 juniversalchardet = "2.5.0"
 
+# On-device streaming Whisper (ASR) for the AI-subtitle feature. JNI library; every native .so ships
+# for the ABIs the app builds. `#sharesWhisper` — when bumping, keep WhisperRecognizer.kt in step.
+sherpaOnnx = "1.12.27"
+# .tar.bz2 extraction for the on-demand streaming ASR models (StreamingModelStore).
+commonsCompress = "1.27.1"
+
 # --- Test ---
 junit = "4.13.2"
 # Test-only: the real org.json, so JVM unit tests can exercise code built on JSONObject/JSONArray
@@ -146,6 +152,11 @@ zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" 
 
 # Charset detection for local subtitle files (subtitle plan §7.2 / review R6).
 juniversalchardet = { group = "com.github.albfernandez", name = "juniversalchardet", version.ref = "juniversalchardet" }
+
+# On-device streaming Whisper (ASR) for the AI-subtitle feature.
+sherpa-onnx-android = { group = "com.k2fsa.sherpa.onnx", name = "sherpa-onnx-android", version.ref = "sherpaOnnx" }
+# .tar.bz2 extraction of the on-demand streaming ASR models.
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 
 # Networking (M3U/Xtream fetch)
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

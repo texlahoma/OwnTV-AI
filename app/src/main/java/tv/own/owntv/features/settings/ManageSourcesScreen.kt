@@ -574,7 +574,10 @@ internal fun ConfirmDialog(
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
         Column(Modifier.dialogPanel(width = 460.dp, padding = 28.dp)) {
@@ -614,7 +617,10 @@ private fun ResyncChoiceDialog(
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
         Column(Modifier.dialogPanel(width = 520.dp, padding = 28.dp)) {
@@ -672,7 +678,7 @@ internal fun SourceTestDialog(
     // it can be asked to take focus.
     val measuring = state is SourceTestUi.Measuring
     LaunchedEffect(measuring) {
-        withFrameNanos { }
+        kotlinx.coroutines.delay(80)
         runCatching { focus.requestFocus() }
     }
     BackHandler { onDismiss() }

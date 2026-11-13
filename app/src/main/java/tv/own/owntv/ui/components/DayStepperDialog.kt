@@ -65,7 +65,10 @@ internal fun DayStepperDialog(
         val layoutDirection = LocalLayoutDirection.current
         var days by remember { mutableIntStateOf(initialDays.coerceIn(minDays, maxDays)) }
         val focus = remember { FocusRequester() }
-        LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+        LaunchedEffect(Unit) {
+            kotlinx.coroutines.delay(80)
+            runCatching { focus.requestFocus() }
+        }
         BackHandler { onDismiss() }
         Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
             Column(Modifier.dialogPanel(width = 460.dp, padding = 28.dp)) {

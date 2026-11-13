@@ -87,6 +87,7 @@ fun NumberInputDialog(
     // asking it to would leave the dialog with no focus at all, which is the very complaint this
     // change answers. So land on whichever stepper is live; at 0 of 0..max that is +.
     LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
         runCatching { (if (value > min) minusFocus else plusFocus).requestFocus() }
     }
 

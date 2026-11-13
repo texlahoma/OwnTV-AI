@@ -1329,6 +1329,12 @@ fun OwnTVShell(
                     },
                 )
             }
+            // AI subtitles (local Whisper ASR + cloud translation): a distinct overlay mounted over
+            // BOTH engines, so the generated line shows on mpv and ExoPlayer playback alike.
+            tv.own.owntv.features.aisubtitles.AiSubtitleOverlay(
+                modifier = Modifier.fillMaxSize(),
+                sizeScale = if (isFull) 1f else 0.6f,
+            )
             if (isFull && !autoFrameRate && !afrPrompted) {
                 // Frame rate of whichever engine is on screen. On the mpv side this is what the direct
                 // path judders on; on Exo it now survives "Measured stream stats" being off (F14).

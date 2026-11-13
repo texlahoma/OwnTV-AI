@@ -58,7 +58,10 @@ fun PlaylistPickerDialog(
     val colors = OwnTVTheme.colors
     // Focus the currently-selected row on open so the user starts on their current choice.
     val selectedFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { selectedFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { selectedFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     tv.own.owntv.ui.theme.PopupFontTheme {

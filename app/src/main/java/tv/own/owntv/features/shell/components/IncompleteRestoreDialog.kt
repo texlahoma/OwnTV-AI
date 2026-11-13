@@ -50,7 +50,10 @@ fun IncompleteRestoreDialog(
 ) {
     val colors = OwnTVTheme.colors
     val okFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { okFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { okFocus.requestFocus() }
+    }
 
     Box(
         modifier = Modifier

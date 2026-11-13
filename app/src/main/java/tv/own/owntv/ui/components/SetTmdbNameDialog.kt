@@ -57,7 +57,10 @@ fun SetTmdbNameDialog(
     var title by remember { mutableStateOf(initialTitle) }
     var year by remember { mutableStateOf(initialYear?.toString() ?: "") }
     val titleFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { titleFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { titleFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),

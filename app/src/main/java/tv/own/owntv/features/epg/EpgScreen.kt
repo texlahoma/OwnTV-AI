@@ -258,7 +258,7 @@ fun EpgScreen(
         // Only auto-focus when a restore is pending (returning from playback to a specific channel).
         if (!state.loading && state.channels.isNotEmpty() && restoreFocus) {
             kotlinx.coroutines.delay(80)
-            if (runCatching { firstCell.requestFocus() }.isFailure) runCatching { tunedCell.requestFocus() }
+            if (!firstCell.requestFocus()) tunedCell.requestFocus()
         }
     }
 
@@ -363,7 +363,7 @@ fun EpgScreen(
         if (idx >= 0) runCatching { rowListState.scrollToItem(idx) }
         pendingEnter = target
         kotlinx.coroutines.delay(80)
-        if (runCatching { target.requestFocus() }.isFailure) runCatching { firstCell.requestFocus() }
+        if (!target.requestFocus()) firstCell.requestFocus()
         restoreChannelId = null // focus is set; release the row so playback-restore can reuse it
     }
 
@@ -380,7 +380,7 @@ fun EpgScreen(
                     val target = pendingEnter ?: firstCell
                     pendingEnter = null
                     // tunedCell fallback: when the last-tuned channel IS row 0, firstCell isn't attached.
-                    if (runCatching { target.requestFocus() }.isFailure) runCatching { tunedCell.requestFocus() }
+                    if (!target.requestFocus()) tunedCell.requestFocus()
                 }
             }
             // Held Up/Down can outrun the guide's row composition and escape this pane

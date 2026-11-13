@@ -33,9 +33,10 @@ import kotlin.math.abs
  *
  * Mode selection keeps the CURRENT resolution and only varies the refresh rate — never switch a 4K
  * output down to 1080p just to hit a rate. A mode is a match when its refresh rate is an integer
- * multiple (1x–3x) of the video fps, which makes 24fps prefer 24/48/72Hz and 25fps prefer 50Hz while
- * still accepting 60Hz for 30fps. Among matches a **seamless** switch wins first, then the LOWEST
- * multiple (a true 24Hz beats 72Hz) — see [pickMode].
+ * multiple (1x–6x) of the video fps, which makes 24fps prefer 24/48/72Hz and 25fps prefer 50Hz while
+ * still accepting 60Hz for 30fps — and lets a 120/144Hz panel lock 24fps at 5x/6x when it advertises
+ * no native 24p mode. Among matches a **seamless** switch wins first, then the LOWEST multiple (a
+ * true 24Hz beats 72Hz) — see [pickMode].
  *
  * Every actual mode change costs an HDMI re-handshake, and on a live stream that black gap reads as
  * "the picture paused". Two guards keep changes to the ones that earn it: [snapFps] stops a drifting
@@ -50,7 +51,14 @@ object FrameRateController {
     private const val TAG = "FrameRate"
     /** Refresh rates within this many Hz of an exact multiple count as a match (panels report 59.94 etc). */
     private const val TOLERANCE_HZ = 0.35f
-    private const val MAX_MULTIPLE = 3
+    /**
+     * The largest integer multiple a refresh rate may be of the video fps and still count as a match.
+     * 6 (not 3) so a 120/144Hz panel with no native 24/48/72p mode can still lock 24fps content at
+     * 120/144Hz (5x/6x) instead of juddering on 60Hz. [pickMode] always prefers the lowest multiple,
+     * so a panel that does advertise 24p still uses 24/48/72Hz — the larger ones only ever serve as a
+     * fallback that previously left 24fps untouched on high-refresh panels.
+     */
+    private const val MAX_MULTIPLE = 6
     /** Grace period before a release actually lands — see [reset]. */
     private const val RESET_DELAY_MS = 1_500L
 

@@ -52,7 +52,10 @@ fun MultiviewTileMenu(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {

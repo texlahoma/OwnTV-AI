@@ -45,7 +45,10 @@ fun ExitDialog(
 ) {
     val colors = OwnTVTheme.colors
     val cancelFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { cancelFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { cancelFocus.requestFocus() }
+    }
 
     Box(
         modifier = Modifier

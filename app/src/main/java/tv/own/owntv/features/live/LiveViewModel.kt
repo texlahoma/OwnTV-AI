@@ -82,6 +82,7 @@ import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.settings.LiveBuffer
 import tv.own.owntv.core.settings.LiveLatency
 import tv.own.owntv.core.settings.SettingsRepository
+import tv.own.owntv.features.aisubtitles.AiSubtitleManager
 import tv.own.owntv.player.LiveExoWatchdog
 import tv.own.owntv.player.LiveLadder
 import tv.own.owntv.player.LiveProgramme
@@ -132,6 +133,7 @@ class LiveViewModel(
     private val epgRepository: tv.own.owntv.core.repository.EpgRepository,
     private val externalPlayerLauncher: tv.own.owntv.core.player.ExternalPlayerLauncher,
     private val recordings: tv.own.owntv.core.recording.RecordingManager,
+    private val aiSubtitles: AiSubtitleManager,
 ) : ViewModel() {
 
     // --- "Record what I'm watching" (Plan D, D3 mode b) -----------------------------------------
@@ -907,7 +909,7 @@ class LiveViewModel(
         setStalkerReconnect(null) // non-Stalker: URLs are stable, replay on reconnect
         previewEngine.play(
             targetUrl, muted = !livePreviewAudio.value,
-            meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = mpvPinKey(channel)),
+            meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = channelPrefKey(channel)),
             userAgent = sourceUaMap[channel.sourceId],
             prerollSecsOverride = prerollFor(channel.sourceId),
             liveBufferOverride = liveBufferFor(channel.sourceId),
@@ -954,7 +956,7 @@ class LiveViewModel(
             title = channel.name,
             subtitle = channelNumberLabel(channel),
             logoUrl = channel.displayLogoUrl,
-            contentKey = mpvPinKey(channel),
+            contentKey = channelPrefKey(channel),
         )
         if (streamUrlResolver.needsResolve(source)) {
             viewModelScope.launch {
@@ -1005,7 +1007,7 @@ class LiveViewModel(
             setStalkerReconnect(channel.streamUrl) // C-3: re-resolve on reconnect if the URL expires
             previewEngine.play(
                 url, muted = !livePreviewAudio.value,
-                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = mpvPinKey(channel)),
+                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = channelPrefKey(channel)),
                 userAgent = source.userAgent,
                 prerollSecsOverride = prerollFor(channel.sourceId),
                 liveBufferOverride = liveBufferFor(channel.sourceId),
@@ -1501,6 +1503,10 @@ class LiveViewModel(
             else -> "${if (onMpv) "mpv" else "exoplayer"} (setting)"
         }
         engineLog("tune '${channel.name}' -> $reason [${preference.name}]")
+        // Feed the per-channel preference key explicitly: the ExoPlayer live path plays through
+        // previewEngine, which never writes OwnTVPlayer.currentMeta, so without this the AI-subtitle
+        // manager would keep the previous channel's memory (or none) and the toggle would be dead.
+        aiSubtitles.setActiveKey(channelPrefKey(channel))
         armLadder(channel, preference)
         if (onMpv) startOnMpv(channel, reason) else startOnExo(channel)
         recordLiveHistory(channel)
@@ -1546,6 +1552,13 @@ class LiveViewModel(
      *  provider id (some hand-made M3U entries), where the stream URL stays the key. */
     private fun mpvPinKey(channel: ChannelEntity): String? =
         tv.own.owntv.core.player.enginePinKey(channel.sourceId, "LIVE", channel.remoteId)
+
+    /** Stable per-channel preference key (AI-subtitle memory, …): the engine pin key where the row has
+     *  a provider id, else its stream URL — for hand-made M3U rows the URL is exactly as stable as the
+     *  provider id (see [mpvPinKey]). Null only when the URL is blank, so [PlaybackPrefsStore]-keyed
+     *  per-channel state (the AI-subtitle switch) works on every channel. */
+    private fun channelPrefKey(channel: ChannelEntity): String? =
+        mpvPinKey(channel) ?: channel.streamUrl
 
     /** The engine [channel] is pinned to — true = mpv, false = ExoPlayer, null = not pinned, follow the
      *  setting. Honours pins written by older builds under the stream URL; a legacy hit is rewritten under
@@ -1601,7 +1614,7 @@ class LiveViewModel(
             setStalkerReconnect(null) // non-Stalker: URLs are stable, replay on reconnect
             previewEngine.play(
                 targetUrl, muted = false,
-                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = mpvPinKey(channel)),
+                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = channelPrefKey(channel)),
                 userAgent = sourceUaMap[channel.sourceId] ?: source?.userAgent,
                 prerollSecsOverride = prerollFor(channel.sourceId),
                 liveBufferOverride = liveBufferFor(channel.sourceId),
@@ -1634,7 +1647,7 @@ class LiveViewModel(
             setStalkerReconnect(channel.streamUrl) // C-3: re-resolve on reconnect if the URL expires
             previewEngine.play(
                 url, muted = false,
-                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = mpvPinKey(channel)),
+                meta = tv.own.owntv.player.MediaMeta(title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, contentKey = channelPrefKey(channel)),
                 userAgent = source.userAgent,
                 prerollSecsOverride = prerollFor(channel.sourceId),
                 liveBufferOverride = liveBufferFor(channel.sourceId),
@@ -1960,7 +1973,7 @@ class LiveViewModel(
             if (_previewChannel.value?.streamUrl != channel.streamUrl) return // zapped away while resolving
             // C-3: mpv is now the active engine — install/clear the reconnect provider to match.
             setStalkerReconnect(if (isStalker) channel.streamUrl else null)
-            player.play(url, title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, isLive = true, muted = false, userAgent = source?.userAgent, httpHeaders = channel.httpHeaders, contentKey = mpvPinKey(channel), livePrerollSecsOverride = prerollFor(channel.sourceId), liveBufferOverride = liveBufferFor(channel.sourceId))
+            player.play(url, title = channel.name, subtitle = channelNumberLabel(channel), logoUrl = channel.displayLogoUrl, isLive = true, muted = false, userAgent = source?.userAgent, httpHeaders = channel.httpHeaders, contentKey = channelPrefKey(channel), livePrerollSecsOverride = prerollFor(channel.sourceId), liveBufferOverride = liveBufferFor(channel.sourceId))
             watchMpvOutcome(channel)
         } else {
             // The only way out of this function that leaves the shell on mpv's surface with nothing
@@ -2284,6 +2297,7 @@ class LiveViewModel(
         ladderOpened() // nothing is tuning any more; the opening alarm must not fire on a torn-down channel
         previewEngine.stop()
         player.stop()
+        aiSubtitles.setActiveKey(null) // leave live: drop the channel's AI-subtitle memory context
         _previewChannel.value = null
     }
 

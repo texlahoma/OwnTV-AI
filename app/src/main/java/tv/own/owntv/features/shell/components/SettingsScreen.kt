@@ -155,7 +155,7 @@ internal val LocalSettingsRowTone = staticCompositionLocalOf { TileTone.PRIMARY 
 private fun Toned(tone: TileTone, content: @Composable () -> Unit) =
     CompositionLocalProvider(LocalSettingsRowTone provides tone, content = content)
 
-private enum class SettingsTab { ROOT, RECORDING, LANGUAGE, SOURCES, EPG, PROFILES, BACKUP, LOCAL_SYNC, VIDEO, CUSTOMIZE, HOME, NETWORK, DNS, METADATA, OPEN_SUBTITLES, WEATHER, NAV_MENU, CH_NAV, PANEL_WIDTH, GUIDE_WIDTH, GLASS_EFFECT, CONTENT_MENUS }
+private enum class SettingsTab { ROOT, RECORDING, LANGUAGE, SOURCES, EPG, PROFILES, BACKUP, LOCAL_SYNC, VIDEO, CUSTOMIZE, HOME, NETWORK, DNS, METADATA, OPEN_SUBTITLES, AI_SUBTITLES, WEATHER, NAV_MENU, CH_NAV, PANEL_WIDTH, GUIDE_WIDTH, GLASS_EFFECT, CONTENT_MENUS }
 
 @Composable
 internal fun surroundModeLabel(mode: SurroundMode): String = stringResource(
@@ -246,10 +246,15 @@ fun SettingsScreen(
     // Search is a chip in the one-line header until it is opened.
     var searchExpanded by remember { mutableStateOf(false) }
     val searchFieldFocus = remember { FocusRequester() }
+    // Requester on the *selected* category, so a directional entry from the sidebar lands on the
+    // group the user last used rather than on whatever row happens to be nearest.
+    val selectedCategoryFocus = remember { FocusRequester() }
     // While searching, Back clears the query (and returns focus to the field) instead of leaving Settings.
     BackHandler(enabled = tab == SettingsTab.ROOT && searchQuery.isNotBlank()) {
         searchQuery = ""
-        runCatching { searchFieldFocus.requestFocus() }
+        // Clearing the query can collapse the search field out of composition, which drops the
+        // request; fall back to the category rail so the D-pad is never left dead.
+        if (!searchFieldFocus.requestFocus()) runCatching { selectedCategoryFocus.requestFocus() }
     }
 
     // Dialog-close focus return: closing a dialog/picker refocuses the row that opened it (focus
@@ -436,6 +441,7 @@ fun SettingsScreen(
         SettingsTab.DNS -> { Toned(TileTone.SECONDARY) { tv.own.owntv.features.settings.DnsSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }; return }
         SettingsTab.METADATA -> { tv.own.owntv.features.settings.MetadataSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier); return }
         SettingsTab.OPEN_SUBTITLES -> { tv.own.owntv.features.settings.OpenSubtitlesAccountScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier); return }
+        SettingsTab.AI_SUBTITLES -> { tv.own.owntv.features.settings.AiSubtitleSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier); return }
         SettingsTab.WEATHER -> { Toned(TileTone.SECONDARY) { tv.own.owntv.features.settings.WeatherSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }; return }
         SettingsTab.NAV_MENU -> { tv.own.owntv.features.settings.NavMenuSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier); return }
         SettingsTab.CH_NAV -> { tv.own.owntv.features.settings.ChNavSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier); return }
@@ -713,6 +719,12 @@ fun SettingsScreen(
             focus = rowFocus.getValue(SettingsTab.OPEN_SUBTITLES),
             onClick = { open(SettingsTab.OPEN_SUBTITLES) },
         ),
+        RootRow(
+            tabRowKey(SettingsTab.AI_SUBTITLES), TileTone.SECONDARY, OwnTVIcon.SUBTITLE,
+            title = stringResource(R.string.settings_ai_subtitles), desc = stringResource(R.string.settings_ai_subtitles_description),
+            focus = rowFocus.getValue(SettingsTab.AI_SUBTITLES),
+            onClick = { open(SettingsTab.AI_SUBTITLES) },
+        ),
         RootGroup("group_playback", stringResource(R.string.settings_playback_group), OwnTVIcon.VIDEO, stringResource(R.string.settings_group_summary_playback)),
         RootRow(
             tabRowKey(SettingsTab.VIDEO), TileTone.TERTIARY, OwnTVIcon.VIDEO,
@@ -855,9 +867,6 @@ fun SettingsScreen(
     val selectedRows = categories.getOrNull(selectedGroup)?.second.orEmpty()
     // Which column has the cursor, so the sheet's count tag can go accent and say so.
     var sheetFocused by remember { mutableStateOf(false) }
-    // Requester on the *selected* category, so a directional entry from the sidebar lands on the
-    // group the user last used rather than on whatever row happens to be nearest.
-    val selectedCategoryFocus = remember { FocusRequester() }
     // The row whose hold-OK menu is open, or null.
     var menuRow by remember { mutableStateOf<RootRow?>(null) }
     // Closing the menu leaves focus nowhere, so the row it belonged to asks for it back.
@@ -870,8 +879,8 @@ fun SettingsScreen(
         kotlinx.coroutines.delay(60)
         // Unpinning removes the row from Quick, so its requester may no longer be attached to
         // anything — then the group column takes focus rather than nothing at all.
-        if (runCatching { menuReturnFocus.requestFocus() }.isFailure) {
-            runCatching { selectedCategoryFocus.requestFocus() }
+        if (!menuReturnFocus.requestFocus()) {
+            selectedCategoryFocus.requestFocus()
         }
     }
     // Back on the empty search field collapses it back to a chip and hands focus to the spine.
@@ -1058,6 +1067,7 @@ fun SettingsScreen(
             // Four screens that had no entry at all, so nothing on them could be found by name.
             SettingsSearchEntry(stringResource(R.string.settings_group_playback), stringResource(R.string.recording_settings_group), stringResource(R.string.settings_search_keywords_recording), OwnTVIcon.LIVE_TV, TileTone.TERTIARY) { open(SettingsTab.RECORDING) },
             SettingsSearchEntry(stringResource(R.string.settings_group_content_metadata), stringResource(R.string.settings_open_subtitles), stringResource(R.string.settings_search_keywords_subtitle_appearance), OwnTVIcon.SUBTITLE, TileTone.PRIMARY) { open(SettingsTab.OPEN_SUBTITLES) },
+            SettingsSearchEntry(stringResource(R.string.settings_group_content_metadata), stringResource(R.string.settings_ai_subtitles), stringResource(R.string.settings_open_subtitles), OwnTVIcon.SUBTITLE, TileTone.SECONDARY) { open(SettingsTab.AI_SUBTITLES) },
             SettingsSearchEntry(stringResource(R.string.settings_group_appearance), stringResource(R.string.settings_glass_effect), stringResource(R.string.settings_search_keywords_glass), OwnTVIcon.SPARKLE, TileTone.PRIMARY,
                 chip = if (glassOn) glassPresetLabel(glassConfig.preset) else stringResource(R.string.common_off), chipTone = if (glassOn) TileTone.PRIMARY else TileTone.SECONDARY) { open(SettingsTab.GLASS_EFFECT) },
             SettingsSearchEntry(stringResource(R.string.settings_group_layout), stringResource(R.string.settings_content_menus_title), stringResource(R.string.settings_search_keywords_customize), OwnTVIcon.MENU, TileTone.PRIMARY) { open(SettingsTab.CONTENT_MENUS) },
@@ -1302,7 +1312,8 @@ fun SettingsScreen(
                                 // is inside the sheet's own plate — so the sheet says it explicitly.
                                 .onPreviewKeyEvent { e ->
                                     if (e.type == KeyEventType.KeyDown && e.key == Key.DirectionLeft && !searching) {
-                                        runCatching { selectedCategoryFocus.requestFocus() }.isSuccess
+                                        selectedCategoryFocus.requestFocus()
+                                        true
                                     } else {
                                         false
                                     }
@@ -1834,7 +1845,10 @@ private fun AccentPaletteDialog(
     val pickedHex = tv.own.owntv.ui.components.hsvToHex(hue, sat, value)
     var hexInput by remember { mutableStateOf(customAccent.removePrefix("#")) }
     var hexError by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     // Keep the sliders and hex field in step whenever the HSV picker moves.
@@ -1989,7 +2003,10 @@ private fun FocusHighlightDialog(
     val pickedHex = tv.own.owntv.ui.components.hsvToHex(hue, sat, value)
     var hexInput by remember { mutableStateOf(highlight.removePrefix("#")) }
     var hexError by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     // The sample follows whatever is currently picked, falling back to the saved/accent color.
@@ -2114,7 +2131,10 @@ private const val TELEGRAM_LINK = "t.me/owntvplayer"
 internal fun AboutDialog(onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -2198,7 +2218,12 @@ internal fun PlaybackErrorLogDialog(onDismiss: () -> Unit) {
         }
     }
     val focus = remember { FocusRequester() }
-    LaunchedEffect(entries) { if (entries != null) runCatching { focus.requestFocus() } }
+    LaunchedEffect(entries) {
+        if (entries != null) {
+            kotlinx.coroutines.delay(80)
+            runCatching { focus.requestFocus() }
+        }
+    }
     BackHandler { onDismiss() }
     val dateContext = LocalContext.current
     Box(
@@ -2321,7 +2346,10 @@ internal fun PlaybackErrorLogDialog(onDismiss: () -> Unit) {
 internal fun AutoFrameRateWarningDialog(onEnable: () -> Unit, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -2364,7 +2392,10 @@ internal fun AutoFrameRateWarningDialog(onEnable: () -> Unit, onDismiss: () -> U
 internal fun LivePreviewPanelHiddenDialog(onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -2415,7 +2446,10 @@ internal fun ClearHistoryDialog(
     val colors = OwnTVTheme.colors
     var pending by remember { mutableStateOf<HistoryScope?>(null) }
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(pending) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(pending) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { if (pending != null) pending = null else onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -2687,7 +2721,10 @@ private fun FontFamilyPickerDialog(
 ) {
     val colors = OwnTVTheme.colors
     val focus = remember { AppFontFamily.entries.associateWith { FocusRequester() } }
-    LaunchedEffect(Unit) { runCatching { focus.getValue(selected).requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.getValue(selected).requestFocus() }
+    }
     BackHandler { onDismiss() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
     Box(
@@ -2742,7 +2779,10 @@ private fun FontFamilyPickerDialog(
 private fun PopupSizeDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
@@ -2805,7 +2845,10 @@ private fun PopupSizeDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () ->
 private fun ZoomDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     // Zoom below LOW_RAM_WARN doubles the on-screen item count, which can OOM-crash 2 GB devices
     // (#51) — the first step under it is gated behind an accept-the-risk warning. Accepting once
     // arms the rest of this dialog session; if it was opened already below the line, don't nag.
@@ -2860,7 +2903,10 @@ private fun ZoomDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit
         // D-pad directions cancelled) — OK accepts and applies the pending step, Back cancels.
         pendingLowZoom?.let { target ->
             val acceptFocus = remember { FocusRequester() }
-            LaunchedEffect(Unit) { runCatching { acceptFocus.requestFocus() } }
+            LaunchedEffect(Unit) {
+                kotlinx.coroutines.delay(80)
+                runCatching { acceptFocus.requestFocus() }
+            }
             // Composed after the dialog's own BackHandler, so it wins while the warning is up.
             BackHandler {
                 pendingLowZoom = null
@@ -2915,7 +2961,10 @@ private fun AmbientGlowDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -3093,7 +3142,10 @@ private fun GlassEffectDesignedScreen(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onBack() }
 
     Column(
@@ -3735,7 +3787,10 @@ private fun BrowsingListsDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -3860,7 +3915,10 @@ private fun GlassSurfacesDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     fun toggled(s: GlassSurface): Int = GlassConfig(if (s in scope) scope - s else scope + s).toBitmask()
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
@@ -3932,7 +3990,10 @@ private fun CatchupTimeDialog(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     val manual = mode == SettingsRepository.CatchupTimezone.MANUAL
     Box(
@@ -4024,7 +4085,10 @@ private fun EpgOffsetSettingDialog(
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
     val doneFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),

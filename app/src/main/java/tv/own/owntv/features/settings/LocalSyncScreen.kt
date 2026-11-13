@@ -58,6 +58,7 @@ import org.koin.androidx.compose.koinViewModel
 import tv.own.owntv.R
 import tv.own.owntv.core.backup.BackupManager
 import tv.own.owntv.core.companion.CompanionServerState
+import tv.own.owntv.core.setup.stringRes
 import tv.own.owntv.core.sync.local.SyncDirection
 import tv.own.owntv.core.sync.local.SyncFailure
 import tv.own.owntv.core.sync.local.shortCodes
@@ -324,6 +325,11 @@ private fun SetupResultBlock(step: LocalSyncViewModel.Step.Result, onDone: () ->
         Text(stringResource(R.string.local_sync_done), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
         step.received?.let {
             Text(stringResource(R.string.local_sync_received_items, it.items), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            // A local merge runs the same restore as a file import, so an optional block that could
+            // not be applied (wallpaper, subtitles, AI config, …) must be named here too — never lost silently.
+            it.warnings.forEach { warning ->
+                Text(stringResource(warning.stringRes), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            }
         }
         Spacer(Modifier.height(10.dp))
         OwnTVButton(stringResource(R.string.common_done), onClick = onDone)
@@ -715,6 +721,9 @@ private fun ResultBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step.Re
         Text(stringResource(R.string.local_sync_done), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
         step.received?.let {
             Text(stringResource(R.string.local_sync_received_items, it.items), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            it.warnings.forEach { warning ->
+                Text(stringResource(warning.stringRes), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            }
         }
         if (step.sent) {
             Text(stringResource(R.string.local_sync_sent), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
@@ -750,6 +759,7 @@ private fun BackupManager.Section.labelRes(): Int = when (this) {
     BackupManager.Section.RESUME -> R.string.settings_backup_section_resume
     BackupManager.Section.MANUAL_REORDER -> R.string.settings_backup_section_reorder
     BackupManager.Section.SETTINGS -> R.string.settings_backup_section_settings
+    BackupManager.Section.AI_TRANSLATION -> R.string.settings_backup_section_translation
 }
 
 /** `192.168.1.5:8089` or a whole URL both carry a port; a bare address means the usual one. */

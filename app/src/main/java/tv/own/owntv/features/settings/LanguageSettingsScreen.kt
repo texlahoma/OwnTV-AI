@@ -391,7 +391,10 @@ private fun TranslationContributionDialog(onDismiss: () -> Unit) {
     var status by remember { mutableStateOf<Int?>(null) }
     var copyUrl by remember { mutableStateOf(url) }
 
-    LaunchedEffect(Unit) { urlFocus.requestFocus() }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        urlFocus.requestFocus()
+    }
     BackHandler { onDismiss() }
 
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {

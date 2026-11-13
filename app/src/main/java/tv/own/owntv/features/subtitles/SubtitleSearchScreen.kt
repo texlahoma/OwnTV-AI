@@ -183,7 +183,10 @@ private fun ResultsList(
 ) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     Column {
         LazyColumn(Modifier.fillMaxWidth().heightIn(max = 320.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             items(results, key = { it.fileId }) { r ->
@@ -232,7 +235,10 @@ private fun ResultsList(
 private fun EditSearchField(initial: String, onSubmit: (String) -> Unit, onCancel: () -> Unit) {
     var value by remember { mutableStateOf(initial) }
     val fieldFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fieldFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fieldFocus.requestFocus() }
+    }
     Column {
         Text(stringResource(tv.own.owntv.R.string.player_subtitles_edit_search), style = MaterialTheme.typography.titleSmall, color = OwnTVTheme.colors.onSurface)
         Spacer(Modifier.height(10.dp))
@@ -257,7 +263,10 @@ private fun Message(
     onTertiary: (() -> Unit)? = null,
 ) {
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     Column {
         Text(text, style = MaterialTheme.typography.bodyMedium, color = OwnTVTheme.colors.onSurfaceVariant)
         Spacer(Modifier.height(18.dp))

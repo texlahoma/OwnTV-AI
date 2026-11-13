@@ -39,6 +39,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.backup.BackupManager
+import tv.own.owntv.core.setup.stringRes
 import tv.own.owntv.ui.components.BrowseMode
 import tv.own.owntv.ui.components.FocusableSurface
 import tv.own.owntv.ui.components.OwnTVButton
@@ -133,6 +134,16 @@ fun BackupScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
     }
+    // Focus dead-end guard: Export/Restore are disabled while a backup runs (selectable(enabled=false)
+    // drops focusability), so a dialog closing mid-operation makes the return-focus above land on a
+    // disabled button and fail — the D-pad is left with nowhere to go. Re-grab the first button once
+    // work finishes. Skipped while any dialog is open so it cannot yank focus out of a picker.
+    LaunchedEffect(state) {
+        if (state != BackupViewModel.State.Working && !anyDialogOpen) {
+            kotlinx.coroutines.delay(80)
+            runCatching { firstFocus.requestFocus() }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -191,18 +202,27 @@ fun BackupScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                     if (s.invalidLocale) {
                         Text(stringResource(R.string.settings_backup_invalid_locale), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
                     }
+                    s.warnings.forEach { warning ->
+                        Text(stringResource(warning.stringRes), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+                    }
                 }
             }
-            is BackupViewModel.State.Error -> Text(
-                stringResource(
-                    when (s.kind) {
-                        BackupError.EXPORT -> R.string.settings_backup_export_error
-                        BackupError.READ -> R.string.settings_backup_read_error
-                        BackupError.IMPORT -> R.string.settings_backup_import_error
-                    },
-                ),
-                style = MaterialTheme.typography.bodyLarge, color = Color(0xFFEF4444),
-            )
+            is BackupViewModel.State.Error -> Column {
+                Text(
+                    stringResource(
+                        when (s.kind) {
+                            BackupError.EXPORT -> R.string.settings_backup_export_error
+                            BackupError.READ -> R.string.settings_backup_read_error
+                            BackupError.IMPORT -> R.string.settings_backup_import_error
+                        },
+                    ),
+                    style = MaterialTheme.typography.bodyLarge, color = Color(0xFFEF4444),
+                )
+                // Concrete reason from the underlying exception, so a failed restore says WHY.
+                s.detail?.takeIf { it.isNotBlank() }?.let {
+                    Text(it, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+                }
+            }
             else -> Unit
         }
     }
@@ -375,7 +395,10 @@ private fun RemoteLocalChooserDialog(
     OwnTVPopup(onDismissRequest = onDismiss) {
     val colors = OwnTVTheme.colors
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
@@ -411,7 +434,10 @@ private fun BackupPasswordDialog(
     val colors = OwnTVTheme.colors
     var password by remember { mutableStateOf("") }
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
@@ -466,7 +492,10 @@ private fun ProfilePickerDialog(
     }
     var pinFor by remember { mutableStateOf<tv.own.owntv.core.database.entity.ProfileEntity?>(null) }
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { if (pinFor != null) pinFor = null else onDismiss() }
 
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
@@ -535,7 +564,10 @@ private fun ProfilePinDialog(
     var pin by remember { mutableStateOf("") }
     var wrong by remember { mutableStateOf(false) }
     val fieldFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { fieldFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { fieldFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {
@@ -582,6 +614,7 @@ internal fun sectionLabelRes(section: BackupManager.Section): Int = when (sectio
     BackupManager.Section.RESUME -> R.string.settings_backup_section_resume
     BackupManager.Section.MANUAL_REORDER -> R.string.settings_backup_section_reorder
     BackupManager.Section.SETTINGS -> R.string.settings_backup_section_settings
+    BackupManager.Section.AI_TRANSLATION -> R.string.settings_backup_section_translation
 }
 
 private fun sectionDescriptionRes(section: BackupManager.Section): Int = when (section) {
@@ -592,6 +625,7 @@ private fun sectionDescriptionRes(section: BackupManager.Section): Int = when (s
     BackupManager.Section.RESUME -> R.string.settings_backup_section_resume_desc
     BackupManager.Section.MANUAL_REORDER -> R.string.settings_backup_section_reorder_desc
     BackupManager.Section.SETTINGS -> R.string.settings_backup_section_settings_desc
+    BackupManager.Section.AI_TRANSLATION -> R.string.settings_backup_section_translation_desc
 }
 
 /**
@@ -613,7 +647,10 @@ internal fun SectionPickerDialog(
     val colors = OwnTVTheme.colors
     var selected by remember { mutableStateOf(initial) }
     val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { firstFocus.requestFocus() }
+    }
     BackHandler { onDismiss() }
 
     Box(Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(), contentAlignment = Alignment.Center) {

@@ -60,6 +60,7 @@ import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.setup.SourceImporter
+import tv.own.owntv.core.setup.stringRes
 import tv.own.owntv.core.sync.importProgressDisplay
 import tv.own.owntv.core.theme.GlassSurface
 import tv.own.owntv.core.theme.UiFontScale
@@ -926,6 +927,9 @@ private fun ImportProgressScreen(
                 }
                 if (state.invalidLocale) {
                     Text(stringResource(R.string.setup_invalid_locale), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant, textAlign = TextAlign.Center)
+                }
+                state.restoreWarnings.forEach { warning ->
+                    Text(stringResource(warning.stringRes), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant, textAlign = TextAlign.Center, modifier = Modifier.widthIn(max = 560.dp))
                 }
                 state.warnings.warningText()?.let { warning ->
                     Text(warning, style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant, textAlign = TextAlign.Center)

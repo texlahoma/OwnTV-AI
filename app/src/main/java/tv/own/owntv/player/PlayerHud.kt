@@ -117,7 +117,7 @@ private const val PLAYER_SHORTCUT_LONG_PRESS_MS = 600L
 private const val TRACK_POLL_MS = 300L
 private const val TRACK_POLL_TRIES = 20
 
-internal enum class HudDialog { NONE, AUDIO, SUBS, SPEED, ZOOM, VOLUME, SUB_TIMING, JUMP_BACK }
+internal enum class HudDialog { NONE, AUDIO, SPEED, ZOOM, VOLUME, SUB_TIMING, JUMP_BACK, AI_SUBS }
 
 /** What the top-left channel OSD shows for direct tune: the digits being typed, the channel a number
  *  resolved to, or a failure message. All three render as the same card as the channel OSD. */
@@ -224,7 +224,6 @@ fun PlayerHud(
     val audioCount by player.audioCount.collectAsStateWithLifecycle()
     val audioDelayMs by player.audioDelayMs.collectAsStateWithLifecycle()
     val audioDelayRemembered by player.audioDelayRemembered.collectAsStateWithLifecycle()
-    val subCount by player.subCount.collectAsStateWithLifecycle()
     val zoomMode by player.zoomMode.collectAsStateWithLifecycle()
     val speed by player.speed.collectAsStateWithLifecycle()
     val isLive = player.isLiveContent
@@ -241,6 +240,8 @@ fun PlayerHud(
     val retryFocus = remember { FocusRequester() }
     val catchFocus = remember { FocusRequester() }
     val nextFocus = remember { FocusRequester() }
+    // The AI-subtitle panel control: shared process singleton that owns the playback-audio tap.
+    val aiSubtitleManager = org.koin.compose.koinInject<tv.own.owntv.features.aisubtitles.AiSubtitleManager>()
 
     // Next-episode countdown card (VOD queues only): appears in the last ~30s before the automatic
     // advance (which fires at duration − 8s), counts down to it, and offers Play now / Cancel.
@@ -413,7 +414,7 @@ fun PlayerHud(
     var shortcutPressedAt by remember { mutableStateOf(0L) }
     val dispatchPlayerShortcut: (RemoteShortcutAction) -> Unit = { action ->
         when (action) {
-            RemoteShortcutAction.OPEN_SUBTITLE_CONTROLS -> { controlsVisible = true; dialog = HudDialog.SUBS }
+            RemoteShortcutAction.OPEN_SUBTITLE_CONTROLS -> { controlsVisible = true; dialog = HudDialog.AI_SUBS }
             RemoteShortcutAction.OPEN_AUDIO_CONTROLS -> { controlsVisible = true; dialog = HudDialog.AUDIO }
             RemoteShortcutAction.OPEN_ASPECT_CONTROLS -> { controlsVisible = true; dialog = HudDialog.ZOOM }
             RemoteShortcutAction.TOGGLE_PLAYBACK_INFO -> showInfo = !showInfo
@@ -628,7 +629,7 @@ fun PlayerHud(
 
                 BottomBar(
                     player = player, isLive = isLive, position = position, duration = duration,
-                    volume = volume, audioCount = audioCount, subCount = subCount, zoomMode = zoomMode,
+                    volume = volume, audioCount = audioCount, zoomMode = zoomMode,
                     speedLabel = formatSpeed(speed),
                     onScrubLive = onScrubLive, timeshiftOffsetSec = timeshiftOffset, onGoToLive = onGoToLive,
                     liveProgrammes = liveProgrammes,
@@ -812,27 +813,9 @@ fun PlayerHud(
                 onToggleRememberAudioDelay = if (player.audioDelayAvailable()) ({ player.toggleRememberAudioDelay() }) else null,
             )
         }
-        HudDialog.SUBS -> {
-            var subTracks by remember { mutableStateOf(player.textTracks()) }
-            LaunchedEffect(Unit) {
-                repeat(TRACK_POLL_TRIES) {
-                    if (subTracks.isNotEmpty()) return@LaunchedEffect
-                    delay(TRACK_POLL_MS)
-                    subTracks = player.textTracks()
-                }
-            }
-            TrackDialog(
-                stringResource(R.string.player_subtitles), subTracks,
-                onSelect = { player.selectSubtitle(it.mpvId); dialog = HudDialog.NONE },
-                onOff = { player.disableSubtitles(); dialog = HudDialog.NONE },
-                onDismiss = { dialog = HudDialog.NONE },
-                onSearchSubtitles = onSearchSubtitles?.let { open -> { dialog = HudDialog.NONE; open() } },
-                onSelectLocalSubtitle = onSelectLocalSubtitle?.let { open -> { dialog = HudDialog.NONE; open() } },
-                // Subtitle timing (plan §8): only when adjustment applies to the ACTIVE subtitle on the
-                // current engine (any mpv text sub; external side-loads on ExoPlayer).
-                onSubtitleTiming = if (player.subtitleTimingAvailable()) ({ dialog = HudDialog.SUB_TIMING }) else null,
-            )
-        }
+        // Subtitles are AI-generated only; the non-AI subtitle dialog (track list / "Off" switch /
+        // OpenSubtitles search / local file / timing) is no longer offered from the player.
+        HudDialog.AI_SUBS -> AiSubtitleHudDialog(aiSubtitleManager, onDismiss = { dialog = HudDialog.NONE })
         HudDialog.SUB_TIMING -> SubtitleTimingDialog(player, onDismiss = { dialog = HudDialog.NONE })
         HudDialog.SPEED -> SpeedDialog(current = speed, onSelect = { player.setSpeed(it); dialog = HudDialog.NONE }, onDismiss = { dialog = HudDialog.NONE })
         HudDialog.ZOOM -> ZoomDialog(current = zoomMode, onSelect = { player.setZoomModeByUser(it); dialog = HudDialog.NONE }, onDismiss = { dialog = HudDialog.NONE })

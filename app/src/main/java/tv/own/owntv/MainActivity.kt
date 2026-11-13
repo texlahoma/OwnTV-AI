@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import androidx.room.useWriterConnection
 import android.view.WindowManager
@@ -51,6 +50,8 @@ import tv.own.owntv.features.shell.OwnTVShell
 import tv.own.owntv.features.shell.ShellViewModel
 import tv.own.owntv.ui.theme.BlurredBackdrop
 import tv.own.owntv.ui.theme.BackdropLuminanceMap
+import tv.own.owntv.ui.components.rememberTouchTapDispatcher
+import tv.own.owntv.ui.components.rootTouchSupport
 import tv.own.owntv.core.theme.GlassConfig
 import tv.own.owntv.ui.theme.GlassMotionState
 import tv.own.owntv.ui.theme.LocalBlurredBackdrop
@@ -75,27 +76,7 @@ class MainActivity : ComponentActivity() {
 
         /** Bounded wait for the startup database probe (see [probeDatabase]). */
         private const val DB_PROBE_TIMEOUT_MS = 5_000L
-
-        /**
-         * Hard ceiling on the ST3 splash. A stuck DataStore/profile read must never leave the user
-         * staring at a static logo — past this the splash dismisses whatever the state is.
-         *
-         * Kept short deliberately: the old build drew its (blank) first frame at ~1.1s, so anything
-         * beyond ~2s of splash is a perceived-responsiveness regression even though the app is doing
-         * strictly less work than before.
-         */
-        private const val SPLASH_TIMEOUT_MS = 2_000L
     }
-
-    /**
-     * ST3: false while the app has no destination to draw yet (active profile id unknown, or the
-     * profile query has not returned on a cold start) — exactly the two `when` branches that used to
-     * render a blank window. Latched true and never cleared, so a mid-session empty-profile window
-     * during backup restore cannot bring the splash back; the foreground gate still refuses to
-     * compose the shell until the loaded list and active-id check are valid.
-     */
-    @Volatile
-    private var contentReady = false
 
     private val player: tv.own.owntv.player.OwnTVPlayer by inject()
     private val previewEngine: tv.own.owntv.player.LivePreviewEngine by inject()
@@ -178,28 +159,37 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // ST3 — must be installed BEFORE super.onCreate() per the library's contract. It also applies
-        // postSplashScreenTheme (Theme.OwnTV), so the activity ends up in the same theme as before.
+        // installSplashScreen() must run BEFORE super.onCreate() per the library's contract. It is kept
+        // only so the launch theme's postSplashScreenTheme (Theme.OwnTV) is applied; the splash itself is
+        // dismissed immediately below — there is deliberately no held logo or artificial timeout. A held
+        // splash view kept the activity's window from owning input focus during the first screens, so a
+        // remote OK (notably on the disclaimer's "I understand") was delivered to the launcher instead of
+        // the app — which read as "the app returned to the desktop".
         val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
-        val splashDeadline = SystemClock.uptimeMillis() + SPLASH_TIMEOUT_MS
-        splash.setKeepOnScreenCondition { !contentReady && SystemClock.uptimeMillis() < splashDeadline }
+        splash.setKeepOnScreenCondition { false }
         pendingDeepLink = LauncherDeepLink.parse(intent.data)
         Log.d(TAG, "onCreate deepLinkHost=${intent.data?.host} deepLinkType=${pendingDeepLink?.javaClass?.simpleName ?: "none"}")
         val dbError = probeDatabase()
         if (dbError != null) {
-            contentReady = true // the recovery screen IS the destination — don't hold the splash over it
             setContent {
-                tv.own.owntv.features.recovery.DatabaseRecoveryScreen(
-                    message = dbError,
-                    onRetry = { recreate() },
-                    onResetData = {
-                        // Explicit, twice-confirmed user choice — the only thing that clears a
-                        // database SQLite refuses to open. Never automatic (that was D1's bug).
-                        runCatching { deleteDatabase(tv.own.owntv.core.database.OwnTVDatabase.NAME) }
-                        finishAffinity()
-                    },
-                )
+                val recoveryTouch = rememberTouchTapDispatcher()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .rootTouchSupport(recoveryTouch),
+                ) {
+                    tv.own.owntv.features.recovery.DatabaseRecoveryScreen(
+                        message = dbError,
+                        onRetry = { recreate() },
+                        onResetData = {
+                            // Explicit, twice-confirmed user choice — the only thing that clears a
+                            // database SQLite refuses to open. Never automatic (that was D1's bug).
+                            runCatching { deleteDatabase(tv.own.owntv.core.database.OwnTVDatabase.NAME) }
+                            finishAffinity()
+                        },
+                    )
+                }
             }
             return
         }
@@ -296,10 +286,7 @@ class MainActivity : ComponentActivity() {
             }
             val destinationReady = loadedProfileId != null && profilesLoaded
             LaunchedEffect(destinationReady) {
-                if (destinationReady && !contentReady) {
-                    contentReady = true
-                    Perf.stamp("destination-ready") // splash hand-off — the number ST1/ST2 move
-                }
+                if (destinationReady) Perf.stamp("destination-ready") // the number ST1/ST2 move
             }
 
             // "Refresh on startup" — re-sync sources once the active profile is known.
@@ -390,7 +377,15 @@ class MainActivity : ComponentActivity() {
                         // base color shows through and glass renders over that instead.
                         if (bgImagePath.isNotBlank()) BackgroundLayer(bgImagePath)
 
-                        Box(modifier = Modifier.fillMaxSize()) {
+                        // Root touch adapter: taps that no interactive component consumed (D-pad-first
+                        // surfaces, semantics-only targets) are routed into the semantics tree as focus +
+                        // OnClick, so the UI is fully usable with a phone/tablet touch screen too.
+                        val touchDispatcher = rememberTouchTapDispatcher()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .rootTouchSupport(touchDispatcher),
+                        ) {
                         val profile = activeProfileId
                         when {
                             profile == null || !profilesLoaded -> Unit // active id / Room list loading

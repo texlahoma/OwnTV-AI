@@ -1,8 +1,19 @@
 package tv.own.owntv.di
 
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import tv.own.owntv.features.aisubtitles.AiSubtitleBackupExtraSettings
+import tv.own.owntv.features.aisubtitles.AiSubtitleConfigStore
+import tv.own.owntv.features.aisubtitles.AiSubtitleManager
+import tv.own.owntv.features.aisubtitles.streaming.StreamingModelStore
+import tv.own.owntv.features.aisubtitles.translate.FallbackTranslator
+import tv.own.owntv.features.aisubtitles.translate.GoogleFreeTranslator
+import tv.own.owntv.features.aisubtitles.translate.OpenAiCompatibleTranslator
+import tv.own.owntv.features.aisubtitles.translate.SpeechTranslator
+import tv.own.owntv.features.aisubtitles.whisper.SherpaOnnxWhisperFactory
+import tv.own.owntv.features.aisubtitles.whisper.WhisperFactory
 import tv.own.owntv.features.more.MoreCountsViewModel
 import org.koin.dsl.module
 import tv.own.owntv.features.customize.CustomizeItemsViewModel
@@ -61,11 +72,12 @@ val appModule = module {
     // Takes a Context first; Koin resolves it from androidContext().
     //
     // Spelled out rather than `viewModelOf(::LiveViewModel)`: that reflective helper is generated for
-    // up to 22 constructor parameters and this class now has 23. The failure is a "none of the
+    // up to 22 constructor parameters and this class now has 24. The failure is a "none of the
     // following candidates is applicable" at the call above, which says nothing about arity — hence
     // this note. Every argument is resolved by type, so the order here does not matter.
     viewModel {
         LiveViewModel(
+            get(),
             get(),
             get(),
             get(),
@@ -152,4 +164,29 @@ val appModule = module {
     viewModelOf(::EpgSourcesViewModel)
     // The counts the More rows and the Favourites / History tabs carry.
     viewModelOf(::MoreCountsViewModel)
+
+    // AI subtitles (local Whisper ASR → cloud translation). App-only concern, so its settings are
+    // kept in the app's own DataStore instead of the shared core SettingsRepository. The manager is
+    // a process-wide `single`: it owns the playback-audio tap and must outlive any single screen.
+    single { AiSubtitleConfigStore(androidContext()) }
+    // Carries the AI-subtitle/cloud-translation (LLM) config along inside backup/restore. The core
+    // BackupManager resolves this via getOrNull(), so it rides only when this app registers it.
+    single<tv.own.owntv.core.backup.BackupExtraSettings> {
+        AiSubtitleBackupExtraSettings(get())
+    }
+    // The model stores persist their "last-good" readiness through the config store, so a normal
+    // launch trusts what was already validated and skips the per-launch model-state detection
+    // (disk scan + possible multi-minute download attempt).
+    single { StreamingModelStore(androidContext(), get<AiSubtitleConfigStore>()::setStreamingModelsReady) }
+    single<WhisperFactory> { SherpaOnnxWhisperFactory(get()) }
+    // Cloud translation: the user's OpenAI-compatible gateway first, the key-free Google web
+    // translator as the always-there fallback so a caption survives the gateway being unset/down.
+    single<SpeechTranslator> {
+        val client = OpenAiCompatibleTranslator.httpClient()
+        FallbackTranslator(
+            primary = OpenAiCompatibleTranslator(client),
+            fallback = GoogleFreeTranslator(client),
+        )
+    }
+    single { AiSubtitleManager(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cleartext policy. The app used to carry android:usesCleartextTraffic="true" globally, which
+    silently allowed plaintext HTTP for every request the app made, including its own APIs.
+
+    That blanket switch is now this file. Playback itself cannot go https-only: IPTV sources are
+    user-entered and most Xtream/M3U panels and streams are still plain http, so the base config
+    keeps cleartext for arbitrary hosts. The own-service list below is the opposite: every domain
+    the app controls or talks to with credentials/keys (metadata, subtitles, updates, weather, DNS,
+    AI subtitle gateways) is pinned https-only, so a future code change that accidentally uses http
+    for one of them fails loudly instead of sending keys in the clear. New own-service hosts must be
+    added here, not silently exempted.
+-->
+<network-security-config>
+    <!-- IPTV playback, EPG and poster images are user-supplied arbitrary http hosts — keep cleartext
+         available for those, matched only by the tighter domain-config entries below. -->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!-- Own metadata/subtitle workers (x-owntv-key, TMDB key, OpenSubtitles credentials). -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">tmdb.owntv.me</domain>
+        <domain includeSubdomains="true">owntv-tmdb-meta.xiannero.workers.dev</domain>
+        <domain includeSubdomains="true">my-owntv-opensub.xiannero.workers.dev</domain>
+        <domain includeSubdomains="true">api.themoviedb.org</domain>
+        <domain includeSubdomains="true">image.tmdb.org</domain>
+    </domain-config>
+
+    <!-- Update check (in-app updater fetches release metadata, not the APK itself). -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.github.com</domain>
+    </domain-config>
+
+    <!-- Weather and DNS-over-HTTPS. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.open-meteo.com</domain>
+        <domain includeSubdomains="true">geocoding-api.open-meteo.com</domain>
+        <domain includeSubdomains="true">ipapi.co</domain>
+        <domain includeSubdomains="true">dns.google</domain>
+        <domain includeSubdomains="true">cloudflare-dns.com</domain>
+        <domain includeSubdomains="true">dns.quad9.net</domain>
+    </domain-config>
+
+    <!-- AI subtitle speech/translation gateways carry API keys. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.openai.com</domain>
+        <domain includeSubdomains="true">translate.googleapis.com</domain>
+    </domain-config>
+
+    <!-- Connectivity probe used by the network diagnostic. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">www.gstatic.com</domain>
+    </domain-config>
+</network-security-config>

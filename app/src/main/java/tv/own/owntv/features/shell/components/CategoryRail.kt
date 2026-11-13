@@ -396,7 +396,10 @@ fun CategoryContextMenu(
     OwnTVPopup(onDismissRequest = onDismiss) {
         val colors = OwnTVTheme.colors
         val focus = remember { FocusRequester() }
-        LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+        LaunchedEffect(Unit) {
+            kotlinx.coroutines.delay(80)
+            runCatching { focus.requestFocus() }
+        }
         androidx.activity.compose.BackHandler { onDismiss() }
         Box(
             modifier = Modifier

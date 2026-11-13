@@ -41,7 +41,10 @@ import tv.own.owntv.ui.theme.OwnTVTheme
 internal fun MultiviewTilesDialog(current: Int, onPick: (Int) -> Unit, onDismiss: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onDismiss() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
@@ -86,7 +89,10 @@ internal fun MultiviewTilesDialog(current: Int, onPick: (Int) -> Unit, onDismiss
 internal fun MultiviewWarningDialog(onUseAnyway: () -> Unit, onKeepTwo: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onKeepTwo() }
     Box(
         modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),

@@ -218,7 +218,10 @@ private const val MAX_ROLL_MINUTES = tv.own.owntv.core.recording.RecordingSchedu
 private fun RecordWatchingWarningDialog(onKeepOff: () -> Unit, onTurnOn: () -> Unit) {
     val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(80)
+        runCatching { focus.requestFocus() }
+    }
     BackHandler { onKeepOff() }
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onKeepOff) {
     Box(
