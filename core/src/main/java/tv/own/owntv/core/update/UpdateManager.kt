@@ -108,12 +108,23 @@ class UpdateManager(
                     val body = resp.body.string()
                     if (body.isBlank()) throw InvalidReleaseResponseException()
                     val o = runCatching { JSONObject(body) }.getOrElse { throw InvalidReleaseResponseException() }
-                    val version = o.optString("tag_name").removePrefix("v").takeIf { it.isNotBlank() }
-                        ?: throw InvalidReleaseResponseException()
                     val notes = o.optString("body").take(16_000)
+                    // Version resolution. Upstream releases carry a semver tag, so the tag is compared
+                    // against the installed versionName. A patch fork publishing a rolling 'latest'
+                    // instead stamps build metadata into the notes — `versionCode=<epoch minutes>
+                    // name=<versionName>` — because the rolling tag never changes and no tag comparison
+                    // could ever see it move. When the notes carry a versionCode it wins: compared
+                    // numerically against the installed versionCode, and the name becomes what the
+                    // dialog shows. Otherwise the upstream tag logic applies unchanged.
+                    val bodyVersionCode = Regex("""versionCode=(\d+)""").find(notes)
+                        ?.groupValues?.get(1)?.toIntOrNull()
+                    val version = Regex("""name=(\S+)""").find(notes)?.groupValues?.get(1)
+                        ?: o.optString("tag_name").removePrefix("v").takeIf { it.isNotBlank() }
+                        ?: throw InvalidReleaseResponseException()
                     val assets = o.optJSONArray("assets") ?: throw InvalidReleaseResponseException()
                     // Releases carry one APK per ABI flavor (arm = generic, x86_64 suffixed). Never
-                    // silently install an APK for the wrong ABI.
+                    // silently install an APK for the wrong ABI. A universal APK published under both
+                    // a plain and an x86_64-suffixed name satisfies both device classes from one file.
                     val wantX86 = android.os.Build.SUPPORTED_ABIS.firstOrNull() == "x86_64"
                     val apkUrl = (0 until assets.length())
                         .asSequence()
@@ -128,7 +139,9 @@ class UpdateManager(
                         .firstOrNull()
                         ?: throw NoCompatibleApkException()
                     val info = UpdateInfo(version, notes, apkUrl)
-                    if (isNewer(version, currentVersion)) _state.value = State.Available(info)
+                    val newer = bodyVersionCode?.let { it > CoreBuildInfo.versionCode }
+                        ?: isNewer(version, currentVersion)
+                    if (newer) _state.value = State.Available(info)
                     else _state.value = State.UpToDate
                 }
             }.onFailure { error ->
