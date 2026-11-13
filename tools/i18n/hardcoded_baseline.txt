@@ -258,12 +258,10 @@
 1	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	--- live diagnostics leading up to the crash ---
 1	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	DEPRECATION
 4	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
-1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
-1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
-1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> ${clamped}ms
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> ${clamped}ms (engaged now; picture waits for the fill)
-1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> 0 — the backlog plays out, stock depth returns on the next tune1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> 0 — the backlog plays out, stock depth returns on the next tune
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	bufferedAhead=${(player?.bufferedPosition ?: 0L) - pos}ms
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
