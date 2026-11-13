@@ -249,6 +249,12 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
 
     testImplementation(libs.junit)
+    // Real SQLite on the JVM: the driver-transaction regression test builds an in-memory Room
+    // database through the driver API (same setDriver/useWriterConnection path as production).
+    // BundledSQLiteDriver ships only Android .so artifacts, so on the host JVM the test uses
+    // AndroidSQLiteDriver backed by Robolectric's native SQLite runtime — still a driver-built
+    // database with no SupportSQLiteOpenHelper, which is the condition this regression pins.
+    testImplementation(libs.robolectric)
     // android.jar's org.json is a stub and isReturnDefaultValues silences it; backup/restore is
     // all JSON, so the tests need the real implementation. Same reason as :app.
     testImplementation(libs.org.json)

@@ -1,5 +1,6 @@
 package tv.own.owntv.core.setup
 
+import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,8 +61,12 @@ class SourceImporter(
 
     sealed interface SetupFailure {
         data object InvalidMac : SetupFailure
-        data object BackupRead : SetupFailure
-        data object Restore : SetupFailure
+        /** Reading/parsing the backup failed. [detail] carries the underlying cause (already a
+         *  user-readable sentence when we produced it, otherwise the exception's own message), so
+         *  the restore screen can say WHY instead of only that it failed. */
+        data class BackupRead(val detail: String? = null) : SetupFailure
+        /** The file read fine but applying it failed. Same [detail] contract as [BackupRead]. */
+        data class Restore(val detail: String? = null) : SetupFailure
         data class Sync(val failure: FriendlySyncFailure) : SetupFailure
     }
 
@@ -76,6 +81,8 @@ class SourceImporter(
             val passwordsOmitted: Boolean = false,
             val skippedSources: Int = 0,
             val invalidLocale: Boolean = false,
+            /** Best-effort restore blocks that could not be applied (shown under the success headline). */
+            val restoreWarnings: Set<BackupManager.RestoreWarning> = emptySet(),
             /** The source as it stands after the sync — the host uses it to offer a guide sync. */
             val source: SourceEntity? = null,
         ) : ImportState
@@ -376,8 +383,9 @@ class SourceImporter(
             _state.value = ImportState.NeedPassword(file, sealed = true)
             return false
         }
-        val inspection = backup.sectionsIn(file).getOrElse {
-            _state.value = ImportState.Failed(SetupFailure.BackupRead)
+        val inspection = backup.sectionsIn(file).getOrElse { cause ->
+            Log.w(TAG, "Backup inspection failed for ${file.name}", cause)
+            _state.value = ImportState.Failed(SetupFailure.BackupRead(BackupManager.describeFailure(cause)))
             return false
         }
         if (inspection.encrypted) {
@@ -409,14 +417,16 @@ class SourceImporter(
                     passwordsOmitted = password.isNullOrBlank(),
                     skippedSources = summary.skippedSources,
                     invalidLocale = summary.invalidLocale,
+                    restoreWarnings = summary.warnings,
                 )
                 true
             },
-            onFailure = {
-                if (it is BackupManager.WrongPasswordException) {
+            onFailure = { cause ->
+                if (cause is BackupManager.WrongPasswordException) {
                     _state.value = ImportState.NeedPassword(file, retry = true, sealed = backup.isSealed(file))
                 } else {
-                    _state.value = ImportState.Failed(SetupFailure.Restore)
+                    Log.w(TAG, "Backup restore failed for ${file.name}", cause)
+                    _state.value = ImportState.Failed(SetupFailure.Restore(BackupManager.describeFailure(cause)))
                 }
                 false
             },
@@ -463,5 +473,6 @@ class SourceImporter(
     private companion object {
         /** Sentinel sourceId for the pre-save Stalker handshake. */
         const val STALKER_TEST_SOURCE_ID = -1L
+        private const val TAG = "SourceImporter"
     }
 }

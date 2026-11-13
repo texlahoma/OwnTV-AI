@@ -1,3 +1,6 @@
-# Keep rules that :player-core imposes on anything consuming it. Empty for now: the engine's
-# keep rules still live in app/proguard-rules.pro. Declared by consumerProguardFiles so moving a
-# rule here later is a one-line change rather than a build-config change.
+# Keep rules that :player-core imposes on anything consuming it (merged into a consumer's R8 run
+# via consumerProguardFiles). Each rule guards a runtime lookup R8 can't see statically — trim
+# only with a full on-device regression (sync, both engines, backup).
+
+# --- libmpv JNI: native code resolves MPVLib and its event callbacks by name ---
+-keep class dev.jdtech.mpv.** { *; }

@@ -3,6 +3,7 @@ package tv.own.owntv.core.backup
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -35,12 +36,12 @@ class BackupV17ScopingTest {
     }
 
     @Test
-    fun `engine pin key for a source that took no part in the restore is left alone`() {
+    fun `engine pin key for a source that took no part in the restore resolves to null`() {
         // 5 is not in the map: the file's source was not merged, so there is no device id to point
-        // at. Rewriting it to anything would be a guess; passing it through leaves a pin that simply
-        // never matches, which is the safe failure.
-        assertEquals("5:LIVE:abc", remapEnginePinKey("5:LIVE:abc", idMap))
-        assertEquals("7:LIVE:abc", remapEnginePinKey("7:LIVE:abc", emptyMap()))
+        // at. Passing the number through was NOT safe — it could pin items of whatever unrelated
+        // source holds that id here — so callers must drop nulls. An empty map resolves the same.
+        assertNull(remapEnginePinKey("5:LIVE:abc", idMap))
+        assertNull(remapEnginePinKey("7:LIVE:abc", emptyMap()))
     }
 
     @Test
@@ -52,11 +53,12 @@ class BackupV17ScopingTest {
     }
 
     @Test
-    fun `typed content keys remap the id in the middle`() {
+    fun `typed content keys remap the id in the middle and reject absent sources`() {
         // Subtitle rows and TMDB overrides lead with the media type, so the id is the SECOND segment.
         assertEquals("movie:91:12345", remapTypedContentKey("movie:7:12345", idMap))
         assertEquals("episode:91:show1:S1E2", remapTypedContentKey("episode:7:show1:S1E2", idMap))
-        assertEquals("movie:5:12345", remapTypedContentKey("movie:5:12345", idMap))
+        assertNull(remapTypedContentKey("movie:5:12345", idMap))
+        // Not source-keyed at all: nothing an id collision could misroute, so it passes through.
         assertEquals("nonsense", remapTypedContentKey("nonsense", idMap))
     }
 

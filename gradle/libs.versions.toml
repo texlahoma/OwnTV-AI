@@ -63,6 +63,9 @@ juniversalchardet = "2.5.0"
 
 # --- Test ---
 junit = "4.13.2"
+# JVM-driver Room tests (real SQLite via BundledSQLiteDriver, no device needed). SDK 34 pinned in
+# the test so the android-all image it downloads stays independent of targetSdk.
+robolectric = "4.14.1"
 # Test-only: the real org.json, so JVM unit tests can exercise code built on JSONObject/JSONArray
 # (the android.jar stub returns defaults for every method under isReturnDefaultValues).
 orgJson = "20260814"
@@ -136,6 +139,7 @@ koin-android = { group = "io.insert-koin", name = "koin-android" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 org-json = { group = "org.json", name = "json", version.ref = "orgJson" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }

@@ -14,6 +14,9 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -76,6 +79,19 @@ class PlaybackSession(
     private var collectJob: Job? = null
     private var session: MediaSession? = null
 
+    private val _activeEngine = MutableStateFlow<PlaybackEngine?>(null)
+
+    /**
+     * The engine currently owning the speaker, or null while the player is closed.
+     *
+     * This class stays engine-agnostic, but it is the ONE place that learns which engine is live (the
+     * shell [attach]es it). Exposing that fact lets a consumer that needs a "is it actually playing /
+     * buffering" reading — the AI-subtitle play/buffering meters — ask the engine that is really making
+     * sound instead of guessing at one. Reading the mpv player directly made `play 0` on every Live TV
+     * session, which plays through [LivePreviewEngine], not mpv.
+     */
+    val activeEngine: StateFlow<PlaybackEngine?> = _activeEngine.asStateFlow()
+
     private var hasFocus = false
     /** Volume the user had set before we ducked, or null when not ducked. */
     private var preDuckVolume: Int? = null
@@ -94,6 +110,8 @@ class PlaybackSession(
         // next publish must send the metadata even if the title happens to match.
         lastMetaKey = null
         this.engine = engine
+        // Publish the handoff before the early return below, so detach (null) also clears it.
+        _activeEngine.value = engine
         if (engine == null) {
             unduck()
             abandonFocus()

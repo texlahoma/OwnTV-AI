@@ -82,6 +82,15 @@ object AudioOutputPolicy {
 class OwnTVRenderersFactory(
     context: Context,
     private val forceStereo: Boolean,
+    /**
+     * The hold-back THIS engine can apply, ms — read live, per audio buffer, not once at build time
+     * (0 = hold nothing). **Null means this engine can never need one**: its sink is left exactly as
+     * Media3 builds it, with no extra processor in the path. Non-null engines (the live ones) always
+     * get the hold-back stage even while the request is 0, because the alternative — installing it
+     * when the request first turns up — means rebuilding the player, and on this TV family a rebuild
+     * is what loses the only HEVC decoder.
+     */
+    private val audioDelayMs: (() -> Int)? = null,
 ) : DefaultRenderersFactory(context) {
 
     override fun buildAudioSink(
@@ -89,18 +98,77 @@ class OwnTVRenderersFactory(
         enableFloatOutput: Boolean,
         enableAudioOutputPlaybackParams: Boolean,
     ): AudioSink? {
-        if (!forceStereo) return super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
-        return runCatching<AudioSink?> {
-            @Suppress("DEPRECATION")
-            DefaultAudioSink.Builder()
-                .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
-                .setEnableFloatOutput(enableFloatOutput)
-                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
-                .build()
-        }.getOrElse {
-            android.util.Log.w("AudioOutputPolicy", "stereo-only sink unavailable, using device capabilities", it)
-            super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
+        // A live caption needs its audio to be decoded *before* it is heard (see [LiveAudioDelay]).
+        // That gap lives in APPLICATION memory, not in the AudioTrack: [HoldBackAudioProcessor] holds
+        // the PCM back while the device keeps its ordinary, small track. Asking the track itself for
+        // seconds of depth was the earlier design, and the TV this runs on answers that with an
+        // AudioTrack that never starts — the reopen that followed then took the only HEVC decoder.
+        val holdBack = audioDelayMs
+        // Float output is mutually exclusive with ANY audio processing — DefaultAudioSink's
+        // configure() puts ToFloatPcmAudioProcessor in the pipeline INSTEAD of the processor chain
+        // ("enabling floating point output disables audio processing"), and MediaCodecAudioRenderer
+        // asks the decoder for float PCM whenever the sink reports it useful. A hold-back sink is
+        // therefore always 16-bit, where the chain — and the hold-back in it — is guaranteed to run.
+        val floatOutput = enableFloatOutput && holdBack == null
+        val base = if (!forceStereo) {
+            runCatching<AudioSink?> {
+                val sink = DefaultAudioSink.Builder(context)
+                    .setEnableFloatOutput(floatOutput)
+                    .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+                    .apply { holdBack?.let { setHoldBack(it) } }
+                    .build()
+                if (holdBack != null) LiveAudioDelay.plumbed = true
+                sink
+            }.getOrElse {
+                android.util.Log.w("AudioOutputPolicy", "delayed sink unavailable, using stock sink", it)
+                if (holdBack != null) LiveAudioDelay.plumbed = false
+                super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
+            }
+        } else {
+            runCatching<AudioSink?> {
+                @Suppress("DEPRECATION")
+                val sink = DefaultAudioSink.Builder()
+                    .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
+                    .setEnableFloatOutput(floatOutput)
+                    .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+                    .apply { holdBack?.let { setHoldBack(it) } }
+                    .build()
+                if (holdBack != null) LiveAudioDelay.plumbed = true
+                sink
+            }.getOrElse {
+                android.util.Log.w("AudioOutputPolicy", "stereo-only sink unavailable, using device capabilities", it)
+                if (holdBack != null) LiveAudioDelay.plumbed = false
+                super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
+            }
         }
+        // Hand the decoded PCM to the AI-subtitle tap (see PlaybackAudioTap). This sink is built once
+        // when the engine's renderers are created, so the decision cannot depend on whether the tape
+        // is armed at that exact moment — AI subtitles may be switched on any time during playback. The
+        // wrapper always forwards to a consumer when one is attached and otherwise shuffles the audio
+        // straight through with negligible overhead. Only wraps a real sink — the external/none case
+        // returns null and must stay null.
+        if (base != null) {
+            // [TapAudioSink.pcmOnly]: a LIVE sink must see real PCM. Encoded audio that the device
+            // can bitstream is otherwise bypassed, and a bypassed track gives the tap nothing to
+            // listen to and the hold-back nothing to queue — the channel then reads `dly 8s/0ms/8s`
+            // and the caption session stands itself down. Only live engines take this; VOD, the hero
+            // preview and every other ExoPlayer keep Media3's own passthrough decision.
+            return TapAudioSink(base, pcmOnly = holdBack != null)
+        }
+        return base
+    }
+
+    /**
+     * Build the sink with the in-memory hold-back (see [HoldBackAudioProcessor]). The AudioTrack
+     * underneath keeps the device's ordinary size — no multi-second request, no custom provider,
+     * nothing this TV's audio HAL can refuse. The depth is read live from [delayMs], so switching
+     * captions on starts the hold-back on the RUNNING player instead of waiting for a rebuild.
+     */
+    private fun DefaultAudioSink.Builder.setHoldBack(delayMs: () -> Int): DefaultAudioSink.Builder {
+        @Suppress("DEPRECATION")
+        return setAudioProcessorChain(
+            DefaultAudioSink.DefaultAudioProcessorChain(HoldBackAudioProcessor(delayMs)),
+        )
     }
 }
 
@@ -226,6 +294,12 @@ class AudioWatchdog : AnalyticsListener {
         bufferSizeMs: Long,
         elapsedSinceLastFeedMs: Long,
     ) {
+        // A filling hold-back starves the track ON PURPOSE (see [LiveAudioDelay.filling]): the PCM it
+        // is not writing is queued in app memory, waiting for the caption budget. Counting those as
+        // "the sink can't keep up" tripped this verdict 4 underruns into every hold-back fill, which
+        // latched stereo and rebuilt the player mid-fill — dropping the queue and restarting the fill
+        // from zero. That loop is why an 8 s hold-back never actually delivered a delayed word.
+        if (LiveAudioDelay.filling) return
         val now = android.os.SystemClock.elapsedRealtime()
         // Individual underruns were silent until the limit tripped, which made "sound keeps cutting
         // out" impossible to confirm from a log: below the limit there was no evidence at all, and at
@@ -277,6 +351,10 @@ class AudioWatchdog : AnalyticsListener {
     fun poll(isPlaying: Boolean): String? {
         pendingReason?.let { pendingReason = null; return it }
         if (!armed || advancing) { lastTickMs = 0L; return null }
+        // Same rule as the underrun tier, for the "accepted the format and produced silence" one: a
+        // fill is silent by construction, and it lasts longer than [AudioOutputPolicy.NO_AUDIO_GRACE_MS],
+        // so without this every tune with captions on was rebuilt six seconds in.
+        if (LiveAudioDelay.filling) { lastTickMs = 0L; return null }
         val now = android.os.SystemClock.elapsedRealtime()
         if (!isPlaying) { lastTickMs = 0L; return null }
         if (lastTickMs != 0L) playingSinceArmMs += (now - lastTickMs).coerceAtMost(2_000L)

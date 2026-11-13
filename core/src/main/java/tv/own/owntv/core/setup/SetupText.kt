@@ -3,6 +3,7 @@ package tv.own.owntv.core.setup
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import tv.own.owntv.core.R
+import tv.own.owntv.core.backup.BackupManager
 import tv.own.owntv.core.parser.HlsInconclusiveReason
 import tv.own.owntv.core.parser.HlsNotServedReason
 import tv.own.owntv.core.parser.HlsProbe
@@ -45,10 +46,30 @@ fun FriendlySyncFailure.displayText(res: Resources): String = when (this) {
 /** Words a semantic onboarding failure. */
 fun SourceImporter.SetupFailure.displayText(res: Resources): String = when (this) {
     SourceImporter.SetupFailure.InvalidMac -> res.getString(R.string.setup_invalid_mac)
-    SourceImporter.SetupFailure.BackupRead -> res.getString(R.string.setup_backup_read_failed)
-    SourceImporter.SetupFailure.Restore -> res.getString(R.string.setup_restore_failed)
+    // The screen heading already says "Restore failed"; when we know WHY, the body shows only the
+    // concrete reason instead of repeating the heading. No reason (exception with no message) falls
+    // back to the generic line so the body is never blank.
+    is SourceImporter.SetupFailure.BackupRead -> detail ?: res.getString(R.string.setup_backup_read_failed)
+    is SourceImporter.SetupFailure.Restore -> detail ?: res.getString(R.string.setup_restore_failed)
     is SourceImporter.SetupFailure.Sync -> failure.displayText(res)
 }
+
+/**
+ * The user-facing sentence for a non-fatal [BackupManager.RestoreWarning]. Both the setup wizard and
+ * the settings restore screen render these under the "restored" headline, so the wording lives here
+ * once rather than being mapped twice in the two apps.
+ */
+val BackupManager.RestoreWarning.stringRes: Int
+    @StringRes get() = when (this) {
+        BackupManager.RestoreWarning.WALLPAPER -> R.string.settings_backup_warning_wallpaper
+        BackupManager.RestoreWarning.PROFILE_PICTURE -> R.string.settings_backup_warning_profile_picture
+        BackupManager.RestoreWarning.AI_TRANSLATION -> R.string.settings_backup_warning_ai_translation
+        BackupManager.RestoreWarning.SUBTITLES -> R.string.settings_backup_warning_subtitles
+        BackupManager.RestoreWarning.ENGINE_PINS -> R.string.settings_backup_warning_engine_pins
+        BackupManager.RestoreWarning.PLAYBACK_PREFS -> R.string.settings_backup_warning_playback_prefs
+        BackupManager.RestoreWarning.OPENSUBTITLES_LOGIN -> R.string.settings_backup_warning_opensubtitles_login
+        BackupManager.RestoreWarning.TMDB_OVERRIDES -> R.string.settings_backup_warning_tmdb_overrides
+    }
 
 /** Words the "Test HLS support" probe: what was asked for, what came back, and what the panel claims. */
 fun HlsTest.displayText(res: Resources): String {

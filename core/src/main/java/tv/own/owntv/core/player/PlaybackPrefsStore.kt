@@ -41,6 +41,16 @@ class PlaybackPrefsStore(
         runCatching { dao.setAudioDelay(settings.activeProfileId.first(), contentKey, audioDelayMs) }
     }
 
+    /** Remember the AI-subtitle master switch for this item; null forgets it and returns to the global switch. */
+    suspend fun rememberAiSubtitleEnabled(contentKey: String, enabled: Boolean?) {
+        runCatching { dao.setAiSubtitleEnabled(settings.activeProfileId.first(), contentKey, enabled) }
+    }
+
+    /** Remember the AI-subtitle recognition language for this item; null forgets it and returns to the global language. */
+    suspend fun rememberAiSubtitleSourceLanguage(contentKey: String, language: String?) {
+        runCatching { dao.setAiSubtitleSourceLanguage(settings.activeProfileId.first(), contentKey, language) }
+    }
+
     /** Settings escape hatch: forget every item's zoom, on every profile. Volumes are kept. */
     suspend fun clearZoom() {
         runCatching { dao.clearZoom() }

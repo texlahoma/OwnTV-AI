@@ -24,6 +24,7 @@ import tv.own.owntv.core.database.dao.ProgressDao
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SeriesDao
 import tv.own.owntv.core.database.dao.UserDataExportRow
+import tv.own.owntv.core.database.withWriteTransaction
 import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.core.database.entity.CustomCategoryMemberEntity
 import tv.own.owntv.core.database.entity.FavoriteEntity
@@ -161,8 +162,7 @@ class UserDataResolver(
         var i = 0
         while (i < entries.length()) {
             val end = minOf(i + RESOLVE_CHUNK, entries.length())
-            db.transaction {
-                for (j in i until end) {
+            db.withWriteTransaction {                for (j in i until end) {
                     val e = entries.getJSONObject(j)
                     if (runCatching { applyTombstone(e) }.getOrDefault(false)) applied++
                 }
@@ -322,8 +322,7 @@ class UserDataResolver(
     private fun JSONArray.hasSourceSnapshotIds(): Boolean =
         length() > 0 && (0 until length()).all { getJSONObject(it).has("oid") }
 
-    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) = db.transaction {
-        for (i in 0 until snapshot.length()) {
+    private suspend fun purgeSnapshotOrphans(snapshot: JSONArray) = db.withWriteTransaction {        for (i in 0 until snapshot.length()) {
             val e = snapshot.getJSONObject(i)
             val type = runCatching { MediaType.valueOf(e.getString("t")) }.getOrNull() ?: continue
             val profileId = e.getLong("p")
@@ -400,8 +399,7 @@ class UserDataResolver(
         var i = 0
         while (i < entries.length()) {
             val end = minOf(i + RESOLVE_CHUNK, entries.length())
-            db.transaction {
-                for (j in i until end) {
+            db.withWriteTransaction {                for (j in i until end) {
                     val e = entries.getJSONObject(j)
                     when (runCatching { resolveAndInsert(e, tombstonesPresent) }.getOrDefault(Resolution.PENDING)) {
                         Resolution.PENDING -> unresolved.put(e)

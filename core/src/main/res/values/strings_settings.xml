@@ -1087,6 +1087,86 @@
     <string name="settings_open_subtitles_reset_in">In <xliff:g id="hours">%1$d</xliff:g>h <xliff:g id="minutes">%2$d</xliff:g>m</string>
     <!-- Translators: Description of the OpenSubtitles setting. 'opensubtitles.com' is a website. -->
     <string name="settings_open_subtitles_description">Sign in to search and download subtitles, and manage downloaded subtitles. Per profile; a free opensubtitles.com account is required.</string>
+    <!-- AI subtitles (built-in Whisper + cloud translation). -->
+    <string name="settings_ai_subtitles">AI subtitles</string>
+    <string name="settings_ai_subtitles_description">Live speech recognition plus cloud translation of what you watch, rendered as subtitles. Recognition runs on-device; translation uses an OpenAI-compatible gateway.</string>
+    <string name="ai_subtitles_general">General</string>
+    <string name="ai_subtitles_enable">Enable AI subtitles</string>
+    <string name="ai_subtitles_enable_description">Transcribe the audio in real time and display it as subtitles.</string>
+    <string name="ai_subtitles_recognition">Recognition</string>
+    <string name="ai_subtitles_source_language">Source language</string>
+    <string name="ai_subtitles_source_language_description">Language spoken in the audio. Auto lets the recognizer guess.</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_original">Original (no translation)</string>
+    <string name="ai_subtitles_translation">Translation</string>
+    <string name="ai_subtitles_target_language">Target language</string>
+    <string name="ai_subtitles_target_language_description">Show recognized speech translated into this language. Choose “Original” to show it untranslated.</string>
+    <string name="ai_subtitles_api">Translation gateway</string>
+    <string name="ai_subtitles_api_description">Any OpenAI-compatible endpoint: API base URL, key and model.</string>
+    <string name="ai_subtitles_api_base_url">API base URL</string>
+    <string name="ai_subtitles_api_key">API key</string>
+    <string name="ai_subtitles_model">Model</string>
+    <string name="ai_subtitles_api_reset">Use defaults</string>
+    <!-- Translators: Button in the translation-gateway dialog that probes the entered URL/key/model with a tiny translation request. -->
+    <string name="ai_subtitles_api_test">Test connection</string>
+    <!-- Translators: Button label while the connectivity probe is in flight. -->
+    <string name="ai_subtitles_api_testing">Testing…</string>
+    <!-- Translators: Result of a successful probe; %1$s is the model's translated reply to the probe sentence. -->
+    <string name="ai_subtitles_api_test_success">Connected — sample reply: %1$s</string>
+    <!-- Translators: Probe failed to reach the server at all (DNS/connect/timeout). -->
+    <string name="ai_subtitles_api_test_fail_network">No route to the server — check the base URL and network.</string>
+    <!-- Translators: Probe was rejected with 401/403, i.e. the API key is wrong or lacks permission. -->
+    <string name="ai_subtitles_api_test_fail_auth">Rejected (401/403) — the API key is wrong or unauthorized.</string>
+    <!-- Translators: Probe hit a 404, i.e. the base URL has no chat-completions endpoint there. -->
+    <string name="ai_subtitles_api_test_fail_not_found">Endpoint not found (404) — check the base URL.</string>
+    <!-- Translators: Probe was rejected with 400, most often a wrong/unsupported model name. -->
+    <string name="ai_subtitles_api_test_fail_bad_request">Rejected (400) — check the model name.</string>
+    <!-- Translators: Probe failed for an uncategorized reason; %1$s is the raw error detail. -->
+    <string name="ai_subtitles_api_test_fail">Failed: %1$s</string>
+    <string name="ai_subtitles_display">Display</string>
+    <string name="ai_subtitles_font_size">Font size</string>
+    <string name="ai_subtitles_font_size_description">Relative size of the AI subtitle text.</string>
+    <string name="ai_subtitles_font_size_percent">%1$d%%</string>
+    <string name="ai_subtitles_line_height">Line spacing</string>
+    <string name="ai_subtitles_line_height_description">Gap between the lines of an AI subtitle block.</string>
+    <!-- Translators: Live hold-back so AI captions can be ready when their audio plays. -->
+    <string name="ai_subtitles_live_delay">Live delay</string>
+    <string name="ai_subtitles_live_delay_description">Hold live audio back so the AI lines are ready when it plays. 5–10 seconds is the useful range; a channel takes longer to start.</string>
+    <string name="ai_subtitles_live_delay_off">Off</string>
+    <string name="ai_subtitles_live_delay_seconds">%1$d s</string>
+    <string name="ai_subtitles_position">Position</string>
+    <string name="ai_subtitles_position_description">Where the AI subtitles sit on screen.</string>
+    <!-- Translators: Hint in the in-player AI-subtitle panel explaining that changes are remembered for this channel. -->
+    <string name="ai_subtitles_remembered_hint">Remembered for this channel.</string>
+    <string name="ai_subtitles_status">Status: %1$s</string>
+    <!-- Translators: Section header for the on-demand streaming recognition models. -->
+    <string name="ai_subtitles_streaming_models">Streaming models</string>
+    <!-- Translators: Description of the streaming models section. -->
+    <string name="ai_subtitles_streaming_models_description">English is included with the app and works immediately. French, German and Spanish are downloaded on first use and stored on this device.</string>
+    <!-- Translators: Status shown for a downloaded streaming model. -->
+    <string name="ai_subtitles_model_downloaded">Downloaded</string>
+    <!-- Translators: Download progress of a streaming model; %1$d is a percent 0-100. -->
+    <string name="ai_subtitles_model_downloading">Downloading… %1$d%%</string>
+    <!-- Translators: Toast shown on the AI-subtitle screen the instant a model download starts. %1$s is a model/language name. -->
+    <string name="ai_subtitles_model_download_started">Starting download of %1$s…</string>
+    <!-- Translators: Shown while an already-downloaded archive is being unpacked. %1$d is the number of megabytes written to disk so far. -->
+    <string name="ai_subtitles_model_extracting">Extracting… %1$d MB</string>
+    <!-- Translators: Text shown beside a model row's size, i.e. an archive size in megabytes. -->
+    <string name="ai_subtitles_model_size_mb">%1$d MB</string>
+    <!-- Translators: Row description for a streaming model: what it replaces while active. -->
+    <string name="ai_subtitles_model_description">When downloaded, recognition runs true-streaming; otherwise the built-in model is used.</string>
+    <!-- Translators: Confirmation body when deleting a downloaded streaming model. -->
+    <string name="ai_subtitles_model_delete_prompt">Delete this model? It will be re-downloaded when the language is used again.</string>
+    <!-- Translators: Shown when the user taps a model that is mid-download; %1$s is a model name, %2$d a percent 0-100. -->
+    <string name="ai_subtitles_model_busy_message">%1$s is downloading (…%2$d%%). You can keep browsing; it will appear here when ready.</string>
+    <!-- Translators: Shown when a model download fails; %1$s is a model name. -->
+    <string name="ai_subtitles_model_failed_title">Download failed</string>
+    <!-- Translators: Shown when a model download fails; %1$s is a model name. -->
+    <string name="ai_subtitles_model_failed_message">%1$s could not be downloaded. Check your network connection and try again.</string>
+    <!-- Translators: Status shown for a recognition model that ships inside the app (nothing to download). -->
+    <string name="ai_subtitles_model_builtin">Built-in</string>
+    <!-- Translators: Row description when the recognition model is bundled with the app. -->
+    <string name="ai_subtitles_model_builtin_description">Engine is included with the app; recognition works immediately, no download.</string>
     <!-- Translators: Section header for audio settings. -->
     <string name="settings_audio">Audio</string>
     <!-- Translators: Setting label for preferred audio language. -->
@@ -1811,6 +1891,10 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_backup_section_settings">App settings</string>
     <!-- Translators: Description of the App settings backup section. -->
     <string name="settings_backup_section_settings_desc">Theme, accent, player &amp; layout preferences</string>
+    <!-- Translators: Backup content section: AI translation / LLM config. -->
+    <string name="settings_backup_section_translation">AI translation</string>
+    <!-- Translators: Description of the AI translation backup section. -->
+    <string name="settings_backup_section_translation_desc">Cloud-translation (LLM) model, API endpoint &amp; key, languages</string>
     <!-- Translators: Status text when backup is saved. 'path' is the file path. -->
     <string name="settings_backup_saved_to">Saved to <xliff:g id="path">%1$s</xliff:g>.</string>
     <!-- Translators: Status text when backup is saved without passwords. 'path' is the file path. -->
@@ -1837,6 +1921,15 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="settings_backup_import_error">Import failed.</string>
     <!-- Translators: Warning when the backup contains an unsupported language. -->
     <string name="settings_backup_invalid_locale">This backup contained an unsupported app language. The restore succeeded, but your current language was kept.</string>
+    <!-- Translators: Post-restore warnings: the restore overall succeeded but one optional block could not be applied. Each names what was not restored. -->
+    <string name="settings_backup_warning_wallpaper">The background image could not be restored.</string>
+    <string name="settings_backup_warning_profile_picture">A profile picture could not be restored.</string>
+    <string name="settings_backup_warning_ai_translation">The AI translation settings could not be restored.</string>
+    <string name="settings_backup_warning_subtitles">Saved subtitles could not be restored.</string>
+    <string name="settings_backup_warning_engine_pins">Per-channel player compatibility settings could not be restored.</string>
+    <string name="settings_backup_warning_playback_prefs">Per-item zoom, volume and audio-delay settings could not be restored.</string>
+    <string name="settings_backup_warning_opensubtitles_login">A saved OpenSubtitles login could not be restored.</string>
+    <string name="settings_backup_warning_tmdb_overrides">Your edited movie and series titles could not be restored.</string>
     <!-- Translators: Section header for selecting which profiles to back up. -->
     <string name="settings_backup_which_profiles">Which profiles to back up</string>
     <!-- Translators: Description of profile selection for backups. -->

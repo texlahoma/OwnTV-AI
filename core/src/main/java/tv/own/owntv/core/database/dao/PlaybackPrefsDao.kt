@@ -35,6 +35,8 @@ interface PlaybackPrefsDao {
                 zoomMode = zoomMode,
                 volumeBoost = existing?.volumeBoost,
                 audioDelayMs = existing?.audioDelayMs,
+                aiSubtitleEnabled = existing?.aiSubtitleEnabled,
+                aiSubtitleSourceLanguage = existing?.aiSubtitleSourceLanguage,
             ),
         )
     }
@@ -51,6 +53,8 @@ interface PlaybackPrefsDao {
                 zoomMode = existing?.zoomMode,
                 volumeBoost = volumeBoost,
                 audioDelayMs = existing?.audioDelayMs,
+                aiSubtitleEnabled = existing?.aiSubtitleEnabled,
+                aiSubtitleSourceLanguage = existing?.aiSubtitleSourceLanguage,
             ),
         )
     }
@@ -67,6 +71,44 @@ interface PlaybackPrefsDao {
                 zoomMode = existing?.zoomMode,
                 volumeBoost = existing?.volumeBoost,
                 audioDelayMs = audioDelayMs,
+                aiSubtitleEnabled = existing?.aiSubtitleEnabled,
+                aiSubtitleSourceLanguage = existing?.aiSubtitleSourceLanguage,
+            ),
+        )
+    }
+
+    /** Remember [aiSubtitleEnabled] (null = "follow the global switch") without touching the rest. */
+    @Transaction
+    suspend fun setAiSubtitleEnabled(profileId: Long, contentKey: String, aiSubtitleEnabled: Boolean?) {
+        val existing = get(profileId, contentKey)
+        if (existing == null && aiSubtitleEnabled == null) return
+        upsert(
+            PlaybackPrefsEntity(
+                profileId = profileId,
+                contentKey = contentKey,
+                zoomMode = existing?.zoomMode,
+                volumeBoost = existing?.volumeBoost,
+                audioDelayMs = existing?.audioDelayMs,
+                aiSubtitleEnabled = aiSubtitleEnabled,
+                aiSubtitleSourceLanguage = existing?.aiSubtitleSourceLanguage,
+            ),
+        )
+    }
+
+    /** Remember [aiSubtitleSourceLanguage] (null = "follow the global source language") without touching the rest. */
+    @Transaction
+    suspend fun setAiSubtitleSourceLanguage(profileId: Long, contentKey: String, aiSubtitleSourceLanguage: String?) {
+        val existing = get(profileId, contentKey)
+        if (existing == null && aiSubtitleSourceLanguage == null) return
+        upsert(
+            PlaybackPrefsEntity(
+                profileId = profileId,
+                contentKey = contentKey,
+                zoomMode = existing?.zoomMode,
+                volumeBoost = existing?.volumeBoost,
+                audioDelayMs = existing?.audioDelayMs,
+                aiSubtitleEnabled = existing?.aiSubtitleEnabled,
+                aiSubtitleSourceLanguage = aiSubtitleSourceLanguage,
             ),
         )
     }
@@ -91,7 +133,10 @@ interface PlaybackPrefsDao {
     @Query("UPDATE playback_prefs SET audioDelayMs = NULL")
     suspend fun clearAudioDelayColumn()
 
-    @Query("DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL")
+    @Query(
+        "DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL " +
+            "AND aiSubtitleEnabled IS NULL AND aiSubtitleSourceLanguage IS NULL",
+    )
     suspend fun dropEmptyRows()
 
     /** Forget every per-item zoom, keeping the per-item volumes. */

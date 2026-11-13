@@ -167,9 +167,21 @@ object BackupContainer {
      */
     fun open(file: File, passphrase: String? = null): Payload = when (probe(file)) {
         Kind.LEGACY_JSON -> Payload(json = file.readText(), wallpaper = null)
-        Kind.CONTAINER -> unzip(file.readBytes())
-        Kind.ENCRYPTED_CONTAINER -> unzip(decryptContainer(file.readBytes(), passphrase))
+        Kind.CONTAINER -> unzip(readAndCap(file))
+        Kind.ENCRYPTED_CONTAINER -> unzip(decryptContainer(readAndCap(file), passphrase))
         Kind.UNKNOWN -> error("Not an OwnTV backup file")
+    }
+
+    /**
+     * Reads [file] into memory, rejecting anything over [MAX_FILE_BYTES] up front. Without a cap a
+     * malicious or damaged file (or one from a future version with a huge inline binary) could blow
+     * the heap on a low-end TV when [open] slurps it whole — the UI would never even get an error,
+     * just death. The largest legitimate backup is well under this.
+     */
+    private fun readAndCap(file: File): ByteArray {
+        val n = file.length()
+        if (n > MAX_FILE_BYTES) error("Backup file too large (${n / 1024} KB)")
+        return file.readBytes()
     }
 
     private fun decryptContainer(bytes: ByteArray, passphrase: String?): ByteArray {
@@ -226,5 +238,7 @@ object BackupContainer {
 
     /** Sanity bound so a corrupt length field can't make us allocate wildly. */
     private const val MAX_HEADER_BYTES = 8 * 1024
+    /** Upper bound on a whole backup file (64 MB) before it is slurped into memory. */
+    private const val MAX_FILE_BYTES = 64L * 1024 * 1024
     private const val CONTAINER_SCHEME = "container-aes-gcm"
 }

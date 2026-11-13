@@ -89,6 +89,72 @@ class LivePreviewEngine(
     @Volatile private var livePrerollSecs: Int = LiveBuffer.PREROLL_OFF
     @Volatile private var prerollOverrideSecs: Int? = null
 
+    /**
+     * AI-subtitle hold-back for THIS engine, ms (0 = none). Set only on the engine that owns the
+     * speaker (see [applyAudioDelay]); a muted preview tile leaves it 0, so browsing the channel list
+     * never waits on a full-screen caption session's delay.
+     */
+    @Volatile private var captionHoldBackMs = 0
+
+    /**
+     * What the caption session WANTS, ms, even when the hold-back itself has been dropped (a stall, a
+     * flap). A dropped hold-back still leaves the session's residue — playback seconds behind the live
+     * edge — so the flap verdict needs to know the channel is a caption-delay channel even with
+     * `captionHoldBackMs == 0`, or its terminal branch looks like an ordinary dead stream.
+     */
+    @Volatile private var captionDelayWantedMs = 0
+
+    /** Queue depth at the previous health tick, ms; -1 = no fill in progress. See the fill-stall check. */
+    private var fillWatchQueuedMs = -1
+
+    /** Wall clock when the queue last failed to grow across a tick, ms; 0 = growing. */
+    private var fillWatchStallSinceMs = 0L
+
+    /**
+     * The channel whose open could not be primed with the hold-back (see [openWatchdog]): its next
+     * build uses stock audio, until another channel is tuned. Per URL, not per device — the hold-back
+     * itself is in-memory now, so nothing about the audio hardware can make it unopenable.
+     */
+    @Volatile private var holdBackStallUrl: String? = null
+
+    /**
+     * The hold-back in force for the current tune: the engine's request, dropped to 0 while the
+     * engine is a muted preview. A preview is not the speaker and must start as fast as it always
+     * did; when it is promoted the player is rebuilt through the normal path, which is where the
+     * request is picked up.
+     */
+    private val effectiveHoldBackMs: Int get() = if (muted) 0 else captionHoldBackMs
+
+    /**
+     * How long an open may legitimately show a full buffer and no first frame while the in-memory
+     * hold-back ([HoldBackAudioProcessor]) primes: until the processor has [effectiveHoldBackMs]
+     * queued there is no audio out, so the audio clock — the clock the picture waits on — does not
+     * advance and nothing renders. That is the delay working, not a dead feed, and both watchdogs
+     * would otherwise reach the opposite verdict and "recover" by reopening the channel: the one
+     * action that loses the decoder on this TV family. The margin is the stock path's own start-up
+     * slack (network + codec), which still has to happen on top of the queueing.
+     */
+    private val holdBackPrimingMs: Long
+        get() = if (effectiveHoldBackMs > 0) {
+            // Half the delay + the start-up slack: a live feed supplies audio at real time, so the
+            // FILL itself needs ~the whole delay in wall clock before a single delayed sample is
+            // heard — and HLS delivers in segment bursts, so the pace is 1x only on average. A flat
+            // 3 s margin fit an 8 s fill (11 s window) but was verdict-adjacent for a 16 s one
+            // (16-19 s of filling against a 19 s window): the deadline killed healthy fills, and
+            // every drop after that was the first domino of the stutter-then-error chain.
+            effectiveHoldBackMs / 2L + effectiveHoldBackMs + HOLD_BACK_PRIMING_MARGIN_MS
+        } else 0L
+
+    /**
+     * Wall-clock until which a still picture is EXPECTED because the hold-back is filling. Set when
+     * the request is RAISED on a channel that is already playing: the processor then withholds
+     * [HoldBackAudioProcessor]'s queue's worth of audio before the first delayed sample is heard, and
+     * since the picture is paced by the audio clock it stands still for exactly that long. Both
+     * watchdogs below sit that window out — the alternative is "recovering" a perfectly healthy
+     * channel by rebuilding it, which is what loses the decoder on this TV family.
+     */
+    @Volatile private var holdBackWarmUntilMs = 0L
+
     /** The buffering numbers the live [player] instance was actually constructed with. A LoadControl can't
      *  be changed afterwards, so this is what [play] compares against to decide on a rebuild. */
     @Volatile private var builtLoadControl: LiveBuffer.LoadControlMs? = null
@@ -98,7 +164,89 @@ class LivePreviewEngine(
      *  Live latency setting. Null either way means Balanced — engine defaults, no target offset. */
     private fun effectiveLiveBufferSecs(): Int? = liveBufferOverride?.secs ?: liveBufferSecs
 
+    /**
+     * The capacity the load control must allow for a caption build to work. [HoldBackAudioProcessor]
+     * keeps [effectiveHoldBackMs] of decoded audio queued ahead of the speaker, and the renderer can
+     * only fill that queue if the loader is allowed to buffer at least that much media on top of the
+     * stock depth. Two seconds of headroom covers the decoder's own queue. The live-edge target offset
+     * is deliberately NOT raised: that would move playback further from live on top of the hold-back,
+     * and the delay is a caption aid, not a timeshift.
+     */
+    private fun effectiveLoadControlSecs(): Int? {
+        val base = effectiveLiveBufferSecs()
+        if (effectiveHoldBackMs <= 0) return base
+        // Capacity only. The hold-back is queued inside the sink (see HoldBackAudioProcessor), so the
+        // media buffer has to be allowed to grow to that depth or the queue can never fill. This is
+        // deliberately NOT the playback-start threshold: raising that is what made every tune with
+        // subtitles on wait 5–10 s before the first frame and blow the tune budget
+        // ("no picture within 30 s of tuning"), while subtitles off — hold-back 0 — tuned normally.
+        val needed = (effectiveHoldBackMs + 999) / 1_000 + AUDIO_DELAY_BUFFER_MARGIN_SECS
+        return maxOf(base ?: LiveBuffer.BALANCED_SECS, needed)
+    }
+
+    /**
+     * Apply the AI-subtitle audio hold-back. The DEPTH is read live by the sink's processor, so a
+     * request is honoured by the channel that is already playing — never by reopening it.
+     *
+     * A PLAYING channel is deliberately never reopened for this. Reopening was the one thing that
+     * ever broke playback: on this TV family the replacement asks for a second HEVC decoder while the
+     * released one still occupies the OMX component (`ACodec: onAllocateComponent, mFatalError is
+     * [0]`), or configures it against a window that is being replaced (`setPortMode … -1010`).
+     *
+     * The request is clamped to [LiveAudioDelay]; 0 lets the backlog play out and leaves stock audio
+     * from the next build on. May be called from the AI-subtitle worker: the state itself is volatile,
+     * and this never touches the player.
+     */
+    override fun applyAudioDelay(delayMs: Int) {
+        val clamped = LiveAudioDelay.clamp(delayMs)
+        captionDelayWantedMs = clamped
+        if (captionHoldBackMs == clamped) return
+        // A channel that could not be primed with the hold-back keeps stock audio: re-applying it
+        // (a config re-emission, a retry) would reproduce the same stall. Remembered per URL, and
+        // forgotten as soon as another channel is tuned (see [play]).
+        if (clamped > 0 && currentUrl != null && currentUrl == holdBackStallUrl) {
+            LiveDiagnosticsLog.event("audio hold-back stays off for this channel — it blocked the open earlier")
+            return
+        }
+        // A tune that has already dropped the hold-back twice never carries it again: re-engaging on a
+        // fresh URL re-runs the same fill-and-flap cycle, each costing a freeze and a destabilised
+        // drain. Two failures bound the session; the tune then plays stock audio, and the stream is
+        // judged on that — which is the verdict the ladder's terminal branches expect.
+        if (clamped > 0 && tune.delayRecoveries >= DELAY_RECOVERIES_LIMIT) {
+            LiveDiagnosticsLog.event("audio hold-back stays off this tune — the stream failed with it ${tune.delayRecoveries} times")
+            return
+        }
+        val raised = clamped > captionHoldBackMs
+        captionHoldBackMs = clamped
+        if (clamped > 0) {
+            // The processor reads this live, so a channel that is ALREADY PLAYING starts delaying now:
+            // its queue fills over the requested depth, the audio clock stands still while it does,
+            // and from then on the picture is that far behind live (see [holdBackWarmUntilMs]).
+            if (raised && currentUrl != null) {
+                val now = android.os.SystemClock.elapsedRealtime()
+                holdBackWarmUntilMs = maxOf(holdBackWarmUntilMs, now + holdBackPrimingMs)
+                LiveDiagnosticsLog.event("audio hold-back -> ${clamped}ms (engaged now; picture waits for the fill)")
+            } else {
+                LiveDiagnosticsLog.event("audio hold-back -> ${clamped}ms")
+            }
+            return
+        }
+        // Off: the queue drains into the track at real time (nothing is discarded mid-sentence), so
+        // the sound keeps trailing live until the next tune. No reopen — on a set with one HEVC
+        // decoder every reopen is a chance to lose the picture.
+        LiveAudioDelay.resetLead()
+        LiveAudioDelay.filling = false
+        LiveDiagnosticsLog.event("audio hold-back -> 0 — the backlog plays out, stock depth returns on the next tune")
+    }
+
     private fun effectivePrerollSecs(): Int {
+        // The AI-subtitle hold-back deliberately does NOT raise this. Pre-roll is "wait N seconds
+        // buffered before the first frame", so tying it to the caption delay turned every tune with
+        // subtitles on into a 5–10 s black screen and, on a stream that cannot buffer that far, a tune
+        // that never opened ("no picture within 30 s of tuning") — exactly the failure seen on enable.
+        // The delay needs no pre-roll: the load-control CAPACITY (see [effectiveLoadControlSecs]) lets
+        // the buffer grow while the hold-back queue fills, and the watchdogs' priming window
+        // ([holdBackPrimingMs]) keeps that fill from being mistaken for a dead stream.
         val chosen = prerollOverrideSecs ?: livePrerollSecs
         if (chosen <= 0) return chosen
         return if (currentUrl?.let { LiveStreamQuirks.defeatsPreroll(it) } == true) LiveBuffer.PREROLL_OFF else chosen
@@ -687,20 +835,84 @@ class LivePreviewEngine(
     private val progressWatchdog = object : Runnable {
         override fun run() {
             val p = player
+            val now = android.os.SystemClock.elapsedRealtime()
+            // A fill that never completes. The hold-back can only queue what the loader supplies, and
+            // the loader is bounded (max buffer duration, target buffer BYTES). On a bitrate whose cap
+            // lands below the requested depth the queue would wait for audio that can never arrive — a
+            // frozen picture forever. Play at whatever depth the stream could actually give instead:
+            // drop the hold-back for this channel (remembered for the next tune like any other
+            // hold-back stall) and let the queued audio flow. Caption sync reads
+            // [LiveAudioDelay.measuredMs], so it simply follows the smaller real delay.
+            //
+            // Deliberately OUTSIDE the READY gate below: a starved renderer parks the player in
+            // BUFFERING, where none of those checks run, and that is exactly the state this must act in.
+            // The window belongs to the FILL, not to the raise: a flush (seek, track transition)
+            // empties the queue and starts a fresh fill long after the original warm window expired,
+            // and judging that re-fill on the stale window stripped the hold-back on the first tick —
+            // every seek silently turned the caption delay off for the rest of the channel.
+            //
+            // AND the deadline alone is not the verdict: the queue grows only as the source supplies
+            // it, in segment bursts with plateaus up to a segment duration, so a healthy fill spends
+            // seconds LOOKING stuck. A fill past its window is a failure only if it has ALSO not
+            // grown for [FILL_STALL_MS] — a growing fill is doing its job, however slowly, and the
+            // deadline merely bounds the pathological case (a feed that supplies at a fraction of
+            // real time freezes the picture for the whole fill, and that must terminate).
+            val queuedNow = LiveAudioDelay.queuedMs
+            if (!LiveAudioDelay.filling) {
+                fillWatchQueuedMs = -1
+                fillWatchStallSinceMs = 0L
+            } else if (queuedNow != fillWatchQueuedMs) {
+                fillWatchQueuedMs = queuedNow
+                fillWatchStallSinceMs = 0L
+            } else if (fillWatchStallSinceMs == 0L) {
+                fillWatchStallSinceMs = now
+            }
+            val fillStalledMs = if (fillWatchStallSinceMs == 0L) 0L else now - fillWatchStallSinceMs
+            if (p != null && tune.hasPlayed && LiveAudioDelay.filling &&
+                LiveAudioDelay.fillStartedAtMs > 0 && now - LiveAudioDelay.fillStartedAtMs >= holdBackPrimingMs &&
+                fillStalledMs >= FILL_STALL_MS
+            ) {
+                val url = currentUrl
+                if (url != null) {
+                    val waitedMs = holdBackPrimingMs
+                    holdBackStallUrl = url
+                    captionHoldBackMs = 0
+                    fillWatchQueuedMs = -1
+                    fillWatchStallSinceMs = 0L
+                    LiveAudioDelay.resetLead()
+                    LiveAudioDelay.filling = false
+                    // Same residue rule as the flap drop above: whatever partial depth was built is
+                    // released behind the live edge; the seek hands back a state the player sustains.
+                    player?.seekToDefaultPosition()
+                    LiveDiagnosticsLog.event(
+                        "hold-back could not fill within ${waitedMs}ms — playing stock audio from the live edge, captions undelayed",
+                    )
+                }
+            }
             // Gate on INTENT to play (playWhenReady && STATE_READY), NOT isPlaying. isPlaying drops to false
             // during transient playback suppression and brief internal stalls WITHOUT entering STATE_BUFFERING
             // or STATE_ERROR — and the old gate then reset the freeze counter every poll, so a real frozen-
             // but-"ready" channel was never caught (no spinner / reconnect / error). playWhenReady stays true
             // through those flickers, which is exactly the "should be advancing but isn't" condition we want.
             if (p != null && tune.hasPlayed && p.playWhenReady && p.playbackState == Player.STATE_READY) {
-                val now = android.os.SystemClock.elapsedRealtime()
+                // The hold-back primed nothing yet: no audio out, so no clock, so no frames. Every
+                // freeze verdict below has to sit that window out (see [holdBackPrimingMs]) — and the
+                // same is true of a hold-back that was switched ON mid-play (see [holdBackWarmUntilMs])
+                // and of every re-fill after a flush: while a fill is running the position stands
+                // still BY DESIGN, so the fill flag itself is the authoritative priming signal. A fill
+                // that never completes is the check above's verdict to reach (it drops the hold-back),
+                // not the freeze verdicts' — a reconnect here would cost the decoder for nothing.
+                val priming = now - tune.readySinceMs < holdBackPrimingMs || now < holdBackWarmUntilMs ||
+                    LiveAudioDelay.filling
                 val frames = frameCounter.get()
                 val hasVideo = p.videoFormat != null
                 if (frames > 0) tune.everRendered = true
                 val pos = p.currentPosition
                 val posAdvanced = pos > 0 && pos != tune.lastProgressPos
                 if (posAdvanced) { tune.lastProgressPos = pos; tune.lastProgressWallMs = now }
-                else if (tune.lastProgressWallMs == 0L) tune.lastProgressWallMs = now // seed on the first ready poll
+                // seed/re-seed on the first ready poll and through the priming window, so the freeze
+                // window is measured from the moment the clock COULD move, not from READY.
+                else if (tune.lastProgressWallMs == 0L || priming) tune.lastProgressWallMs = now
                 if (LiveDiagnosticsLog.enabled) {
                     val liveOffset = p.currentLiveOffset.takeUnless { it == C.TIME_UNSET }
                     val dropped = (currentDroppedFrames(p) - dropsBaseline).coerceAtLeast(0)
@@ -723,7 +935,9 @@ class LivePreviewEngine(
                 // Audio-plays-no-video: a video track exists but has never rendered a single frame, even
                 // though we're not in the total-freeze case above (position/audio clock IS advancing). Only
                 // fires once per load so the VM's one-shot mpv fallback isn't retriggered after it acts.
-                if (!_audioOnly.value && !tune.noVideoTriggered && hasVideo && !tune.everRendered && now - tune.readySinceMs >= NO_VIDEO_TIMEOUT_MS) {
+                if (!_audioOnly.value && !tune.noVideoTriggered && hasVideo && !tune.everRendered &&
+                    now - tune.readySinceMs >= NO_VIDEO_TIMEOUT_MS + holdBackPrimingMs && now >= holdBackWarmUntilMs
+                ) {
                     tune.noVideoTriggered = true
                     LiveDiagnosticsLog.event("progressWatchdog: no video frame after ${now - tune.readySinceMs}ms (pos=$pos advancing, video track present)")
                     _noVideoDetected.value = true
@@ -731,7 +945,7 @@ class LivePreviewEngine(
                 // Backstop: zero forward progress for the whole window while we intend to play == a dead feed.
                 // Wall-clock based, so it CAN'T be missed by isPlaying flicker or a non-functional frame hook.
                 val noProgressMs = now - tune.lastProgressWallMs
-                if (noProgressMs >= FREEZE_TIMEOUT_MS) {
+                if (!priming && noProgressMs >= FREEZE_TIMEOUT_MS) {
                     LiveDiagnosticsLog.event("progressWatchdog: no-progress detected for ${noProgressMs}ms (pos=$pos, state=READY, frameHook=${tune.everRendered})")
                     tune.frozenChecks = 0
                     reconnect("stream frozen — no progress ${noProgressMs}ms"); return
@@ -741,7 +955,7 @@ class LivePreviewEngine(
                 // In Audio Mode the surface is intentionally detached, so no frames render and the count
                 // sits still — that's expected, not a frozen picture. Skip the frame-based freeze check;
                 // the position/no-progress backstop above still catches a genuinely dead feed.
-                val framesStuck = !_audioOnly.value && tune.everRendered && hasVideo && frames == tune.lastFrameCount
+                val framesStuck = !priming && !_audioOnly.value && tune.everRendered && hasVideo && frames == tune.lastFrameCount
                 tune.lastFrameCount = frames
                 if (framesStuck) {
                     if (++tune.frozenChecks >= FROZEN_LIMIT) {
@@ -796,7 +1010,13 @@ class LivePreviewEngine(
             val waitedMs = android.os.SystemClock.elapsedRealtime() - openStartMs
             // (1) enough buffered to start, and it isn't starting.
             if (buffered >= startMs && buffered > 0L) {
-                if (++openStuckPolls >= OPEN_STUCK_POLLS) {
+                // A hold-back in force makes this state EXPECTED until it has primed: the processor
+                // must queue that much audio before any of it reaches the track, so the buffer is
+                // full and no frame has been drawn — for as long as the delay, not for as long as a
+                // broken stream takes. Counting starts only after that window.
+                if (waitedMs < holdBackPrimingMs) {
+                    openStuckPolls = 0
+                } else if (++openStuckPolls >= OPEN_STUCK_POLLS) {
                     logHlsPlaylist("open stalled")
                     val detail = "${buffered}ms buffered (needs ${startMs}ms) after ${waitedMs}ms, no frame, " +
                         rendererReadiness()
@@ -805,6 +1025,15 @@ class LivePreviewEngine(
                         LiveDiagnosticsLog.TAG,
                         "open stalled — $detail" + (hlsShape()?.let { ", $it" } ?: ""),
                     )
+                    // The picture outranks the captions, but not at the price of a reopen: reopening
+                    // is what loses the only HEVC decoder on this TV family (see [applyAudioDelay]).
+                    // Failing the load hands the channel to the retry ladder / mpv, and the verdict is
+                    // remembered per URL so that attempt is built with stock audio.
+                    if (effectiveHoldBackMs > 0) {
+                        holdBackStallUrl = url
+                        captionHoldBackMs = 0
+                        LiveDiagnosticsLog.event("open stalled while priming the hold-back — the next attempt uses stock audio")
+                    }
                     failLoad("buffered but never started playing ($detail)")
                     return
                 }
@@ -896,6 +1125,19 @@ class LivePreviewEngine(
         if (tune.prerollRetunePending) return
         val now = android.os.SystemClock.elapsedRealtime()
         val pos = player?.currentPosition ?: 0L
+        // The caption hold-back's FIRST fill freezes the position on purpose for up to the whole
+        // requested delay — the processor withholds that much audio before a single delayed sample is
+        // heard. This check's entire premise is "many re-buffers with no position progress", so it fires
+        // exactly when that fill completes: a 20 s request was reported as "12 re-buffers in 19749ms,
+        // position advanced 2508ms" — the 2508 ms being the audio that played before the fill started.
+        // Sit the fill out, as the freeze watchdogs above already do (see holdBackPrimingMs); a fill that
+        // never completes is their verdict to reach, not this one's.
+        if (LiveAudioDelay.filling) {
+            tune.flapWindowStartMs = now
+            tune.flapCount = 0
+            tune.flapWindowStartPos = pos
+            return
+        }
         if (now - tune.flapWindowStartMs > FLAP_WINDOW_MS) { tune.flapWindowStartMs = now; tune.flapCount = 0; tune.flapWindowStartPos = pos }
         if (++tune.flapCount < FLAP_LIMIT) return
         // A channel that re-buffers often but still moves forward is merely choppy — that's the reconnect
@@ -904,14 +1146,61 @@ class LivePreviewEngine(
         if (advancedMs >= FLAP_MIN_PROGRESS_MS) { tune.flapWindowStartMs = now; tune.flapCount = 0; tune.flapWindowStartPos = pos; return }
         val url = currentUrl
         val detail = "${tune.flapCount} re-buffers in ${now - tune.flapWindowStartMs}ms, position advanced ${advancedMs}ms"
+        // FACTS, not a diagnosis: what the hold-back and the load control were doing at this instant.
+        // The first verdict this fired with ("12 re-buffers in 397ms, position advanced 0ms") could not
+        // distinguish a starved audio queue from a stream that cannot play, and guessing between them
+        // was wrong. Log the state so the next occurrence answers it instead of inviting a guess.
+        val context = "holdBack=${effectiveHoldBackMs}ms queued=${LiveAudioDelay.queuedMs}ms " +
+            "lead=${LiveAudioDelay.measuredMs}ms filling=${LiveAudioDelay.filling} " +
+            "bufferedAhead=${(player?.bufferedPosition ?: 0L) - pos}ms " +
+            "liveOffset=${player?.currentLiveOffset?.takeUnless { it == C.TIME_UNSET } ?: -1}ms " +
+            "state=${player?.playbackState} " + rendererReadiness()
         tune.flapWindowStartMs = now; tune.flapCount = 0; tune.flapWindowStartPos = pos
+        // With audio withheld, the freezer below the decoder cannot be fed steadily: it underruns, the
+        // renderer goes not-ready, and the player flips READY ↔ BUFFERING several times a second while
+        // the position — which is paced by the audio clock — stands still. From out here that is
+        // indistinguishable from a stream that cannot play, and it was reported as exactly that
+        // ("12 re-buffers in 397ms, position advanced 0ms"). The verdict is still worth acting on, but
+        // the remedy is to stop withholding audio, not to abandon the channel: same remembered remedy
+        // as a hold-back that never fills (below), which also keeps the next attempt on stock audio.
+        // With audio withheld, the freezer below the decoder cannot be fed steadily: it underruns, the
+        // renderer goes not-ready, and the player flips READY ↔ BUFFERING several times a second while
+        // the position — which is paced by the audio clock — stands still. The remedy is to stop
+        // withholding audio — AND to jump back to the live edge: the released backlog otherwise drains
+        // in real time, leaving playback `holdBack` seconds behind live, a state the live speed
+        // control then fights (accelerating into a feed that just proved marginal). The seek discards
+        // the residue in one move and restarts from a state the player is known to sustain.
+        if (effectiveHoldBackMs > 0) {
+            LiveDiagnosticsLog.event(
+                "re-buffer flap ($detail) with a hold-back — dropping it, back to the live edge ($context)",
+            )
+            if (url != null) holdBackStallUrl = url
+            captionHoldBackMs = 0
+            LiveAudioDelay.resetLead()
+            LiveAudioDelay.filling = false
+            player?.seekToDefaultPosition()
+            return
+        }
+        // The hold-back is already off, but this channel was tuned with a caption delay: being behind
+        // the live edge is that session's residue, not proof the stream is dead. One bounded recovery
+        // per failure — back to the live edge — before the terminal verdict is allowed to stand, so a
+        // genuinely dead stream still terminates (the limit is reached quickly) and a delay-residue
+        // oscillation does not fail a channel the user was watching fine without captions.
+        if (captionDelayWantedMs > 0 && tune.delayRecoveries < DELAY_RECOVERIES_LIMIT) {
+            tune.delayRecoveries++
+            LiveDiagnosticsLog.event(
+                "re-buffer flap ($detail) with the caption delay already off — recovery ${tune.delayRecoveries}/$DELAY_RECOVERIES_LIMIT: back to the live edge ($context)",
+            )
+            player?.seekToDefaultPosition()
+            return
+        }
         if (url != null && effectivePrerollSecs() > 0) {
-            LiveDiagnosticsLog.event("re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one")
+            LiveDiagnosticsLog.event("re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one ($context)")
             android.util.Log.i(LiveDiagnosticsLog.TAG, "preroll defeated — reopening without pre-buffer ($detail)")
             dropPrerollAndReopen(url)
             return
         }
-        LiveDiagnosticsLog.event("re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream")
+        LiveDiagnosticsLog.event("re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream ($context)")
         failLoad("playback kept re-buffering ($detail)")
     }
 
@@ -1103,6 +1392,19 @@ class LivePreviewEngine(
                 retryWithFallbackUserAgent()
                 return
             }
+            // A sink that cannot start at all must not cost the channel: retry once with the stock
+            // sink. The hold-back is cleared so this recovery cannot repeat (it is the only thing that
+            // clears it while playing) — with the audio track now at the device's ordinary size, the
+            // hold-back is no longer what a failure like this could be blamed on.
+            if (error.errorCode == PlaybackException.ERROR_CODE_AUDIO_TRACK_INIT_FAILED && effectiveHoldBackMs > 0) {
+                LiveDiagnosticsLog.event("audio track init failed — reopening once with the stock sink")
+                captionHoldBackMs = 0
+                // Audio-only failure: the Surface and the video decoder are healthy, so leave both
+                // alone. Recreating the Surface here is what turned this recovery into the MStar
+                // `setPortMode … -1010` error.
+                rebuildDecoderAndRetry(error, recreateSurface = false)
+                return
+            }
             // Every hardware decoder on the device is taken (Multiview's real ceiling). A rebuild
             // cannot conjure one, and mpv would fail the same way, so this one says what it is and
             // stops. Checked before the rebuild retry, which is for a decoder that *died*.
@@ -1193,6 +1495,24 @@ class LivePreviewEngine(
         _surfaceGeneration.value++
     }
 
+    /** Run [block] once a Surface is attached again, or after [deadlineMs] regardless. A player built
+     *  while the SurfaceView is mid-recreation configures its codec against a window that is about to
+     *  disappear — on MStar that is `setPortMode on output to DynamicANWBuffer … -1010`, followed by a
+     *  black picture that never starts. */
+    private fun runWithSurface(deadlineMs: Long, block: () -> Unit) {
+        val started = android.os.SystemClock.uptimeMillis()
+        val step = object : Runnable {
+            override fun run() {
+                if (surface == null && android.os.SystemClock.uptimeMillis() - started < deadlineMs) {
+                    mainHandler.postDelayed(this, 100)
+                } else {
+                    block()
+                }
+            }
+        }
+        mainHandler.post(step)
+    }
+
     /** Fully release the ExoPlayer instance (and its MediaCodec) — used when leaving a UHD channel so the
      *  4K hardware decoder is handed back cleanly instead of parked/reused, and recreate the surface with
      *  it (see [recreateSurface]). The next [play] lazily rebuilds via `player ?: build()`; it may run
@@ -1235,6 +1555,11 @@ class LivePreviewEngine(
         // THE reset. Everything a new channel must not inherit from the previous one lives in
         // [TuneState], so forgetting it is one assignment that cannot be partially done.
         tune = TuneState(playStartedMs = android.os.SystemClock.elapsedRealtime())
+        // This load re-tests the channel's audio; the previous load's passthrough verdict was for
+        // that stream.
+        PlaybackAudioTap.clearPassThroughNotice()
+        // A different channel gets its own verdict about the hold-back; a reopen of the SAME one keeps it.
+        if (holdBackStallUrl != null && holdBackStallUrl != url) holdBackStallUrl = null
         // Read BEFORE the player is (re)built below — the load control is fixed at construction.
         prerollOverrideSecs = prerollSecsOverride
         this.liveBufferOverride = liveBufferOverride
@@ -1277,6 +1602,11 @@ class LivePreviewEngine(
         frameCounter.set(0)
         throughputTracker.reset(); fpsSample.resetAll(); dropsBaseline = currentDroppedFrames(player)
         audioWatchdog.reset()
+        // A new channel's hold-back starts from nothing. Leaving the previous channel's state here
+        // would outlive the fill it described and keep the audio watchdog suppressed (see
+        // [LiveAudioDelay.filling]) on a stream that has to be judged on its own.
+        LiveAudioDelay.resetLead()
+        LiveAudioDelay.filling = false
         _currentMeta.value = meta
         _zoomMode.value = defaultZoom // start new content at the user's default zoom, same as mpv/VOD
         // A different channel starts at normal volume. Re-opening the SAME one does not: a retry, a
@@ -1297,7 +1627,7 @@ class LivePreviewEngine(
             // across tunes — so a setting changed while nothing was playing, or a per-playlist override that
             // differs from the last channel's, would otherwise never take effect (the "Pre-buffer
             // does nothing" report). Drop the player whenever the numbers it was built with no longer match.
-            val wanted = LiveBuffer.loadControlFor(effectiveLiveBufferSecs(), effectivePrerollSecs())
+            val wanted = LiveBuffer.loadControlFor(effectiveLoadControlSecs(), effectivePrerollSecs())
             if (player != null && builtLoadControl != wanted) {
                 LiveDiagnosticsLog.event("load_control stale (was=$builtLoadControl want=$wanted) — rebuilding player")
                 player?.run { removeListener(listener); release() }
@@ -1340,8 +1670,30 @@ class LivePreviewEngine(
      * A rebuild, not a reload: an ExoPlayer's audio sink capabilities are fixed when the renderers are
      * constructed, so re-preparing the same player would keep the sink that just failed. Live has no
      * position to preserve, so this is just "open the same channel again".
+     *
+     * This is the operation that fails on the traced TV family: the replacement asks for a SECOND
+     * `OMX.MS.HEVC.Decoder` while the released one still occupies the component, and MediaCodec
+     * answers `ACodec: onAllocateComponent, mFatalError is [0]`. That is why the AI-subtitle hold-back
+     * never reopens a playing channel (see [applyAudioDelay]) — the delay is queued in memory by the
+     * next build instead, and nothing about enabling captions costs this reopen. What still calls it:
+     * a surround-to-stereo fallback and a defeated pre-roll, both genuine audio/output failures.
+     * Rebuilds are coalesced, leave the Surface alone, and wait out the decoder teardown
+     * (see [performRebuildForSettingChange]).
      */
+    private var rebuildScheduled = false
+    /** A released player is waiting out [DECODER_REBUILD_DELAY_MS] before its replacement is built. */
+    private var rebuildWaitingToBuild = false
+    private val rebuildRunnable = Runnable { performRebuildForSettingChange() }
+
     private fun rebuildForSettingChange() {
+        if (currentUrl == null || rebuildScheduled || rebuildWaitingToBuild) return
+        rebuildScheduled = true
+        mainHandler.removeCallbacks(rebuildRunnable)
+        mainHandler.postDelayed(rebuildRunnable, REBUILD_COALESCE_MS)
+    }
+
+    private fun performRebuildForSettingChange() {
+        rebuildScheduled = false
         val url = currentUrl ?: return
         val meta = _currentMeta.value
         val ua = currentUa
@@ -1357,11 +1709,25 @@ class LivePreviewEngine(
         player?.run { removeListener(listener); release() }
         player = null
         videoRenderer = null
-        play(
-            url, wasMuted, meta, ua, preroll, tunedLiveBufferOverride, headers, tunedDrmConfig,
-            tunedManifestType, tunedDirectSource,
-        )
-    }
+        // NOTE: the Surface is deliberately left alone here. Bumping its generation destroys and
+        // recreates the SurfaceView, and on MStar (`OMX.MS.HEVC.Decoder`) a codec configured while
+        // that window is being replaced fails with `setPortMode on output to DynamicANWBuffer failed
+        // w/ err -1010` — a rebuild that was meant to save the channel then loses it. The fresh
+        // player + fresh codec are enough; only [rebuildDecoderAndRetry] (a decoder that actually
+        // died) touches the Surface.
+        // Let the old OMX component actually finish tearing down before the replacement asks for one.
+        rebuildWaitingToBuild = true
+        mainHandler.postDelayed({
+            rebuildWaitingToBuild = false
+            // A fresh tune (player built) or a stop (url cleared) happened while waiting: the newer
+            // path owns the channel now, so this reopen must not fight it.
+            if (player == null && currentUrl == url) {
+                play(
+                    url, wasMuted, meta, ua, preroll, tunedLiveBufferOverride,
+                    headers, tunedDrmConfig, tunedManifestType, tunedDirectSource,
+                )
+            }
+        }, DECODER_REBUILD_DELAY_MS)    }
 
     /**
      * Cap the video this engine will select, or null for no cap.
@@ -1627,7 +1993,8 @@ class LivePreviewEngine(
 
     private fun isDecoderFailure(error: PlaybackException): Boolean =
         error.errorCode == PlaybackException.ERROR_CODE_DECODING_FAILED ||
-            error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
+            error.errorCode == PlaybackException.ERROR_CODE_DECODER_INIT_FAILED ||
+            error.errorCode == PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED
 
     /**
      * A live HLS segment came back 403/404/410.
@@ -2061,7 +2428,7 @@ class LivePreviewEngine(
      * VM hands the channel to mpv as before — this only costs a genuinely undecodable channel one extra
      * attempt before the fallback.
      */
-    private fun rebuildDecoderAndRetry(error: PlaybackException) {
+    private fun rebuildDecoderAndRetry(error: PlaybackException, recreateSurface: Boolean = true) {
         val url = currentUrl ?: return
         tune.decoderRetryDone = true
         LiveDiagnosticsLog.event("decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once")
@@ -2073,13 +2440,27 @@ class LivePreviewEngine(
         player = null
         videoRenderer = null
         sawUhd = false
-        // A fresh codec alone does NOT rescue this — the dead native window has to go too, or the retry
-        // reproduces the identical failure. See [recreateSurface].
-        recreateSurface()
+        // A fresh codec alone does NOT rescue a decoder that died against a dead native window —
+        // but a failure that came from the audio side must not pay that cost: replacing the Surface
+        // there races the new video codec into `setPortMode … -1010`. Callers say which case it is.
+        if (recreateSurface) recreateSurface()
         // Let the OMX component actually tear down before the replacement asks for it — the same
         // reason the mpv→ExoPlayer swap in LiveViewModel waits before re-tuning.
+        // An ALLOCATION failure (the codec could not even be created) needs a longer teardown than a
+        // decoder that died mid-stream: the replacement cannot claim the OMX component while the
+        // released instance is still occupied — the traced `ACodec: onAllocateComponent` on this
+        // class of TV. Waiting the ordinary beat there reproduced the identical failure, so this case
+        // gets double before the replacement asks again.
+        val waitMs = when (error.errorCode) {
+            PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
+            PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED -> DECODER_ALLOCATION_HANDOFF_MS
+            else -> DECODER_REBUILD_DELAY_MS
+        }
         mainHandler.postDelayed({
             if (currentUrl != url) return@postDelayed // zapped away / stopped while we waited
+            // The replacement must not be configured against a Surface that the bump above is still
+            // replacing — that is the `setPortMode … -1010` / "buffered but never started" pair.
+            runWithSurface(SURFACE_READY_WAIT_MS) {
             runCatching {
                 val p = build().also { player = it }
                 surface?.let { p.setVideoSurface(it) }
@@ -2098,7 +2479,8 @@ class LivePreviewEngine(
                 _error.value = PlaybackFailure.Channel
                 _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(it.message ?: ""), exoSpec(), it.message ?: "")
             }
-        }, DECODER_REBUILD_DELAY_MS)
+            }
+        }, waitMs)
     }
 
     // --- Audio Mode (Audio Mode plan §5): keep audio playing, release the video surface ---
@@ -2685,7 +3067,7 @@ class LivePreviewEngine(
         // Media3 honours that for HLS/DASH only. The preset now drives the depth (keeping the 2 s idle
         // window at every setting), and the new "Pre-buffer" drives the start thresholds.
         // Balanced + Off reproduces the previous constants exactly.
-        val lc = LiveBuffer.loadControlFor(effectiveLiveBufferSecs(), effectivePrerollSecs()).also { builtLoadControl = it }
+        val lc = LiveBuffer.loadControlFor(effectiveLoadControlSecs(), effectivePrerollSecs()).also { builtLoadControl = it }
         val defaultBytes = if (budget.lowSpec) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES
         LiveDiagnosticsLog.event(
             "load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs} " +
@@ -2706,7 +3088,7 @@ class LivePreviewEngine(
                 lc.bufferForPlaybackMs,
                 lc.bufferForPlaybackAfterRebufferMs,
             )
-            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(effectiveLiveBufferSecs(), effectivePrerollSecs(), defaultBytes))
+            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(effectiveLoadControlSecs(), effectivePrerollSecs(), defaultBytes))
             .build()
         // Decode-path config is shared with the other ExoPlayer engines — see [ownTVRenderers].
         // The audio sink is pinned to stereo PCM when the user asked for "Stereo only" or when the
@@ -2717,6 +3099,9 @@ class LivePreviewEngine(
             context,
             forceStereo = !AudioOutputPolicy.allowsMultichannel(surroundMode),
             softwareFirst = !hwDecodingEnabled,
+            // A muted preview never asks for the hold-back: its picture must start as fast as it
+            // always did, and it is not the engine the captions are being timed against.
+            audioDelayMs = { effectiveHoldBackMs },
         )
         return ExoPlayer.Builder(context)
             .setRenderersFactory(renderers)
@@ -2757,6 +3142,13 @@ class LivePreviewEngine(
     companion object {
         private const val MAX_VOLUME = VolumeBoost.MAX_VOLUME // same ceiling as mpv; 100–150 comes from LoudnessEnhancer
         private const val MAX_RECONNECTS = 8        // ~consecutive failures before giving up (HUD Retry then)
+
+        /**
+         * Extra seconds of media the loader must hold beyond [LiveAudioDelay.delayMs]. The decoder's
+         * sample queue sits between the loader and the sink, so without this margin the sink could
+         * never be filled and the hold-back would silently collapse.
+         */
+        private const val AUDIO_DELAY_BUFFER_MARGIN_SECS = 2
         /** Playback must hold this long before the reconnect ladder is considered recovered. */
         internal const val HEALTHY_MS = 60_000L
 
@@ -2931,6 +3323,29 @@ class LivePreviewEngine(
          *  long a *provider* takes to free a session, which is why it is four times the longest of them. */
         internal const val SESSION_RELEASE_MS = 2_000L
 
+        /**
+         * Slack on top of the hold-back before a watchdog may call an unstarted channel dead: the
+         * stock path's own start-up work (playlist fetch, codec init, first buffer) still has to
+         * happen after the processor has queued the delay.
+         */
+        private const val HOLD_BACK_PRIMING_MARGIN_MS = 3_000L
+
+        /**
+         * How many times a tune may drop the hold-back (flap verdict, fill stall) and still be handed
+         * a live-edge recovery before the ordinary ladder verdicts apply. Two keeps a delay-residue
+         * oscillation from failing a healthy channel while a genuinely dead stream still terminates
+         * seconds later — and the same count stops the delay from being re-engaged mid-tune.
+         */
+        private const val DELAY_RECOVERIES_LIMIT = 2
+
+        /**
+         * How long the filling queue may show NO growth before "could not fill" becomes true, ms.
+         * Above the longest segment plateau a live HLS feed produces (4-6 s), so a burst-paced but
+         * healthy fill is never mistaken for a dead one; well below the fill deadline, so a source
+         * that has truly stopped supplying is still dropped promptly after its window elapses.
+         */
+        private const val FILL_STALL_MS = 10_000L
+
         // --- LoadControl (see [build]) ----------------------------------------------------------
         /** Resume reading the socket once the buffer drains to this. */
         private const val MIN_BUFFER_MS = 8_000
@@ -2949,6 +3364,19 @@ class LivePreviewEngine(
          *  same physical event (one decoder releasing before another claims it), just within a single
          *  engine rather than across two. If the measured value there ever moves, this should follow. */
         private const val DECODER_REBUILD_DELAY_MS = 500L
+
+        /** Handoff for a codec that could not be ALLOCATED (see [rebuildDecoderAndRetry]). Double the
+         *  ordinary beat: the traced `ACodec: onAllocateComponent` was reproduced with the ordinary one,
+         *  and the doubled beat was still not enough on the MStar set that kept answering
+         *  `mFatalError is [0]` after a zap — the released OMX component needs a longer beat there. */
+        private const val DECODER_ALLOCATION_HANDOFF_MS = 2_500L
+
+        /** How long a rebuilt player waits for the recreated SurfaceView to hand back its Surface
+         *  before being built without one (see [runWithSurface]). */
+        private const val SURFACE_READY_WAIT_MS = 2_000L
+
+        /** Requests arriving inside this window collapse into one reopen (see [rebuildForSettingChange]). */
+        private const val REBUILD_COALESCE_MS = 300L
 
         private const val STALL_MS = 12_000L        // buffering this long after playing == a dropped feed
         private const val PROGRESS_CHECK_MS = 2_500L // poll interval for the silent-freeze watchdog
@@ -3064,6 +3492,8 @@ internal data class TuneState(
     var flapWindowStartMs: Long = 0L,
     var flapCount: Int = 0,
     var flapWindowStartPos: Long = 0L,
+    /** Live-edge recoveries handed out this tune (see [DELAY_RECOVERIES_LIMIT]). */
+    var delayRecoveries: Int = 0,
     /** A no-pre-roll reopen is queued; ignore further flapping until it lands. */
     var prerollRetunePending: Boolean = false,
     /** The top-level request ended at an HLS manifest even though the submitted URL looked like raw TS. */

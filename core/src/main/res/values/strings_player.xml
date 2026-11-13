@@ -91,6 +91,18 @@
     <string name="player_subtitles">Subtitles</string>
     <!-- Translators: Option row label in the subtitle dialog, and dialog title for the subtitle timing adjustment dialog. -->
     <string name="player_subtitle_timing">Subtitle timing</string>
+    <!-- Translators: Dialog title and option row for the AI speech-recognition subtitles panel in the player HUD. -->
+    <string name="player_ai_subtitles">AI subtitles</string>
+    <!-- Translators: Section label in the in-player AI-subtitle panel for the on-screen arrow controls that nudge the subtitle position. -->
+    <string name="player_ai_subtitles_adjust_position">Adjust position</string>
+    <!-- Manual caption sync trim: the one offset the platform cannot measure (HDMI/ARC, soundbar,
+         TV audio DSP). Negative = subtitles earlier. -->
+    <string name="ai_subtitles_sync_offset">Sync</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
+    <!-- Translators: Overlay status line while the on-demand speech-recognition model is still being downloaded. "model" is the engine/language name (e.g. "whisper"). -->
+    <string name="player_ai_subtitles_downloading">AI subtitles: downloading <xliff:g id="model">%1$s</xliff:g> model\u2026</string>
+    <!-- Translators: On-screen AI-subtitle diagnostic chip shown in the top-right corner while subtitles are on, so a caption that is not updating can be diagnosed without adb. The three numbers are: audio chunks fed into the recognizer ("chunk"), empty/failed recognizer results ("blank"), and results that contained recognised words ("words"). If "chunk" keeps rising but "words" does not, the recognizer is not producing fresh text. -->
+    <string name="player_ai_subtitles_diag">chunk\u00b7<xliff:g id="chunk">%1$d</xliff:g>  blank\u00b7<xliff:g id="blank">%2$d</xliff:g>  words\u00b7<xliff:g id="words">%3$d</xliff:g></string>
     <!-- Translators: Section header in the subtitle dialog for the area with search and local-file options. All caps is intentional for this section label. -->
     <string name="player_add_subtitles">ADD SUBTITLES</string>
     <!-- Translators: Section header in the subtitle dialog for the timing adjustment option. All caps is intentional. -->

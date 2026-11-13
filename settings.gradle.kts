@@ -11,9 +11,11 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
+// Toolchain auto-provisioning plugin disabled in the sandbox (no network to the plugin portal).
+// The project declares no explicit Java toolchain, so JAVA_HOME (JDK 21) is used directly.
+// plugins {
+//     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+// }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {

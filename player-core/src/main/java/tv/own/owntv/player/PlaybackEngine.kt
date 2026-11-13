@@ -132,6 +132,16 @@ interface PlaybackEngine {
     fun previous() {}
     fun next() {}
     fun seekBy(deltaMs: Long) {}
+
+    /**
+     * Hold the audio back by [delayMs] so a caption pipeline can decode and translate *ahead* of
+     * the speaker (0 = off). A live caption can only be in sync if its audio has not been heard yet
+     * when the line is ready; the sink's buffer provides that room (see `LiveAudioDelay`).
+     *
+     * Engines that cannot timeshift decoded audio — mpv renders natively and exposes no PCM tap —
+     * leave this a no-op, and AI subtitles on them keep their previous behaviour.
+     */
+    fun applyAudioDelay(delayMs: Int) {}
     /** HUD "Cancel" on the next-episode countdown — suppress the automatic advance for the current item. */
     fun cancelAutoNext() {}
 

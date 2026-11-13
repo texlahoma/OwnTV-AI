@@ -23,6 +23,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/CoreBuildInfo.kt	ahXN00/OwnTV
 1	log	core/src/main/java/tv/own/owntv/core/CorePerf.kt	OwnTVPerf
 3	technical	core/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	..
+1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	Backup file too large (${n / 1024} KB)
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	Corrupt backup header
 2	technical	core/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	Not an OwnTV backup file
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupContainer.kt	OWNTVBK1
@@ -56,27 +57,34 @@
 1	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${parts[0]}:$mapped:${parts[2]}
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${profile.id}_${file.name}
 1	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${row.id}_${File(row.fileName).name}
-1	file-path	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${target.name}$BAK_SUFFIX
+2	file-path	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${target.name}$BAK_SUFFIX
 1	file-path	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${target.name}$TMP_SUFFIX
 2	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	,
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	.bak
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	.tmp
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	AI-translation config restore failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	BackupManager
+1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Couldn't finalize the backup file
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Engine-pin restore failed: ${it.message}
 1	protocol	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	LOCAL
 1	protocol	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	MOVIE
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	OpenSubtitles login restore failed: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Playback-preferences restore failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Profile picture restore failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore done items=$count skippedSources=$skippedSources invalidLocale=$invalidLocale
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore start file=${file.name} sections=${sections.joinToString(",") { it.name }}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore: skipping source '${o.optString("name")}' — unknown type '${o.optString("type")}'
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Subtitles restore failed: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	TMDB overrides restore failed: ${it.message}
+1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Unknown error reading the backup file
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Wallpaper restore failed: ${it.message}
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	a
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	activeProfileId
+3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	aiTranslation
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarColor
-2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarFile
+3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarFile
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	avatarId
 1	file-path	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	background_${System.currentTimeMillis()}.$ext
-1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	backup_finalize_failed
-1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	backup_invalid
 5	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	c
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	cache
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	compatMode
@@ -87,6 +95,7 @@
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	customizations
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	customizePins
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	defaultSourceId
+3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	e
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	encrypted=${crypto != null} key=${key != null} profiles=${fileProfiles.length()} sources=${fileSources.length()}
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgAutoRefresh
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	epgSources
@@ -106,7 +115,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	isKids
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	json
 6	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	k
-4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	kind
+5	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	kind
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	language
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	languageName
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	lastSyncAt
@@ -142,7 +151,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	png
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	preferHls
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	profileId
-6	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	profiles
+7	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	profiles
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	prog
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	proxy_pass_enc
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	releaseName
@@ -152,11 +161,12 @@
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	selections
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	session
 7	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	settings
+2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sl
 3	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sort
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	source
 2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sourceId
 7	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	sources
-6	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	src
+2	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	src
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerDeviceId
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerDeviceId2
 4	json	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	stalkerSerialNumber
@@ -502,6 +512,8 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `metadata_cache` ADD COLUMN `trailerKey` TEXT
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `movies` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0
 1	sql	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `movies` ADD COLUMN `httpHeaders` TEXT
+1	sql	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `playback_prefs` ADD COLUMN `aiSubtitleEnabled` INTEGER
+1	sql	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `playback_prefs` ADD COLUMN `aiSubtitleSourceLanguage` TEXT
 1	sql	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `profiles` ADD COLUMN `avatarPath` TEXT
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `series` ADD COLUMN `addedAt` INTEGER
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	ALTER TABLE `series` ADD COLUMN `contentHash` INTEGER NOT NULL DEFAULT 0
@@ -766,6 +778,8 @@
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`year` INTEGER,
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	`zoomMode` TEXT,
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	addedAt
+1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	aiSubtitleEnabled
+1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	aiSubtitleSourceLanguage
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	catchup
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	catchupDays
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	catchupSource
@@ -793,6 +807,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	normId
 1	log	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	normName
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	owntv.db
+3	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	playback_prefs
 5	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	series
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	series_fts
 16	sql	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	sources
@@ -1143,6 +1158,7 @@
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND id IN
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures)
 2	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM movies
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	AND aiSubtitleEnabled IS NULL AND aiSubtitleSourceLanguage IS NULL
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT * FROM playback_prefs
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT * FROM playback_prefs WHERE profileId = :profileId AND contentKey = :contentKey LIMIT 1
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT COUNT(*) FROM playback_prefs WHERE volumeBoost IS NOT NULL
@@ -2755,6 +2771,9 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/601.1 (KHTML, like Gecko) MAG420 stbapp ver: 4 rev: 2721 Safari/601.1
 10	empty	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	\0
 1	file-path	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	/
+1	log	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	Backup inspection failed for ${file.name}
+1	log	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	Backup restore failed for ${file.name}
+1	log	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	SourceImporter
 1	technical	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	add_remainder
 1	url	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	content://
 1	url	core/src/main/java/tv/own/owntv/core/setup/SourceImporter.kt	file://
@@ -3743,7 +3762,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.channelCount}ch
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.sampleRate / 1000}kHz
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	?
-7	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	AudioOutputPolicy
+8	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	AudioOutputPolicy
 1	compiler	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	DEPRECATION
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio decoder: $decoderName (init ${initializationDurationMs}ms, passthrough=$passthrough)
@@ -3756,6 +3775,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio.passthrough
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio.raw
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	decoded
+1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	delayed sink unavailable, using stock sink
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	forcing stereo for this session: $reason
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	lang=${format.language} reuse=${decoderReuseEvaluation?.result}
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	no sound from the audio output after ${AudioOutputPolicy.NO_AUDIO_GRACE_MS / 1000}s ($what)
@@ -3776,6 +3796,20 @@
 1	protocol	player-core/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.
 1	protocol	player-core/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.ffmpeg.
 1	protocol	player-core/src/main/java/tv/own/owntv/player/DecoderNames.kt	omx.google.
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	amlogic
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	g12a
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	g12b
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	realtek
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	rk2
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	rk3
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	s905
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	s912
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	s922x
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	sm1
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	t962
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	t968
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	t972
+1	technical	player-core/src/main/java/tv/own/owntv/player/ExoRenderers.kt	t982
 2	empty	player-core/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	\0
 1	technical	player-core/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	$path|$offsetMs
 1	log	player-core/src/main/java/tv/own/owntv/player/ExoSubtitleEngine.kt	${when (hardware) { true -> "hardware"; false -> "software"; null -> "kind unknown" }}
@@ -3927,6 +3961,9 @@
 1	mime	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	application/vnd.apple.mpegurl
 1	mime	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	application/x-mpegurl
 2	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back stays off for this channel — it blocked the open earlier
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back stays off this tune — the stream failed with it ${tune.delayRecoveries} times
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio track init failed — reopening once with the stock sink
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio: ${audioSinkError.message ?: audioSinkError.javaClass.simpleName}
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audioWatchdog: $reason — forcing stereo for this session
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	av01
@@ -3962,6 +3999,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hls-manifest
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hls_playlist ($reason) mediaSeq=${playlist.mediaSequence} segs=${playlist.segments.size}
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hls_shape $it
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	holdBack=${effectiveHoldBackMs}ms queued=${LiveAudioDelay.queuedMs}ms
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hosts=${hosts.groupingBy { it }.eachCount()} newest=$tail
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	html
 1	url	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	http://
@@ -3976,7 +4014,9 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	kind unknown
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	knownHlsHost=$knownHlsHost knownDashHost=$knownDashHost
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	latencySec=${liveBufferSecs ?: -1}
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	lead=${LiveAudioDelay.measuredMs}ms filling=${LiveAudioDelay.filling}
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	length=${response.body.contentLength()} signature=${mediaSignature(prefix)}
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	liveOffset=${player?.currentLiveOffset?.takeUnless { it == C.TIME_UNSET } ?: -1}ms
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	liveOffsetMs=${p.currentLiveOffset.takeUnless { it == C.TIME_UNSET } ?: -1}
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	live_buffer preroll=${effectivePrerollSecs()}s start=${lc.bufferForPlaybackMs}ms
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs}
@@ -3994,6 +4034,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	network restored
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	network restored — resuming the channel the ladder gave up on
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled while priming the hold-back — the next attempt uses stock audio
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled — $detail
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	open stalled: $detail — the stream is buffered but unplayable here
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	owntv-http-evict
@@ -4023,8 +4064,10 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused with HTTP 458 (account session still in use) uri=${HttpClient.redactUrl(uri)}
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refuses its own signed segment URLs — ExoPlayer cannot re-sign them; handing this
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider still refusing after ${tune.providerBackOffs} waits — letting the failure through
-1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream
-1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) with a hold-back — dropping it, back to the live edge ($context)
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) with no pre-buffer — giving up on ExoPlayer for this stream ($context)
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) with the caption delay already off — recovery ${tune.delayRecoveries}/$DELAY_RECOVERIES_LIMIT: back to the live edge ($context)
+1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	re-buffer flap ($detail) — this stream can't reach its pre-buffer, reopening without one ($context)
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	ready
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	reconnect attempt ${tune.retryCount}/$MAX_RECONNECTS reason=$reason
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	reconnect exhausted ($reason) at ${tune.retryCount}/$MAX_RECONNECTS — giving up
@@ -4464,6 +4507,13 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	xsub
 24	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ytdl
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	${sampleRate}Hz/${channelCount}ch/$codec!
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	${sampleRate}Hz/${channelCount}ch/$enc
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	enc
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	f32
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	s16
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	s24
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackAudioTap.kt	s32
 6	empty	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	\0
 2	file-path	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	$relativePath$EXPORT_NAME
 1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	${Build.MANUFACTURER} ${Build.MODEL}
@@ -4537,6 +4587,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	${e.tag}: ${e.text}
 1	regex	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	(?:\\bhttp(?: error)? |\\bresponse code[:= ]+|\\bstatus(?: code)?[:= ]+)(\\d{3})\\b
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	*:S
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	--pid=$ownPid
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	-T
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	-v
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	0x80001000
@@ -4564,6 +4615,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	MediaCodecRenderer:E
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	MediaCodecVideoRenderer:E
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	OMXClient:E
+1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	PlayerDiagnostics
 1	regex	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	\\b(?:err(?:or)?|status|code)\\s*[:=]?\\s*(?:-12|0xfffffff4)\\b
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	audio codec
 1	log	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	audioflinger

@@ -83,7 +83,6 @@
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveEnginePreference
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyCustomSecs
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	liveLatencyMode
-1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	playback_prefs
 1	core/src/main/java/tv/own/owntv/core/database/OwnTVDatabase.kt	preferHls
 1	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT COUNT(*) FROM channels WHERE sourceId IN (:sourceIds) AND catchup = 1
 1	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	(:type = 'LIVE' AND itemId IN (SELECT id FROM channels WHERE sourceId IN (:sourceIds))) OR
@@ -257,17 +256,26 @@
 1	core/src/main/java/tv/own/owntv/core/sync/work/TrendingRefreshWorker.kt	Playlist
 1	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})
 1	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	--- live diagnostics leading up to the crash ---
+1	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	DEPRECATION
 4	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	\0
-1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	Content-Type
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	HLS
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	MPEG-TS
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> ${clamped}ms
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> ${clamped}ms (engaged now; picture waits for the fill)
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	audio hold-back -> 0 — the backlog plays out, stock depth returns on the next tune1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	body="$failureText"
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	bufferedAhead=${(player?.bufferedPosition ?: 0L) - pos}ms
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder failed before first frame (${error.errorCodeName}) — rebuilding the decoder and retrying once
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hold-back could not fill within ${waitedMs}ms — playing stock audio from the live edge, captions undelayed
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	html
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	insufficient resource
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	insufficientresources
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	no more instances
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	reclaim
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	state=${player?.playbackState}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	stream didn't open — trying the ${alt.substringBefore('?').substringAfterLast('.')} form of this channel
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	trying alternate format: ${HttpClient.redactUrl(alt)}
 4	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.m3u8
@@ -290,3 +298,4 @@
 1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	\0
 1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	429
 1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	458
+1	player-core/src/main/java/tv/own/owntv/player/PlayerDiagnostics.kt	logcat --pid unsupported; reading unscoped codec tags

@@ -44,17 +44,36 @@ class PlayerDiagnostics {
     /** Mark the start of a new stream load, so [recentError] only reports failures from the CURRENT item. */
     fun markLoad() { loadStartMs = SystemClock.elapsedRealtime() }
 
+    /** This process only: without it a codec error from another app (or the TV's own player) is
+     *  attributed to our channel — the ambiguity that made a past diagnosis point at the wrong decoder. */
+    private val ownPid = android.os.Process.myPid().toString()
+
+    /** Some vendor logcat builds reject `--pid`; the next pass retries unscoped (see [readLoop]). */
+    @Volatile private var pidFiltered = true
+
     private fun readLoop() {
         runCatching {
             // `-T 1`: start near "now" (don't replay the whole backlog). Tag-filtered to codec/audio errors.
-            val cmd = listOf(
-                "logcat", "-v", "tag", "-T", "1",
-                "MediaCodec:E", "ACodec:E", "OMXClient:E", "CCodec:E", "Codec2Client:E", "C2PlatformStore:E",
-                "MediaCodecRenderer:E", "MediaCodecVideoRenderer:E", "MediaCodecAudioRenderer:E",
-                "AudioTrack:W", "AudioSink:E", "AudioFlinger:E", "*:S",
-            )
+            val cmd = buildList {
+                addAll(listOf("logcat", "-v", "tag", "-T", "1"))
+                if (pidFiltered) add("--pid=$ownPid")
+                addAll(
+                    listOf(
+                        "MediaCodec:E", "ACodec:E", "OMXClient:E", "CCodec:E", "Codec2Client:E", "C2PlatformStore:E",
+                        "MediaCodecRenderer:E", "MediaCodecVideoRenderer:E", "MediaCodecAudioRenderer:E",
+                        "AudioTrack:W", "AudioSink:E", "AudioFlinger:E", "*:S",
+                    ),
+                )
+            }
+            val ranAt = SystemClock.elapsedRealtime()
             val proc = ProcessBuilder(cmd).redirectErrorStream(true).start()
             BufferedReader(InputStreamReader(proc.inputStream)).useLines { lines -> lines.forEach(::record) }
+            // A tail that exits in well under a second never followed the log: this build cannot
+            // scope by pid, so fall back rather than lose diagnostics entirely.
+            if (pidFiltered && SystemClock.elapsedRealtime() - ranAt < 1_000) {
+                pidFiltered = false
+                android.util.Log.w("PlayerDiagnostics", "logcat --pid unsupported; reading unscoped codec tags")
+            }
         }
     }
 

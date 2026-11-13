@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.CorePerf
 import tv.own.owntv.core.database.BulkInsertHelper
+import tv.own.owntv.core.database.withWriteTransaction
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.database.dao.ChannelDao
 import tv.own.owntv.core.database.dao.EpgDao
@@ -357,8 +358,7 @@ class EpgRepository(
         suspend fun storeProgrammes(batch: List<EpgProgrammeEntity>) {
             if (batch.isEmpty()) return
             val startedAt = SystemClock.elapsedRealtime()
-            db.transaction {
-                epgDao.upsertProgrammes(batch)
+            db.withWriteTransaction {                epgDao.upsertProgrammes(batch)
             }
             val batchMs = SystemClock.elapsedRealtime() - startedAt
             writeMs += batchMs
@@ -584,8 +584,7 @@ class EpgRepository(
             // instead of sitting on "Connecting…" until it finishes.
             onProgress = { seenChannels, programmes -> onProgress(seenChannels, programmes) },
         ) { batch ->
-            db.transaction {
-                epgDao.upsertProgrammes(
+            db.withWriteTransaction {                epgDao.upsertProgrammes(
                     batch.map {
                         EpgProgrammeEntity(
                             sourceId = storeId,

@@ -60,6 +60,10 @@
     <string name="player_audio_track">音轨</string>
     <string name="player_subtitles">字幕</string>
     <string name="player_subtitle_timing">字幕时间调整</string>
+    <string name="player_ai_subtitles">AI 字幕</string>
+    <string name="player_ai_subtitles_adjust_position">调整位置</string>
+    <string name="ai_subtitles_sync_offset">字幕同步</string>
+    <string name="ai_subtitles_sync_value">%1$d 毫秒</string>
     <string name="player_add_subtitles">添加字幕</string>
     <string name="player_adjust">调整</string>
     <string name="player_search_subtitles">搜索 OpenSubtitles</string>

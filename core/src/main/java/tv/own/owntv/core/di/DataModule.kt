@@ -273,13 +273,15 @@ val dataModule = module {
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,
     // forceMpvStore, vodEngineStore, db, metadataOverrideStore, metadataDao, openSubtitlesAuthStore,
     // backgroundsDir (same folder ingestBackgroundImage writes to — the .own container carries the wallpaper),
-    // subtitlesDir (SubtitleRepository's shared cache — the container carries the subtitle files too)
+    // subtitlesDir (SubtitleRepository's shared cache — the container carries the subtitle files too),
+    // avatarStore, optional app-layer BackupExtraSettings (AI-subtitle/cloud-translation config)
     single {
         BackupManager(
             get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(),
             java.io.File(androidContext().filesDir, "backgrounds"),
             java.io.File(androidContext().filesDir, "subtitles"),
             get(),
+            getOrNull(),
         )
     }
     // profileDao, sourceDao, settings, launcherIntegration, openSubtitlesAccounts — creating,

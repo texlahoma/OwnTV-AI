@@ -143,6 +143,20 @@ data class PlaybackPrefsEntity(
      * correction onto the next, correctly-muxed item would break it.
      */
     val audioDelayMs: Int? = null,
+    /**
+     * AI-subtitle master switch remembered for this item; null = follow the global Settings switch.
+     *
+     * Per item because the AI subtitle usability belongs to the **channel/title**: some play every
+     * recording with subtitles on, others never. Remembered "while watching" and applied with
+     * priority over the global switch when the user comes back to this item.
+     */
+    val aiSubtitleEnabled: Boolean? = null,
+    /**
+     * AI-subtitle recognition (source) language remembered for this item (BCP-47, e.g. "en"); null
+     * = follow the global Settings source language. Storing the user's explicit pick means the
+     * recognizer does not re-detect the language every time this item plays.
+     */
+    val aiSubtitleSourceLanguage: String? = null,
     val updatedAt: Long = System.currentTimeMillis(),
 )
 
