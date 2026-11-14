@@ -3,13 +3,17 @@ name: Sync upstream
 # Daily maintenance for this patch-fork of ahXN00/OwnTV. This fork carries the AI-subtitle
 # patches on top of upstream, and the 'core' branch carries the core-module patches (mirrored
 # from ahXN00/OwnTV_Core). This workflow:
-#   1. mirrors upstream main into a local 'upstream' branch (fast-forward by construction —
-#      never conflicts, so the mirror is ALWAYS current, even when step 2 fails);
-#   2. merges that mirror into main (no history rewrite, no force push — a merge conflict is
+#   1. merges upstream main into main (no history rewrite, no force push — a merge conflict is
 #      a smaller, more inspectable event than a rebase replay of every fork commit);
-#   3. mirrors ahXN00/OwnTV_Core main into a 'core-upstream' branch and merges the 'core'
-#      branch onto it the same way.
-# A conflicting merge fails loudly and must be resolved locally (see the error message).
+#   2. merges ahXN00/OwnTV_Core main into the 'core' branch the same way.
+#
+# Authentication: plain GITHUB_TOKEN (contents: write). Upstream's commits carry its own
+# .github/workflows files, and a GitHub App token can never create, update or delete workflow
+# files — so each merge restores .github/workflows to whatever this repo already has and amends
+# the merge commit before pushing. The push therefore never carries a workflow-file change and
+# needs no personal token: nothing here expires. Upstream CI changes (rare) are picked up by
+# hand when wanted.
+#
 # Pushes made with GITHUB_TOKEN do not trigger other workflows, so fork-release.yml also
 # listens for this workflow's completion via workflow_run.
 on:
@@ -30,52 +34,64 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this fork
-        # SYNC_PAT is a fine-grained personal token with Contents+Workflows: the upstream
-        # mirror carries upstream's own .github/workflows files, and a GITHUB_TOKEN (an App
-        # token) cannot create or update workflow files no matter how its permissions block
-        # is written — GitHub does not expose that scope to it. The PAT is stored as this
-        # checkout's git credential, so every push below rides on it.
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.SYNC_PAT }}
 
-      - name: Mirror upstream main into the 'upstream' branch
-        run: |
-          git remote add upstream https://github.com/ahXN00/OwnTV.git
-          git fetch upstream main
-          git push origin "refs/remotes/upstream/main:refs/heads/upstream" --force
-
-      - name: Merge upstream into main
+      - name: Merge upstream main into main
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout main
-          if git merge upstream/main --no-edit -m "Merge upstream into main (daily sync)"; then
-            git push origin main
+          git remote add upstream https://github.com/ahXN00/OwnTV.git
+          git fetch upstream main
+          UP_SHA="$(git rev-parse --short=12 FETCH_HEAD)"
+          echo "upstream main: $UP_SHA"
+          BEFORE="$(git rev-parse HEAD)"
+          if git merge FETCH_HEAD --no-edit -m "Merge upstream into main ($UP_SHA)"; then
+            if [ "$(git rev-parse HEAD)" = "$BEFORE" ]; then
+              echo "main is already at upstream $UP_SHA — nothing to merge."
+            else
+              # Neutralise workflow files: the push must not carry any .github/workflows change.
+              if ! git diff --quiet origin/main HEAD -- .github/workflows; then
+                git rm -rq --ignore-unmatch .github/workflows
+                git checkout origin/main -- .github/workflows
+                git commit --amend --no-edit
+                echo "upstream workflow changes were dropped from the merge (restore by hand if wanted)."
+              fi
+              git push origin main
+            fi
           else
             git merge --abort
-            echo "::error::Merge of ahXN00/OwnTV main hit conflicts. The 'upstream' branch IS updated (step 2), so the divergence is inspectable. Resolve locally: git fetch origin upstream && git merge origin/upstream && git push origin main"
+            echo "::error::Merge of ahXN00/OwnTV main hit conflicts. Resolve locally: git remote add upstream https://github.com/ahXN00/OwnTV.git && git fetch upstream main && git merge FETCH_HEAD && git push origin main"
             exit 1
           fi
 
-      - name: Mirror upstream core into the 'core-upstream' branch
-        run: |
-          git remote add core-upstream https://github.com/ahXN00/OwnTV_Core.git
-          git fetch core-upstream main
-          git push origin "refs/remotes/core-upstream/main:refs/heads/core-upstream" --force
-
-      - name: Merge upstream into core
+      - name: Merge upstream core into the core branch
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add core-upstream https://github.com/ahXN00/OwnTV_Core.git
+          git fetch core-upstream main
+          UP_SHA="$(git rev-parse --short=12 FETCH_HEAD)"
+          echo "upstream core main: $UP_SHA"
+          BEFORE="$(git rev-parse HEAD)"
           git checkout core
-          if git merge core-upstream/main --no-edit -m "Merge upstream core (daily sync)"; then
-            git push origin core
+          if git merge FETCH_HEAD --no-edit -m "Merge upstream core ($UP_SHA)"; then
+            if [ "$(git rev-parse HEAD)" = "$BEFORE" ]; then
+              echo "core is already at upstream $UP_SHA — nothing to merge."
+            else
+              if ! git diff --quiet origin/core HEAD -- .github/workflows; then
+                git rm -rq --ignore-unmatch .github/workflows
+                git checkout origin/core -- .github/workflows
+                git commit --amend --no-edit
+                echo "upstream core workflow changes were dropped from the merge (restore by hand if wanted)."
+              fi
+              git push origin core
+            fi
           else
             git merge --abort
-            echo "::error::Merge of ahXN00/OwnTV_Core main hit conflicts. The 'core-upstream' branch IS updated, so the divergence is inspectable. Resolve locally: git fetch origin core-upstream && git checkout core && git merge origin/core-upstream && git push origin core"
+            echo "::error::Merge of ahXN00/OwnTV_Core main hit conflicts. Resolve locally: git remote add core-upstream https://github.com/ahXN00/OwnTV_Core.git && git fetch core-upstream main && git checkout core && git merge FETCH_HEAD && git push origin core"
             exit 1
           fi
 
@@ -93,16 +109,20 @@ jobs:
           EXISTING="$(gh issue list --state open --search "$TITLE in:title" --json number --jq 'length')"
           TODAY="$(date -u +%F)"
           BODY=$(cat <<EOM
-          The daily sync workflow failed on $TODAY — a rebase hit conflicts or the mirror push was refused. **The fork is safe** (main still holds the last good state and no broken release was published), but new upstream work is NOT being picked up until this is resolved.
+          The daily sync workflow failed on $TODAY — the merge hit conflicts. **The fork is safe**
+          (main still holds the last good state and no broken release was published), but new
+          upstream work is NOT being picked up until this is resolved.
 
           Run: $RUN_URL
 
           Fix locally, from this repository:
           \`\`\`
-          git fetch origin upstream
-          git checkout main && git merge origin/upstream
-          git fetch origin core-upstream
-          git checkout core && git merge origin/core-upstream
+          git remote add upstream https://github.com/ahXN00/OwnTV.git
+          git fetch upstream main
+          git checkout main && git merge FETCH_HEAD
+          git remote add core-upstream https://github.com/ahXN00/OwnTV_Core.git
+          git fetch core-upstream main
+          git checkout core && git merge FETCH_HEAD
           git push origin main core
           \`\`\`
           Then close this issue — the next daily run resumes automatically.
