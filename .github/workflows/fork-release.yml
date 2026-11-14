@@ -143,13 +143,13 @@ jobs:
           "$BT/apksigner" sign \
             --ks update.keystore --ks-pass "pass:$KS_PASS" --key-pass "pass:$KS_PASS" \
             --ks-key-alias owntv-debug \
-            --out "OwnTV-AI-${VERSION_CODE}.apk" \
+            --out "OwnTV-AI-${VERSION_NAME}.apk" \
             app/build/outputs/apk/standard/debug/app-standard-debug.apk
-          "$BT/apksigner" verify --print-certs "OwnTV-AI-${VERSION_CODE}.apk" | sed -n 2p
+          "$BT/apksigner" verify --print-certs "OwnTV-AI-${VERSION_NAME}.apk" | sed -n 2p
           # The standard APK is universal (every ABI). The in-app updater picks its asset on the
           # x86_64 name marker, so publish the same file under both names: TVs match the plain
           # name, x86_64 emulators match the suffixed one.
-          cp "OwnTV-AI-${VERSION_CODE}.apk" "OwnTV-AI-x86_64-${VERSION_CODE}.apk"
+          cp "OwnTV-AI-${VERSION_NAME}.apk" "OwnTV-AI-x86_64-${VERSION_NAME}.apk"
 
       - name: Publish release ${{ env.RELEASE_TAG }} (kept permanently)
         if: env.SKIP != 'true'
