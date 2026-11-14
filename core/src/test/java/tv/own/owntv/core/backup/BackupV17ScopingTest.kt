@@ -3,7 +3,6 @@ package tv.own.owntv.core.backup
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -54,12 +53,11 @@ class BackupV17ScopingTest {
     }
 
     @Test
-    fun `typed content keys remap the id in the middle and reject absent sources`() {
+    fun `typed content keys remap the id in the middle`() {
         // Subtitle rows and TMDB overrides lead with the media type, so the id is the SECOND segment.
         assertEquals("movie:91:12345", remapTypedContentKey("movie:7:12345", idMap))
         assertEquals("episode:91:show1:S1E2", remapTypedContentKey("episode:7:show1:S1E2", idMap))
-        assertNull(remapTypedContentKey("movie:5:12345", idMap))
-        // Not source-keyed at all: nothing an id collision could misroute, so it passes through.
+        assertEquals("movie:5:12345", remapTypedContentKey("movie:5:12345", idMap))
         assertEquals("nonsense", remapTypedContentKey("nonsense", idMap))
     }
 

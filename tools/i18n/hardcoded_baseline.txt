@@ -7,7 +7,6 @@
 1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	$mapped:${contextKey.substringAfter(':')}
 1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	${file.name} · ${sections.joinToString(", ") { it.name }}
 2	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	,
-1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	AI-translation config restore failed: ${'$'}{it.message}
 1	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore start file=${file.name} sections=${sections.joinToString(",") { it.name }}
 2	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	activeProfileId
 2	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	aisl

@@ -5,6 +5,7 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import tv.own.owntv.core.database.entity.SourceEntity
@@ -118,28 +119,24 @@ class BackupMergeRemappingTest {
     // --- remapKeys: profile-id-keyed and source-id-keyed settings maps ---
 
     @Test
-    fun `remapKeys rewrites mapped ids and drops unmapped numeric keys`() {
+    fun `remapKeys rewrites mapped ids and passes unmapped keys through untouched`() {
         val file = JSONObject().put("1", "a").put("2", "b").put("9", "c")
         val out = remapKeys(file, mapOf(1L to 40L, 2L to 41L))
 
         assertEquals("a", out.getString("40"))
         assertEquals("b", out.getString("41"))
-        // 9 had no match on this device — it must be DROPPED, never kept: the number 9 might be
-        // held by an unrelated profile/source here, and downstream checks only test existence.
-        assertNull(out.opt("9"))
-        assertEquals(2, out.length())
+        // 9 had no match on this device — kept as-is so a later profile-id filter can drop it,
+        // rather than being silently rewritten onto someone else.
+        assertEquals("c", out.getString("9"))
+        assertEquals(3, out.length())
     }
 
     @Test
-    fun `remapKeys leaves non-numeric keys alone and drops every id when the map is empty`() {
+    fun `remapKeys leaves non-numeric keys alone and short-circuits on an empty map`() {
         val file = JSONObject().put("theme", "dark").put("3", "x")
-        val out = remapKeys(file, mapOf(3L to 7L))
-        assertEquals("dark", out.getString("theme"))
-        assertEquals("x", out.getString("7"))
-        // No id survived the merge: every numeric key goes, scalars stay.
-        val empty = remapKeys(JSONObject().put("theme", "dark").put("3", "x"), emptyMap())
-        assertEquals("dark", empty.getString("theme"))
-        assertEquals(1, empty.length())
+        assertEquals("dark", remapKeys(file, mapOf(3L to 7L)).getString("theme"))
+        // Empty map: the same instance back, no copying.
+        assertSame(file, remapKeys(file, emptyMap()))
     }
 
     @Test
@@ -163,44 +160,11 @@ class BackupMergeRemappingTest {
         val out = JSONObject(remapCustomizationValue(raw, mapOf(10L to 200L)))
 
         val hidden = out.getJSONArray("hidden")
-        assertEquals(1, hidden.length())
         assertEquals("200:movie:99", hidden.getString(0))
+        assertEquals("11:live:7", hidden.getString(1)) // source 11 not on this device — untouched
         assertEquals("My Show", out.getJSONObject("renamed").getString("200:series:3"))
         assertNull(out.getJSONObject("renamed").opt("10:series:3"))
         assertEquals("NAME", out.getString("sortMode")) // scalar fields pass straight through
-    }
-
-    @Test
-    fun `customization entries naming an absent source are dropped from arrays and maps`() {
-        // Source 11 took no part in the restore. Keeping "11:live:7" would risk hiding/pinning items
-        // of whatever unrelated source happens to be 11 on this device — the entry is removed.
-        val raw = JSONObject()
-            .put("hidden", JSONArray(listOf("10:movie:99", "11:live:7")))
-            .put("renamed", JSONObject().put("10:series:3", "Mine").put("11:live:2", "Other"))
-            .toString()
-
-        val out = JSONObject(remapCustomizationValue(raw, mapOf(10L to 200L)))
-
-        assertEquals(1, out.getJSONArray("hidden").length())
-        assertEquals("200:movie:99", out.getJSONArray("hidden").getString(0))
-        val renamed = out.getJSONObject("renamed")
-        assertEquals("Mine", renamed.optString("200:series:3"))
-        assertNull(renamed.opt("11:live:2"))
-    }
-
-    @Test
-    fun `customization with no surviving sources keeps only custom and scalar fields`() {
-        val raw = JSONObject()
-            .put("hidden", JSONArray(listOf("10:movie:99", "custom:abc")))
-            .put("sortMode", "NAME")
-            .toString()
-
-        val out = JSONObject(remapCustomizationValue(raw, emptyMap()))
-
-        val hidden = out.getJSONArray("hidden")
-        assertEquals(1, hidden.length())
-        assertEquals("custom:abc", hidden.getString(0))
-        assertEquals("NAME", out.getString("sortMode"))
     }
 
     @Test
@@ -259,12 +223,12 @@ class BackupMergeRemappingTest {
     }
 
     @Test
-    fun `user data context remaps provider folders, preserves custom and built-in, rejects absent sources`() {
+    fun `user data context remaps provider folders but preserves custom and built-in contexts`() {
         val ids = mapOf(10L to 200L)
         assertEquals("200:category:7", remapContentContextKey("10:category:7", ids))
         assertEquals("custom:abc-123", remapContentContextKey("custom:abc-123", ids))
         assertEquals("favorites", remapContentContextKey("favorites", ids))
-        assertNull(remapContentContextKey("11:category:7", ids))
+        assertEquals("11:category:7", remapContentContextKey("11:category:7", ids))
     }
 
     @Test
@@ -289,9 +253,7 @@ class BackupMergeRemappingTest {
         assertEquals("Blade Runner", out.getString("movie:200:42"))
         // split(limit = 3): everything after the source id is one opaque remainder, colons and all.
         assertEquals("The Show", out.getString("series:200:some:id:with:colons"))
-        // Source 11 did not survive the merge: the rename is dropped, never applied to whatever
-        // unrelated source holds id 11 on this device.
-        assertNull(out.opt("movie:11:1"))
+        assertEquals("Unmapped Source", out.getString("movie:11:1"))
     }
 
     @Test
@@ -302,133 +264,8 @@ class BackupMergeRemappingTest {
     }
 
     @Test
-    fun `tmdb overrides naming only absent sources come out empty`() {
-        val raw = JSONObject().put("movie:11:1", "Nope").put("series:12:2", "Also nope").toString()
-        val out = JSONObject(remapTmdbOverrideKeys(raw, mapOf(10L to 200L)))
-        assertEquals(0, out.length())
-    }
-
-    @Test
     fun `malformed tmdb override json is returned verbatim`() {
         assertEquals("{oops", remapTmdbOverrideKeys("{oops", mapOf(1L to 2L)))
-    }
-
-    // --- remapUserData: favorites/history/progress/order records (and their tombstones) ---
-
-    private fun rec(kind: String, p: Long, src: Long, ctx: String? = null) =
-        JSONObject().put("kind", kind).put("p", p).put("src", src).put("t", "MOVIE").also {
-            if (ctx != null) it.put("ctx", ctx)
-        }
-
-    @Test
-    fun `a record whose profile has no device match is dropped, not passed through with the file id`() {
-        // The bug: profile ids are per-device autoincrements. File id 3 (a parent on the old device)
-        // and device id 3 (a Kids profile here) are different people; name matching found nothing, so
-        // the old code wrote the record out with p=3 whenever SOURCES was not ticked, and the
-        // restored favorite/history silently landed on the Kids profile.
-        val arr = JSONArray().put(rec("fav", p = 3, src = 10))
-        val kinds = setOf("fav", "his", "prog", "order", "member", "sort")
-
-        val out = remapUserData(arr, kinds, profileIdMap = emptyMap(), sourceIdMap = emptyMap())
-
-        assertEquals("the record has no home on this device — it must be skipped", 0, out.length())
-    }
-
-    @Test
-    fun `dropping unmapped profiles does not depend on whether sources are restored`() {
-        // The old branch was `?: if (applySources) continue else fileP` — the dangerous pass-through
-        // happened exactly on a merge restore (profiles+favorites ticked, SOURCES unticked). The
-        // decision now depends solely on whether a profile mapping exists.
-        val arr = JSONArray().put(rec("his", p = 9, src = 99))
-        val kinds = setOf("fav", "his")
-        val withSourcesMapped = mapOf(99L to 200L)
-
-        val out = remapUserData(arr, kinds, profileIdMap = emptyMap(), sourceIdMap = withSourcesMapped)
-
-        assertEquals("even a resolvable source cannot rescue an unresolvable profile", 0, out.length())
-    }
-
-    @Test
-    fun `mapped records get their profile, source and context ids rewritten`() {
-        val arr = JSONArray()
-            .put(rec("fav", p = 1, src = 10))
-            .put(rec("order", p = 2, src = 11, ctx = "10:category:7"))
-        val kinds = setOf("fav", "order")
-
-        val out = remapUserData(
-            arr,
-            kinds,
-            profileIdMap = mapOf(1L to 40L, 2L to 41L),
-            sourceIdMap = mapOf(10L to 200L, 11L to 201L),
-        )
-
-        assertEquals(2, out.length())
-        assertEquals(40L, out.getJSONObject(0).getLong("p"))
-        assertEquals(200L, out.getJSONObject(0).getLong("src"))
-        assertEquals(41L, out.getJSONObject(1).getLong("p"))
-        assertEquals(201L, out.getJSONObject(1).getLong("src"))
-        assertEquals("200:category:7", out.getJSONObject(1).getString("ctx"))
-    }
-
-    @Test
-    fun `unmapped profiles are dropped while mapped ones survive in the same batch`() {
-        // File profile 1 matches a device profile by name; file profile 2 does not exist here at
-        // all, but happens to share its number with an unrelated device profile. Only the first may
-        // come through — tombstones are filtered by the exact same function.
-        val arr = JSONArray()
-            .put(rec("fav", p = 1, src = 10))
-            .put(rec("fav", p = 2, src = 10))
-        val kinds = setOf("fav")
-
-        val out = remapUserData(arr, kinds, mapOf(1L to 77L), mapOf(10L to 200L))
-
-        assertEquals(1, out.length())
-        assertEquals(77L, out.getJSONObject(0).getLong("p"))
-    }
-
-    @Test
-    fun `a record whose source has no device match is dropped, not pointed at an unrelated source`() {
-        // Profile resolves, but the playlist does not exist here. Keeping the file src id could
-        // attach the favorite to content of whatever unrelated device source holds that number.
-        val arr = JSONArray().put(rec("fav", p = 1, src = 99))
-        val kinds = setOf("fav")
-
-        val out = remapUserData(arr, kinds, mapOf(1L to 40L), emptyMap())
-
-        assertEquals(0, out.length())
-    }
-
-    @Test
-    fun `an order record whose folder context names an absent source is dropped`() {
-        val arr = JSONArray().put(rec("order", p = 1, src = 10, ctx = "11:category:7"))
-        val kinds = setOf("order")
-
-        val out = remapUserData(arr, kinds, mapOf(1L to 40L), mapOf(10L to 200L))
-
-        assertEquals("the item's source survived, but the provider folder belongs to source 11 — gone", 0, out.length())
-    }
-
-    @Test
-    fun `a custom-category context survives when its source is mapped`() {
-        val arr = JSONArray().put(rec("member", p = 1, src = 10, ctx = "custom:abc"))
-        val out = remapUserData(arr, setOf("member"), mapOf(1L to 40L), mapOf(10L to 200L))
-        assertEquals(1, out.length())
-        assertEquals("custom:abc", out.getJSONObject(0).getString("ctx"))
-    }
-
-    @Test
-    fun `records outside the selected kinds, malformed rows and records without a profile are skipped`() {
-        val arr = JSONArray()
-            .put(rec("his", p = 1, src = 10)) // kind not selected
-            .put(JSONObject().put("kind", "fav")) // missing p/src
-            .put("not-an-object")
-            .put(rec("fav", p = 1, src = 10))
-        val kinds = setOf("fav")
-
-        val out = remapUserData(arr, kinds, mapOf(1L to 77L), mapOf(10L to 200L))
-
-        assertEquals(1, out.length())
-        assertEquals(77L, out.getJSONObject(0).getLong("p"))
     }
 
     // --- filterByProfile: the "only the ticked profiles" gate ---

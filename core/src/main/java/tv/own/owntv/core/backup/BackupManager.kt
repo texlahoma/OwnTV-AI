@@ -1406,11 +1406,14 @@ if (out.isEmpty()) error("backup_invalid")
             }
             // Before the marker is cleared: a restore killed in between still reports itself as
             // interrupted rather than leaving a profile that looks complete.
-            // Standalone AI-subtitle / cloud-translation (LLM) config section. Absent on files
-            // written before v27 or when the section isn't checked — no-op. A failed apply is logged
+            // Standalone AI-subtitle / cloud-translation (LLM) config section. Gated like every
+            // other section: a file that carries it but wasn't ticked for this restore must not
+            // apply it. Absent on files written before v27 — no-op. A failed apply is logged
             // and skipped: the restore itself stands.
-            runCatching { extraSettings?.importJson(root.optJSONObject("aiTranslation")) }
-                .onFailure { Log.w(TAG, "AI-translation config restore failed: ${'$'}{it.message}") }
+            if (Section.AI_TRANSLATION in sections) {
+                runCatching { extraSettings?.importJson(root.optJSONObject("aiTranslation")) }
+                    .onFailure { Log.w(TAG, "AI-translation config restore failed: ${it.message}") }
+            }
             profileToAdopt?.let { settings.setActiveProfile(it) }
             settings.clearRestoreMarker()
             // Locale writes are last by design: all restore work and the interrupted-restore marker

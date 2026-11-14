@@ -66,6 +66,7 @@
 2	technical	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	LIVE
 1	protocol	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	LOCAL
 1	protocol	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	MOVIE
+1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	AI-translation config restore failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Profile picture restore failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore done items=$count skippedSources=$skippedSources invalidLocale=$invalidLocale
 1	log	core/src/main/java/tv/own/owntv/core/backup/BackupManager.kt	Restore: skipping source '${o.optString("name")}' — unknown type '${o.optString("type")}'
