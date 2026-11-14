@@ -20,6 +20,9 @@ on:
 permissions:
   contents: write
   issues: write
+  # The upstream mirror carries upstream's own workflow files (.github/workflows/*) —
+  # a push that creates or updates them is refused without this scope.
+  workflows: write
 
 concurrency:
   group: fork-sync-upstream
