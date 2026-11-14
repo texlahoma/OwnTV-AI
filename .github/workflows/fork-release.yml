@@ -159,10 +159,10 @@ jobs:
           NOTES="versionCode=${VERSION_CODE} name=${VERSION_NAME} sha=$(git rev-parse --short=12 HEAD) core=$(git rev-parse --short=12 origin/core)"
           # One release per build, published under its own tag and never deleted: the Releases
           # page is the version history. If a previous attempt died after tagging, reuse it.
-          gh release create "$RELEASE_TAG" "OwnTV-AI-${VERSION_CODE}.apk" "OwnTV-AI-x86_64-${VERSION_CODE}.apk" \
+          gh release create "$RELEASE_TAG" "OwnTV-AI-${VERSION_NAME}.apk" "OwnTV-AI-x86_64-${VERSION_NAME}.apk" \
             --title "OwnTV-AI ${VERSION_NAME}" \
             --notes "$NOTES" \
           || {
-            gh release upload "$RELEASE_TAG" "OwnTV-AI-${VERSION_CODE}.apk" "OwnTV-AI-x86_64-${VERSION_CODE}.apk" --clobber
+            gh release upload "$RELEASE_TAG" "OwnTV-AI-${VERSION_NAME}.apk" "OwnTV-AI-x86_64-${VERSION_NAME}.apk" --clobber
             gh release edit "$RELEASE_TAG" --title "OwnTV-AI ${VERSION_NAME}" --notes "$NOTES"
           }
