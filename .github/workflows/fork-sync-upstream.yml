@@ -20,9 +20,6 @@ on:
 permissions:
   contents: write
   issues: write
-  # The upstream mirror carries upstream's own workflow files (.github/workflows/*) —
-  # a push that creates or updates them is refused without this scope.
-  workflows: write
 
 concurrency:
   group: fork-sync-upstream
@@ -33,10 +30,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this fork
+        # SYNC_PAT is a fine-grained personal token with Contents+Workflows: the upstream
+        # mirror carries upstream's own .github/workflows files, and a GITHUB_TOKEN (an App
+        # token) cannot create or update workflow files no matter how its permissions block
+        # is written — GitHub does not expose that scope to it. The PAT is stored as this
+        # checkout's git credential, so every push below rides on it.
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.SYNC_PAT }}
 
       - name: Mirror upstream main into the 'upstream' branch
         run: |
