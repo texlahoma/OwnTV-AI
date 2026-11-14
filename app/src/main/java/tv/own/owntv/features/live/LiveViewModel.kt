@@ -423,7 +423,17 @@ class LiveViewModel(
         miniPlaying = null
         _previewChannel.value = channel
         _paneChannel.value = channel
+        // Feed the per-channel preference key explicitly: the live paths play through
+        // LivePreviewEngine, which never writes OwnTVPlayer.currentMeta, so without this the
+        // AI-subtitle manager would keep the previous channel's memory (or none) and the HUD
+        // toggle would be dead. No-op-safe to repeat; see [AiSubtitleManager.setActiveKey].
+        aiSubtitles.setActiveKey(channelPrefKey(channel))
     }
+
+    /** The per-channel preference key: engine pins and the AI-subtitle channel memory share it,
+     *  so the memory survives a re-sync/Stalker re-mint that moves the stream URL. */
+    private fun channelPrefKey(channel: ChannelEntity): String? =
+        tv.own.owntv.core.player.enginePinKey(channel.sourceId, MediaType.LIVE.name, channel.remoteId)
 
     /** Every guide read this screen makes, and the now/next cache that used to live here — see
      *  [LiveEpgReader]. The shift it applies is passed in at each call, so this view model stays the
@@ -2120,6 +2130,7 @@ class LiveViewModel(
 
     fun stopPreview() {
         live.stop() // both engines, every watcher and the give-up alarm, and the reconnect link
+        aiSubtitles.setActiveKey(null) // leave live: drop the channel's AI-subtitle memory context
         _previewChannel.value = null
         _paneChannel.value = null
     }

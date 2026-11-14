@@ -66,6 +66,15 @@ private fun aiLanguages(): List<Pair<String, String>> {
 private fun languageName(code: String, options: List<Pair<String, String>>): String? =
     options.firstOrNull { it.first == code }?.second
 
+/** This screen's rows as Settings search finds them, by their own titles. The "model failed" info
+ *  dialog title is a dialog, not a setting, so it is excluded in the coverage test instead. */
+internal val AI_SUBTITLES_SEARCH_ROWS: List<Int> = listOf(
+    R.string.ai_subtitles_source_language, R.string.ai_subtitles_live_delay,
+    R.string.ai_subtitles_target_language, R.string.ai_subtitles_api,
+    R.string.ai_subtitles_font_size, R.string.ai_subtitles_line_height,
+    R.string.ai_subtitles_position,
+)
+
 /**
  * Settings → Content → AI subtitles. Controls the speech-recognition → cloud-translate pipeline:
  * the recognition (source) language, the translate (target) language, and the OpenAI-compatible

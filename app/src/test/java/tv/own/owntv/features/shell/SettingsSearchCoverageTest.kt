@@ -155,6 +155,9 @@ class SettingsSearchCoverageTest {
         "settings_sources_test_title", "player_subtitles_sign_in_title", "settings_open_subtitles_setup_title",
         "settings_panel_width_dialog_title", "settings_panel_width_disable_preview_title",
         "settings_record_watching_warning_title",
+        // Fork (AI subtitles): an info dialog shown when the streaming model fails to load —
+        // not a setting.
+        "ai_subtitles_model_failed_title",
     )
 
     @Test
