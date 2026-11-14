@@ -98,7 +98,8 @@ jobs:
         run: |
           MAJMIN="$(tr -d '[:space:]' < VERSION)"
           LAST="$(git ls-remote --tags origin "v${MAJMIN}.*" | grep -v '\^{}' | grep -oE "v${MAJMIN}\.[0-9]+$" | sed "s/v${MAJMIN}\.//" | sort -n | tail -1)"
-          PATCH="$(( ${LAST:-0} + 1 ))"
+          # The first release under a new major.minor is .0 (semver: 1.0.0 is the first stable).
+          if [ -n "$LAST" ]; then PATCH="$(( LAST + 1 ))"; else PATCH=0; fi
           echo "VERSION_CODE=$(( $(date +%s) / 60 ))" >> "$GITHUB_ENV"
           echo "VERSION_NAME=${MAJMIN}.${PATCH}" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=v${MAJMIN}.${PATCH}" >> "$GITHUB_ENV"
