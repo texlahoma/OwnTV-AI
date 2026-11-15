@@ -533,7 +533,7 @@ internal fun AiSubtitleHudDialog(
     val focus = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
     val configStore = koinInject<AiSubtitleConfigStore>()
-    val debugInfo by configStore.hudDebugInfo.collectAsStateWithLifecycle()
+    val debugInfo by configStore.hudDebugInfo.collectAsStateWithLifecycle(false)
     // Both look settings are the same persisted values the Settings page edits, exposed here too
     // because the natural moment to size a caption is while watching it — leaving to Settings means
     // losing the picture you are sizing against.
