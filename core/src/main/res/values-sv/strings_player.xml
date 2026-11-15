@@ -33,6 +33,7 @@
     <string name="player_skip_forward">Hoppa framåt</string>
     <string name="player_tool_audio">Ljud</string>
     <string name="player_tool_subtitles">Undertexter</string>
+    <string name="player_tool_ai_subtitles">AI-undertexter</string>
     <string name="player_tool_favorite">Favorit</string>
     <string name="player_tool_catchup">Repris</string>
     <string name="player_tool_speed">Hastighet</string>

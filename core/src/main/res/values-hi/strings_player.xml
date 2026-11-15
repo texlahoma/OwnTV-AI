@@ -33,6 +33,7 @@
     <string name="player_skip_forward">आगे जाएं</string>
     <string name="player_tool_audio">ऑडियो</string>
     <string name="player_tool_subtitles">उपशीर्षक</string>
+    <string name="player_tool_ai_subtitles">AI उपशीर्षक</string>
     <string name="player_tool_favorite">पसंदीदा</string>
     <string name="player_tool_catchup">कैच-अप</string>
     <string name="player_tool_speed">गति</string>

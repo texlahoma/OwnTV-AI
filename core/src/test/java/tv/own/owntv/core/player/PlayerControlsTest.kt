@@ -123,6 +123,8 @@ class PlayerControlsTest {
                 PlayerControl.VOLUME,
                 PlayerControl.SPEED,
                 PlayerControl.SUBTITLES,
+                // The fork's AI-subtitle panel sits beside the subtitle button it extends.
+                PlayerControl.AI_SUBTITLES,
                 PlayerControl.AUDIO,
                 PlayerControl.FAVOURITE,
                 PlayerControl.CATCH_UP,

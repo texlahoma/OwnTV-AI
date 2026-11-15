@@ -33,6 +33,7 @@
     <string name="player_skip_forward">Vooruitspoelen</string>
     <string name="player_tool_audio">Audio</string>
     <string name="player_tool_subtitles">Ondertitels</string>
+    <string name="player_tool_ai_subtitles">AI-ondertitels</string>
     <string name="player_tool_favorite">Favoriet</string>
     <string name="player_tool_catchup">Terugkijken</string>
     <string name="player_tool_speed">Snelheid</string>

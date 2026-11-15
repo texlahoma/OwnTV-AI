@@ -33,6 +33,7 @@
     <string name="player_skip_forward">Avançar</string>
     <string name="player_tool_audio">Áudio</string>
     <string name="player_tool_subtitles">Legendas</string>
+    <string name="player_tool_ai_subtitles">Legendas IA</string>
     <string name="player_tool_favorite">Favorito</string>
     <string name="player_tool_catchup">Retroativo</string>
     <string name="player_tool_speed">Velocidade</string>

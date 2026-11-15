@@ -68,6 +68,14 @@ enum class PlayerControl(
     /** Playback speed. Was television-only for no reason anybody could name; the phone has it too. */
     SPEED(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_speed),
     SUBTITLES(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_subtitles),
+
+    /**
+     * The AI-subtitle panel: recognition, translation and appearance for the bilingual overlay.
+     * A fork control — upstream has no AI subtitle pipeline — sitting beside [SUBTITLES] because
+     * that is its nearest relative: both decide what text is shown under the picture. The panel
+     * itself is the app's [tv.own.owntv.player.PlayerHud] AI_SUBS dialog.
+     */
+    AI_SUBTITLES(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_ai_subtitles),
     AUDIO(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_audio),
     FAVOURITE(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_favorite),
 

@@ -33,6 +33,7 @@
     <string name="player_skip_forward">Avanzar</string>
     <string name="player_tool_audio">Audio</string>
     <string name="player_tool_subtitles">Subtítulos</string>
+    <string name="player_tool_ai_subtitles">Subtítulos IA</string>
     <string name="player_tool_favorite">Favorito</string>
     <string name="player_tool_catchup">Diferido</string>
     <string name="player_tool_speed">Velocidad</string>

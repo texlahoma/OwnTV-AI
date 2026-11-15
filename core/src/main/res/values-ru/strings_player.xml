@@ -33,6 +33,7 @@
     <string name="player_skip_forward">Вперёд</string>
     <string name="player_tool_audio">Звук</string>
     <string name="player_tool_subtitles">Субтитры</string>
+    <string name="player_tool_ai_subtitles">ИИ-субтитры</string>
     <string name="player_tool_favorite">Избранное</string>
     <string name="player_tool_catchup">Архив</string>
     <string name="player_tool_speed">Скорость</string>

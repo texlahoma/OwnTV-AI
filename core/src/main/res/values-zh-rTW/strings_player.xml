@@ -33,6 +33,7 @@
     <string name="player_skip_forward">快進</string>
     <string name="player_tool_audio">音訊</string>
     <string name="player_tool_subtitles">字幕</string>
+    <string name="player_tool_ai_subtitles">AI 字幕</string>
     <string name="player_tool_favorite">收藏</string>
     <string name="player_tool_catchup">回看</string>
     <string name="player_tool_speed">速度</string>
