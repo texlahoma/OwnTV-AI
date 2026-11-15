@@ -104,7 +104,7 @@ jobs:
           echo "VERSION_NAME=${MAJMIN}.${PATCH}" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=v${MAJMIN}.${PATCH}" >> "$GITHUB_ENV"
 
-      - name: Quality gates (i18n ratchet + unit tests)
+      - name: Quality gates (i18n ratchet + unit tests + dead-symbol gate)
         if: env.SKIP != 'true'
         run: |
           # The release gate for automatic upstream syncs: a rebase can compile cleanly and still
@@ -119,6 +119,21 @@ jobs:
             :OwnTV_Core:player-core:testDebugUnitTest \
             -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
             --stacktrace --no-daemon
+          # Dead-symbol gate. Three shipped bugs were one shape: a function that EXISTS, is
+          # documented as the other side of a seam, and is called by NOTHING — the compiler warns
+          # "never used" and nobody reads it. The AI hold-back capacity was exactly this for a
+          # month: every tune with subtitles on died on every channel. CI compiles fresh every
+          # run, so the warning is always emitted; this makes it fatal.
+          ./gradlew \
+            :OwnTV_Core:core:compileDebugKotlin \
+            :OwnTV_Core:player-core:compileDebugKotlin \
+            :app:compileStandardDebugKotlin \
+            -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
+            --console=plain 2>&1 | tee /tmp/dead-symbol.log
+          if grep -E "never used|is unused" /tmp/dead-symbol.log; then
+            echo "::error::Dead private symbols found above — a seam lost its wiring. Wire it or delete it; never merge past this gate."
+            exit 1
+          fi
 
       - name: Build standard debug APK
         if: env.SKIP != 'true'
