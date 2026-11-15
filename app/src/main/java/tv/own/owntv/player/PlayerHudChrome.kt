@@ -438,6 +438,12 @@ internal fun BottomBar(
                             SpeedButton(label = speedLabel, active = speedLabel != stringResource(R.string.player_speed_normal_short), toolLabel = stringResource(R.string.player_tool_speed)) { onOpenDialog(HudDialog.SPEED) }
                         PlayerControl.SUBTITLES ->
                             CtrlButton(OwnTVIcon.SUBTITLE, badge = subCount.takeIf { it > 0 }, label = stringResource(R.string.player_tool_subtitles)) { onOpenDialog(HudDialog.SUBS) }
+                        // The fork's AI-subtitle panel — recognition, translation and appearance for the
+                        // bilingual overlay. Beside the subtitle button it replaces; the merge that brought
+                        // upstream's HUD left the panel wired but reachable only through the hidden remote
+                        // shortcut, which is how it went missing from the bar.
+                        PlayerControl.AI_SUBTITLES ->
+                            CtrlButton(OwnTVIcon.SPARKLE, label = stringResource(R.string.player_tool_ai_subtitles)) { onOpenDialog(HudDialog.AI_SUBS) }
                         PlayerControl.AUDIO ->
                             CtrlButton(OwnTVIcon.AUDIO, badge = audioCount.takeIf { it > 1 }, label = stringResource(R.string.player_tool_audio)) { onOpenDialog(HudDialog.AUDIO) }
                         // Favorite the current channel/movie/series without leaving the stream (coral
@@ -468,10 +474,11 @@ internal fun BottomBar(
                             CtrlButton(OwnTVIcon.PLAYLIST, label = stringResource(R.string.player_tool_sources)) { onOpenDialog(HudDialog.SOURCES) }
                         }
                         // Belongs to the tools cluster; `clusterFor` never hands them to this loop.
+                        // AI_SUBTITLES is handled in the media cluster above.
                         PlayerControl.BRIGHTNESS, PlayerControl.CHANNEL_LIST, PlayerControl.ENGINE,
                         PlayerControl.ASPECT, PlayerControl.QUALITY, PlayerControl.MINI_PLAYER, PlayerControl.AUDIO_ONLY,
                         PlayerControl.MULTIVIEW, PlayerControl.RECORD, PlayerControl.SLEEP_TIMER,
-                        PlayerControl.INFO, PlayerControl.REPORT,
+                        PlayerControl.INFO, PlayerControl.REPORT, PlayerControl.AI_SUBTITLES,
                         -> Unit
                     }
                 }
@@ -563,8 +570,9 @@ internal fun BottomBar(
                             CtrlButton(OwnTVIcon.SHARE, label = stringResource(R.string.player_tool_report)) { onReport() }
                         }
                         // Belongs to the media cluster; `clusterFor` never hands them to this loop.
+                        // AI_SUBTITLES is handled in the media cluster above.
                         PlayerControl.GO_LIVE, PlayerControl.VOLUME, PlayerControl.BRIGHTNESS,
-                        PlayerControl.SPEED, PlayerControl.SUBTITLES, PlayerControl.AUDIO,
+                        PlayerControl.SPEED, PlayerControl.SUBTITLES, PlayerControl.AI_SUBTITLES, PlayerControl.AUDIO,
                         PlayerControl.FAVOURITE, PlayerControl.CATCH_UP, PlayerControl.PREVIOUS_CHANNEL,
                         PlayerControl.OTHER_CHANNELS, PlayerControl.MATCH, PlayerControl.SOURCES, PlayerControl.CHANNEL_LIST,
                         -> Unit

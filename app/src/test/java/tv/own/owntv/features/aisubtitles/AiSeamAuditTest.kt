@@ -59,6 +59,29 @@ class AiSeamAuditTest {
     }
 
     /**
+     * The player bar carries the AI-subtitle button: the entry must exist in core's canonical
+     * list AND be handled in the television's bottom bar.
+     */
+    @Test
+    fun `the player bar carries the ai-subtitle button`() {
+        // The core checkout is a sibling of the app module in CI (../OwnTV_Core) and a sibling of
+        // the repository in the development sandbox (../../OwnTV_Core).
+        val controls = listOf("../OwnTV_Core", "../../OwnTV_Core")
+            .map { File("$it/core/src/main/java/tv/own/owntv/core/player/PlayerControls.kt") }
+            .firstOrNull { it.isFile }?.readText()
+            ?: error("PlayerControls.kt not found next to the app module")
+        assertTrue(
+            "PlayerControl must define AI_SUBTITLES in the shared canonical list",
+            controls.contains("AI_SUBTITLES(ControlCluster.MEDIA"),
+        )
+        val chrome = read("src/main/java/tv/own/owntv/player/PlayerHudChrome.kt")
+        assertTrue(
+            "the TV bottom bar must handle PlayerControl.AI_SUBTITLES with a button",
+            chrome.contains("PlayerControl.AI_SUBTITLES ->"),
+        )
+    }
+
+    /**
      * The updater asks CoreBuildInfo.releaseRepo; the default is upstream's repo. If the fork
      * override disappears, devices silently check upstream for updates.
      */

@@ -1158,8 +1158,9 @@ fun SettingsScreen(
         searching && searchQuery.isBlank() -> ""
         searching -> pluralStringResource(R.plurals.settings_match_count, searchResults.size, searchResults.size)
         group.video != null -> videoGroupCount(group.video, settingsVm).let { n ->
-            val all = n + if (group == SettingsGroup.WATCHING) 4 else 0
-            pluralStringResource(R.plurals.settings_setting_count, all, all)
+            // WATCHING counts its recording rows and its own slice rows (the AI subtitles).
+            val own = if (group == SettingsGroup.WATCHING) 4 + selectedRows.size else 0
+            pluralStringResource(R.plurals.settings_setting_count, n + own, n + own)
         }
         group == SettingsGroup.PROFILE -> tv.own.owntv.features.settings.profileCount().let { n ->
             pluralStringResource(R.plurals.settings_profile_count, n, n)
@@ -1202,6 +1203,20 @@ fun SettingsScreen(
                     StageSearchResultRow(e.icon, e.group, e.title, e.chip, onClick = e.onClick)
                 }
                 group.video != null -> {
+                    // WATCHING carries a row of its own (the fork's AI subtitles) that lives in the
+                    // slice above, not in the video player's sections. The merge parked it there and
+                    // this branch never rendered the slice — the row was reachable only through
+                    // search, which is how it went "missing" from the menu. Its slice rows come first.
+                    if (group == SettingsGroup.WATCHING) selectedRows.forEachIndexed { i, row ->
+                        RootRowStage(
+                            row,
+                            pinned = row.key in quickPinned,
+                            inQuick = false,
+                            extra = extras[row.key],
+                            onLongClick = { menuRow = row },
+                            focus = if (row.key == menuReturnKey) menuReturnFocus else null,
+                        )
+                    }
                     VideoPlayerGroupRows(
                         group.video, pageScroll,
                         openMiniPlayer = openMiniPlayer,

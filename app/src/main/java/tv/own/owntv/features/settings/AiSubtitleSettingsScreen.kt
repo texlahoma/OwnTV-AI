@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -47,6 +45,9 @@ import tv.own.owntv.features.aisubtitles.translate.OpenAiCompatibleTranslator
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.theme.OwnTVTheme
+import tv.own.owntv.ui.theme.StageColors
+import tv.own.owntv.ui.theme.mpx
+import tv.own.owntv.ui.theme.stageText
 import kotlin.math.roundToInt
 
 /**
@@ -117,109 +118,99 @@ fun AiSubtitleSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
     val apiWasOpen = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { kotlinx.coroutines.delay(60); runCatching { firstFocus.requestFocus() } }
-    BackHandler { onBack() }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .roundedPanel()
-            .focusProperties { onEnter = { runCatching { firstFocus.requestFocus() } } }
-            .focusGroup()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 40.dp, vertical = 28.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp),
+    StageFullPage(
+        parents = listOf(stringResource(R.string.settings_group_watching_recording)),
+        title = stringResource(R.string.settings_ai_subtitles),
+        count = "",
+        onBack = onBack,
+        modifier = modifier,
+        scroll = rememberScrollState(),
+        rowsFocus = firstFocus,
     ) {
-        Header(stringResource(R.string.settings_ai_subtitles), onBack)
-        Spacer(Modifier.height(8.dp))
         Text(
             stringResource(R.string.settings_ai_subtitles_description),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            style = stageText(15.5f, 500),
+            color = StageColors.Muted,
+            modifier = Modifier.padding(start = 22.mpx, bottom = 4.mpx),
         )
-        Spacer(Modifier.height(12.dp))
 
         // Recognition — the master switch is deliberately NOT here: AI subtitles are turned on/off
         // per channel from the playback HUD (default off), so the global Settings page only offers
         // the recognition language, translation target/gateway, display and streaming models.
 
-        GroupLabel(stringResource(R.string.ai_subtitles_recognition))
-        ServiceSettingsRow(
+        StageSettingsHeading(stringResource(R.string.ai_subtitles_recognition), null, first = true)
+        StageSettingRow(
             icon = OwnTVIcon.LANGUAGE,
             title = stringResource(R.string.ai_subtitles_source_language),
             desc = stringResource(R.string.ai_subtitles_source_language_description),
-            chip = sourceName, chevron = true,
-            modifier = Modifier.focusRequester(firstFocus),
+            value = SettingValue.Choice(sourceName),
             onClick = { showSourcePicker = true },
         )
-        ServiceSettingsRow(
+        StageSettingRow(
             icon = OwnTVIcon.GEAR,
             title = stringResource(R.string.ai_subtitles_live_delay),
             desc = stringResource(R.string.ai_subtitles_live_delay_description),
-            chip = if (config.liveDelaySeconds == AiSubtitleDefaults.LIVE_DELAY_OFF) {
-                stringResource(R.string.ai_subtitles_live_delay_off)
-            } else {
-                stringResource(R.string.ai_subtitles_live_delay_seconds, config.liveDelaySeconds)
-            },
-            chevron = true,
+            value = SettingValue.Choice(
+                if (config.liveDelaySeconds == AiSubtitleDefaults.LIVE_DELAY_OFF) {
+                    stringResource(R.string.ai_subtitles_live_delay_off)
+                } else {
+                    stringResource(R.string.ai_subtitles_live_delay_seconds, config.liveDelaySeconds)
+                },
+            ),
             onClick = { showLiveDelay = true },
         )
 
-        Spacer(Modifier.height(14.dp))
-        GroupLabel(stringResource(R.string.ai_subtitles_translation))
-        ServiceSettingsRow(
+        StageSettingsHeading(stringResource(R.string.ai_subtitles_translation), null)
+        StageSettingRow(
             icon = OwnTVIcon.LANGUAGE,
             title = stringResource(R.string.ai_subtitles_target_language),
             desc = stringResource(R.string.ai_subtitles_target_language_description),
-            chip = targetName, chevron = true,
+            value = SettingValue.Choice(targetName),
             onClick = { showTargetPicker = true },
         )
-        ServiceSettingsRow(
+        StageSettingRow(
             icon = OwnTVIcon.GEAR,
             title = stringResource(R.string.ai_subtitles_api),
             desc = stringResource(R.string.ai_subtitles_api_description),
-            chip = if (config.apiKey.isNotBlank()) stringResource(R.string.common_on) else stringResource(R.string.settings_shared),
-            primaryChip = config.apiKey.isNotBlank(),
-            chevron = true,
+            value = SettingValue.Opens(
+                if (config.apiKey.isNotBlank()) stringResource(R.string.common_on) else stringResource(R.string.settings_shared),
+            ),
             modifier = Modifier.focusRequester(apiRowFocus),
             onClick = { showApi = true },
         )
 
-        Spacer(Modifier.height(14.dp))
-        GroupLabel(stringResource(R.string.ai_subtitles_display))
-        ServiceSettingsRow(
+        StageSettingsHeading(stringResource(R.string.ai_subtitles_display), null)
+        StageSettingRow(
             icon = OwnTVIcon.SUBTITLE,
             title = stringResource(R.string.ai_subtitles_font_size),
             desc = stringResource(R.string.ai_subtitles_font_size_description),
-            chip = stringResource(R.string.ai_subtitles_font_size_percent, (config.scale * 100).roundToInt()), chevron = true,
+            value = SettingValue.Choice(stringResource(R.string.ai_subtitles_font_size_percent, (config.scale * 100).roundToInt())),
             onClick = { showDisplay = true },
         )
-        ServiceSettingsRow(
+        StageSettingRow(
             icon = OwnTVIcon.SUBTITLE,
             title = stringResource(R.string.ai_subtitles_line_height),
             desc = stringResource(R.string.ai_subtitles_line_height_description),
-            chip = stringResource(R.string.common_percent, (config.lineHeight * 100).roundToInt()), chevron = true,
+            value = SettingValue.Choice(stringResource(R.string.common_percent, (config.lineHeight * 100).roundToInt())),
             onClick = { showLineSpacing = true },
         )
-        ServiceSettingsRow(
+        StageSettingRow(
             icon = OwnTVIcon.SUBTITLE,
             title = stringResource(R.string.ai_subtitles_position),
             desc = stringResource(R.string.ai_subtitles_position_description),
-            chip = subtitlePositionName(SubtitleStyle.Position.fromKey(config.position)), chevron = true,
+            value = SettingValue.Choice(subtitlePositionName(SubtitleStyle.Position.fromKey(config.position))),
             onClick = { showPosition = true },
         )
 
-        Spacer(Modifier.height(14.dp))
-        GroupLabel(stringResource(R.string.ai_subtitles_streaming_models))
+        StageSettingsHeading(stringResource(R.string.ai_subtitles_streaming_models), null)
         // English ships inside the APK as assets, so it is always ready — nothing to download/delete.
         val englishName = languageName(StreamingModelCatalog.BUILT_IN_ENGLISH_LANGUAGE, languages)
             ?: StreamingModelCatalog.BUILT_IN_ENGLISH_LANGUAGE
-        ServiceSettingsRow(
+        StageSettingRow(
             icon = OwnTVIcon.SPARKLE,
             title = englishName,
             desc = stringResource(R.string.ai_subtitles_model_builtin_description),
-            chip = stringResource(R.string.ai_subtitles_model_builtin),
-            primaryChip = true,
+            value = SettingValue.Choice(stringResource(R.string.ai_subtitles_model_builtin)),
             onClick = {},
         )
         StreamingModelCatalog.models.forEach { model ->
@@ -238,32 +229,30 @@ fun AiSubtitleSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
                 downloaded -> stringResource(R.string.ai_subtitles_model_downloaded)
                 else -> stringResource(R.string.ai_subtitles_model_size_mb, (model.sizeBytes / 1_000_000).toInt())
             }
-            ServiceSettingsRow(
+            StageSettingRow(
                 icon = OwnTVIcon.DOWNLOADS,
                 title = name,
                 desc = stringResource(R.string.ai_subtitles_model_description),
-                chip = chip,
-                primaryChip = downloaded,
-                chevron = progress == null,
+                value = SettingValue.Choice(chip),
                 onClick = {
                     when {
                         downloaded -> modelToDelete = model
                         progress != null -> modelBusy = model.language
                         else -> {
-                    // Give instant feedback before the (possibly slow) network connect, so a
-                    // tap never looks idle even while the connection is still hanging.
-                    android.widget.Toast.makeText(
-                        context,
-                        downloadStarted,
-                        android.widget.Toast.LENGTH_SHORT,
-                    ).show()
-                    modelBusy = model.language
-                    scope.launch {
-                        val ok = modelStore.ensureDownloaded(model)
-                        modelBusy = null
-                        if (!ok) modelFailed = model.language
-                    }
-                }
+                            // Give instant feedback before the (possibly slow) network connect, so a
+                            // tap never looks idle even while the connection is still hanging.
+                            android.widget.Toast.makeText(
+                                context,
+                                downloadStarted,
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
+                            modelBusy = model.language
+                            scope.launch {
+                                val ok = modelStore.ensureDownloaded(model)
+                                modelBusy = null
+                                if (!ok) modelFailed = model.language
+                            }
+                        }
                     }
                 },
             )
@@ -272,12 +261,11 @@ fun AiSubtitleSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
         // The Whisper tiny multilingual fallback recognizer ships inside the APK as assets
         // (no download, no delete) — only the on-demand streaming models appear in this list.
 
-        Spacer(Modifier.height(16.dp))
         Text(
             stringResource(R.string.ai_subtitles_status, status),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            style = stageText(15.5f, 500),
+            color = StageColors.Muted,
+            modifier = Modifier.padding(start = 22.mpx, top = 10.mpx),
         )
     }
 
