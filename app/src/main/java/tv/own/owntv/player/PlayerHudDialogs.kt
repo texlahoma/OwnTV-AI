@@ -533,6 +533,7 @@ internal fun AiSubtitleHudDialog(
     val focus = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
     val configStore = koinInject<AiSubtitleConfigStore>()
+    val debugInfo by configStore.hudDebugInfo.collectAsStateWithLifecycle()
     // Both look settings are the same persisted values the Settings page edits, exposed here too
     // because the natural moment to size a caption is while watching it — leaving to Settings means
     // losing the picture you are sizing against.
@@ -677,19 +678,31 @@ internal fun AiSubtitleHudDialog(
             )
         }
         item {
-            // The COMPLETE live debug line, as the list's last row. The pipeline only runs during
-            // playback and ends the moment it stops, so a panel open ON the playing channel is the
-            // only place this can be read — the Settings page's copy is dead data the instant
-            // playback exits. Fully wrapped, focusable so the D-pad lands on it and the list
-            // scrolls the whole dump into view.
-            Text(
-                stringResource(R.string.ai_subtitles_status, status),
-                style = stageText(12, 400), color = StageColors.Muted,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusable()
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
+            // The debug line is a diagnostic surface, not a preference: off by default, one press
+            // to arm it for this install (persisted). The complete dump renders below only while it
+            // is on.
+            OptionRow(
+                label = stringResource(R.string.player_ai_debug_info),
+                selected = debugInfo,
+                onClick = { scope.launch { configStore.setHudDebugInfo(!debugInfo) } },
             )
+        }
+        if (debugInfo) {
+            item {
+                // The COMPLETE live debug line. The pipeline only runs during playback and ends the
+                // moment it stops, so a panel open ON the playing channel is the only place this can
+                // be read — the Settings page's copy is dead data the instant playback exits. Fully
+                // wrapped, focusable so the D-pad lands on it and the list scrolls the whole dump
+                // into view.
+                Text(
+                    stringResource(R.string.ai_subtitles_status, status),
+                    style = stageText(12, 400), color = StageColors.Muted,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusable()
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                )
+            }
         }
     }
 

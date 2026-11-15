@@ -142,6 +142,7 @@ class AiSubtitleConfigStore(private val context: Context) {
     private val keySyncOffset = intPreferencesKey("sync_offset_ms")
     private val keyLiveDelay = intPreferencesKey("live_delay_seconds")
     private val keyStreamingReady = stringPreferencesKey("streaming_models_ready")
+    private val keyHudDebugInfo = booleanPreferencesKey("hud_debug_info")
 
     private val enabled: Flow<Boolean> = context.aiSubtitleDataStore.data.map { it[keyEnabled] ?: AiSubtitleConfig().enabled }
     private val source: Flow<String> = context.aiSubtitleDataStore.data.map { it[keySource] ?: AiSubtitleConfig().sourceLanguage }
@@ -233,6 +234,17 @@ class AiSubtitleConfigStore(private val context: Context) {
                 it[keyStreamingReady] = languages.sorted().joinToString(",")
             }
         }
+
+    /**
+     * Whether the in-player AI panel shows the complete live debug line. Off by default — it is a
+     * diagnostic surface, not a preference; held outside [AiSubtitleConfig] so a backup's AI
+     * section keeps its exact key set.
+     */
+    val hudDebugInfo: Flow<Boolean> =
+        context.aiSubtitleDataStore.data.map { it[keyHudDebugInfo] ?: false }
+
+    suspend fun setHudDebugInfo(value: Boolean) =
+        context.aiSubtitleDataStore.edit { it[keyHudDebugInfo] = value }
 
     /** One-shot read of the whole readiness snapshot, as a fast-path gate for the pipeline start. */
     suspend fun readinessSnapshot(): Set<String> = try {

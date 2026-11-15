@@ -31,6 +31,7 @@ app	splash_static_gone_base	res/values/themes.xml	!owntv_splash_static_
 app	splash_static_gone_v31	res/values-v31/themes.xml	!owntv_splash_static_
 app	splash_branding_gone_v31	res/values-v31/themes.xml	!owntv_splash_name_
 app	ai_preload_after_first_frame	features/aisubtitles/AiSubtitleManager.kt	PRELOAD_AFTER_FIRST_FRAME_MS
+app	ai_hud_debug_toggle	player/PlayerHudDialogs.kt	setHudDebugInfo(
 core	player_controls_ai_entry	core/player/PlayerControls.kt	AI_SUBTITLES(ControlCluster.MEDIA
 player	holdback_capacity_loadcontrol	player/LivePreviewEngine.kt	loadControlFor(effectiveLoadControlSecs()
 player	holdback_capacity_bytes	player/LivePreviewEngine.kt	targetBufferBytes(effectiveLoadControlSecs()
