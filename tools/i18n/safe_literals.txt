@@ -60,6 +60,7 @@
 1	preference-key	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	enabled
 2	technical	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	gpt-4o-mini
 2	url	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	https://api.openai.com
+1	preference-key	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	hud_debug_info
 1	preference-key	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	line_height
 1	preference-key	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	live_delay_seconds
 1	json	app/src/main/java/tv/own/owntv/features/aisubtitles/AiSubtitleConfigStore.kt	model
