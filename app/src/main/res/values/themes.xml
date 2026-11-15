@@ -24,30 +24,30 @@
         <item name="postSplashScreenTheme">@style/Theme.OwnTV</item>
     </style>
     <style name="Theme.OwnTV.Starting.Petrol">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_petrol</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Sunflower">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_sunflower</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Cobalt">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_cobalt</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Tomato">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_tomato</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Board">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_board</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Eggshell">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_eggshell</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Olive">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_olive</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.OliveCream">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_olive_cream</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Pixel">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_pixel</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
 </resources>

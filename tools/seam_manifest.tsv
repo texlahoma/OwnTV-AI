@@ -24,6 +24,12 @@ app	hud_status_footer_rendered	player/PlayerHudDialogs.kt	footer?.invoke()
 app	hud_status_footer_wired	player/PlayerHudDialogs.kt	R.string.ai_subtitles_status, status
 app	hud_panel_width_honored	player/PlayerHudDialogs.kt	width = panelWidth ?: 640.mpx
 app	updater_fork_repo	OwnTVApp.kt	CoreBuildInfo.releaseRepo = "texlahoma/OwnTV-AI"
+app	splash_never_held	MainActivity.kt	!setKeepOnScreenCondition
+app	splash_icon_transparent_base	res/values/themes.xml	@drawable/owntv_splash_transparent
+app	splash_icon_transparent_v31	res/values-v31/themes.xml	@drawable/owntv_splash_transparent
+app	splash_static_gone_base	res/values/themes.xml	!owntv_splash_static_
+app	splash_static_gone_v31	res/values-v31/themes.xml	!owntv_splash_static_
+app	splash_branding_gone_v31	res/values-v31/themes.xml	!owntv_splash_name_
 core	player_controls_ai_entry	core/player/PlayerControls.kt	AI_SUBTITLES(ControlCluster.MEDIA
 player	holdback_capacity_loadcontrol	player/LivePreviewEngine.kt	loadControlFor(effectiveLoadControlSecs()
 player	holdback_capacity_bytes	player/LivePreviewEngine.kt	targetBufferBytes(effectiveLoadControlSecs()

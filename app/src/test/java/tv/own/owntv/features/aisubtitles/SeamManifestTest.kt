@@ -39,18 +39,23 @@ class SeamManifestTest {
                 continue
             }
             val (repo, id, path, marker) = parts
-            val root = when (repo) {
-                "app" -> File("src/main/java/tv/own/owntv")
-                "core" -> File(coreRoot(), "core/src/main/java/tv/own/owntv")
-                "player" -> File(coreRoot(), "player-core/src/main/java/tv/own/owntv")
+            val root = when {
+                repo == "app" -> if (path.startsWith("res/")) File("src/main") else File("src/main/java/tv/own/owntv")
+                repo == "core" -> File(coreRoot(), "core/src/main/java/tv/own/owntv")
+                repo == "player" -> File(coreRoot(), "player-core/src/main/java/tv/own/owntv")
                 else -> null
             }
             val file = root?.resolve(path)
             val text = file?.takeIf { it.isFile }?.readText()
+            // A marker starting with '!' is a ban: the file must NOT contain it (e.g. the splash
+            // hold that was removed on purpose — its return must fail the gate by name).
+            val banned = marker.startsWith("!")
+            val needle = if (banned) marker.removePrefix("!") else marker
             when {
                 root == null -> broken += "$id — unknown repo '$repo'"
                 text == null -> broken += "$id — file missing: $file"
-                !text.contains(marker) -> broken += id
+                banned && text.contains(needle) -> broken += "$id — forbidden marker is back: $needle"
+                !banned && !text.contains(needle) -> broken += id
             }
         }
         assertTrue(

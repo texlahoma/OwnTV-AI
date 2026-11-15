@@ -2,7 +2,6 @@ package tv.own.owntv
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import androidx.room.useWriterConnection
 import android.view.WindowManager
@@ -54,43 +53,7 @@ open class MainActivity : ComponentActivity() {
 
         /** Bounded wait for the startup database probe (see [probeDatabase]). */
         private const val DB_PROBE_TIMEOUT_MS = 5_000L
-
-        /**
-         * Hard ceiling on the splash. A stuck DataStore/profile read must never leave the user
-         * staring at a static logo — past this the splash dismisses whatever the state is.
-         *
-         * Kept short deliberately: the old build drew its (blank) first frame at ~1.1s, so anything
-         * beyond ~2s of splash is a perceived-responsiveness regression even though the app is doing
-         * strictly less work than before.
-         */
-        private const val SPLASH_TIMEOUT_MS = 2_000L
-
-        /**
-         * How much longer, once the profile is known, the splash waits for the start-up screen. Home settles
-         * at once, so only a start on the last channel ever waits; on a 55k-channel playlist on the TCL that
-         * took 2.2–3.3 s from launch, and a shorter wait showed Home for a moment before Live TV or the Guide.
-         */
-        private const val STARTUP_SETTLE_TIMEOUT_MS = 3_000L
     }
-
-    /**
-     * False while the app has no destination to draw yet (active profile id unknown, or the
-     * profile query has not returned on a cold start) — exactly the two `when` branches that used to
-     * render a blank window. Latched true and never cleared, so a mid-session empty-profile window
-     * during backup restore cannot bring the splash back; the foreground gate still refuses to
-     * compose the shell until the loaded list and active-id check are valid.
-     */
-    @Volatile
-    private var contentReady = false
-
-    /**
-     * Whether the shell has opened where the profile's start-up choice says (the TV Guide, Live TV, the
-     * player...). The shell first composes on Home and applies that choice a moment later, so the splash
-     * stays up until then and Home never flashes on the way. Owned by this activity, so a relaunch in a
-     * process that is still alive waits again.
-     */
-    @Volatile
-    private var startupSettled = false
 
     private val player: tv.own.owntv.player.OwnTVPlayer by inject()
     private val engines: tv.own.owntv.player.PlaybackEngines by inject()
@@ -199,28 +162,25 @@ open class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be installed BEFORE super.onCreate() per the library's contract. It also applies
         // postSplashScreenTheme (Theme.OwnTV), so the activity ends up in the same theme as before.
-        val splash = installSplashScreen()
+        // Return value unused by design — see the NO-splash-hold comment in onCreate.
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         tv.own.owntv.features.pip.PictureInPictureWindow.attach(this, get())
         // The window only pauses the activity, so onStop's relock never runs while it is open: going into
         // it is leaving the app, and a channel from a category the PIN opened stops there too.
         addOnPictureInPictureModeChangedListener { if (it.isInPictureInPictureMode) shellViewModel.relockCategories() }
         visibility.addListener(onVisibility)
-        val splashDeadline = SystemClock.uptimeMillis() + SPLASH_TIMEOUT_MS
-        var readyAt = 0L
-        splash.setKeepOnScreenCondition {
-            val now = SystemClock.uptimeMillis()
-            if (!contentReady) return@setKeepOnScreenCondition now < splashDeadline
-            if (readyAt == 0L) readyAt = now
-            // Then until the shell is on the start-up screen, so Home does not flash first.
-            !startupSettled && now < readyAt + STARTUP_SETTLE_TIMEOUT_MS
-        }
+        // NO splash hold: the system splash dismisses on the first frame and the shell composes straight
+        // on Home — a tap on the launcher icon must land on the home page, not on a logo. The old
+        // keep-on-screen condition held the icon for up to five seconds (profile wait + start-up-screen
+        // settle); that branding beat was removed on purpose, and the seam manifest fails the build if
+        // any splash-holding condition comes back. The splash icon itself is a transparent drawable
+        // (res/drawable/owntv_splash_transparent.xml referenced by the Starting themes), because the
+        // Android 12+ system splash frame itself cannot be removed by an app.
         pendingDeepLink = LauncherDeepLink.parse(intent.data)
         Log.d(TAG, "onCreate deepLinkHost=${intent.data?.host} deepLinkType=${pendingDeepLink?.javaClass?.simpleName ?: "none"}")
         val dbError = probeDatabase()
         if (dbError != null) {
-            contentReady = true // the recovery screen IS the destination — don't hold the splash over it
-            startupSettled = true
             setContent {
                 tv.own.owntv.features.recovery.DatabaseRecoveryScreen(
                     message = dbError,
@@ -343,15 +303,8 @@ open class MainActivity : ComponentActivity() {
                 if (profilesLoaded) Perf.stamp("profiles-loaded")
             }
             val destinationReady = loadedProfileId != null && profilesLoaded
-            // A profile or PIN gate is the destination itself; the shell's start-up choice comes after it.
-            LaunchedEffect(destinationReady, shellReady) {
-                if (destinationReady && !shellReady) startupSettled = true
-            }
             LaunchedEffect(destinationReady) {
-                if (destinationReady && !contentReady) {
-                    contentReady = true
-                    Perf.stamp("destination-ready") // splash hand-off — the number startup work moves
-                }
+                if (destinationReady) Perf.stamp("destination-ready") // first-frame hand-off timing
             }
 
             // "Refresh on startup" — re-sync sources once the active profile is known.
@@ -485,7 +438,7 @@ open class MainActivity : ComponentActivity() {
                                 onDeepLinkConsumed = { pendingDeepLink = null },
                                 isOffline = !isOnline,
                                 onExitApp = { finish() },
-                                onStartupSettled = { startupSettled = true },
+                                onStartupSettled = {},
                                 onSwitchProfile = {
                                     // Stop playback and return to the "Who's watching?" gate — no app restart.
                                     tv.own.owntv.features.profiles.stopPlaybackForProfileGate(shellViewModel, engines)

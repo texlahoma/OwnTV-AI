@@ -1,79 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Android 12+: the launch screen plays the flip (core's owntv_splash_<colour>, 800 ms) and shows the
-         wordmark at the bottom (owntv_splash_name_<colour>), the pass-6 mockup's launch animation. -->
+    <!-- Android 12+: every variant points its icon and branding image at the transparent drawable —
+         the launch splash shows nothing but the window background before the first frame lands on
+         Home. The splash-holding condition is gone too (MainActivity); the seam manifest holds both. -->
     <style name="Theme.OwnTV.Starting.Petrol">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_petrol</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_petrol</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Sunflower">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_sunflower</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_sunflower</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Cobalt">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_cobalt</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_cobalt</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Tomato">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_tomato</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_tomato</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Board">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_board</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_board</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Eggshell">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_eggshell</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_eggshell</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Olive">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_olive</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_olive</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.OliveCream">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_olive_cream</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">800</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_olive_cream</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Pixel">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_pixel</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
         <item name="windowSplashScreenAnimationDuration">600</item>
-        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_name_pixel</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/owntv_splash_transparent</item>
     </style>
     <!-- Animations Off: the same launch screen with the still mark. MainActivity hands one of these to
          SplashScreen.setSplashScreenTheme (Android 13+), which applies from the next launch on. -->
     <style name="Theme.OwnTV.Starting.Petrol.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_petrol</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Sunflower.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_sunflower</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Cobalt.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_cobalt</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Tomato.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_tomato</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Board.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_board</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Eggshell.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_eggshell</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Olive.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_olive</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.OliveCream.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_olive_cream</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
     <style name="Theme.OwnTV.Starting.Pixel.Still">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_static_pixel</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/owntv_splash_transparent</item>
     </style>
 </resources>

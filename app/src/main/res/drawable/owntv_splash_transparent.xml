@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The launch splash icon, removed: every Theme.OwnTV.Starting variant points its
+  windowSplashScreenAnimatedIcon here, so the Android 12+ system splash shows nothing but the
+  window background before the first frame lands on Home. The splash-holding condition is gone
+  too (MainActivity); the seam manifest holds both.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+    <size android:width="1dp" android:height="1dp" />
+</shape>
