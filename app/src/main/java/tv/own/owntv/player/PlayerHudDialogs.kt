@@ -3,6 +3,7 @@ package tv.own.owntv.player
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -554,22 +555,7 @@ internal fun AiSubtitleHudDialog(
     DialogScaffold(
         title = stringResource(R.string.player_ai_subtitles),
         onDismiss = { if (!dismissLayer()) onDismiss() },
-        // Wider than the standard popup and the long status line pinned below the list: the combined
-        // status/debug line is one unbroken string, so a narrow box wrapped it past the list cap and
-        // the tail never showed.
         panelWidth = 520.dp,
-        footer = {
-            Text(
-                stringResource(R.string.ai_subtitles_status, status),
-                style = stageText(14, 400), color = StageColors.Muted,
-                // The status line is one unbroken string that wraps to many lines; cap it so the
-                // footer cannot push the panel past its height (the head carries engine/language/
-                // mode and counts, which is what the in-player panel needs — the full dump lives in
-                // Settings → AI subtitles).
-                maxLines = 4, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            )
-        },
     ) {
         item {
             OptionRow(
@@ -688,6 +674,21 @@ internal fun AiSubtitleHudDialog(
                 stringResource(R.string.ai_subtitles_remembered_hint),
                 style = stageText(14, 400), color = StageColors.Muted,
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            )
+        }
+        item {
+            // The COMPLETE live debug line, as the list's last row. The pipeline only runs during
+            // playback and ends the moment it stops, so a panel open ON the playing channel is the
+            // only place this can be read — the Settings page's copy is dead data the instant
+            // playback exits. Fully wrapped, focusable so the D-pad lands on it and the list
+            // scrolls the whole dump into view.
+            Text(
+                stringResource(R.string.ai_subtitles_status, status),
+                style = stageText(12, 400), color = StageColors.Muted,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusable()
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
             )
         }
     }
