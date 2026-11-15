@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Ses</string>
     <string name="player_tool_subtitles">Altyazı</string>
     <string name="player_tool_ai_subtitles">AI altyazıları</string>
+    <string name="player_ai_debug_info">Hata ayıklama</string>
     <string name="player_tool_favorite">Favori</string>
     <string name="player_tool_catchup">Geri izle</string>
     <string name="player_tool_speed">Hız</string>

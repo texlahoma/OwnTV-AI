@@ -34,6 +34,7 @@
     <string name="player_tool_audio">ഓഡിയോ</string>
     <string name="player_tool_subtitles">സബ്ടൈറ്റിൽ</string>
     <string name="player_tool_ai_subtitles">AI സബ്ടൈറ്റിൽ</string>
+    <string name="player_ai_debug_info">ഡീബഗ് വിവരം</string>
     <string name="player_tool_favorite">പ്രിയപ്പെട്ടത്</string>
     <string name="player_tool_catchup">ക്യാച്ച്-അപ്പ്</string>
     <string name="player_tool_speed">വേഗത</string>

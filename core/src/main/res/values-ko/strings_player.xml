@@ -34,6 +34,7 @@
     <string name="player_tool_audio">오디오</string>
     <string name="player_tool_subtitles">자막</string>
     <string name="player_tool_ai_subtitles">AI 자막</string>
+    <string name="player_ai_debug_info">디버그 정보</string>
     <string name="player_tool_favorite">즐겨찾기</string>
     <string name="player_tool_catchup">다시보기</string>
     <string name="player_tool_speed">속도</string>

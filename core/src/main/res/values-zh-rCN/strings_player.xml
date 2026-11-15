@@ -54,6 +54,7 @@
     <string name="player_subtitles">字幕</string>
     <string name="player_subtitle_timing">字幕时间调整</string>
     <string name="player_ai_subtitles">AI 字幕</string>
+    <string name="player_ai_debug_info">调试信息</string>
     <string name="player_ai_subtitles_adjust_position">调整位置</string>
     <string name="ai_subtitles_sync_offset">字幕同步</string>
     <string name="ai_subtitles_sync_value">%1$d 毫秒</string>

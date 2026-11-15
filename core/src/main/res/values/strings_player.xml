@@ -113,6 +113,7 @@
     <string name="player_subtitle_timing">Subtitle timing</string>
     <!-- Translators: Dialog title and option row for the AI speech-recognition subtitles panel in the player HUD. -->
     <string name="player_ai_subtitles">AI subtitles</string>
+    <string name="player_ai_debug_info">Debug info</string>
     <!-- Translators: Section label in the in-player AI-subtitle panel for the on-screen arrow controls that nudge the subtitle position. -->
     <string name="player_ai_subtitles_adjust_position">Adjust position</string>
     <!-- Manual caption sync trim: the one offset the platform cannot measure (HDMI/ARC, soundbar,

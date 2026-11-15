@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Ton</string>
     <string name="player_tool_subtitles">Untertitel</string>
     <string name="player_tool_ai_subtitles">KI-Untertitel</string>
+    <string name="player_ai_debug_info">Debug-Info</string>
     <string name="player_tool_favorite">Favorit</string>
     <string name="player_tool_catchup">Catch-up</string>
     <string name="player_tool_speed">Tempo</string>

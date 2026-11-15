@@ -34,6 +34,7 @@
     <string name="player_tool_audio">অডিও</string>
     <string name="player_tool_subtitles">সাবটাইটেল</string>
     <string name="player_tool_ai_subtitles">AI সাবটাইটেল</string>
+    <string name="player_ai_debug_info">ডিবাগ তথ্য</string>
     <string name="player_tool_favorite">প্রিয়</string>
     <string name="player_tool_catchup">ক্যাচ-আপ</string>
     <string name="player_tool_speed">গতি</string>

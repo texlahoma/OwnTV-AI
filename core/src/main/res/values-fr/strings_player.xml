@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Audio</string>
     <string name="player_tool_subtitles">Sous-titres</string>
     <string name="player_tool_ai_subtitles">Sous-titres IA</string>
+    <string name="player_ai_debug_info">Infos de débogage</string>
     <string name="player_tool_favorite">Favori</string>
     <string name="player_tool_catchup">Replay</string>
     <string name="player_tool_speed">Vitesse</string>

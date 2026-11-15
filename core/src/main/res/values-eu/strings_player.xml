@@ -32,6 +32,7 @@
     <string name="player_tool_audio">Audioa</string>
     <string name="player_tool_subtitles">Azpitituluak</string>
     <string name="player_tool_ai_subtitles">AI azpitituluak</string>
+    <string name="player_ai_debug_info">Arazpen-informazioa</string>
     <string name="player_tool_favorite">Gogokoa</string>
     <string name="player_tool_catchup">Berrikusi</string>
     <string name="player_tool_speed">Abiadura</string>

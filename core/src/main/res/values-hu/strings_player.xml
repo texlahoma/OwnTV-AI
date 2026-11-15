@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Hang</string>
     <string name="player_tool_subtitles">Felirat</string>
     <string name="player_tool_ai_subtitles">AI feliratok</string>
+    <string name="player_ai_debug_info">Hibakeresési infó</string>
     <string name="player_tool_favorite">Kedvenc</string>
     <string name="player_tool_catchup">Visszanézés</string>
     <string name="player_tool_speed">Sebesség</string>

@@ -34,6 +34,7 @@
     <string name="player_tool_audio">الصوت</string>
     <string name="player_tool_subtitles">ترجمة</string>
     <string name="player_tool_ai_subtitles">ترجمة AI</string>
+    <string name="player_ai_debug_info">معلومات التصحيح</string>
     <string name="player_tool_favorite">مفضّلة</string>
     <string name="player_tool_catchup">البث الفائت</string>
     <string name="player_tool_speed">السرعة</string>

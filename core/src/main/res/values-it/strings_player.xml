@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Audio</string>
     <string name="player_tool_subtitles">Sottotitoli</string>
     <string name="player_tool_ai_subtitles">Sottotitoli IA</string>
+    <string name="player_ai_debug_info">Info debug</string>
     <string name="player_tool_favorite">Preferito</string>
     <string name="player_tool_catchup">Differita</string>
     <string name="player_tool_speed">Velocità</string>

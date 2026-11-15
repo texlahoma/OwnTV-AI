@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Zvuk</string>
     <string name="player_tool_subtitles">Titulky</string>
     <string name="player_tool_ai_subtitles">AI titulky</string>
+    <string name="player_ai_debug_info">Ladící informace</string>
     <string name="player_tool_favorite">Oblíbené</string>
     <string name="player_tool_catchup">Ze záznamu</string>
     <string name="player_tool_speed">Rychlost</string>

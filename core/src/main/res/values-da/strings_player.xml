@@ -34,6 +34,7 @@
     <string name="player_tool_audio">Lyd</string>
     <string name="player_tool_subtitles">Undertekster</string>
     <string name="player_tool_ai_subtitles">AI-undertekster</string>
+    <string name="player_ai_debug_info">Debug-info</string>
     <string name="player_tool_favorite">Favorit</string>
     <string name="player_tool_catchup">Catch-up</string>
     <string name="player_tool_speed">Hastighed</string>
