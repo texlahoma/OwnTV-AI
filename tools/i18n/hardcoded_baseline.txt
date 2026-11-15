@@ -299,8 +299,10 @@
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	decoder rebuild failed: ${it.message}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	default User-Agent refused — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	hold-back could not fill within ${waitedMs}ms — playing stock audio from the live edge, captions undelayed
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	holdBack=${effectiveHoldBackMs}ms latencySec=${liveBufferSecs ?: -1}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	insufficient resource
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	insufficientresources
+1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms holdBack=${effectiveHoldBackMs}ms latency=${liveBufferSecs ?: -1}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	no more instances
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	provider refused the default User-Agent — retrying as ${HttpClient.FALLBACK_USER_AGENT}
 1	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	reclaim

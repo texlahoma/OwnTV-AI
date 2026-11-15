@@ -2052,7 +2052,11 @@ class LivePreviewEngine(
             // across tunes — so a setting changed while nothing was playing, or a per-playlist override that
             // differs from the last channel's, would otherwise never take effect (the "Pre-buffer
             // does nothing" report). Drop the player whenever the numbers it was built with no longer match.
-            val wanted = LiveBuffer.loadControlFor(effectiveLiveBufferSecs(), effectivePrerollSecs())
+            // The hold-back capacity is part of the identity: the AI worker applies the caption delay
+            // BETWEEN tunes, and a player built before it never grew the buffer past the base cap —
+            // the sink then waited for a 16 s queue a 10 s buffer can never fill, and every tune with
+            // subtitles on died in the open watchdog ("open stalled ... after 30079ms").
+            val wanted = LiveBuffer.loadControlFor(effectiveLoadControlSecs() ?: effectiveLiveBufferSecs(), effectivePrerollSecs())
             if (player != null && (builtLoadControl != wanted || (memoryPressure && !builtLowRam) || builtTunneled != wantTunneling() ||
                     builtHwDecoding != hwDecodingEnabled)) {
                 LiveDiagnosticsLog.event("player stale (load_control was=$builtLoadControl want=$wanted, hw decoding was=$builtHwDecoding want=$hwDecodingEnabled) — rebuilding player")
@@ -3829,21 +3833,24 @@ class LivePreviewEngine(
         // Media3 honours that for HLS/DASH only. The preset now drives the depth (keeping the 2 s idle
         // window at every setting), and the new "Pre-buffer" drives the start thresholds.
         // Balanced + Off reproduces the previous constants exactly.
-        val lc = LiveBuffer.loadControlFor(effectiveLiveBufferSecs(), effectivePrerollSecs()).also { builtLoadControl = it }
+        // The hold-back capacity (see [effectiveLoadControlSecs]): the sink queues the caption delay
+        // in decoded audio, so the media buffer must be ALLOWED to grow to that depth or the queue
+        // can never fill and the tune dies in the open watchdog.
+        val lc = LiveBuffer.loadControlFor(effectiveLoadControlSecs() ?: effectiveLiveBufferSecs(), effectivePrerollSecs()).also { builtLoadControl = it }
         val lowRam = budget.lowSpec || memoryPressure
         builtLowRam = lowRam
         val defaultBytes = if (lowRam) LOW_RAM_TARGET_BYTES else TARGET_BUFFER_BYTES
         LiveDiagnosticsLog.event(
             "load_control min=${lc.minBufferMs} max=${lc.maxBufferMs} start=${lc.bufferForPlaybackMs} " +
                 "restart=${lc.bufferForPlaybackAfterRebufferMs} preroll=${effectivePrerollSecs()}s " +
-                "latencySec=${liveBufferSecs ?: -1}",
+                "holdBack=${effectiveHoldBackMs}ms latencySec=${liveBufferSecs ?: -1}",
         )
         // Also to Logcat unconditionally: the diagnostics log is off in a release build, and these numbers
         // are the only way to tell "the setting didn't apply" from "the buffer filled that fast".
         android.util.Log.i(
             LiveDiagnosticsLog.TAG,
             "live_buffer preroll=${effectivePrerollSecs()}s start=${lc.bufferForPlaybackMs}ms " +
-                "min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms latency=${liveBufferSecs ?: -1}",
+                "min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms holdBack=${effectiveHoldBackMs}ms latency=${liveBufferSecs ?: -1}",
         )
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(
@@ -3852,7 +3859,7 @@ class LivePreviewEngine(
                 lc.bufferForPlaybackMs,
                 lc.bufferForPlaybackAfterRebufferMs,
             )
-            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(effectiveLiveBufferSecs(), effectivePrerollSecs(), defaultBytes, lowSpec = budget.lowSpec))
+            .setTargetBufferBytes(LiveBuffer.targetBufferBytes(effectiveLoadControlSecs() ?: effectiveLiveBufferSecs(), effectivePrerollSecs(), defaultBytes, lowSpec = budget.lowSpec))
             .build()
         // Decode-path config is shared with the other ExoPlayer engines — see [ownTVRenderers].
         // The audio sink is pinned to stereo PCM when the user asked for "Stereo only" or when the

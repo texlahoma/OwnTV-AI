@@ -6208,7 +6208,6 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	kind unknown
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	knownHlsHost=$knownHls knownDashHost=$knownDashHost
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	lang=$it
-1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	latencySec=${liveBufferSecs ?: -1}
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	lead=${LiveAudioDelay.measuredMs}ms filling=${LiveAudioDelay.filling}
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	learned HLS route could not parse this channel — retrying it as TS
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	length=${response.body.contentLength()} signature=${HttpDiagnostics.mediaSignature(prefix)}
@@ -6219,7 +6218,6 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	load_error status=${code ?: -1} type=${error.javaClass.simpleName}
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	media server not answering
 1	log	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	media_source inferred=${route.logName} declared=${currentManifestType?.key ?: "-"}
-1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	min=${lc.minBufferMs}ms max=${lc.maxBufferMs}ms latency=${liveBufferSecs ?: -1}
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	mp4v-es
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	mpeg2
 1	technical	player-core/src/main/java/tv/own/owntv/player/LivePreviewEngine.kt	muxedCaptions=${mv.muxedCaptionFormats?.size ?: 0}
