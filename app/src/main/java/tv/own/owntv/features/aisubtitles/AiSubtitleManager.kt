@@ -1275,11 +1275,16 @@ class AiSubtitleManager(
     @Volatile private var preloadedEnglish: StreamingWhisper? = null
 
     init {
-        // Preload the built-in English streaming engine into memory at app start so the first
-        // English channel recognises without waiting for the ONNX weights to be read. Readiness is
-        // independent of AI subtitles being on — this makes the "idle → recognition" wait on an
-        // English channel go away regardless of when the switch is flipped.
+        // Preload the built-in English streaming engine so the first English channel recognises
+        // without waiting for the ONNX weights to be read — but AFTER the first-frame window. The
+        // manager is constructed during the shell's first composition, and reading the weights right
+        // then competed with Home's first frame for CPU and I/O: visible launch latency for a
+        // benefit (instant first recognition) that a tune with subtitles only reaches seconds into
+        // the session anyway. Readiness is independent of AI subtitles being on — this makes the
+        // "idle → recognition" wait on an English channel go away regardless of when the switch is
+        // flipped.
         scope.launch {
+            kotlinx.coroutines.delay(PRELOAD_AFTER_FIRST_FRAME_MS)
             val warm = runCatching {
                 whisperFactory.create(context, StreamingModelCatalog.BUILT_IN_ENGLISH_LANGUAGE)
             }.getOrNull()
@@ -2909,6 +2914,10 @@ class AiSubtitleManager(
     @Volatile private var recognizer: StreamingWhisper? = null
 
     private companion object {
+        // The English-model preload waits this long before touching disk: the manager is constructed
+        // during the shell's first composition, and the ONNX weight read inside that window competed
+        // with Home's first frame — visible launch latency for a benefit seconds away.
+        private const val PRELOAD_AFTER_FIRST_FRAME_MS = 2_500L
         // Bounded tap buffer between the ExoPlayer audio thread and the ASR worker. Each element is
         // a 160 ms frame, so the capacity IS the caption lag ceiling: the deepest the queue can get
         // is exactly how far behind live the recognizer is allowed to fall. On overflow the WHOLE
