@@ -130,7 +130,10 @@ jobs:
             :app:compileStandardDebugKotlin \
             -Powntv.corePath="$GITHUB_WORKSPACE/OwnTV_Core" \
             --console=plain 2>&1 | tee /tmp/dead-symbol.log
-          if grep -E "never used|is unused" /tmp/dead-symbol.log; then
+          # " is never used" — the exact wording for an unwired private function/property. NOT the
+          # broader "is unused": upstream tests legitimately leave expressions unused, and one
+          # release was falsely killed by them.
+          if grep -E " is never used" /tmp/dead-symbol.log; then
             echo "::error::Dead private symbols found above — a seam lost its wiring. Wire it or delete it; never merge past this gate."
             exit 1
           fi
