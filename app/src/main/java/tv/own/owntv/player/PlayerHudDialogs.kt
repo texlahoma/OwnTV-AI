@@ -481,11 +481,12 @@ private fun DialogScaffold(
     // Applied to the list, so it sees the rows' keys first (a guard against a still-held OK).
     modifier: Modifier = Modifier,
     state: androidx.compose.foundation.lazy.LazyListState = androidx.compose.foundation.lazy.rememberLazyListState(),
-    panelWidth: Dp = 260.dp,
+    /** Explicit panel width; null keeps the player pickers' standard 640‰ width. */
+    panelWidth: Dp? = null,
     footer: (@Composable () -> Unit)? = null,
     content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit,
 ) {
-    tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = title, eyebrow = null, width = 640.mpx, scroll = false) {
+    tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = title, eyebrow = null, width = panelWidth ?: 640.mpx, scroll = false) {
         LazyColumn(state = state, modifier = Modifier.weight(1f, fill = false).then(modifier), verticalArrangement = Arrangement.spacedBy(4.mpx), content = content)
         // The footer slot is real: the AI-subtitle panel pins its live status/debug line here.
         // It once took the parameter and never drew it — the line was wired, populated, and
@@ -647,7 +648,7 @@ internal fun AiSubtitleHudDialog(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     tv.own.owntv.ui.stage.StagePopupButton(
-                        label = "", icon = OwnTVIcon.CHEVRON_DOWN, onClick = { nudge(-AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
+                        label = "", icon = OwnTVIcon.CHEVRON_LEFT, onClick = { nudge(-AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
                         primary = false, compact = true, modifier = Modifier.size(36.dp),
                     )
                     tv.own.owntv.ui.stage.StagePopupButton(
