@@ -94,6 +94,25 @@ class AiSeamAuditTest {
     }
 
     /**
+     * The AI settings page must be drawn with the Stage design system — the same components as
+     * every other settings page. It once used the legacy ink-on-glass rows, which under the
+     * current theme rendered as an unreadable smudge: the settings "worked" and showed nothing
+     * a user could read.
+     */
+    @Test
+    fun `the ai settings page uses the stage design system`() {
+        val page = read("src/main/java/tv/own/owntv/features/settings/AiSubtitleSettingsScreen.kt")
+        assertTrue(
+            "the AI settings page must draw on StageFullPage",
+            page.contains("StageFullPage("),
+        )
+        assertTrue(
+            "the AI settings page must not use the legacy ServiceSettingsRow rows",
+            !page.contains("ServiceSettingsRow("),
+        )
+    }
+
+    /**
      * Export and import must name the same JSON keys, or a field is carried out of a backup and
      * quietly dropped on restore (or vice versa). Parsed from both method bodies so the two drift
      * apart only when this test says so.
