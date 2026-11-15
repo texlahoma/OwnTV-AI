@@ -1,0 +1,28 @@
+# OwnTV-AI fork seam manifest — the single registry of every patch site this fork
+# sews into upstream code. One line per site, TAB-separated, exactly four fields:
+#
+# repo	 id	 path	 required-marker
+#
+# repo: app (path relative to the app module's src/main/java/tv/own/owntv/) or
+#       core (path relative to the core checkout's src/main/java/tv/own/owntv/)
+#
+# The generic test (SeamManifestTest) asserts every marker exists in its file. An upstream
+# merge that rewrites one of these files and drops a patch site fails the release gate with
+# the manifest id — no new bespoke audit is written per bug; new patch sites are ADDED here.
+# A marker must be specific enough that only real wiring matches (a call site, a branch, a
+# route — never a mere declaration).
+app	routes_ai_subtitles	features/shell/components/SettingsScreen.kt	open(SettingsTab.AI_SUBTITLES)
+app	watching_slice_rendered	features/shell/components/SettingsScreen.kt	if (group == SettingsGroup.WATCHING) selectedRows.forEachIndexed
+app	ai_page_stage_system	features/settings/AiSubtitleSettingsScreen.kt	StageFullPage(
+app	shell_mounts_ai_overlay	features/shell/OwnTVShell.kt	AiSubtitleOverlay(
+app	tune_feeds_ai_manager	features/live/LiveViewModel.kt	aiSubtitles.setActiveKey(channelPrefKey(channel))
+app	leaving_live_clears_ai	features/live/LiveViewModel.kt	aiSubtitles.setActiveKey(null)
+app	ai_engine_pin_shared	features/live/LiveViewModel.kt	enginePinKey(
+app	hud_ai_dialog_routed	player/PlayerHud.kt	HudDialog.AI_SUBS -> AiSubtitleHudDialog(
+app	hud_ai_button	player/PlayerHudChrome.kt	PlayerControl.AI_SUBTITLES ->
+app	updater_fork_repo	OwnTVApp.kt	CoreBuildInfo.releaseRepo = "texlahoma/OwnTV-AI"
+core	player_controls_ai_entry	core/player/PlayerControls.kt	AI_SUBTITLES(ControlCluster.MEDIA
+player	holdback_capacity_loadcontrol	player/LivePreviewEngine.kt	loadControlFor(effectiveLoadControlSecs()
+player	holdback_capacity_bytes	player/LivePreviewEngine.kt	targetBufferBytes(effectiveLoadControlSecs()
+player	holdback_depth_in_log	player/LivePreviewEngine.kt	holdBack=${effectiveHoldBackMs}ms
+core	updater_mirror_urls	core/update/UpdateManager.kt	gh-proxy.com/https://api.github.com/
