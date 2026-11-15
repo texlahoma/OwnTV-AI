@@ -20,6 +20,8 @@ app	leaving_live_clears_ai	features/live/LiveViewModel.kt	aiSubtitles.setActiveK
 app	ai_engine_pin_shared	features/live/LiveViewModel.kt	enginePinKey(
 app	hud_ai_dialog_routed	player/PlayerHud.kt	HudDialog.AI_SUBS -> AiSubtitleHudDialog(
 app	hud_ai_button	player/PlayerHudChrome.kt	PlayerControl.AI_SUBTITLES ->
+app	hud_status_footer_rendered	player/PlayerHudDialogs.kt	footer?.invoke()
+app	hud_status_footer_wired	player/PlayerHudDialogs.kt	R.string.ai_subtitles_status, status
 app	updater_fork_repo	OwnTVApp.kt	CoreBuildInfo.releaseRepo = "texlahoma/OwnTV-AI"
 core	player_controls_ai_entry	core/player/PlayerControls.kt	AI_SUBTITLES(ControlCluster.MEDIA
 player	holdback_capacity_loadcontrol	player/LivePreviewEngine.kt	loadControlFor(effectiveLoadControlSecs()

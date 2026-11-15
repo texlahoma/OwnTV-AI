@@ -487,6 +487,10 @@ private fun DialogScaffold(
 ) {
     tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = title, eyebrow = null, width = 640.mpx, scroll = false) {
         LazyColumn(state = state, modifier = Modifier.weight(1f, fill = false).then(modifier), verticalArrangement = Arrangement.spacedBy(4.mpx), content = content)
+        // The footer slot is real: the AI-subtitle panel pins its live status/debug line here.
+        // It once took the parameter and never drew it — the line was wired, populated, and
+        // structurally invisible on every version until a user reported it missing.
+        footer?.invoke()
     }
 }
 
@@ -556,7 +560,12 @@ internal fun AiSubtitleHudDialog(
         footer = {
             Text(
                 stringResource(R.string.ai_subtitles_status, status),
-                style = stageText(16, 400), color = StageColors.Muted,
+                style = stageText(14, 400), color = StageColors.Muted,
+                // The status line is one unbroken string that wraps to many lines; cap it so the
+                // footer cannot push the panel past its height (the head carries engine/language/
+                // mode and counts, which is what the in-player panel needs — the full dump lives in
+                // Settings → AI subtitles).
+                maxLines = 4, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             )
         },
