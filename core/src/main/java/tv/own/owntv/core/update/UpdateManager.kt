@@ -99,17 +99,36 @@ class UpdateManager(
         _state.value = State.Checking
         scope.launch {
             runCatching {
-                val request = Request.Builder()
-                    .url("https://api.github.com/repos/${CoreBuildInfo.releaseRepo}/releases/latest")
-                    .header("Accept", "application/vnd.github+json")
-                    .header("User-Agent", "OwnTV")
-                    .build()
-                client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) throw CheckHttpException(resp.code)
-                    val body = resp.body.string()
-                    if (body.isBlank()) throw InvalidReleaseResponseException()
-                    val o = runCatching { JSONObject(body) }.getOrElse { throw InvalidReleaseResponseException() }
-                    val notes = o.optString("body").take(16_000)
+                // GitHub's API is unreachable for a meaningful slice of the TVs this fork runs on
+                // (regional blocks, CGNAT rate limits) — the check then failed with nothing to show
+                // for it. Try the direct endpoint first, then a read-only proxy of the same
+                // endpoint: the same JSON behind a different door.
+                val repoPath = "repos/${CoreBuildInfo.releaseRepo}/releases/latest"
+                var json: JSONObject? = null
+                var lastError: Exception? = null
+                for (candidate in listOf(
+                    "https://api.github.com/$repoPath",
+                    "https://gh-proxy.com/https://api.github.com/$repoPath",
+                )) {
+                    try {
+                        val request = Request.Builder()
+                            .url(candidate)
+                            .header("Accept", "application/vnd.github+json")
+                            .header("User-Agent", "OwnTV")
+                            .build()
+                        client.newCall(request).execute().use { resp ->
+                            if (!resp.isSuccessful) throw CheckHttpException(resp.code)
+                            val body = resp.body.string()
+                            if (body.isBlank()) throw InvalidReleaseResponseException()
+                            json = runCatching { JSONObject(body) }.getOrElse { throw InvalidReleaseResponseException() }
+                        }
+                        break
+                    } catch (e: Exception) {
+                        lastError = e
+                    }
+                }
+                val o = json ?: throw (lastError ?: InvalidReleaseResponseException())
+                val notes = o.optString("body").take(16_000)
                     // Version resolution. Upstream releases carry a semver tag, so the tag is compared
                     // against the installed versionName. A patch fork publishing a rolling 'latest'
                     // instead stamps build metadata into the notes — `versionCode=<epoch minutes>
@@ -145,7 +164,6 @@ class UpdateManager(
                         ?: isNewer(version, currentVersion)
                     if (newer) _state.value = State.Available(info)
                     else _state.value = State.UpToDate
-                }
             }.onFailure { error ->
                 Log.w(TAG, "update check failed: ${error.message}", error)
                 _state.value = State.Failed(failureFor(error, checking = true))
@@ -162,34 +180,48 @@ class UpdateManager(
                 val dir = File(context.filesDir, "updates").apply { mkdirs() }
                 val out = File(dir, "owntv-update.apk")
                 out.delete() // never build on top of a previous half-download
-                val request = Request.Builder().url(info.apkUrl).header("User-Agent", "OwnTV").build()
                 try {
-                    client.newCall(request).execute().use { resp ->
-                        if (!resp.isSuccessful) throw DownloadHttpException(resp.code)
-                        val body = resp.body
-                        val total = body.contentLength()
-                        // The APK is written once here and copied again into the install session, so
-                        // the download needs room for two of it. Checking up front turns a silent short
-                        // write — which reaches the installer as "App not installed" — into a real message.
-                        if (total > 0 && dir.usableSpace < total * 2) throw NotEnoughSpaceException(total * 2)
-                        var copied = 0L
-                        body.byteStream().use { input ->
-                            out.outputStream().use { output ->
-                                val buf = ByteArray(64 * 1024)
-                                while (true) {
-                                    val n = input.read(buf)
-                                    if (n < 0) break
-                                    output.write(buf, 0, n)
-                                    copied += n
-                                    if (total > 0) _state.value = State.Downloading((copied * 100 / total).toInt())
+                    // The same door policy as the check: the release CDN is blocked or throttled for
+                    // a meaningful slice of TVs, so a failed attempt retries through the proxy.
+                    var lastError: Throwable? = null
+                    var done = false
+                    for (candidate in listOf(info.apkUrl, "https://gh-proxy.com/${info.apkUrl}")) {
+                        try {
+                            val request = Request.Builder().url(candidate).header("User-Agent", "OwnTV").build()
+                            client.newCall(request).execute().use { resp ->
+                                if (!resp.isSuccessful) throw DownloadHttpException(resp.code)
+                                val body = resp.body
+                                val total = body.contentLength()
+                                // The APK is written once here and copied again into the install session, so
+                                // the download needs room for two of it. Checking up front turns a silent short
+                                // write — which reaches the installer as "App not installed" — into a real message.
+                                if (total > 0 && dir.usableSpace < total * 2) throw NotEnoughSpaceException(total * 2)
+                                var copied = 0L
+                                body.byteStream().use { input ->
+                                    out.outputStream().use { output ->
+                                        val buf = ByteArray(64 * 1024)
+                                        while (true) {
+                                            val n = input.read(buf)
+                                            if (n < 0) break
+                                            output.write(buf, 0, n)
+                                            copied += n
+                                            if (total > 0) _state.value = State.Downloading((copied * 100 / total).toInt())
+                                        }
+                                    }
+                                }
+                                if (copied == 0L) throw EmptyDownloadException()
+                                if (total > 0 && copied != total) {
+                                    throw DamagedDownloadException("truncated: got $copied of $total bytes")
                                 }
                             }
-                        }
-                        if (copied == 0L) throw EmptyDownloadException()
-                        if (total > 0 && copied != total) {
-                            throw DamagedDownloadException("truncated: got $copied of $total bytes")
+                            done = true
+                            break
+                        } catch (e: Throwable) {
+                            out.delete() // clean partial bytes before trying the next door
+                            lastError = e
                         }
                     }
+                    if (!done) throw (lastError ?: EmptyDownloadException())
                     verifyApk(out)
                     install(out)
                 } catch (e: Throwable) {
