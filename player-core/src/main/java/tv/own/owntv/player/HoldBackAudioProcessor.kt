@@ -89,6 +89,16 @@ class HoldBackAudioProcessor(private val holdBackMs: () -> Int) : BaseAudioProce
                 primedBytes = 0
                 if (pendingBytes > 0) release(pendingBytes)
             }
+            // A SHALLOWER request than the queue was primed for (the live-delay lowered mid-play):
+            // hand the excess back now, in order, and hold the queue at the new depth. Falling through
+            // to the steady branch instead would keep the old, deeper backlog forever — the UI would
+            // show the smaller delay while the audio actually stayed that much further behind live,
+            // and every caption stamped against [LiveAudioDelay.measuredMs] would drift with it.
+            requested < primedBytes -> {
+                val excess = pendingBytes - requested
+                if (excess > 0) release(excess)
+                primedBytes = requested
+            }
             // A deeper request than this queue was primed for (captions switched on mid-play, or a
             // longer delay configured): withhold everything until the new depth exists. This is the
             // freeze the viewer sees when the delay is turned on — the delay itself, not a fault.
