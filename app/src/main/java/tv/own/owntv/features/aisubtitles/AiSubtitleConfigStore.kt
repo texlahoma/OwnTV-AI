@@ -10,6 +10,9 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -127,6 +130,14 @@ private const val AI_SUBTITLE_LINE_HEIGHT_DEFAULT = AiSubtitleDefaults.LINE_HEIG
 private const val AI_SUBTITLE_POSITION_DEFAULT = AiSubtitleDefaults.POSITION_DEFAULT
 
 class AiSubtitleConfigStore(private val context: Context) {
+
+    /**
+     * Writes outlive their caller. The player HUD's panel fires these writes from its own
+     * composition scope; a panel closed the instant a stepper fires would cancel a write still in
+     * flight and the last nudge or step would silently vanish. This app-lifetime scope is the one
+     * UI fire-and-forget writes should launch on.
+     */
+    val writeScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val keyEnabled = booleanPreferencesKey("enabled")
     private val keySource = stringPreferencesKey("source_language")

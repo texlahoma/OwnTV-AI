@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -533,7 +532,6 @@ internal fun AiSubtitleHudDialog(
 
     var showLanguagePicker by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
-    val scope = rememberCoroutineScope()
     val configStore = koinInject<AiSubtitleConfigStore>()
     val debugInfo by configStore.hudDebugInfo.collectAsStateWithLifecycle(false)
     // Both look settings are the same persisted values the Settings page edits, exposed here too
@@ -542,10 +540,12 @@ internal fun AiSubtitleHudDialog(
     val fontSizePercent = (cfg.scale * 100).roundToInt()
     val lineHeightPercent = (cfg.lineHeight * 100).roundToInt()
     // Nudge the subtitle block by a dp delta in x/y, writing through the config store so the change
-    // survives the session and the overlay updates live.
+    // survives the session and the overlay updates live. The write launches on the store's
+    // app-lifetime scope: the panel can close the instant a key fires, and a dialog-scoped launch
+    // would be cancelled with it — the last nudge would silently vanish.
     fun nudge(dx: Float, dy: Float) {
         val current = cfg.positionOffset
-        scope.launch { configStore.setPositionOffset(Offset(current.x + dx, current.y + dy)) }
+        configStore.writeScope.launch { configStore.setPositionOffset(Offset(current.x + dx, current.y + dy)) }
     }
     // Any nested picker must close before the panel itself does.
     fun dismissLayer(): Boolean = when {
@@ -604,7 +604,7 @@ internal fun AiSubtitleHudDialog(
                 step = AiSubtitleDefaults.LOOK_STEP_PERCENT,
                 canStep = { it in AiSubtitleDefaults.SCALE_MIN_PERCENT..AiSubtitleDefaults.SCALE_MAX_PERCENT },
                 current = fontSizePercent,
-                onStep = { scope.launch { configStore.setScale(it / 100f) } },
+                onStep = { configStore.writeScope.launch { configStore.setScale(it / 100f) } },
             )
         }
         item {
@@ -614,7 +614,7 @@ internal fun AiSubtitleHudDialog(
                 step = AiSubtitleDefaults.LOOK_STEP_PERCENT,
                 canStep = { it in AiSubtitleDefaults.LINE_HEIGHT_MIN_PERCENT..AiSubtitleDefaults.LINE_HEIGHT_MAX_PERCENT },
                 current = lineHeightPercent,
-                onStep = { scope.launch { configStore.setLineHeight(it / 100f) } },
+                onStep = { configStore.writeScope.launch { configStore.setLineHeight(it / 100f) } },
             )
         }
         item {
@@ -645,7 +645,7 @@ internal fun AiSubtitleHudDialog(
                                 else -> return@onPreviewKeyEvent false
                             }
                             if (e.type == KeyEventType.KeyDown && syncMs + delta in AiSubtitleDefaults.SYNC_OFFSET_MIN..AiSubtitleDefaults.SYNC_OFFSET_MAX) {
-                                scope.launch { configStore.setSyncOffsetMs(syncMs + delta) }
+                                configStore.writeScope.launch { configStore.setSyncOffsetMs(syncMs + delta) }
                             }
                             true
                         },
@@ -704,7 +704,7 @@ internal fun AiSubtitleHudDialog(
                         // Resets the whole on-screen look this panel owns (nudge + font size + line
                         // spacing), not just the nudge: the rows above are one adjustment surface, so
                         // "reset" restoring only one of them would surprise.
-                        scope.launch {
+                        configStore.writeScope.launch {
                             configStore.setPositionOffset(Offset.Zero)
                             configStore.setScale(AiSubtitleDefaults.SCALE_DEFAULT)
                             configStore.setLineHeight(AiSubtitleDefaults.LINE_HEIGHT_DEFAULT)
@@ -728,7 +728,7 @@ internal fun AiSubtitleHudDialog(
             OptionRow(
                 label = stringResource(R.string.player_ai_debug_info),
                 selected = debugInfo,
-                onClick = { scope.launch { configStore.setHudDebugInfo(!debugInfo) } },
+                onClick = { configStore.writeScope.launch { configStore.setHudDebugInfo(!debugInfo) } },
             )
         }
     }
