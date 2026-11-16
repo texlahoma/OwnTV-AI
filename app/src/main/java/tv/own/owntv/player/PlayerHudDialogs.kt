@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import tv.own.owntv.features.aisubtitles.AiSubtitleConfigStore
 import tv.own.owntv.features.aisubtitles.AiSubtitleDefaults
 import tv.own.owntv.ui.components.longPressMenuGuard
 import tv.own.owntv.ui.theme.mpx
+import tv.own.owntv.ui.theme.mpxSp
 import tv.own.owntv.ui.theme.stageText
 import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.StageColors
@@ -557,6 +559,23 @@ internal fun AiSubtitleHudDialog(
         title = stringResource(R.string.player_ai_subtitles),
         onDismiss = { if (!dismissLayer()) onDismiss() },
         panelWidth = 520.dp,
+        // The complete live debug line is PINNED at the panel's bottom edge (the footer slot), so
+        // it is readable while playback runs — no scrolling, no leaving to Settings, which kills
+        // the pipeline. Off by default; the toggle below arms it. Sized and coloured like the
+        // panel's body text: it was 12 px muted, invisible on a TV across the room.
+        footer = if (debugInfo) {
+            {
+                Text(
+                    stringResource(R.string.ai_subtitles_status, status),
+                    style = stageText(18, 500).copy(lineHeight = (18 * 1.4f).mpxSp),
+                    color = StageColors.Text,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusable()
+                        .padding(horizontal = 22.mpx, vertical = 10.mpx),
+                )
+            }
+        } else null,
     ) {
         item {
             OptionRow(
@@ -599,53 +618,78 @@ internal fun AiSubtitleHudDialog(
             )
         }
         item {
-            // Sync trim: the residual after every measurable stage is the OUTPUT chain's own delay
-            // (HDMI/ARC, a soundbar, the TV's audio DSP), which no Android API reports. Negative
-            // shows the lines earlier — the common case when a soundbar sits between TV and ears.
-            val syncMs = cfg.syncOffsetMs
-            StepperRow(
-                title = stringResource(R.string.ai_subtitles_sync_offset),
-                value = stringResource(R.string.ai_subtitles_sync_value, syncMs),
-                step = AiSubtitleDefaults.SYNC_OFFSET_STEP,
-                canStep = { it in AiSubtitleDefaults.SYNC_OFFSET_MIN..AiSubtitleDefaults.SYNC_OFFSET_MAX },
-                current = syncMs,
-                onStep = { scope.launch { configStore.setSyncOffsetMs(it) } },
-            )
-        }
-        item {
-            Text(
-                stringResource(R.string.player_ai_subtitles_adjust_position),
-                style = stageText(14, 400), color = StageColors.Muted,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-            )
-        }
-        item {
-            Column(
+            // The two fine-adjust controls share ONE row — sync on the LEFT, position on the RIGHT —
+            // so the nudger stops stretching the panel downward. Both titles are the same size as the
+            // rows above (the position header once rendered as a 14 px muted aside, a size nothing
+            // else in the panel uses).
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalArrangement = Arrangement.spacedBy(14.mpx),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Compact cross: up alone, then left / down / right — the classic remote-D-pad shape.
-                // Two tight rows of 36 dp instead of three rows of 40 dp, so the nudger no longer
-                // dominates the panel.
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    tv.own.owntv.ui.stage.StagePopupButton(
-                        label = "", icon = OwnTVIcon.CHEVRON_UP, onClick = { nudge(0f, -AiSubtitleDefaults.POSITION_NUDGE_DP) },
-                        primary = false, compact = true, modifier = Modifier.size(36.dp),
-                    )
+                // LEFT — sync trim: the residual after every measurable stage is the OUTPUT chain's
+                // own delay (HDMI/ARC, a soundbar, the TV's audio DSP), which no Android API reports.
+                // Negative shows the lines earlier — the common case when a soundbar sits between
+                // TV and ears. ◀ ▶ step it, exactly like the stepper rows above.
+                val syncMs = cfg.syncOffsetMs
+                tv.own.owntv.ui.stage.StageSurface(
+                    onClick = {},
+                    radius = 18.mpx,
+                    focusStyle = tv.own.owntv.ui.stage.StageFocus.FX,
+                    modifier = Modifier
+                        .weight(1f)
+                        .onPreviewKeyEvent { e ->
+                            val delta = when (e.key) {
+                                Key.DirectionLeft -> -AiSubtitleDefaults.SYNC_OFFSET_STEP
+                                Key.DirectionRight -> AiSubtitleDefaults.SYNC_OFFSET_STEP
+                                else -> return@onPreviewKeyEvent false
+                            }
+                            if (e.type == KeyEventType.KeyDown && syncMs + delta in AiSubtitleDefaults.SYNC_OFFSET_MIN..AiSubtitleDefaults.SYNC_OFFSET_MAX) {
+                                scope.launch { configStore.setSyncOffsetMs(syncMs + delta) }
+                            }
+                            true
+                        },
+                ) { _ ->
+                    Column(Modifier.padding(horizontal = 16.mpx, vertical = 12.mpx)) {
+                        Text(
+                            stringResource(R.string.ai_subtitles_sync_offset),
+                            style = stageText(21, 600), color = StageColors.Text,
+                            maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        )
+                        Box(Modifier.padding(top = 10.mpx)) {
+                            tv.own.owntv.ui.stage.StageStepper(stringResource(R.string.ai_subtitles_sync_value, syncMs))
+                        }
+                    }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    tv.own.owntv.ui.stage.StagePopupButton(
-                        label = "", icon = OwnTVIcon.CHEVRON_LEFT, onClick = { nudge(-AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
-                        primary = false, compact = true, modifier = Modifier.size(36.dp),
+                // RIGHT — the position nudger: a compact cross, up alone then left / down / right,
+                // the classic remote-D-pad shape (two rows of 36 dp).
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        stringResource(R.string.player_ai_subtitles_adjust_position),
+                        style = stageText(21, 600), color = StageColors.Text,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(bottom = 8.mpx),
                     )
-                    tv.own.owntv.ui.stage.StagePopupButton(
-                        label = "", icon = OwnTVIcon.CHEVRON_DOWN, onClick = { nudge(0f, AiSubtitleDefaults.POSITION_NUDGE_DP) },
-                        primary = false, compact = true, modifier = Modifier.size(36.dp),
-                    )
-                    tv.own.owntv.ui.stage.StagePopupButton(
-                        label = "", icon = OwnTVIcon.CHEVRON, onClick = { nudge(AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
-                        primary = false, compact = true, modifier = Modifier.size(36.dp),
-                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        tv.own.owntv.ui.stage.StagePopupButton(
+                            label = "", icon = OwnTVIcon.CHEVRON_UP, onClick = { nudge(0f, -AiSubtitleDefaults.POSITION_NUDGE_DP) },
+                            primary = false, compact = true, modifier = Modifier.size(36.dp),
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        tv.own.owntv.ui.stage.StagePopupButton(
+                            label = "", icon = OwnTVIcon.CHEVRON_LEFT, onClick = { nudge(-AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
+                            primary = false, compact = true, modifier = Modifier.size(36.dp),
+                        )
+                        tv.own.owntv.ui.stage.StagePopupButton(
+                            label = "", icon = OwnTVIcon.CHEVRON_DOWN, onClick = { nudge(0f, AiSubtitleDefaults.POSITION_NUDGE_DP) },
+                            primary = false, compact = true, modifier = Modifier.size(36.dp),
+                        )
+                        tv.own.owntv.ui.stage.StagePopupButton(
+                            label = "", icon = OwnTVIcon.CHEVRON, onClick = { nudge(AiSubtitleDefaults.POSITION_NUDGE_DP, 0f) },
+                            primary = false, compact = true, modifier = Modifier.size(36.dp),
+                        )
+                    }
                 }
             }
         }
@@ -673,36 +717,19 @@ internal fun AiSubtitleHudDialog(
         item {
             Text(
                 stringResource(R.string.ai_subtitles_remembered_hint),
-                style = stageText(14, 400), color = StageColors.Muted,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                style = stageText(16, 400).copy(lineHeight = (16 * 1.4f).mpxSp), color = StageColors.Muted,
+                modifier = Modifier.padding(horizontal = 22.mpx, vertical = 4.mpx),
             )
         }
         item {
             // The debug line is a diagnostic surface, not a preference: off by default, one press
-            // to arm it for this install (persisted). The complete dump renders below only while it
-            // is on.
+            // to arm it for this install (persisted). The complete dump renders in the footer below
+            // only while it is on.
             OptionRow(
                 label = stringResource(R.string.player_ai_debug_info),
                 selected = debugInfo,
                 onClick = { scope.launch { configStore.setHudDebugInfo(!debugInfo) } },
             )
-        }
-        if (debugInfo) {
-            item {
-                // The COMPLETE live debug line. The pipeline only runs during playback and ends the
-                // moment it stops, so a panel open ON the playing channel is the only place this can
-                // be read — the Settings page's copy is dead data the instant playback exits. Fully
-                // wrapped, focusable so the D-pad lands on it and the list scrolls the whole dump
-                // into view.
-                Text(
-                    stringResource(R.string.ai_subtitles_status, status),
-                    style = stageText(12, 400), color = StageColors.Muted,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusable()
-                        .padding(horizontal = 10.dp, vertical = 4.dp),
-                )
-            }
         }
     }
 
