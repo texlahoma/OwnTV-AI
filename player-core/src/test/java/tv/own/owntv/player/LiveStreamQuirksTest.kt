@@ -17,6 +17,15 @@ class LiveStreamQuirksTest {
     @Before fun reset() = LiveStreamQuirks.clearForTest()
     @After fun tearDown() = LiveStreamQuirks.clearForTest()
 
+    @Test
+    fun `the reset between tests forgets a panel learned as DASH`() {
+        val url = "http://panel.example:80/live/user/pass/1"
+        LiveStreamQuirks.rememberDashRedirect(url)
+        assertTrue(LiveStreamQuirks.isKnownDashHost(url))
+        LiveStreamQuirks.clearForTest()
+        assertFalse(LiveStreamQuirks.isKnownDashHost(url))
+    }
+
     // --- ".ts that is really HLS" ------------------------------------------------------------------
 
     @Test

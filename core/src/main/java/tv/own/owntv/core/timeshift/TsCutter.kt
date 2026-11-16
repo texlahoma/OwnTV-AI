@@ -10,11 +10,19 @@ package tv.own.owntv.core.timeshift
  * stream's own clock (PCR), so a burst of bytes (an HLS segment fetched in half a second) still counts
  * as the six seconds of television it is.
  *
+ * **Joining a copy that already has pictures** ([resumeAfterPcrMs]): a provider answers a new connection
+ * with a burst of what it already sent — 20–30 s of a `.ts` channel. Saved behind the copy's last piece,
+ * that replay makes the stream's clock step backwards, and a player reading across the join fills its
+ * buffer with frames it counts as already played and stalls. So everything up to that stream-clock value
+ * is dropped, and the first piece starts on the next keyframe after it.
+ *
  * Pure: bytes in, packets and cut decisions out through [Sink]. No I/O, no clock of its own except the
  * [wallClock] fallback for a stream that carries no PCR at all.
  */
 class TsCutter(
     private val targetMs: Long = TARGET_PIECE_MS,
+    /** The stream clock (ms) of the newest picture already saved; null for a copy with nothing in it. */
+    private val resumeAfterPcrMs: Long? = null,
     private val wallClock: () -> Long = System::currentTimeMillis,
 ) {
     /** Where the packets go. [cut] closes the running piece and opens the next. */
@@ -38,6 +46,22 @@ class TsCutter(
     private var pieceStartPcrMs = -1L
     private var lastPcrMs = -1L
     private var pieceStartWallMs = -1L
+
+    /** Still inside the provider's replay of what the copy already holds (see [resumeAfterPcrMs]). */
+    private var skippingReplay = resumeAfterPcrMs != null
+    /** Past the replay, waiting for a place a player can start. */
+    private var awaitingStart = false
+    /** Packets dropped as already saved — for the join's log line. */
+    var packetsSkipped = 0L
+        private set
+    /** The first stream-clock value this connection carried, -1 before any. */
+    var firstPcrMs = -1L
+        private set
+    private var packetsAwaitingStart = 0L
+
+    /** The stream clock of the newest packet written to [Sink]; -1 before any. */
+    var writtenPcrMs = -1L
+        private set
 
     /** True once a 0x47 sync pattern has been found — false for a stream that is not TS at all. */
     var synced = false
@@ -125,6 +149,26 @@ class TsCutter(
             firstPesPid = pid
         }
 
+        if (skippingReplay || awaitingStart) {
+            packetsSkipped++
+            // The replay itself is bounded by the clock (MAX_REPLAY_MS), however many megabytes a 4K
+            // channel spends on it. Only a stream with no clock, or no keyframe in sight, is cut short:
+            // saving something beats saving nothing.
+            val noClock = skippingReplay && firstPcrMs < 0 && packetsSkipped > NO_CLOCK_LIMIT_PACKETS
+            val noKeyframe = awaitingStart && ++packetsAwaitingStart > NO_KEYFRAME_LIMIT_PACKETS
+            if (noClock || noKeyframe) {
+                skippingReplay = false; awaitingStart = false
+            } else if (skippingReplay || !isStartPoint(pid, pusi, randomAccess)) {
+                return
+            } else {
+                awaitingStart = false
+                startPiece()
+                patPacket?.let { sink.write(it, 0, PACKET) }
+                pmtPacket?.let { sink.write(it, 0, PACKET) }
+                writePacket(b, p, sink)
+                return
+            }
+        }
         if (isCutPoint(pid, pusi, randomAccess)) {
             sink.cut(pieceDurationMs())
             startPiece()
@@ -134,7 +178,19 @@ class TsCutter(
         } else if (pieceStartWallMs < 0) {
             startPiece()
         }
+        writePacket(b, p, sink)
+    }
+
+    private fun writePacket(b: ByteArray, p: Int, sink: Sink) {
         sink.write(b, p, PACKET)
+        if (lastPcrMs >= 0) writtenPcrMs = lastPcrMs
+    }
+
+    /** Where a piece may begin after a replay: a keyframe, the tables known. */
+    private fun isStartPoint(pid: Int, pusi: Boolean, randomAccess: Boolean): Boolean {
+        if (patPacket == null || pmtPacket == null) return false
+        if (videoPid >= 0) return pid == videoPid && randomAccess
+        return pid == firstPesPid && pusi
     }
 
     private fun isCutPoint(pid: Int, pusi: Boolean, randomAccess: Boolean): Boolean {
@@ -159,6 +215,17 @@ class TsCutter(
     }
 
     private fun onPcr(ms: Long) {
+        if (firstPcrMs < 0) firstPcrMs = ms
+        if (skippingReplay) {
+            val saved = resumeAfterPcrMs ?: -1L
+            // Behind the saved copy by less than a provider's replay: already saved. Anything else — the
+            // stream moved on, or its clock restarted — is new.
+            val replayed = ms <= saved && saved - ms <= MAX_REPLAY_MS
+            if (!replayed) {
+                skippingReplay = false
+                awaitingStart = true
+            }
+        }
         // A PCR that jumps (a reconnect, a wrap, a provider reset) restarts the piece's clock rather
         // than producing a negative or hour-long piece.
         if (lastPcrMs >= 0 && (ms < lastPcrMs || ms - lastPcrMs > PCR_JUMP_MS)) {
@@ -223,6 +290,15 @@ class TsCutter(
         const val TARGET_PIECE_MS = 2_000L
 
         private const val NO_KEYFRAME_FACTOR = 3
+
+        /** The longest replay a provider sends on a new connection, with room to spare. */
+        private const val MAX_REPLAY_MS = 120_000L
+
+        /** About 5 MB with no stream clock at all: there is nothing to judge a replay by. */
+        private const val NO_CLOCK_LIMIT_PACKETS = 28_000L
+
+        /** About 37 MB past the replay with no keyframe — over ten seconds of a 4K channel. */
+        private const val NO_KEYFRAME_LIMIT_PACKETS = 200_000L
 
         /** A PCR step bigger than this is a discontinuity, not time passing. */
         private const val PCR_JUMP_MS = 10_000L

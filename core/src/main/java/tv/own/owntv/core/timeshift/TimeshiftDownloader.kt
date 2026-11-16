@@ -166,9 +166,11 @@ class TimeshiftDownloader(
 
     private suspend fun transportStream(input: InputStream) {
         session.setContainer(TimeshiftSession.Container.TS)
-        val cutter = TsCutter(wallClock = clock)
+        val resumeAfter = session.savedPcrMs
+        val cutter = TsCutter(wallClock = clock, resumeAfterPcrMs = resumeAfter)
         val sink = PieceSink()
         val buffer = ByteArray(READ_BYTES)
+        var joinLogged = false
         input.use {
             while (true) {
                 currentCoroutineContext().ensureActive()
@@ -177,7 +179,12 @@ class TimeshiftDownloader(
                 cutter.feed(buffer, 0, n, sink)
                 if (!cutter.synced && cutter.discardedBytes > NOT_TS_BYTES) throw NotSupported("not an MPEG-TS stream")
                 if (sink.open) {
+                    if (!joinLogged) {
+                        joinLogged = true
+                        log("timeshift: joined at stream clock ${cutter.firstPcrMs}ms, saved up to ${resumeAfter ?: -1}ms, skipped ${cutter.packetsSkipped} packets")
+                    }
                     session.flush()
+                    cutter.writtenPcrMs.takeIf { it >= 0 }?.let { session.savedPcrMs = it }
                     started = true
                 }
             }
@@ -195,7 +202,7 @@ class TimeshiftDownloader(
             playlistUrl = absolute(url, variant.uri) ?: throw NotSupported("unreadable HLS variant address")
             text = fetchText(playlistUrl)
         }
-        val cutter = TsCutter(wallClock = clock)
+        val cutter = TsCutter(wallClock = clock, resumeAfterPcrMs = session.savedPcrMs)
         val sink = PieceSink()
         var lastSequence = -1L
         var mapKey: String? = null
@@ -256,6 +263,7 @@ class TimeshiftDownloader(
                     cutter.feed(buffer, 0, n, sink)
                     if (sink.open) {
                         session.flush()
+                        cutter.writtenPcrMs.takeIf { it >= 0 }?.let { session.savedPcrMs = it }
                         started = true
                     }
                 }

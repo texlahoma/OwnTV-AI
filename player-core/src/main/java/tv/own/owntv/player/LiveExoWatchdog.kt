@@ -1,5 +1,6 @@
 package tv.own.owntv.player
 
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,7 +76,13 @@ class LiveExoWatchdog(
             engine.segmentsRefused.first { it }
             if (stillOurs()) handOver("provider refuses ExoPlayer's signed segment URLs")
         }
+        watchUntilSettled(channelName)
+        // The two listeners above never finish on a healthy channel. Left running they keep this watch
+        // alive after its verdict, and can hand over a channel the ladder has already given up on.
+        coroutineContext.cancelChildren()
+    }
 
+    private suspend fun watchUntilSettled(channelName: String) {
         // Bounded, because "neither" is a real outcome. A pre-buffer is requested silence: 10s of it
         // means the first frame is *supposed* to be ~10s out, so the deadline moves with it or every
         // pre-buffered channel looks stuck.
@@ -90,7 +97,7 @@ class LiveExoWatchdog(
                 }
             }
             if (terminal != null) break
-            if (!stillOurs()) return@coroutineScope
+            if (!stillOurs()) return
             val waits = engine.providerBackOffsSpent
             val waited = engine.providerBackOff.value != null || waits != waitsSeen
             // A decoder rebuild started since the last deadline: the engine is still trying a channel
@@ -107,18 +114,18 @@ class LiveExoWatchdog(
             // simply queued behind a wait we agreed to.
             if (waited) postponeDeadline(openBudgetMs)
         }
-        if (!stillOurs()) return@coroutineScope
+        if (!stillOurs()) return
 
         if (terminal == null) {
             handOver("ExoPlayer never opened it (${openBudgetMs / 1000}s, no frame and no error)")
-            return@coroutineScope
+            return
         }
         if (terminal == LivePreviewEngine.State.ERROR) {
             // onPlayerError assigns the state before the detail, and a collector can resume inline on
             // Dispatchers.Main.immediate — so yield first, or the detail is always read as null.
             yield()
             handOver("ExoPlayer error before first frame: ${engine.errorInfo.value?.raw ?: engine.error.value}")
-            return@coroutineScope
+            return
         }
 
         // One unconditional line per tune saying whether ExoPlayer ever opened it. Without this a
@@ -128,10 +135,10 @@ class LiveExoWatchdog(
         onOpened()
         // Give the track list a moment to settle, then route silent streams to the other engine.
         delay(TRACK_SETTLE_MS)
-        if (!stillOurs()) return@coroutineScope
+        if (!stillOurs()) return
         if (engine.audioUnsupported.value) {
             handOver("no decodable audio track")
-            return@coroutineScope
+            return
         }
         watchAfterFirstFrame(channelName)
     }

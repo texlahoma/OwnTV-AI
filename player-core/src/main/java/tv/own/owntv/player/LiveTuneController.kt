@@ -164,6 +164,7 @@ class LiveTuneController(
     private var exoWatchJob: Job? = null
     private var mpvOutcomeJob: Job? = null
     private var mpvHandoffJob: Job? = null
+    private var exoHandoffJob: Job? = null
     private var deadlineJob: Job? = null
 
     // --- Entry points -----------------------------------------------------------------------------
@@ -204,8 +205,10 @@ class LiveTuneController(
             panelRefusesSegments = panelRefusesSegments(channel, source),
         )
         engineLog("tune '${channel.name}' -> ${route.why} [${route.preference.name}]")
+        // "Give up after" counts from here: the wait for a saved copy's first data is part of the tune.
+        val startedAtMs = host.nowMs()
         openTimeshift(channel, source, resolved)
-        arm(channel, source, route.preference)
+        arm(channel, source, route.preference, startedAtMs)
         when {
             route.onMpv -> startOnMpv(channel, source, route.why, resolved = resolved)
             // The preview already found that ExoPlayer can't open this channel. Promoting it put the
@@ -252,6 +255,9 @@ class LiveTuneController(
             if (behindLive()) timeshiftWatchingWallMs()?.let { tsFromIndex = session.pieceAt(it) }
         }
         engineLog("engine toggle '${channel.name}' -> ${if (goToMpv) "mpv" else "exoplayer"}")
+        // An automatic hand-over still inside its release wait would otherwise start its engine after
+        // this one starts the other: two engines on one channel.
+        cancelLadderJobs()
         launch {
             host.pin(channel, goToMpv)
             val source = host.sourceOf(channel.sourceId)
@@ -764,11 +770,17 @@ class LiveTuneController(
 
     // --- The ladder -------------------------------------------------------------------------------
 
-    private suspend fun arm(channel: ChannelEntity, source: SourceEntity?, preference: EnginePreference) {
+    private suspend fun arm(
+        channel: ChannelEntity,
+        source: SourceEntity?,
+        preference: EnginePreference,
+        /** When this tune began, so time already spent on it is charged to the budget. */
+        startedAtMs: Long = host.nowMs(),
+    ) {
         forceTsFor = null
         val secs = SourceOverrides.liveTuneTimeoutSecsOf(source) ?: host.globalBudgetSecs()
         armedBudgetMs = if (secs <= 0) LiveLadder.NO_BUDGET else secs * 1000L
-        ladder.arm(channel.streamUrl, preference, budgetMs = armedBudgetMs, nowMs = host.nowMs()) {
+        ladder.arm(channel.streamUrl, preference, budgetMs = armedBudgetMs, nowMs = startedAtMs) {
             // A saved copy is one address; the ladder is only the two engines.
             ts == null && hasHlsAlternative(channel, source)
         }
@@ -800,6 +812,7 @@ class LiveTuneController(
             exoResolveJob?.cancel()
             mpvOutcomeJob?.cancel()
             mpvHandoffJob?.cancel()
+            exoHandoffJob?.cancel()
             abandon(channel, detail)
         }
     }
@@ -858,7 +871,11 @@ class LiveTuneController(
             mpvHandoffJob = scope.launch { startOnMpv(channel, source, reason, forceTs = !next.isHls) }
         } else {
             forceTsFor = if (next.isHls) null else channel.streamUrl
-            switchToExo(channel, source)
+            // Detached for the same reason: ExoPlayer taking over cancels mpv's watcher, and on a
+            // one-connection panel it then waits for mpv's release — inside that watcher it would be
+            // cancelled there, with ExoPlayer never asked to play.
+            exoHandoffJob?.cancel()
+            exoHandoffJob = scope.launch { switchToExo(channel, source) }
         }
     }
 
@@ -874,6 +891,7 @@ class LiveTuneController(
         exoWatchJob?.cancel()
         mpvOutcomeJob?.cancel()
         mpvHandoffJob?.cancel()
+        exoHandoffJob?.cancel()
         deadlineJob?.cancel()
     }
 

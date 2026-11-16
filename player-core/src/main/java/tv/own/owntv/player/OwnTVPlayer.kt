@@ -1052,7 +1052,9 @@ class OwnTVPlayer(
 
     private fun mpvAsync(block: MPVLib.() -> Unit) {
         val m = mpv ?: return
-        mpvExecutor.execute { runCatching { m.block() } }
+        mpvExecutor.execute {
+            runCatching { m.block() }.onFailure { android.util.Log.w(TAG, "mpv call failed: $it") }
+        }
     }
 
     private fun markActiveFile(active: Boolean) {
@@ -2340,6 +2342,7 @@ class OwnTVPlayer(
                 runCatching { this.detachSurface() }; mpvHasSurface = false
                 scope.launch {
                     delay(SURFACE_HANDOFF_MS) // let mpv's MediaCodec release — a busy decoder would fail Exo instantly
+                    if (gen != loadGeneration) return@launch // another item started meanwhile; it owns the surface
                     val s = attachedSurface ?: return@launch
                     startExo(url, pos, s, sub = null)
                 }
@@ -3534,9 +3537,11 @@ class OwnTVPlayer(
                     // still trips. Not progress for the reconnect budget — playback is not holding yet.
                     // Exact, not the whole seconds the HUD gets: a slow line that is still refilling may add
                     // less than a second per poll, and must not read as a dead one.
-                    val cacheSecs = readProperty("demuxer-cache-duration")?.toDoubleOrNull() ?: 0.0
-                    val refilling = mpvPausedForCache && lastCacheSecs >= 0 && cacheSecs > lastCacheSecs
-                    lastCacheSecs = cacheSecs
+                    // A read that did not come back says nothing: counted as 0 s, it made the next real
+                    // value look like a growing cache.
+                    val cacheSecs = readProperty("demuxer-cache-duration")?.toDoubleOrNull()
+                    val refilling = cacheSecs != null && mpvPausedForCache && lastCacheSecs >= 0 && cacheSecs > lastCacheSecs
+                    if (cacheSecs != null) lastCacheSecs = cacheSecs
                     if (refilling) {
                         stalls = 0
                         health.reset()
@@ -4149,6 +4154,7 @@ class OwnTVPlayer(
             runCatching {
                 oldMpv?.let {
                     it.removeObserver(this)
+                    it.removeLogObserver(logObserver)
                     it.destroy()
                 }
             }
@@ -4937,7 +4943,9 @@ class OwnTVPlayer(
                     // A real frame decoded → playback genuinely works. Dismiss any error the watchdog raised
                     // prematurely while a slow hardware decoder (e.g. Realtek setPortMode negotiation) was
                     // still producing its first frame — otherwise the popup stays stuck over playing video.
-                    if (_error.value != null) _error.value = null
+                    // Only for the load still current: a size still in flight from a stream that was
+                    // stopped since must not erase the failure that stop put on screen.
+                    if (_error.value != null && load.fileLoadedGeneration == loadGeneration) _error.value = null
                 }
                 updateAspect()
                 enforceDecodeGuard()
@@ -5080,6 +5088,7 @@ class OwnTVPlayer(
                 if (exoActive) return
                 load.fileLoaded = true
                 load.fileLoadedAt = android.os.SystemClock.elapsedRealtime()
+                load.fileLoadedGeneration = loadGeneration
                 // Observation only — do NOT clear the counter here. Each app-issued loadfile/stop credits
                 // exactly one cleanup END_FILE, and that END_FILE can legitimately arrive *after* the new
                 // file's FILE_LOADED. The old `getAndSet(0)` threw those credits away, so the late END_FILE
@@ -5235,9 +5244,12 @@ class OwnTVPlayer(
                             applyAudioChannels() // latched → stereo (the 16-bit pin stays — see the surround observer)
                             setPropertyString("audio-samplerate", "0")
                             toast(toastRenderer.render(PlaybackFailure.Surround))
-                            val stereoUrl = currentUrl
-                            if (sgen == loadGeneration && stereoUrl != null) {
-                                loadUrl(stereoUrl, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
+                            // Back on the main thread: loadUrl replaces state that only that thread may touch.
+                            scope.launch {
+                                val stereoUrl = currentUrl
+                                if (sgen == loadGeneration && stereoUrl != null) {
+                                    loadUrl(stereoUrl, currentMetaSnapshot(), isLiveContent, _position.value, resetRetries = false)
+                                }
                             }
                         }
                     }
@@ -5720,6 +5732,8 @@ internal data class LoadState(
     var fileLoaded: Boolean = false,
     /** When [fileLoaded] became true (elapsedRealtime); the decoder's own wait starts here. */
     var fileLoadedAt: Long = 0L,
+    /** The load generation [fileLoaded] became true in; a stop or a newer load moves on from it. */
+    @field:Volatile var fileLoadedGeneration: Int = -1,
     /** When loadUrl started (elapsedRealtime, like every watchdog time here — an NTP correction right
      *  after boot must not fire or postpone one), for the watchdog stages above. */
     var loadStartTime: Long = 0L,

@@ -50,6 +50,58 @@ class TsCutterTest {
         }
     }
 
+    /** The PCR of a packet written by [stream], in ms; null when it carries none. */
+    private fun pcrOf(bytes: ByteArray, at: Int): Long? {
+        if ((bytes[at + 3].toInt() shr 4) and 0x02 == 0 || bytes[at + 5].toInt() and 0x10 == 0) return null
+        val base = ((bytes[at + 6].toLong() and 0xFF) shl 25) or ((bytes[at + 7].toLong() and 0xFF) shl 17) or
+            ((bytes[at + 8].toLong() and 0xFF) shl 9) or ((bytes[at + 9].toLong() and 0xFF) shl 1) or
+            ((bytes[at + 10].toLong() and 0xFF) shr 7)
+        return base / 90
+    }
+
+    @Test
+    fun `joining a copy skips the provider's replay and starts on the next keyframe after it`() {
+        val sink = Pieces()
+        // The copy already holds the picture up to 3.2 s; the new connection replays from 0.
+        val cutter = TsCutter(targetMs = 2_000L, wallClock = { 0L }, resumeAfterPcrMs = 3_200L)
+        val bytes = stream(16)
+        cutter.feed(bytes, 0, bytes.size, sink)
+        val first = sink.pieces.first().toByteArray()
+        assertArrayEquals(pat, first.copyOfRange(0, 188))
+        assertArrayEquals(pmt, first.copyOfRange(188, 376))
+        assertTrue("starts on a keyframe", first[376 + 5].toInt() and 0x40 != 0)
+        // Keyframes every 2 s: 0, 2, 4 s — the first one past 3.2 s is 4 s.
+        assertEquals(4_000L, pcrOf(first, 376))
+        assertEquals(7_500L, cutter.writtenPcrMs)
+    }
+
+    @Test
+    fun `a long replay of a busy channel is skipped to its end, however many packets it takes`() {
+        val sink = Pieces()
+        val cutter = TsCutter(targetMs = 2_000L, wallClock = { 0L }, resumeAfterPcrMs = 15_000L)
+        val out = ByteArrayOutputStream()
+        out.write(pat); out.write(pmt)
+        // 60,000 packets over 20 s of clock: a 4K channel's replay is far more data than a few megabytes.
+        for (i in 0 until 60_000) {
+            val ms = i / 3L
+            out.write(packet(pid = VIDEO_PID, pusi = i % 3 == 0, rai = i % 3_000 == 0, pcrMs = if (i % 3 == 0) ms else null))
+        }
+        val bytes = out.toByteArray()
+        cutter.feed(bytes, 0, bytes.size, sink)
+        val first = sink.pieces.first().toByteArray()
+        assertEquals("starts on the first keyframe past the saved 15 s", 16_000L, pcrOf(first, 376))
+    }
+
+    @Test
+    fun `a stream whose clock restarted is not mistaken for a replay`() {
+        val sink = Pieces()
+        // Saved up to far beyond what any replay reaches back: the provider restarted its clock.
+        val cutter = TsCutter(targetMs = 2_000L, wallClock = { 0L }, resumeAfterPcrMs = 3_600_000L)
+        val bytes = stream(8)
+        cutter.feed(bytes, 0, bytes.size, sink)
+        assertEquals(0L, pcrOf(sink.pieces.first().toByteArray(), 376))
+    }
+
     @Test
     fun `the same stream fed in awkward chunks is cut identically`() {
         val whole = Pieces()

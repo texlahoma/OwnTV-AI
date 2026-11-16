@@ -265,6 +265,32 @@ class LiveTuneControllerTimeshiftTest {
         assertNull(c.localTimeshift.value)
     }
 
+    @Test
+    fun `the wait for a saved copy's first data is charged to the Give up after budget`() = runBlocking {
+        // A provider that accepts the connection and never answers: the copy waits, then is refused.
+        val silent = ServerSocket(0)
+        val held = java.util.concurrent.CopyOnWriteArrayList<java.net.Socket>()
+        thread(isDaemon = true) { while (true) held += runCatching { silent.accept() }.getOrNull() ?: break }
+        try {
+            val engines = Engines()
+            val host = object : LiveTuneController.Host by Host() {
+                override suspend fun globalBudgetSecs() = 3
+                override fun nowMs(): Long = System.nanoTime() / 1_000_000
+            }
+            val c = LiveTuneController(scope, engines, host)
+            c.tune(ChannelEntity(id = 60, sourceId = 1, name = "ch60", streamUrl = "http://127.0.0.1:${silent.localPort}/live/60.ts"))
+            // The wait alone outlasts the 3 s budget, so the tune ends as soon as the copy is refused
+            // instead of 3 s after it.
+            val abandoned = { log: List<String> -> log.any { it.endsWith("-abandon") } }
+            awaitGiveUp(engines) { log -> log.any { it.startsWith("exo:") } || abandoned(log) }
+            repeat(30) { if (!abandoned(engines.log.toList())) delay(50) }
+            assertTrue("given up within the budget, not after another one: ${engines.log}", abandoned(engines.log.toList()))
+        } finally {
+            held.forEach { runCatching { it.close() } }
+            silent.close()
+        }
+    }
+
     private companion object {
         /** A null TS packet: valid MPEG-TS the cutter syncs on, and enough to open a buffer. */
         val nullPacket = ByteArray(188).also {

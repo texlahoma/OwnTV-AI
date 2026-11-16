@@ -94,7 +94,6 @@ data class PlaybackSettings(
         /** The snapshot, waiting for the store's first read if it has not landed yet. */
         suspend fun await(settings: SettingsRepository): PlaybackSettings = of(settings).filterNotNull().first()
 
-        @Suppress("UNCHECKED_CAST")
         private fun snapshotOf(s: SettingsRepository): StateFlow<PlaybackSettings?> {
             val sources: List<Flow<Any?>> = listOf(
                 s.preferSdr, s.hwDecoding, s.surroundMode, s.autoPlayNext,
@@ -108,47 +107,51 @@ data class PlaybackSettings(
                 s.maxVideoHeight, s.mobileDataMaxVideoHeight, s.tunneledPlayback, s.backgroundPlayback,
                 s.softwareDecodeAbove1080p, s.outputAudioDelays, s.autoFrameRateLive,
             )
-            return combine(sources) { v ->
-                PlaybackSettings(
-                    preferSdr = v[0] as Boolean,
-                    hwDecoding = v[1] as Boolean,
-                    surroundMode = v[2] as SurroundMode,
-                    autoPlayNext = v[3] as Boolean,
-                    vodEnginePreference = v[4] as EnginePreference,
-                    measuredStreamStats = v[5] as Boolean,
-                    livePrerollSecs = v[6] as Int,
-                    liveBufferSeconds = v[7] as Int?,
-                    subtitleStyleEnabled = v[8] as Boolean,
-                    subtitleScaleMpv = v[9] as Float,
-                    subtitleFont = v[10] as AppFontFamily?,
-                    subtitleColor = v[11] as String,
-                    subtitlePosition = v[12] as SubtitleStyle.Position,
-                    subtitleBgOpacity = v[13] as Int,
-                    audioDelayMs = v[14] as Int,
-                    preferredAudioLang = v[15] as String,
-                    preferredSubLang = v[16] as String,
-                    defaultZoom = v[17] as String,
-                    defaultVolume = v[18] as Int,
-                    seekStepSec = v[19] as Int,
-                    autoFrameRateFilms = v[20] as Boolean,
-                    liveEnginePreference = v[21] as EnginePreference,
-                    liveTuneTimeoutSecs = v[22] as Int,
-                    vodBufferSecs = v[23] as Int,
-                    vodNetworkTimeoutSecs = v[24] as Int,
-                    vodReconnects = v[25] as Int,
-                    audioPassthrough = v[26] as Boolean,
-                    nightMode = v[27] as Boolean,
-                    volumeLevelling = v[28] as Boolean,
-                    maxVideoHeight = v[29] as Int,
-                    mobileDataMaxVideoHeight = v[30] as Int,
-                    tunneledPlayback = v[31] as Boolean,
-                    backgroundPlayback = v[32] as Boolean,
-                    softwareDecodeAbove1080p = v[33] as Boolean,
-                    outputAudioDelays = v[34] as OutputAudioDelays,
-                    autoFrameRateLive = v[35] as Boolean,
-                )
-            }.stateIn(CoroutineScope(SupervisorJob() + Dispatchers.Default), SharingStarted.Eagerly, null)
+            return combine(sources) { v -> fromValues(v) }
+                .stateIn(CoroutineScope(SupervisorJob() + Dispatchers.Default), SharingStarted.Eagerly, null)
         }
+
+        /** The snapshot from the stored values, in the order [snapshotOf] lists their flows. */
+        @Suppress("UNCHECKED_CAST")
+        internal fun fromValues(v: Array<Any?>): PlaybackSettings =
+            PlaybackSettings(
+                preferSdr = v[0] as Boolean,
+                hwDecoding = v[1] as Boolean,
+                surroundMode = v[2] as SurroundMode,
+                autoPlayNext = v[3] as Boolean,
+                vodEnginePreference = v[4] as EnginePreference,
+                measuredStreamStats = v[5] as Boolean,
+                livePrerollSecs = v[6] as Int,
+                liveBufferSeconds = v[7] as Int?,
+                subtitleStyleEnabled = v[8] as Boolean,
+                subtitleScaleMpv = v[9] as Float,
+                subtitleFont = v[10] as AppFontFamily?,
+                subtitleColor = v[11] as String,
+                subtitlePosition = v[12] as SubtitleStyle.Position,
+                subtitleBgOpacity = v[13] as Int,
+                audioDelayMs = v[14] as Int,
+                preferredAudioLang = v[15] as String,
+                preferredSubLang = v[16] as String,
+                defaultZoom = v[17] as String,
+                defaultVolume = v[18] as Int,
+                seekStepSec = v[19] as Int,
+                autoFrameRateFilms = v[20] as Boolean,
+                liveEnginePreference = v[21] as EnginePreference,
+                liveTuneTimeoutSecs = v[22] as Int,
+                vodBufferSecs = v[23] as Int,
+                vodNetworkTimeoutSecs = v[24] as Int,
+                vodReconnects = v[25] as Int,
+                audioPassthrough = v[26] as Boolean,
+                nightMode = v[27] as Boolean,
+                volumeLevelling = v[28] as Boolean,
+                maxVideoHeight = v[29] as Int,
+                mobileDataMaxVideoHeight = v[30] as Int,
+                tunneledPlayback = v[31] as Boolean,
+                backgroundPlayback = v[32] as Boolean,
+                softwareDecodeAbove1080p = v[33] as Boolean,
+                outputAudioDelays = v[34] as OutputAudioDelays,
+                autoFrameRateLive = v[35] as Boolean,
+            )
     }
 }
 

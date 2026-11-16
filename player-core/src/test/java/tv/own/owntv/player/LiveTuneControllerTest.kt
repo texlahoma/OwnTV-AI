@@ -40,6 +40,8 @@ class LiveTuneControllerTest {
         var mpvWatch: CompletableDeferred<MpvOutcome>? = null
         /** Set before the watch opens to fail the channel later, after it has played. */
         var exoLaterFailure: CompletableDeferred<String>? = null
+        /** mpv's release wait runs out with the stream still held (a core stuck in a network read). */
+        var mpvReleaseTimesOut = false
 
         override fun exoPlay(url: String, muted: Boolean, request: LiveRequest) {
             exoUrl = url
@@ -74,6 +76,7 @@ class LiveTuneControllerTest {
             mpvHasStream = false
         }
         override suspend fun mpvStopAndAwaitRelease() {
+            if (mpvReleaseTimesOut) { delay(1_500); return }
             if (mpvHasStream) order += "mpv-released"
             mpvHasStream = false
         }
@@ -305,6 +308,41 @@ class LiveTuneControllerTest {
         // "mpv only" for this tune: no hand-back to ExoPlayer, the failure stays on screen.
         assertEquals("mpv-abandon", engines.log.last())
         assertEquals(1, engines.log.count { it.startsWith("exo:") })
+    }
+
+    @Test
+    fun `the engine button during an automatic hand-over to mpv leaves only ExoPlayer playing`() = runTest {
+        val engines = FakeEngines()
+        val c = controller(engines, FakeHost(this))
+        c.tune(channel(13))
+        runCurrent()
+        engines.exoWatch!!.complete("boom")
+        runCurrent() // the hand-over to mpv is now waiting for ExoPlayer's decoder
+        assertFalse(c.liveOnExo.value)
+        c.toggleEngine() // reads "on mpv", so it goes back to ExoPlayer
+        advanceTimeBy(5_000)
+        assertTrue(c.liveOnExo.value)
+        assertFalse("the hand-over it replaced must never reach mpv", engines.log.any { it.startsWith("mpv:") })
+        assertEquals(2, engines.log.count { it.startsWith("exo:") })
+    }
+
+    @Test
+    fun `ExoPlayer still gets the channel after mpv fails on a one-session panel that is slow to release`() = runTest {
+        LiveStreamQuirks.clearForTest()
+        try {
+            val engines = FakeEngines().apply { mpvReleaseTimesOut = true }
+            LiveStreamQuirks.rememberSessionLimit(channel(22).streamUrl)
+            val host = FakeHost(this).apply { preference = EnginePreference.MPV_FIRST; budgetSecs = 0 }
+            val c = controller(engines, host)
+            c.tune(channel(22))
+            runCurrent()
+            engines.mpvWatch!!.complete(MpvOutcome(opened = false, error = "nope"))
+            advanceTimeBy(10_000)
+            assertTrue(c.liveOnExo.value)
+            assertTrue("ExoPlayer must be asked to play: ${engines.log}", engines.log.contains("exo:${channel(22).streamUrl}"))
+        } finally {
+            LiveStreamQuirks.clearForTest()
+        }
     }
 
     @Test

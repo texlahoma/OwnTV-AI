@@ -55,6 +55,12 @@ class TimeshiftSession(
 
     @Volatile var container: Container = Container.TS
         private set
+
+    /**
+     * The stream clock (MPEG-TS PCR, ms) of the newest saved picture, or null when nothing is saved or the
+     * stream has no such clock. A reconnect skips what it already has up to here — see [TsCutter].
+     */
+    @Volatile var savedPcrMs: Long? = null
     private var initFile: File? = null
     private var initBytes: ByteArray? = null
 
@@ -352,6 +358,7 @@ class TimeshiftSession(
     }
 
     private fun dropAllLocked() {
+        savedPcrMs = null
         runCatching { out?.close() }
         out = null
         pieces.forEach { it.file.delete() }

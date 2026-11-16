@@ -5446,6 +5446,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: connection dropped ($why) — reconnect $failures in ${wait}ms
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: first connection failed — $why
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: giving up after $failures drops — $why
+1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: joined at stream clock ${cutter.firstPcrMs}ms, saved up to ${resumeAfter ?: -1}ms, skipped ${cutter.packetsSkipped} packets
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: no network ($why) — waiting
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: not buffered — ${e.why}
 1	log	core/src/main/java/tv/own/owntv/core/timeshift/TimeshiftDownloader.kt	timeshift: segment ${segment.sequence} has an unreadable address — skipped
@@ -6675,6 +6676,7 @@
 6	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv $line
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv $why — reopening with tolerant demuxing (discardcorrupt/genpts/ignore_err)
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv call failed: $it
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv frames: est-vf-fps=${m.getPropertyString("estimated-vf-fps")}
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv hit EOF at $offset bytes opening a live .ts — checking what the response is
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv live first position after ${now - l.loadStartTime}ms

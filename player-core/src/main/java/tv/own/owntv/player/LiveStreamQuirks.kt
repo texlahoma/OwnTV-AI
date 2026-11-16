@@ -476,6 +476,7 @@ object LiveStreamQuirks {
     /** Test hook — clears everything. */
     internal fun clearForTest() {
         hlsRedirectHosts.clear(); hlsRedirectStreams.clear(); mixedHlsHosts.clear(); segmentRefusingHosts.clear(); singleSessionHosts.clear()
+        dashRedirectHosts.clear()
         brokenTimestampStreams.clear(); softwareArchiveHosts.clear()
         noHlsVariantStreams.clear(); noHlsVariantMpvStreams.clear(); prerollDefeatedStreams.clear()
         tolerantDemuxStreams.clear()

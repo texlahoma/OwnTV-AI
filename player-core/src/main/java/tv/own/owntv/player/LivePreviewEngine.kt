@@ -713,9 +713,6 @@ class LivePreviewEngine(
     /** The provider refuses its own signed segment URLs; ExoPlayer cannot recover, mpv can. One-shot
      *  per load, collected by the ViewModel exactly like [noVideoDetected]. */
     val segmentsRefused: StateFlow<Boolean> = _segmentsRefused
-    /** Seconds asked for by the most recent `Retry-After` on this load. Captured by the diagnostic
-     *  interceptor because response headers never reach [onPlayerError]. */
-    @Volatile private var providerRetryAfterSecs: Int? = null
     /** How many of those waits this tune has been through. The ViewModel's open deadline restarts while
      *  this moves, so the attempt made *after* a wait gets a full deadline of its own instead of
      *  inheriting the seconds left over from the refused one. */
@@ -1506,7 +1503,11 @@ class LivePreviewEngine(
 
     /** Terminal failure of the current load that is NOT worth another reconnect: stand the watchdogs down
      *  and surface an error so the ViewModel can retry elsewhere (TS variant / mpv) immediately. */
-    private fun failLoad(reason: String) {
+    private fun failLoad(
+        reason: String,
+        /** What the screen says; by default worked out from [reason]. */
+        failure: PlaybackFailure = PlayerErrors.visibleFailure(reason, currentUrl, PlaybackFailure.Channel),
+    ) {
         mainHandler.removeCallbacks(stallWatchdog)
         mainHandler.removeCallbacks(progressWatchdog)
         mainHandler.removeCallbacks(openWatchdog)
@@ -1516,7 +1517,7 @@ class LivePreviewEngine(
         _isPlaying.value = false; _buffering.value = false
         // A FairPlay channel keeps its own message through the ladder's give-up, which fails it again.
         _error.value = if (currentDrm?.scheme == tv.own.owntv.core.drm.DrmConfig.Scheme.FAIRPLAY) PlaybackFailure.FairPlay
-            else PlayerErrors.visibleFailure(reason, currentUrl, PlaybackFailure.Channel)
+            else failure
         _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(reason), exoSpec(), reason)
         _state.value = State.ERROR
         // A load can fail while the picture is still running (a stall verdict, a watchdog). When the
@@ -1772,8 +1773,8 @@ class LivePreviewEngine(
                 // conjure one, and mpv would fail the same way, so this one says what it is and stops.
                 LiveStartRungs.Rung.DECODER_EXHAUSTED -> {
                     LiveDiagnosticsLog.event("decoder exhausted — no MediaCodec instance available")
-                    _error.value = PlaybackFailure.DecoderExhausted
-                    _errorInfo.value = ErrorInfo(PlayerErrors.reasonFor(DECODER_EXHAUSTED_REASON), exoSpec(), DECODER_EXHAUSTED_REASON)
+                    // A failed load, so the state says so at once and the open watchdog stands down.
+                    failLoad(DECODER_EXHAUSTED_REASON, PlaybackFailure.DecoderExhausted)
                     return
                 }
                 // A hardware decoder that died before the first frame is usually recoverable on a FRESH
@@ -2462,6 +2463,8 @@ class LivePreviewEngine(
         }
         // Resolve a fresh URL off-main (Stalker create_link is a network call) before the delayed reload.
         val provider = reconnectUrlProvider
+        // The tune this reconnect belongs to: the same address tuned again is a different tune.
+        val forTune = tune
         scope.launch {
             val fresh = if (provider != null) {
                 withContext(Dispatchers.IO) {
@@ -2476,6 +2479,7 @@ class LivePreviewEngine(
             reload = Runnable {
                 // Only its own: a reload left over from a channel since left must not clear the current one's.
                 if (pendingReload === reload) pendingReload = null
+                if (tune !== forTune) return@Runnable // a newer tune, even of the same address: not its reconnect
                 if (currentUrl != url) { tune.reconnectPending = false; return@Runnable } // superseded (zapped / stopped)
                 tune.reconnectPending = false
                 // Media3 kept retrying during the delay and got the stream back by itself. Re-preparing now
@@ -2507,6 +2511,7 @@ class LivePreviewEngine(
                     mainHandler.removeCallbacks(stallWatchdog); mainHandler.postDelayed(stallWatchdog, STALL_MS)
                 }
             }
+            if (tune !== forTune) return@launch // tuned again while the fresh URL was resolved
             pendingReload = reload
             mainHandler.postDelayed(reload, delayMs)
         }
@@ -2654,8 +2659,9 @@ class LivePreviewEngine(
         _state.value = State.LOADING; _buffering.value = true
         _error.value = null; _errorInfo.value = null
         LiveDiagnosticsLog.event("waiting ${SESSION_RELEASE_MS}ms for the provider to free the account session, then retrying")
+        val forTune = tune
         mainHandler.postDelayed({
-            if (currentUrl != url) return@postDelayed
+            if (tune !== forTune || currentUrl != url) return@postDelayed
             runCatching {
                 reprepare(p, url)
             }.onFailure {
@@ -2682,7 +2688,7 @@ class LivePreviewEngine(
      */
     private fun maybeBackOffForProvider(error: PlaybackException): Boolean {
         if (httpStatusOf(error) != HTTP_TOO_MANY_REQUESTS) return false
-        val secs = providerRetryAfterSecs ?: return false // no deadline named → nothing to wait for
+        val secs = tune.providerRetryAfterSecs ?: return false // no deadline named → nothing to wait for
         val url = currentUrl ?: return false
         if (player == null) return false
         if (tune.providerBackOffs >= MAX_PROVIDER_BACKOFFS) {
@@ -2690,7 +2696,7 @@ class LivePreviewEngine(
             return false
         }
         tune.providerBackOffs++
-        providerRetryAfterSecs = null // the next refusal brings its own deadline
+        tune.providerRetryAfterSecs = null // the next refusal brings its own deadline
         _isPlaying.value = false
         _error.value = null; _errorInfo.value = null
         _state.value = State.LOADING; _buffering.value = true
@@ -2757,7 +2763,7 @@ class LivePreviewEngine(
     private fun cancelProviderBackOff() {
         mainHandler.removeCallbacks(backOffTick)
         _providerBackOff.value = null
-        providerRetryAfterSecs = null
+        tune.providerRetryAfterSecs = null
     }
 
     /**
@@ -3054,6 +3060,7 @@ class LivePreviewEngine(
     /** Release the player and its codec, recreate the surface, and reopen the current channel on both. */
     private fun rebuildDecoderAndSurface(delayMs: Long = DECODER_REBUILD_DELAY_MS) {
         val url = currentUrl ?: return
+        val forTune = tune
         _state.value = State.LOADING; _buffering.value = true
         _error.value = null; _errorInfo.value = null
         // Drop the whole player: removeListener first so this release doesn't come back as STATE_IDLE.
@@ -3073,7 +3080,7 @@ class LivePreviewEngine(
         mainHandler.postDelayed({
             // Zapped away or stopped while we waited, or the tune was given up ("Give up after"): a
             // rebuild landing after that would bring a channel the HUD has already failed back to life.
-            if (currentUrl != url || tune.gaveUp) return@postDelayed
+            if (tune !== forTune || currentUrl != url || tune.gaveUp) return@postDelayed
             runCatching {
                 val p = build().also { player = it }
                 surface?.let { p.setVideoSurface(it) }
@@ -3497,11 +3504,14 @@ class LivePreviewEngine(
             .addInterceptor { chain ->
                 val startedAt = android.os.SystemClock.elapsedRealtime()
                 val request = chain.request()
+                // The tune this request was made for: an answer arriving after a zap is the previous
+                // channel's, and must not mark the new one.
+                val forTune = request.tag(TuneState::class.java) ?: tune
                 try {
                     val response = chain.proceed(request)
                     val finalUrl = response.request.url.toString()
                     if (isHlsResponse(finalUrl, response.header("Content-Type"))) {
-                        tune.responseWasHls = true
+                        forTune.responseWasHls = true
                         // The panel — not just this URL — serves HLS behind a `.ts` endpoint. mpv needs to
                         // know that too, or FFmpeg reconnects to the manifest's EOF forever. Learned only
                         // from the channel's own address: this client also fetches variant playlists, and
@@ -3513,7 +3523,7 @@ class LivePreviewEngine(
                             LiveStreamQuirks.rememberHlsRedirect(channelUrl)
                         }
                     } else if (isDashResponse(finalUrl, response.header("Content-Type"))) {
-                        tune.responseWasDash = true
+                        forTune.responseWasDash = true
                         // Panel-wide, exactly as for HLS: every other channel here starts as DASH
                         // instead of repeating this failure and its retry.
                         if (!request.url.toString().substringBefore('?').endsWith(".mpd", ignoreCase = true)) {
@@ -3537,7 +3547,7 @@ class LivePreviewEngine(
                         // the failure reaches [onPlayerError] there is nothing left to read it from.
                         if (response.code == HTTP_TOO_MANY_REQUESTS) {
                             // Every refusal replaces the pending deadline — an over-long one clears it.
-                            providerRetryAfterSecs = retryAfterSecs(response.header("Retry-After"))
+                            forTune.providerRetryAfterSecs = retryAfterSecs(response.header("Retry-After"))
                         }
                     }
                     if (LiveDiagnosticsLog.enabled) {
@@ -3680,7 +3690,11 @@ class LivePreviewEngine(
         // Keyed on the headers as well as the UA: the three cached factories bake the data source in,
         // so a channel with its own Referer must not reuse the previous channel's factory.
         if (ua != dataSourceForUa || currentHeaders != dataSourceForHeaders || cachedHttpDataSource == null) {
-            cachedHttpDataSource = OkHttpDataSource.Factory(diagnosticHttpClient).setUserAgent(ua)
+            // Each request carries the tune it was made for (see the response interceptor).
+            val calls = okhttp3.Call.Factory { request ->
+                diagnosticHttpClient.newCall(request.newBuilder().tag(TuneState::class.java, tune).build())
+            }
+            cachedHttpDataSource = OkHttpDataSource.Factory(calls).setUserAgent(ua)
                 .setTransferListener(throughputTracker)
                 .setDefaultRequestProperties(
                     currentHeaders.filterKeys { !it.equals("User-Agent", ignoreCase = true) },
@@ -4382,6 +4396,9 @@ internal data class TuneState(
     var altFormatRetryDone: Boolean = false,
     /** Automatic 429 waits already spent on this tune. */
     var providerBackOffs: Int = 0,
+    /** Seconds asked for by the most recent `Retry-After` on this tune. Written by the response
+     *  interceptor, because response headers never reach the player's error callback. */
+    @field:Volatile var providerRetryAfterSecs: Int? = null,
     // Audio/text tracks enumerated from the active stream (multi-language live, or a VOD file via M3U).
     var audioTrackList: List<TrackOption> = emptyList(),
     var audioSelections: List<AudioSel> = emptyList(),

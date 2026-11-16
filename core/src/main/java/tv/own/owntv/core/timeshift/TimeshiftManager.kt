@@ -136,12 +136,19 @@ class TimeshiftManager(
         session.onReadersChanged = { onReadersChanged(buffer) }
         // The first piece, or the download's refusal — whichever comes first.
         val deadline = clock() + firstPieceTimeoutMs
-        while (clock() < deadline && !result.isCompleted) {
-            if (withContext(Dispatchers.IO) { session.awaitFirstPiece(FIRST_PIECE_SLICE_MS) }) {
-                // Idle-parking counts from here: the player is about to be told the address.
-                onReadersChanged(buffer)
-                return Opened(session, null)
+        try {
+            while (clock() < deadline && !result.isCompleted) {
+                if (withContext(Dispatchers.IO) { session.awaitFirstPiece(FIRST_PIECE_SLICE_MS) }) {
+                    // Idle-parking counts from here: the player is about to be told the address.
+                    onReadersChanged(buffer)
+                    return Opened(session, null)
+                }
             }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            // The caller gave up during the wait (a newer tune, Back). It never learns of this buffer, so
+            // nothing else would stop the download: it would hold the provider connection until the next tune.
+            closeBuffer(buffer)
+            throw e
         }
         val why = if (result.isCompleted) result.await().toString() else "no data in ${firstPieceTimeoutMs}ms"
         android.util.Log.i(TAG, "not buffering: $why")

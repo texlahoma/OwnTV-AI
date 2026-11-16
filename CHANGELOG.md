@@ -9,6 +9,20 @@
 > in one bolded line of its own (e.g. **Database v46 · Backup v24 · Breaking**). The detail — what,
 > why, files and verification — belongs in the commit message, never here.
 
+## core-1.0.72 — unreleased
+
+### 🐛 Fixes
+
+- **⏪ Timeshift: leaving a channel while it is still opening no longer leaves its download running**
+- **⏱️ Timeshift: "Give up after" now counts the wait for the saved copy**
+- **▶️ Timeshift: "Resume" on a channel you came back to no longer freezes after half a minute**
+- **🔀 Live TV: the engine button during an automatic switch no longer starts both engines**
+- **🔁 Live TV: the switch back to ExoPlayer after mpv fails is no longer lost on one-connection providers**
+- **🎬 Films: picking another film during a switch to ExoPlayer no longer starts the previous one over it**
+- **🧩 Multiview: a tile with no decoder left shows its message at once**
+- **📡 Live TV on ExoPlayer: a late retry or answer from the previous tune no longer touches the new one**
+- **🔊 mpv: the stereo fallback reloads safely, and a stopped stream can no longer clear its error message**
+
 ## core-1.0.71 — 2026-11-09
 
 ### ✨ New features

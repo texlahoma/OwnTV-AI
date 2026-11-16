@@ -1,5 +1,7 @@
 package tv.own.owntv.core.timeshift
 
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.After
@@ -89,14 +91,19 @@ class TimeshiftManagerTest {
 
     @Test
     fun `saves a live stream into keyframe pieces that a player reads back over loopback`() = runBlocking {
-        val opened = manager.open("ch1", target(), windowMinutes = 15, firstPieceTimeoutMs = 5_000)
-        assertNotNull(opened)
-        val session = opened!!.session
-        Thread.sleep(800)
-        assertTrue("several pieces", (session.livePieceIndex() ?: 0) >= 2)
-        val conn = readSome(session, 0, 188 * 20)
-        assertEquals(1, session.readerCount)
-        conn.disconnect()
+        // Long enough before parking that a busy machine still saves several pieces first.
+        val patient = TimeshiftManager(OkHttpClient(), { dir }, idleParkMs = 10_000)
+        try {
+            val opened = patient.open("ch1", target(), windowMinutes = 15, firstPieceTimeoutMs = 5_000)
+            assertNotNull(opened)
+            val session = opened!!.session
+            assertTrue("several pieces", eventually { (session.livePieceIndex() ?: 0) >= 2 })
+            val conn = readSome(session, 0, 188 * 20)
+            assertEquals(1, session.readerCount)
+            conn.disconnect()
+        } finally {
+            patient.closeAll()
+        }
     }
 
     @Test
@@ -118,13 +125,14 @@ class TimeshiftManagerTest {
      * A television in standby: the wall clock runs on, but the CPU sleeps and the manager's own timers
      * barely move, so the parked buffer is still there when the screen comes back.
      */
-    private fun sleepingManager(now: AtomicLong) =
-        TimeshiftManager(OkHttpClient(), { dir }, clock = { now.get() }, idleParkMs = 300)
+    private fun sleepingManager(now: AtomicLong, idleParkMs: Long = 300) =
+        TimeshiftManager(OkHttpClient(), { dir }, clock = { now.get() }, idleParkMs = idleParkMs)
 
     @Test
     fun `a player back long after the park gets fresh pieces, not the ones from before`() = runBlocking {
         val now = AtomicLong(1_000_000L)
-        val sleeping = sleepingManager(now)
+        // Parks only after it has saved something, even on a busy machine.
+        val sleeping = sleepingManager(now, idleParkMs = 2_000)
         try {
             val session = sleeping.open("ch1", target(), 15, 5_000)!!.session
             assertTrue("saving", eventually { (session.livePieceIndex() ?: 0) >= 2 })
@@ -202,6 +210,23 @@ class TimeshiftManagerTest {
         val garbage = TimeshiftDownloader.Target({ "http://127.0.0.1:${notTs.localPort}/x" }, "t", emptyMap(), null)
         assertNull(manager.open("ch9", garbage, 15, 5_000))
         notTs.close()
+    }
+
+    @Test
+    fun `a caller cancelled while waiting for the first data leaves no download behind`() = runBlocking {
+        // A provider that accepts the connection and then sends nothing.
+        val silent = ServerSocket(0)
+        val accepted = java.util.concurrent.CopyOnWriteArrayList<java.net.Socket>()
+        thread(isDaemon = true) {
+            while (true) accepted += runCatching { silent.accept() }.getOrNull() ?: break
+        }
+        val target = TimeshiftDownloader.Target({ "http://127.0.0.1:${silent.localPort}/x.ts" }, "t", emptyMap(), null, sourceId = 5)
+        val opening = launch(kotlinx.coroutines.Dispatchers.Default) { manager.open("ch5", target, 15, 30_000) }
+        assertTrue("downloading while it waits", eventually { manager.isSaving(5) })
+        opening.cancelAndJoin()
+        assertTrue("the download stops with the caller", !manager.isSaving(5))
+        accepted.forEach { runCatching { it.close() } }
+        silent.close()
     }
 
     /**
