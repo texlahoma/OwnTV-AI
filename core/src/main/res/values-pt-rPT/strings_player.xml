@@ -329,4 +329,8 @@
     <string name="player_trailer_blocked_title">Este trailer não pode ser reproduzido na OwnTV</string>
     <string name="player_trailer_blocked_body">O proprietário só permite a reprodução no YouTube.</string>
     <string name="player_trailer_open_youtube">Abrir no YouTube</string>
+    <string name="player_ai_subtitles">Legendas de IA</string>
+    <string name="player_ai_subtitles_adjust_position">Ajustar posição</string>
+    <string name="ai_subtitles_sync_offset">Sincronização</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

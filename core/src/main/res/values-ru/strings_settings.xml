@@ -1854,4 +1854,11 @@
         <item quantity="many">архив на <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">архив на <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">Включить ИИ-субтитры</string>
+    <string name="ai_subtitles_source_language">Исходный язык</string>
+    <string name="ai_subtitles_auto">Авто</string>
+    <string name="ai_subtitles_font_size">Размер шрифта</string>
+    <string name="ai_subtitles_line_height">Межстрочный интервал</string>
+    <string name="ai_subtitles_remembered_hint">Запомнено для этого канала.</string>
+    <string name="ai_subtitles_status">Состояние: %1$s</string>
 </resources>

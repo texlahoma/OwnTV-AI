@@ -1774,4 +1774,11 @@
         <item quantity="one">catch-up på <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">catch-up på <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">Aktiver AI-undertekster</string>
+    <string name="ai_subtitles_source_language">Kildespråk</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Tekststørrelse</string>
+    <string name="ai_subtitles_line_height">Linjeavstand</string>
+    <string name="ai_subtitles_remembered_hint">Huskes for denne kanalen.</string>
+    <string name="ai_subtitles_status">Status: %1$s</string>
 </resources>

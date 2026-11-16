@@ -311,4 +311,8 @@
     <string name="player_trailer_blocked_title">이 예고편은 OwnTV에서 재생할 수 없습니다</string>
     <string name="player_trailer_blocked_body">소유자가 YouTube에서만 재생을 허용합니다.</string>
     <string name="player_trailer_open_youtube">YouTube에서 열기</string>
+    <string name="player_ai_subtitles">AI 자막</string>
+    <string name="player_ai_subtitles_adjust_position">위치 조정</string>
+    <string name="ai_subtitles_sync_offset">자막 동기화</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

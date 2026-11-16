@@ -1774,4 +1774,11 @@
         <item quantity="one"><xliff:g id="count">%1$s</xliff:g> kanalda geçmiş yayın</item>
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g> kanalda geçmiş yayın</item>
     </plurals>
+    <string name="ai_subtitles_enable">Yapay zekâ altyazılarını etkinleştir</string>
+    <string name="ai_subtitles_source_language">Kaynak dil</string>
+    <string name="ai_subtitles_auto">Otomatik</string>
+    <string name="ai_subtitles_font_size">Yazı tipi boyutu</string>
+    <string name="ai_subtitles_line_height">Satır aralığı</string>
+    <string name="ai_subtitles_remembered_hint">Bu kanal için hatırlandı.</string>
+    <string name="ai_subtitles_status">Durum: %1$s</string>
 </resources>

@@ -1774,4 +1774,11 @@
         <item quantity="one"><xliff:g id="count">%1$s</xliff:g> पर कैच-अप</item>
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g> पर कैच-अप</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI उपशीर्षक सक्षम करें</string>
+    <string name="ai_subtitles_source_language">स्रोत भाषा</string>
+    <string name="ai_subtitles_auto">ऑटो</string>
+    <string name="ai_subtitles_font_size">फ़ॉन्ट आकार</string>
+    <string name="ai_subtitles_line_height">पंक्ति अंतराल</string>
+    <string name="ai_subtitles_remembered_hint">इस चैनल के लिए याद रखा गया।</string>
+    <string name="ai_subtitles_status">स्थिति: %1$s</string>
 </resources>

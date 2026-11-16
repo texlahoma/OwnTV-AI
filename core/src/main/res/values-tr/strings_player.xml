@@ -320,4 +320,8 @@
     <string name="player_trailer_blocked_title">Bu fragman OwnTV’de oynatılamıyor</string>
     <string name="player_trailer_blocked_body">Sahibi yalnızca YouTube’da oynatılmasına izin veriyor.</string>
     <string name="player_trailer_open_youtube">YouTube’da aç</string>
+    <string name="player_ai_subtitles">Yapay zekâ altyazıları</string>
+    <string name="player_ai_subtitles_adjust_position">Konumu ayarla</string>
+    <string name="ai_subtitles_sync_offset">Senkronizasyon</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

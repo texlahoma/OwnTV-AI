@@ -1734,4 +1734,11 @@
     <plurals name="settings_epg_line_catchup">
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g> 個頻道可回看</item>
     </plurals>
+    <string name="ai_subtitles_enable">啟用 AI 字幕</string>
+    <string name="ai_subtitles_source_language">來源語言</string>
+    <string name="ai_subtitles_auto">自動</string>
+    <string name="ai_subtitles_font_size">字體大小</string>
+    <string name="ai_subtitles_line_height">行距</string>
+    <string name="ai_subtitles_remembered_hint">已為本頻道記住該設定。</string>
+    <string name="ai_subtitles_status">狀態：%1$s</string>
 </resources>

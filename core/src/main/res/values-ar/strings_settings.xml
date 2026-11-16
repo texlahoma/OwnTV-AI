@@ -1934,4 +1934,11 @@
         <item quantity="many">إعادة البث على <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">إعادة البث على <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">تفعيل ترجمات الذكاء الاصطناعي</string>
+    <string name="ai_subtitles_source_language">لغة المصدر</string>
+    <string name="ai_subtitles_auto">تلقائي</string>
+    <string name="ai_subtitles_font_size">حجم الخط</string>
+    <string name="ai_subtitles_line_height">تباعد الأسطر</string>
+    <string name="ai_subtitles_remembered_hint">محفوظ لهذه القناة.</string>
+    <string name="ai_subtitles_status">الحالة: %1$s</string>
 </resources>

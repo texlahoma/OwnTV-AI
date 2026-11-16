@@ -320,4 +320,8 @@
     <string name="player_trailer_blocked_title">ഈ ട്രെയിലർ OwnTV-യിൽ പ്ലേ ചെയ്യാനാകില്ല</string>
     <string name="player_trailer_blocked_body">ഉടമ YouTube-ൽ മാത്രം പ്ലേ ചെയ്യാൻ അനുവദിക്കുന്നു.</string>
     <string name="player_trailer_open_youtube">YouTube-ൽ തുറക്കുക</string>
+    <string name="player_ai_subtitles">AI സബ്ടൈറ്റിലുകൾ</string>
+    <string name="player_ai_subtitles_adjust_position">സ്ഥാനം ക്രമീകരിക്കുക</string>
+    <string name="ai_subtitles_sync_offset">സിൻക്</string>
+    <string name="ai_subtitles_sync_value">%1$d മി.സെ.</string>
 </resources>

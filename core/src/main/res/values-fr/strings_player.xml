@@ -329,4 +329,8 @@
     <string name="player_trailer_blocked_title">Cette bande-annonce ne peut pas être lue dans OwnTV</string>
     <string name="player_trailer_blocked_body">Son propriétaire n’autorise sa lecture que sur YouTube.</string>
     <string name="player_trailer_open_youtube">Ouvrir dans YouTube</string>
+    <string name="player_ai_subtitles">Sous-titres IA</string>
+    <string name="player_ai_subtitles_adjust_position">Ajuster la position</string>
+    <string name="ai_subtitles_sync_offset">Synchro</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

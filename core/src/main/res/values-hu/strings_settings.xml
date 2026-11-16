@@ -1774,4 +1774,11 @@
         <item quantity="one">visszanézés <xliff:g id="count">%1$s</xliff:g> csatornán</item>
         <item quantity="other">visszanézés <xliff:g id="count">%1$s</xliff:g> csatornán</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI-feliratok bekapcsolása</string>
+    <string name="ai_subtitles_source_language">Forrásnyelv</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Betűméret</string>
+    <string name="ai_subtitles_line_height">Sorköz</string>
+    <string name="ai_subtitles_remembered_hint">Emlékezve erre a csatornára.</string>
+    <string name="ai_subtitles_status">Állapot: %1$s</string>
 </resources>

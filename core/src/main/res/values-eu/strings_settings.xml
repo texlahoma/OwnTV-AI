@@ -1774,4 +1774,11 @@
     <string name="settings_bg_picture">Irudia</string>
     <string name="settings_bg_plain">Arrunta</string>
     <string name="settings_line_bg_picture_none">Aukeratu irudi bat telebista honetatik edo Urrutikoaz</string>
+    <string name="ai_subtitles_enable">IA azpitituluak gaitu</string>
+    <string name="ai_subtitles_source_language">Jatorrizko hizkuntza</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Letra-tamaina</string>
+    <string name="ai_subtitles_line_height">Lerren tartea</string>
+    <string name="ai_subtitles_remembered_hint">Kanal honetarako gogoratuta.</string>
+    <string name="ai_subtitles_status">Egoera: %1$s</string>
 </resources>

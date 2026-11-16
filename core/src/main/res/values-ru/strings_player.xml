@@ -338,4 +338,8 @@
     <string name="player_trailer_blocked_title">Этот трейлер нельзя воспроизвести в OwnTV</string>
     <string name="player_trailer_blocked_body">Владелец разрешает воспроизведение только на YouTube.</string>
     <string name="player_trailer_open_youtube">Открыть в YouTube</string>
+    <string name="player_ai_subtitles">ИИ-субтитры</string>
+    <string name="player_ai_subtitles_adjust_position">Настроить положение</string>
+    <string name="ai_subtitles_sync_offset">Синхронизация</string>
+    <string name="ai_subtitles_sync_value">%1$d мс</string>
 </resources>

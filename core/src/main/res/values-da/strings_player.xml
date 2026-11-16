@@ -320,4 +320,8 @@
     <string name="player_trailer_blocked_title">Denne trailer kan ikke afspilles i OwnTV</string>
     <string name="player_trailer_blocked_body">Ejeren tillader kun afspilning på YouTube.</string>
     <string name="player_trailer_open_youtube">Åbn i YouTube</string>
+    <string name="player_ai_subtitles">AI-undertekster</string>
+    <string name="player_ai_subtitles_adjust_position">Justér position</string>
+    <string name="ai_subtitles_sync_offset">Synk</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

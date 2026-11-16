@@ -356,4 +356,8 @@
     <string name="player_trailer_blocked_title">لا يمكن تشغيل هذا الإعلان في OwnTV</string>
     <string name="player_trailer_blocked_body">يسمح مالكه بتشغيله على YouTube فقط.</string>
     <string name="player_trailer_open_youtube">فتح في YouTube</string>
+    <string name="player_ai_subtitles">ترجمات الذكاء الاصطناعي</string>
+    <string name="player_ai_subtitles_adjust_position">ضبط الموضع</string>
+    <string name="ai_subtitles_sync_offset">المزامنة</string>
+    <string name="ai_subtitles_sync_value">%1$d مللي ثانية</string>
 </resources>

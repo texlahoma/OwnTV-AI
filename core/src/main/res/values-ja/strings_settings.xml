@@ -1734,4 +1734,11 @@
     <plurals name="settings_epg_line_catchup">
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g> チャンネルで見逃し配信</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI字幕を有効にする</string>
+    <string name="ai_subtitles_source_language">ソース言語</string>
+    <string name="ai_subtitles_auto">自動</string>
+    <string name="ai_subtitles_font_size">フォントサイズ</string>
+    <string name="ai_subtitles_line_height">行間</string>
+    <string name="ai_subtitles_remembered_hint">このチャンネルで記憶されます。</string>
+    <string name="ai_subtitles_status">状態：%1$s</string>
 </resources>

@@ -320,4 +320,8 @@
     <string name="player_trailer_blocked_title">Dieser Trailer kann nicht in OwnTV abgespielt werden</string>
     <string name="player_trailer_blocked_body">Der Inhaber erlaubt die Wiedergabe nur auf YouTube.</string>
     <string name="player_trailer_open_youtube">In YouTube öffnen</string>
+    <string name="player_ai_subtitles">KI-Untertitel</string>
+    <string name="player_ai_subtitles_adjust_position">Position anpassen</string>
+    <string name="ai_subtitles_sync_offset">Synchron</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

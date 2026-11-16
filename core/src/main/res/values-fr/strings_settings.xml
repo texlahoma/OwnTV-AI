@@ -1814,4 +1814,11 @@
         <item quantity="many">replay sur <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">replay sur <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">Activer les sous-titres IA</string>
+    <string name="ai_subtitles_source_language">Langue source</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Taille de police</string>
+    <string name="ai_subtitles_line_height">Interligne</string>
+    <string name="ai_subtitles_remembered_hint">Mémorisé pour cette chaîne.</string>
+    <string name="ai_subtitles_status">État : %1$s</string>
 </resources>

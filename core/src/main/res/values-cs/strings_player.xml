@@ -338,4 +338,8 @@
     <string name="player_trailer_blocked_title">Tento trailer nelze v OwnTV přehrát</string>
     <string name="player_trailer_blocked_body">Vlastník povoluje přehrávání pouze na YouTube.</string>
     <string name="player_trailer_open_youtube">Otevřít v YouTube</string>
+    <string name="player_ai_subtitles">AI titulky</string>
+    <string name="player_ai_subtitles_adjust_position">Upravit pozici</string>
+    <string name="ai_subtitles_sync_offset">Synchronizace</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

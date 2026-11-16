@@ -338,4 +338,8 @@
     <string name="player_trailer_blocked_title">Tego zwiastuna nie można odtworzyć w OwnTV</string>
     <string name="player_trailer_blocked_body">Właściciel zezwala na odtwarzanie tylko w YouTube.</string>
     <string name="player_trailer_open_youtube">Otwórz w YouTube</string>
+    <string name="player_ai_subtitles">Napisy AI</string>
+    <string name="player_ai_subtitles_adjust_position">Dostosuj pozycję</string>
+    <string name="ai_subtitles_sync_offset">Synchronizacja</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

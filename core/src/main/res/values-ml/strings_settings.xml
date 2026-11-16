@@ -1774,4 +1774,11 @@
         <item quantity="one"><xliff:g id="count">%1$s</xliff:g> ചാനലിൽ ക്യാച്ച്-അപ്പ്</item>
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g> ചാനലുകളിൽ ക്യാച്ച്-അപ്പ്</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI സബ്ടൈറ്റിലുകൾ പ്രവർത്തനക്ഷമമാക്കുക</string>
+    <string name="ai_subtitles_source_language">ഉറവിട ഭാഷ</string>
+    <string name="ai_subtitles_auto">ഓട്ടോ</string>
+    <string name="ai_subtitles_font_size">ഫോണ്ട് വലുപ്പം</string>
+    <string name="ai_subtitles_line_height">വരി ഇടവേള</string>
+    <string name="ai_subtitles_remembered_hint">ഈ ചാനലിനായി ഓർത്തിരിക്കുന്നു.</string>
+    <string name="ai_subtitles_status">നില: %1$s</string>
 </resources>

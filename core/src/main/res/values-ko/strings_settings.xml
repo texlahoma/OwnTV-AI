@@ -1734,4 +1734,11 @@
     <plurals name="settings_epg_line_catchup">
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g>개 채널 다시보기</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI 자막 사용</string>
+    <string name="ai_subtitles_source_language">소스 언어</string>
+    <string name="ai_subtitles_auto">자동</string>
+    <string name="ai_subtitles_font_size">글꼴 크기</string>
+    <string name="ai_subtitles_line_height">줄 간격</string>
+    <string name="ai_subtitles_remembered_hint">이 채널에 기억됩니다.</string>
+    <string name="ai_subtitles_status">상태: %1$s</string>
 </resources>

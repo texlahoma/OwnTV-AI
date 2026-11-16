@@ -1774,4 +1774,11 @@
         <item quantity="one">Catch-up auf <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">Catch-up auf <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">KI-Untertitel aktivieren</string>
+    <string name="ai_subtitles_source_language">Quellsprache</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Schriftgröße</string>
+    <string name="ai_subtitles_line_height">Zeilenabstand</string>
+    <string name="ai_subtitles_remembered_hint">Für diesen Sender gemerkt.</string>
+    <string name="ai_subtitles_status">Status: %1$s</string>
 </resources>

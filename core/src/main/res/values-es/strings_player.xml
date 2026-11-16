@@ -329,4 +329,8 @@
     <string name="player_trailer_blocked_title">Este tráiler no se puede reproducir en OwnTV</string>
     <string name="player_trailer_blocked_body">Su propietario solo permite reproducirlo en YouTube.</string>
     <string name="player_trailer_open_youtube">Abrir en YouTube</string>
+    <string name="player_ai_subtitles">Subtítulos con IA</string>
+    <string name="player_ai_subtitles_adjust_position">Ajustar posición</string>
+    <string name="ai_subtitles_sync_offset">Sincronización</string>
+    <string name="ai_subtitles_sync_value">%1$d ms</string>
 </resources>

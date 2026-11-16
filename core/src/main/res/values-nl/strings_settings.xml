@@ -1774,4 +1774,11 @@
         <item quantity="one">terugkijken op <xliff:g id="count">%1$s</xliff:g></item>
         <item quantity="other">terugkijken op <xliff:g id="count">%1$s</xliff:g></item>
     </plurals>
+    <string name="ai_subtitles_enable">AI-ondertitels inschakelen</string>
+    <string name="ai_subtitles_source_language">Brontaal</string>
+    <string name="ai_subtitles_auto">Auto</string>
+    <string name="ai_subtitles_font_size">Tekengrootte</string>
+    <string name="ai_subtitles_line_height">Regelhoogte</string>
+    <string name="ai_subtitles_remembered_hint">Onthouden voor dit kanaal.</string>
+    <string name="ai_subtitles_status">Status: %1$s</string>
 </resources>

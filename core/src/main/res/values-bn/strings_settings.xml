@@ -1774,4 +1774,11 @@
         <item quantity="one"><xliff:g id="count">%1$s</xliff:g>টিতে ক্যাচ-আপ</item>
         <item quantity="other"><xliff:g id="count">%1$s</xliff:g>টিতে ক্যাচ-আপ</item>
     </plurals>
+    <string name="ai_subtitles_enable">AI সাবটাইটেল চালু করুন</string>
+    <string name="ai_subtitles_source_language">উৎস ভাষা</string>
+    <string name="ai_subtitles_auto">স্বয়ংক্রিয়</string>
+    <string name="ai_subtitles_font_size">ফন্ট আকার</string>
+    <string name="ai_subtitles_line_height">লাইন স্পেসিং</string>
+    <string name="ai_subtitles_remembered_hint">এই চ্যানেলের জন্য মনে রাখা হয়েছে।</string>
+    <string name="ai_subtitles_status">অবস্থা: %1$s</string>
 </resources>

@@ -320,4 +320,8 @@
     <string name="player_trailer_blocked_title">यह ट्रेलर OwnTV में नहीं चल सकता</string>
     <string name="player_trailer_blocked_body">इसके मालिक ने इसे केवल YouTube पर चलाने की अनुमति दी है।</string>
     <string name="player_trailer_open_youtube">YouTube में खोलें</string>
+    <string name="player_ai_subtitles">AI उपशीर्षक</string>
+    <string name="player_ai_subtitles_adjust_position">स्थिति समायोजित करें</string>
+    <string name="ai_subtitles_sync_offset">सिंक</string>
+    <string name="ai_subtitles_sync_value">%1$d मि.से.</string>
 </resources>
